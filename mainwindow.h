@@ -5,7 +5,9 @@
 #include <QScreen>
 #include <QTimer>
 
+#ifdef Q_OS_UNIX
 #include "wiimotedev/deviceevents.h"
+#endif
 
 namespace Ui {
 class MainWindow;
@@ -31,8 +33,10 @@ private:
 
   QString m_title;
 
+#ifdef Q_OS_UNIX
   WiimotedevDeviceEvents *m_wiimotedevEvents;
   uint64 m_buttons;
+#endif
 
 public:
   enum {
@@ -62,8 +66,10 @@ private slots:
   void calculateFPS();
   void about();
 
+#ifdef Q_OS_UNIX
   void dbusWiimotedevButtons(uint, uint64);
-  
+#endif
+
 private:
   Ui::MainWindow *ui;
 

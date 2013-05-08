@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>916</width>
-    <height>421</height>
+    <width>914</width>
+    <height>419</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,6 +85,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="statusTip">
+                   <string>Select screen to capture</string>
+                  </property>
                  </widget>
                 </item>
                </layout>
@@ -125,6 +128,9 @@
                 </item>
                 <item>
                  <widget class="QSlider" name="brightnessSlider">
+                  <property name="statusTip">
+                   <string>Tune led brightness</string>
+                  </property>
                   <property name="minimum">
                    <number>10</number>
                   </property>
@@ -193,6 +199,9 @@
                 </item>
                 <item>
                  <widget class="QSlider" name="framerateLimit">
+                  <property name="statusTip">
+                   <string>Tune frames per secound limit (24fps should be enought)</string>
+                  </property>
                   <property name="minimum">
                    <number>10</number>
                   </property>
@@ -397,6 +406,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="statusTip">
+                   <string>Led count in your device</string>
+                  </property>
                   <item>
                    <property name="text">
                     <string>32</string>
@@ -447,6 +459,9 @@
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="statusTip">
+                   <string>Size of chunks</string>
                   </property>
                   <property name="suffix">
                    <string> px</string>
@@ -567,6 +582,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="statusTip">
+                   <string>Choose alghoritm</string>
+                  </property>
                   <property name="currentIndex">
                    <number>1</number>
                   </property>
@@ -577,12 +595,12 @@
                   </item>
                   <item>
                    <property name="text">
-                    <string>Capture parial screenshots (fastest)</string>
+                    <string>Capture parial screenshots (should be fastest)</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>Capture only critical areas (fast)</string>
+                    <string>Capture only critical areas (should be fast)</string>
                    </property>
                   </item>
                  </widget>
@@ -834,7 +852,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>916</width>
+     <width>914</width>
      <height>18</height>
     </rect>
    </property>

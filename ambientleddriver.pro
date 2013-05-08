@@ -4,7 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += core gui dbus
+QT       += core gui
+
+unix {
+  QT += dbus
+  HEADERS  += wiimotedev/deviceevents.h \
+    wiimotedev/consts.h
+}
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,7 +25,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
-    wiimotedev\deviceevents.h \
     about.h
 
 FORMS    += mainwindow.ui \

@@ -15,7 +15,6 @@ AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) : QWidget(parent
 void AmbientLightSymulation::updateLeds(QList< QRgb> c) {
   colors = c;
 }
-#include <QDebug>
 
 void AmbientLightSymulation::timerEvent(QTimerEvent *) {
   update();

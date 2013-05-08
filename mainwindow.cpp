@@ -11,9 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :
   timerId(-1),
   m_brightness(1.0),
   m_totalCycles(0),
-  m_totalLatency(0),
+  m_totalLatency(0)
+#ifdef Q_OS_UNIX
+  ,
   m_wiimotedevEvents(new WiimotedevDeviceEvents()),
   m_buttons(0)
+#endif
 {
   ui->setupUi(this);
 
@@ -40,7 +43,9 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
   connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 
+#ifdef Q_OS_UNIX
   connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
+#endif
 
   connect(&m_fpsTimer, SIGNAL(timeout()), this, SLOT(calculateFPS()));
   m_fpsTimer.setInterval(1000);
@@ -84,7 +89,7 @@ void MainWindow:: updateScreenArea(int area) {
 }
 
 void MainWindow::calculateFPS() {
-  double max = (1000.0 / m_totalCycles);
+  double max = 1000.0 / double(m_totalCycles);
   double latency = m_totalLatency / double(m_totalCycles);
   double ov = latency/max * 100;
 
@@ -100,6 +105,7 @@ void MainWindow::about() {
   form.exec();
 }
 
+#ifdef Q_OS_UNIX
 void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
   if (id != ui->wiimoteId->value())
     return;
@@ -135,6 +141,9 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 
   m_buttons = buttons;
 }
+#endif
+
+#include <QDebug>
 
 void MainWindow::screenUpdate() {
   QElapsedTimer timer;
@@ -232,8 +241,11 @@ void MainWindow::screenUpdate() {
     }
   }
 
+
+  qint64 d = timer.nsecsElapsed();
   m_totalCycles++;
-  m_totalLatency += timer.elapsed();
+  m_totalLatency += (d/1000000.0);
+
 
   emit updateLeds(m_leds);
 }
