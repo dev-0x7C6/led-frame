@@ -20,7 +20,7 @@
 #ifndef DEVICEEVENTS_INTERFACE_H
 #define DEVICEEVENTS_INTERFACE_H
 
-#include <wiimotedev/consts.h>
+#include "wiimotedev/consts.h"
 
 #include <QDBusAbstractInterface>
 #include <QDBusReply>
