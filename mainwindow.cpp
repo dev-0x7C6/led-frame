@@ -3,6 +3,7 @@
 
 #include <QDesktopWidget>
 #include <QElapsedTimer>
+#include <QGuiApplication>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
