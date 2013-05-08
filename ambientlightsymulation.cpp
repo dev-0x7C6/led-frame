@@ -6,15 +6,22 @@
 
 AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) : QWidget(parent)
 {
+  setAutoFillBackground(false);
+  startTimer(32);
+
+  m_monitor = QPixmap(":/256x256/display.png");
 }
 
 void AmbientLightSymulation::updateLeds(QList< QRgb> c) {
   colors = c;
-  update(0, 0, width(), height());
+}
+#include <QDebug>
+
+void AmbientLightSymulation::timerEvent(QTimerEvent *) {
+  repaint();
 }
 
-
-void drawLedAmbient(qreal x, qreal y, qreal radius, QColor color, QPainter &painter) {
+void drawLedAmbient(qreal x, qreal y, qreal radius, QColor &color, QPainter &painter) {
   QRadialGradient grad(x, y, radius);
   color.setAlpha(255 - (color.black()/1));
   QColor a = color;
@@ -55,4 +62,10 @@ void AmbientLightSymulation::paintEvent(QPaintEvent *) {
     QColor color(colors[colorid++]);
     drawLedAmbient(width() - 48, i * ((width()-190)/8)+96, 96, color, painter);
   }
+
+
+  int x = (width() - m_monitor.width())/2;
+  int y = (height() - m_monitor.height())/2;
+
+  painter.drawPixmap(x, y, m_monitor.width(), m_monitor.height(), m_monitor);
 }

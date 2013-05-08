@@ -1,14 +1,15 @@
 <RCC>
     <qresource prefix="/">
         <file>16x16/all-screens.png</file>
-        <file>16x16/screen.png</file>
-        <file>16x16/brightness.png</file>
         <file>16x16/selected-screen.png</file>
-        <file>64x64/display.png</file>
         <file>256x256/display.png</file>
-        <file>16x16/kig.png</file>
-        <file>16x16/preferences-desktop-launch-feedback.png</file>
-        <file>16x16/preferences-desktop-screensaver.png</file>
-        <file>16x16/system-software-update.png</file>
+        <file>22x22/brightness.png</file>
+        <file>22x22/alghoritm.png</file>
+        <file>22x22/chunks.png</file>
+        <file>22x22/fpsrate.png</file>
+        <file>22x22/leds.png</file>
+        <file>22x22/screen.png</file>
+        <file>22x22/skip.png</file>
+        <file>22x22/area.png</file>
     </qresource>
 </RCC>

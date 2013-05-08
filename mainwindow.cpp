@@ -2,46 +2,47 @@
 #include "ui_mainwindow.h"
 
 #include <QDesktopWidget>
-
+#include <QElapsedTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow),
   timerId(-1),
-  m_brightness(1.0)
+  m_brightness(1.0),
+  m_totalCycles(0),
+  m_totalLatency(0)
 {
   ui->setupUi(this);
- // connect(this, SIGNAL(update()), this, SLOT(screenUpdate()), Qt::QueuedConnection);
-  emit update();
 
   QString info = " x:" +
       QString::number(QApplication::desktop()->geometry().x()) + ", y:" +
       QString::number(QApplication::desktop()->geometry().y()) + " (" +
       QString::number(QApplication::desktop()->geometry().width()) + "x" +
       QString::number(QApplication::desktop()->geometry().height()) + ")";
-  ui->comboBox->addItem(QIcon(":/16x16/all-screens.png"), "Visible area, " + info, -1);
+  ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"), "Visible area, " + info, -1);
   for (register int i = 0; i < QApplication::desktop()->screenCount(); ++i) {
     info = " x:" +
         QString::number(QApplication::desktop()->screenGeometry(i).x()) + ", y:" +
         QString::number(QApplication::desktop()->screenGeometry(i).y()) + " (" +
         QString::number(QApplication::desktop()->screenGeometry(i).width()) + "x" +
         QString::number(QApplication::desktop()->screenGeometry(i).height()) + ")";
-    ui->comboBox->addItem(QIcon(":/16x16/selected-screen.png"), "Screen " + QString::number(i) + ": "  + info, i);
+    ui->screenArea->addItem(QIcon(":/16x16/selected-screen.png"), "Screen " + QString::number(i) + ": "  + info, i);
   }
 
   updateScreenArea(0);
-
-  connect(this, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)));
-
   setFramerate(30);
 
-  connect(ui->brightnessSlider_2, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
+  connect(this, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
+  connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
-  connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
-}
+  connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 
-#include <QPixmap>
-#include <QDebug>
+  connect(&m_fpsTimer, SIGNAL(timeout()), this, SLOT(calculateFPS()));
+  m_fpsTimer.setInterval(1000);
+  m_fpsTimer.start();
+
+  //setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::Window);
+}
 
 void MainWindow::timerEvent(QTimerEvent *) {
   screenUpdate();
@@ -50,22 +51,14 @@ void MainWindow::timerEvent(QTimerEvent *) {
 void MainWindow::setFramerate(int) {
   if (timerId != -1)
     killTimer(timerId);
-  timerId = startTimer(1000/ui->brightnessSlider_2->value());
-  ui->fpsCount->setText(QString::number(ui->brightnessSlider_2->value()) + "fps");
+  timerId = startTimer(1000.0/double(ui->framerateLimit->value()));
+  ui->fpsCount->setText(QString::number(ui->framerateLimit->value()) + "fps");
 }
-
-#include <QPainter>
-#include <QRgb>
-
-#include <QElapsedTimer>
-
-const int pixelSkip = 8;
 
 void MainWindow::setBrightness(int value) {
   m_brightness = double(value) / 100.0;
   ui->proc->setText(QString::number(int(m_brightness*100)) + "%");
 }
-
 
 void MainWindow:: updateScreenArea(int area) {
   QRect geometry;
@@ -75,125 +68,124 @@ void MainWindow:: updateScreenArea(int area) {
     geometry = QApplication::desktop()->screenGeometry(area-1);
   }
 
-  ui->spinBox->setValue(0);
-  ui->spinBox_2->setValue(0);
-  ui->spinBox_3->setValue(geometry.width());
-  ui->spinBox_4->setValue(geometry.height());
+  ui->x->setValue(0);
+  ui->y->setValue(0);
+  ui->xoffset->setValue(geometry.width());
+  ui->yoffset->setValue(geometry.height());
 }
 
-#include <QScreen>
+void MainWindow::calculateFPS() {
+  ui->latency->setText("Frame capture latency: " + QString::number(m_totalLatency / m_totalCycles, 'f', 2) + "ms");
+  ui->fps->setText("Capture rate: " + QString::number(m_totalCycles) + "fps");
+  m_totalCycles = 0;
+  m_totalLatency = 0;
+}
+
+#include <QDebug>
 
 void MainWindow::screenUpdate() {
   QElapsedTimer timer;
   timer.start();
-  int screen = ui->comboBox->itemData(ui->comboBox->currentIndex(), Qt::UserRole).toInt();
-
-  QRect rect = QApplication::desktop()->screenGeometry(screen);
-
 
   int alghoritm = ui->alghoritm->currentIndex();
+  int pixelSkip = ui->pixelSkip->value()+1;
+  int chunkSize = 32;
 
+  QRect rect = QApplication::desktop()->screenGeometry(ui->screenArea->itemData(ui->screenArea->currentIndex(), Qt::UserRole).toInt());
+  rect.setCoords(ui->x->value() + rect.x(), ui->y->value() + rect.y(), ui->xoffset->value() + rect.x() - 1, ui->yoffset->value() + rect.y() - 1);
 
- //qDebug() << QApplication::desktop()->winId();
-  rect.setCoords(ui->spinBox->value() + rect.x(), ui->spinBox_2->value() + rect.y(), ui->spinBox_3->value() + rect.x(), ui->spinBox_4->value() + rect.y());
-  //qDebug() << rect;
-
-  WId wid = 0;
-
-
-  switch (alghoritm) {
-  case 0:
-    m_wholeScreen = QApplication::screens().first()->grabWindow(wid, rect.x(), rect.y(), rect.width(), rect.height());
-    break;
-  case 1:
-    m_screenChunk[0] = QApplication::screens().first()->grabWindow(wid, rect.x(), rect.y(), rect.width(), 48);
-    m_screenChunk[1] = QApplication::screens().first()->grabWindow(wid, rect.x(), rect.y() + rect.height() - 48, rect.width(), 48);
-    m_screenChunk[2] = QApplication::screens().first()->grabWindow(wid, rect.x(), rect.y(), 48, rect.height());
-    m_screenChunk[3] = QApplication::screens().first()->grabWindow(wid, rect.x() + rect.width() - 48, rect.y(), 48, rect.height());
-    break;
-  case 2:
-    break;
+  QScreen *screen = QGuiApplication::primaryScreen();
+  if (!screen) {
+    qFatal("shit");
   }
 
-
-  QList< QRgb> colors;
-  quint32 vrgb[3];
-  QImage img;
+  m_leds.clear();
+  switch (alghoritm) {
+  case ScreenCaptureFullShots:
+    m_wholeScreen = screen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
+    break;
+  case ScreenCapturePartialShots:
+    m_screenChunk[0] = screen->grabWindow(0, rect.x(), rect.y(), rect.width(), chunkSize);
+    m_screenChunk[1] = screen->grabWindow(0, rect.x(), rect.y() + rect.height() - chunkSize, rect.width(), chunkSize);
+    m_screenChunk[2] = screen->grabWindow(0, rect.x(), rect.y(), chunkSize, rect.height());
+    m_screenChunk[3] = screen->grabWindow(0, rect.x() + rect.width() - chunkSize, rect.y(), chunkSize, rect.height());
+    break;
+  }
 
   for (register int context = 0; context < 4; ++context) {
     for (register int i = 0; i < 8; ++i) {
-      memset(reinterpret_cast< void*>(vrgb), 0, sizeof(vrgb));
+      memset(reinterpret_cast< void*>(m_rgbCache), 0, sizeof(m_rgbCache));
 
       switch (alghoritm) {
-      case 0:
+      case ScreenCaptureFullShots:
         switch (context) {
         case 0:
-          img = m_wholeScreen.copy(i * (rect.width()/8), 0, 48, 48).toImage();
+          m_imageCache = m_wholeScreen.copy(i * (rect.width()/8), 0, chunkSize, chunkSize).toImage();
           break;
         case 1:
-          img = m_wholeScreen.copy(i * (rect.width()/8), rect.height()-48, 48 , 48).toImage();
+          m_imageCache = m_wholeScreen.copy(i * (rect.width()/8), rect.height()-chunkSize, chunkSize , chunkSize).toImage();
           break;
         case 2:
-          img = m_wholeScreen.copy(0, i * (rect.height()/8), 48 , 48).toImage();
+          m_imageCache = m_wholeScreen.copy(0, i * (rect.height()/8), chunkSize , chunkSize).toImage();
           break;
         case 3:
-          img = m_wholeScreen.copy(rect.width()-48, i * (rect.height()/8), 48, 48).toImage();
+          m_imageCache = m_wholeScreen.copy(rect.width()-chunkSize, i * (rect.height()/8), chunkSize, chunkSize).toImage();
           break;
         }
         break;
-      case 1:
+      case ScreenCapturePartialShots:
         switch (context) {
         case 0:
         case 1:
-          img = m_screenChunk[context].copy(i * rect.width() / 8, 0, 48, 48).toImage();
+          m_imageCache = m_screenChunk[context].copy(i * rect.width() / 8, 0, chunkSize, chunkSize).toImage();
           break;
         case 2:
         case 3:
-          img = m_screenChunk[context].copy(0, i * rect.height() / 8, 48, 48).toImage();
+          m_imageCache = m_screenChunk[context].copy(0, i * rect.height() / 8, chunkSize, chunkSize).toImage();
           break;
         }
         break;
-      case 2:
+      case ScreenCaptureCriticalShots:
         switch (context) {
         case 0:
-          img = QApplication::screens().first()->grabWindow(wid, rect.x() + i * (rect.width()/8), rect.y(), 48, 48).toImage();
+          m_imageCache = screen->grabWindow(0, rect.x() + i * (rect.width()/8), rect.y(), chunkSize, chunkSize).toImage();
           break;
         case 1:
-          img = QApplication::screens().first()->grabWindow(wid, rect.x() + i * (rect.width()/8), rect.y()+rect.height()-48, 48, 48).toImage();
+          m_imageCache = screen->grabWindow(0, rect.x() + i * (rect.width()/8), rect.y()+rect.height()-chunkSize, chunkSize, chunkSize).toImage();
           break;
         case 2:
-          img = QApplication::screens().first()->grabWindow(wid, rect.x(), rect.y() + i * (rect.height()/8), 48, 48).toImage();
+          m_imageCache = screen->grabWindow(0, rect.x(), rect.y() + i * (rect.height()/8), chunkSize, chunkSize).toImage();
           break;
         case 3:
-          img = QApplication::screens().first()->grabWindow(wid, rect.x() + rect.width() - 48, rect.y() + i * (rect.height()/8), 48, 48).toImage();
+          m_imageCache = screen->grabWindow(0, rect.x() + rect.width() - chunkSize, rect.y() + i * (rect.height()/8), chunkSize, chunkSize).toImage();
           break;
         }
         break;
       }
 
-      quint32 *source = reinterpret_cast< quint32*>(img.bits());
-      int length = img.byteCount()/img.depth();
+      quint32 *source = reinterpret_cast< quint32*>(m_imageCache.bits());
+      int length = m_imageCache.byteCount()/m_imageCache.depth();
       for (register int i = 0; i < length; i += pixelSkip) {
-        vrgb[0] += uchar(source[i] >> 16);
-        vrgb[1] += uchar(source[i] >> 8);
-        vrgb[2] += uchar(source[i]);
+        m_rgbCache[0] += uchar(source[i] >> 16);
+        m_rgbCache[1] += uchar(source[i] >> 8);
+        m_rgbCache[2] += uchar(source[i]);
       }
 
-      vrgb[0] = double(vrgb[0]) / double(length/(pixelSkip * m_brightness));
-      vrgb[1] = double(vrgb[1]) / double(length/(pixelSkip * m_brightness));
-      vrgb[2] = double(vrgb[2]) / double(length/(pixelSkip * m_brightness));
+      m_rgbCache[0] = double(m_rgbCache[0]) / double(length/(pixelSkip * m_brightness));
+      m_rgbCache[1] = double(m_rgbCache[1]) / double(length/(pixelSkip * m_brightness));
+      m_rgbCache[2] = double(m_rgbCache[2]) / double(length/(pixelSkip * m_brightness));
 
       for (register int c = 0; c < 3; ++c)
-        if (vrgb[c] > 255) vrgb[c] = 255;
+        if (m_rgbCache[c] > 255) m_rgbCache[c] = 255;
 
-      colors << qRgb(vrgb[0], vrgb[1], vrgb[2]);
+      m_leds << qRgb(m_rgbCache[0], m_rgbCache[1], m_rgbCache[2]);
     }
   }
 
-  qDebug() << "Chuks prepared in " << timer.elapsed() << "ms";
+  m_totalCycles++;
+  m_totalLatency += timer.elapsed();
 
-  emit updateLeds(colors);
-
+  emit updateLeds(m_leds);
 }
 
 MainWindow::~MainWindow()

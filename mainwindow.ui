@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>862</width>
-    <height>355</height>
+    <width>917</width>
+    <height>389</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Ambient Led Driver v 0.1</string>
+   <string>Ambient Led Driver v0.2</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -38,7 +38,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources/resource.qrc">:/16x16/screen.png</pixmap>
+               <pixmap resource="resources/resource.qrc">:/22x22/screen.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -59,7 +59,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox">
+             <widget class="QComboBox" name="screenArea">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -84,7 +84,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources/resource.qrc">:/16x16/brightness.png</pixmap>
+               <pixmap resource="resources/resource.qrc">:/22x22/brightness.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -152,7 +152,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources/resource.qrc">:/16x16/kig.png</pixmap>
+               <pixmap resource="resources/resource.qrc">:/22x22/fpsrate.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -168,12 +168,12 @@
                </size>
               </property>
               <property name="text">
-               <string>FPS:</string>
+               <string>FPS limit:</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="brightnessSlider_2">
+             <widget class="QSlider" name="framerateLimit">
               <property name="minimum">
                <number>10</number>
               </property>
@@ -188,6 +188,9 @@
               </property>
               <property name="tickPosition">
                <enum>QSlider::TicksBelow</enum>
+              </property>
+              <property name="tickInterval">
+               <number>4</number>
               </property>
              </widget>
             </item>
@@ -223,7 +226,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources/resource.qrc">:/16x16/preferences-desktop-screensaver.png</pixmap>
+               <pixmap resource="resources/resource.qrc">:/22x22/area.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -234,7 +237,7 @@
              <widget class="QLabel" name="brightnessLabel_6">
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -244,16 +247,18 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="brightnessLabel_7">
-              <property name="text">
-               <string>X:</string>
+             <widget class="QSpinBox" name="x">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="spinBox">
               <property name="suffix">
                <string> px</string>
+              </property>
+              <property name="prefix">
+               <string>X: </string>
               </property>
               <property name="minimum">
                <number>-10000</number>
@@ -264,16 +269,18 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="brightnessLabel_8">
-              <property name="text">
-               <string>Y:</string>
+             <widget class="QSpinBox" name="y">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="spinBox_2">
               <property name="suffix">
                <string> px</string>
+              </property>
+              <property name="prefix">
+               <string>Y: </string>
               </property>
               <property name="minimum">
                <number>-10000</number>
@@ -284,16 +291,18 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="brightnessLabel_9">
-              <property name="text">
-               <string>OX:</string>
+             <widget class="QSpinBox" name="xoffset">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="spinBox_3">
               <property name="suffix">
                <string> px</string>
+              </property>
+              <property name="prefix">
+               <string>X Offset: </string>
               </property>
               <property name="minimum">
                <number>-10000</number>
@@ -304,16 +313,18 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="brightnessLabel_10">
-              <property name="text">
-               <string>OY:</string>
+             <widget class="QSpinBox" name="yoffset">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="spinBox_4">
               <property name="suffix">
                <string> px</string>
+              </property>
+              <property name="prefix">
+               <string>Y Offset: </string>
               </property>
               <property name="minimum">
                <number>-10000</number>
@@ -339,7 +350,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources/resource.qrc">:/16x16/preferences-desktop-screensaver.png</pixmap>
+               <pixmap resource="resources/resource.qrc">:/22x22/leds.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -350,7 +361,7 @@
              <widget class="QLabel" name="brightnessLabel_2">
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -390,7 +401,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources/resource.qrc">:/16x16/preferences-desktop-screensaver.png</pixmap>
+               <pixmap resource="resources/resource.qrc">:/22x22/chunks.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -401,12 +412,12 @@
              <widget class="QLabel" name="brightnessLabel_5">
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
               <property name="text">
-               <string>Chunks:</string>
+               <string>Chunk size:</string>
               </property>
              </widget>
             </item>
@@ -456,7 +467,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources/resource.qrc">:/16x16/system-software-update.png</pixmap>
+               <pixmap resource="resources/resource.qrc">:/22x22/skip.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -467,7 +478,7 @@
              <widget class="QLabel" name="brightnessLabel_12">
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -477,7 +488,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="spinBox_5">
+             <widget class="QSpinBox" name="pixelSkip">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -492,6 +503,9 @@
               </property>
               <property name="maximum">
                <number>64</number>
+              </property>
+              <property name="value">
+               <number>8</number>
               </property>
              </widget>
             </item>
@@ -511,7 +525,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources/resource.qrc">:/16x16/system-software-update.png</pixmap>
+               <pixmap resource="resources/resource.qrc">:/22x22/alghoritm.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -522,7 +536,7 @@
              <widget class="QLabel" name="brightnessLabel_4">
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -539,34 +553,24 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <item>
-               <property name="text">
-                <string>Capture full shots (best for X11)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Capture parial shots</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Capture only critical areas (best for Windows)</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="brightnessLabel_11">
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
+              <property name="currentIndex">
+               <number>1</number>
               </property>
-              <property name="text">
-               <string>Latency: ~2ms</string>
-              </property>
+              <item>
+               <property name="text">
+                <string>Capture full screenshots</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Capture parial screenshots (fastest)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Capture only critical areas (fast)</string>
+               </property>
+              </item>
              </widget>
             </item>
            </layout>
@@ -598,27 +602,41 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="AmbientLightSymulation" name="widget" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QLabel" name="label_5">
-            <property name="minimumSize">
-             <size>
-              <width>300</width>
-              <height>300</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="resources/resource.qrc">:/256x256/display.png</pixmap>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>300</height>
+          </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="fps">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Capture rate: ~fps</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="latency">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Frame capture latency: ~ms</string>
+         </property>
         </widget>
        </item>
        <item>
