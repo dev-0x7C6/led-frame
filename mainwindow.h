@@ -5,6 +5,8 @@
 #include <QScreen>
 #include <QTimer>
 
+#include "wiimotedev/deviceevents.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -26,6 +28,11 @@ private:
 
   double m_totalLatency;
   int m_totalCycles;
+
+  QString m_title;
+
+  WiimotedevDeviceEvents *m_wiimotedevEvents;
+  uint64 m_buttons;
 
 public:
   enum {
@@ -53,6 +60,9 @@ private slots:
   void setBrightness(int value);
   void updateScreenArea(int);
   void calculateFPS();
+  void about();
+
+  void dbusWiimotedevButtons(uint, uint64);
   
 private:
   Ui::MainWindow *ui;

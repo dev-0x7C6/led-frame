@@ -11,5 +11,8 @@
         <file>22x22/screen.png</file>
         <file>22x22/skip.png</file>
         <file>22x22/area.png</file>
+        <file>custom/wiimotedev-small.png</file>
+        <file>custom/wiimotedev.png</file>
+        <file>128x128/about.png</file>
     </qresource>
 </RCC>

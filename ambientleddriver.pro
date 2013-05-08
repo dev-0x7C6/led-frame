@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui gui-private
+QT       += core gui dbus
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,12 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ambientlightsymulation.cpp
+    ambientlightsymulation.cpp \
+    about.cpp
 
 HEADERS  += mainwindow.h \
-    ambientlightsymulation.h
+    ambientlightsymulation.h \
+    wiimotedev\deviceevents.h \
+    about.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    about.ui
 
 RESOURCES += \
     resources/resource.qrc

@@ -10,7 +10,9 @@ MainWindow::MainWindow(QWidget *parent) :
   timerId(-1),
   m_brightness(1.0),
   m_totalCycles(0),
-  m_totalLatency(0)
+  m_totalLatency(0),
+  m_wiimotedevEvents(new WiimotedevDeviceEvents()),
+  m_buttons(0)
 {
   ui->setupUi(this);
 
@@ -37,11 +39,16 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
   connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 
+  connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
+
   connect(&m_fpsTimer, SIGNAL(timeout()), this, SLOT(calculateFPS()));
   m_fpsTimer.setInterval(1000);
   m_fpsTimer.start();
 
-  //setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::Window);
+  m_title = windowTitle();
+
+  connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+  connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 }
 
 void MainWindow::timerEvent(QTimerEvent *) {
@@ -60,6 +67,7 @@ void MainWindow::setBrightness(int value) {
   ui->proc->setText(QString::number(int(m_brightness*100)) + "%");
 }
 
+
 void MainWindow:: updateScreenArea(int area) {
   QRect geometry;
   if (area == 0) {
@@ -75,13 +83,57 @@ void MainWindow:: updateScreenArea(int area) {
 }
 
 void MainWindow::calculateFPS() {
-  ui->latency->setText("Frame capture latency: " + QString::number(m_totalLatency / m_totalCycles, 'f', 2) + "ms");
-  ui->fps->setText("Capture rate: " + QString::number(m_totalCycles) + "fps");
+  double max = (1000.0 / m_totalCycles);
+  double latency = m_totalLatency / double(m_totalCycles);
+  double ov = latency/max * 100;
+
+  setWindowTitle(m_title + " (" + QString::number(m_totalCycles) + "fps) latency: " + QString::number(latency, 'f', 1)+"ms, overheat: " + QString::number(int(ov)) + "%");
   m_totalCycles = 0;
   m_totalLatency = 0;
 }
 
-#include <QDebug>
+#include "about.h"
+
+void MainWindow::about() {
+  About form(this);
+  form.exec();
+}
+
+void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
+  if (id != ui->wiimoteId->value())
+    return;
+
+  if (ui->wiimoteBrightness->isChecked()) {
+    if ((buttons & WIIMOTE_BTN_PLUS) && !(m_buttons & WIIMOTE_BTN_PLUS))
+      ui->brightnessSlider->setValue(ui->brightnessSlider->value() + 10);
+    if ((buttons & WIIMOTE_BTN_MINUS) && !(m_buttons & WIIMOTE_BTN_MINUS))
+      ui->brightnessSlider->setValue(ui->brightnessSlider->value() - 10);
+  }
+
+  if (ui->wiimoteFramerate->isChecked()) {
+    if ((buttons & WIIMOTE_BTN_RIGHT) && !(m_buttons & WIIMOTE_BTN_RIGHT))
+      ui->framerateLimit->setValue(ui->framerateLimit->value() + 2);
+    if ((buttons & WIIMOTE_BTN_LEFT) && !(m_buttons & WIIMOTE_BTN_LEFT))
+      ui->framerateLimit->setValue(ui->framerateLimit->value() - 2);
+  }
+
+  if (ui->wiimoteScreen->isChecked()) {
+    if ((buttons & WIIMOTE_BTN_UP) && !(m_buttons & WIIMOTE_BTN_UP)) {
+      int idx = ui->screenArea->currentIndex() - 1;
+      if (idx == -1)
+        idx = ui->screenArea->count() - 1;
+      ui->screenArea->setCurrentIndex(idx);
+    }
+    if ((buttons & WIIMOTE_BTN_DOWN) && !(m_buttons & WIIMOTE_BTN_DOWN)) {
+      int idx = ui->screenArea->currentIndex() + 1;
+      if (idx == ui->screenArea->count())
+        idx = 0;
+      ui->screenArea->setCurrentIndex(idx);
+    }
+  }
+
+  m_buttons = buttons;
+}
 
 void MainWindow::screenUpdate() {
   QElapsedTimer timer;
@@ -89,15 +141,12 @@ void MainWindow::screenUpdate() {
 
   int alghoritm = ui->alghoritm->currentIndex();
   int pixelSkip = ui->pixelSkip->value()+1;
-  int chunkSize = 32;
+  int chunkSize = ui->chunkSize->value();
 
   QRect rect = QApplication::desktop()->screenGeometry(ui->screenArea->itemData(ui->screenArea->currentIndex(), Qt::UserRole).toInt());
   rect.setCoords(ui->x->value() + rect.x(), ui->y->value() + rect.y(), ui->xoffset->value() + rect.x() - 1, ui->yoffset->value() + rect.y() - 1);
 
   QScreen *screen = QGuiApplication::primaryScreen();
-  if (!screen) {
-    qFatal("shit");
-  }
 
   m_leds.clear();
   switch (alghoritm) {

@@ -18,7 +18,7 @@ void AmbientLightSymulation::updateLeds(QList< QRgb> c) {
 #include <QDebug>
 
 void AmbientLightSymulation::timerEvent(QTimerEvent *) {
-  repaint();
+  update();
 }
 
 void drawLedAmbient(qreal x, qreal y, qreal radius, QColor &color, QPainter &painter) {
