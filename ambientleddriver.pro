@@ -21,11 +21,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     ambientlightsymulation.cpp \
-    about.cpp
+    about.cpp \
+    capturethread.cpp
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
-    about.h
+    about.h \
+    capturethread.h
 
 FORMS    += mainwindow.ui \
     about.ui
