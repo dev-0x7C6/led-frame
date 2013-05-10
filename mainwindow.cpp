@@ -87,7 +87,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   capture.setAlghoritm(ui->alghoritm->currentIndex());
   capture.setBrightness(double(ui->brightnessSlider->value())/100.0);
-  capture.setCaptureArea(QApplication::desktop()->screenGeometry(0));
   capture.setFramerateLimit(ui->framerateLimit->value());
   capture.setPixelSkip(ui->pixelSkip->value());
   capture.start();
