@@ -38,13 +38,13 @@
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
-           <string>Settings</string>
+           <string>Capture</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
             <widget class="QGroupBox" name="groupBox">
              <property name="title">
-              <string>General settings</string>
+              <string>General</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout">
               <item>
@@ -241,7 +241,7 @@
            <item>
             <widget class="QGroupBox" name="groupBox_3">
              <property name="title">
-              <string>Advanced settings</string>
+              <string>Advanced</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
@@ -631,13 +631,13 @@
          </widget>
          <widget class="QWidget" name="tab_3">
           <attribute name="title">
-           <string>Led preview</string>
+           <string>Simulation</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_12">
            <item>
             <widget class="QGroupBox" name="groupBox_6">
              <property name="title">
-              <string>Preview settings</string>
+              <string>Settings</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
@@ -844,6 +844,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="wiimoteId">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="suffix">
                    <string> id</string>
                   </property>
@@ -857,19 +863,6 @@
                    <number>999999999</number>
                   </property>
                  </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
                 </item>
                </layout>
               </item>
@@ -959,7 +952,7 @@
           <item>
            <widget class="QGroupBox" name="groupBox_2">
             <property name="title">
-             <string>Led simulation preview</string>
+             <string>Glow simulation</string>
             </property>
             <property name="flat">
              <bool>false</bool>
