@@ -7,7 +7,6 @@
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
-  m_title(windowTitle()),
 #ifdef Q_OS_UNIX
   m_wiimotedevEvents(new WiimotedevDeviceEvents()),
   m_buttons(0),
@@ -16,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
+  m_title = windowTitle();
 
   QRect rect = QApplication::desktop()->geometry();
   ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),
@@ -47,6 +47,10 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
   connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
   connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
+  connect(ui->ledGlow, SIGNAL(valueChanged(int)), ui->widget, SLOT(setGlowSize(int)));
+  connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), ui->widget, SLOT(setFramerate(int)));
+  connect(ui->ledGlow, SIGNAL(valueChanged(int)), this, SLOT(setGlowSize(int)));
+  connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerateLed(int)));
   connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::QueuedConnection);
   connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
   connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
@@ -59,6 +63,14 @@ MainWindow::MainWindow(QWidget *parent) :
   capture.setFramerateLimit(ui->framerateLimit->value());
   capture.setPixelSkip(ui->pixelSkip->value());
   capture.start();
+}
+
+void MainWindow::setGlowSize(int value) {
+  ui->ledGlowLabel->setText(QString::number(value) + "px");
+}
+
+void MainWindow::setFramerateLed(int value) {
+  ui->ledFps->setText(QString::number(value) + "fps");
 }
 
 void MainWindow::setFramerate(int value) {
@@ -94,7 +106,11 @@ void MainWindow:: updateScreenArea(int area) {
 }
 
 void MainWindow::updateStats(quint32 fps, double latency, double usage) {
-  setWindowTitle(m_title + " (" + QString::number(fps) + "fps) latency: " + QString::number(latency, 'f', 1)+"ms, thread usage: " + QString::number(int(usage)) + "%");
+  setWindowTitle(m_title +
+        QString(" - [fps: %1, latency: %2ms, thread usage: %3%]").arg(
+          QString::number(fps),
+          QString::number(latency, 'f', 1),
+          QString::number(usage, 'f', 1)));
 }
 
 void MainWindow::about() {

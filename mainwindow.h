@@ -30,7 +30,9 @@ public:
   ~MainWindow();
 
 private slots:
+  void setGlowSize(int);
   void setFramerate(int);
+  void setFramerateLed(int);
   void setBrightness(int value);
   void updateScreenArea(int);
   void about();

@@ -4,13 +4,27 @@
 #include <QLinearGradient>
 #include <QRadialGradient>
 
-AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) : QWidget(parent)
+AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) :
+  QWidget(parent),
+  m_timerId(0),
+  m_framerateLimit(30),
+  m_glowSize(96)
 {
   setUpdatesEnabled(false);
   setAutoFillBackground(false);
-  startTimer(1000.0/24.0);
-
   m_monitor = QPixmap(":/256x256/display.png");
+
+  setFramerate(30);
+}
+
+void AmbientLightSymulation::setFramerate(int value) {
+  if (m_timerId)
+    killTimer(m_timerId);
+  m_timerId = startTimer(1000.0/(m_framerateLimit = value));
+}
+
+void AmbientLightSymulation::setGlowSize(int value) {
+  m_glowSize = value;
 }
 
 void AmbientLightSymulation::updateLeds(QList< QRgb> c) {
@@ -23,7 +37,7 @@ void AmbientLightSymulation::timerEvent(QTimerEvent *) {
   setUpdatesEnabled(true);
 }
 
-void drawLedAmbient(qreal x, qreal y, qreal radius, QColor &color, QPainter &painter) {
+void drawLedAmbient(qreal x, qreal y, qreal radius, QColor color, QPainter &painter) {
   QRadialGradient grad(x, y, radius);
   color.setAlpha(255 - (color.black()/1));
   QColor a = color;
@@ -35,39 +49,35 @@ void drawLedAmbient(qreal x, qreal y, qreal radius, QColor &color, QPainter &pai
   painter.drawEllipse(x - radius, y - radius, radius*2, radius*2);
 }
 
+
 void AmbientLightSymulation::paintEvent(QPaintEvent *) {
   QPainter painter(this);
   painter.setPen(Qt::NoPen);
   painter.setBrush(Qt::black);
   painter.drawRect(0, 0, width(), height());
 
-  if (colors.isEmpty())
-    return;
+  int x = ((width() - m_monitor.width())/2) + 9;
+  int y = ((height() - m_monitor.height())/2) + 9;
+  if (!colors.isEmpty()) {
+    int colorid = 0;
+    for (register int i = 0; i < 8; ++i)
+      drawLedAmbient(i * ((m_monitor.width())/7.6) + x, y, m_glowSize, QColor(colors[colorid++]), painter);
 
-  int colorid = 0;
-  for (register int i = 0; i < 8; ++i) {
-    QColor color(colors[colorid++]);
-    drawLedAmbient(i * ((width()-96)/7)+48, 64, 96, color, painter);
+    for (register int i = 0; i < 8; ++i)
+      drawLedAmbient(i * ((m_monitor.width())/7.6) + x, height() - y - (m_monitor.height()/3.8),
+                     m_glowSize, QColor(colors[colorid++]), painter);
+
+    for (register int i = 0; i < 8; ++i)
+      drawLedAmbient(x, i * ((m_monitor.height())/13.5)+y+15, m_glowSize, QColor (colors[colorid++]), painter);
+
+    for (register int i = 0; i < 8; ++i)
+      drawLedAmbient(width() - x, i * ((m_monitor.height())/13.5)+y+15, m_glowSize, QColor (colors[colorid++]), painter);
   }
 
-  for (register int i = 0; i < 8; ++i) {
-    QColor color(colors[colorid++]);
-    drawLedAmbient(i * ((width()-96)/7)+48, 210, 96, color, painter);
-  }
-
-  for (register int i = 0; i < 8; ++i) {
-    QColor color(colors[colorid++]);
-    drawLedAmbient(48, i * ((width()-190)/8)+96, 96, color, painter);
-  }
-
-  for (register int i = 0; i < 8; ++i) {
-    QColor color(colors[colorid++]);
-    drawLedAmbient(width() - 48, i * ((width()-190)/8)+96, 96, color, painter);
-  }
+  painter.drawPixmap((width() - m_monitor.width())/2,
+                     (height() - m_monitor.height())/2,
+                     m_monitor.width(), m_monitor.height(),
+                     m_monitor);
 
 
-  int x = (width() - m_monitor.width())/2;
-  int y = (height() - m_monitor.height())/2;
-
-  painter.drawPixmap(x, y, m_monitor.width(), m_monitor.height(), m_monitor);
 }

@@ -11,11 +11,18 @@ private:
   QList< QRgb> colors;
   QPixmap m_monitor;
 
+  int m_timerId;
+  int m_framerateLimit;
+  int m_glowSize;
+
 public:
   explicit AmbientLightSymulation(QWidget *parent = 0);
 
 public slots:
   void updateLeds(QList< QRgb> c);
+  void setFramerate(int);
+  void setGlowSize(int);
+
 
 protected:
   void timerEvent(QTimerEvent *);
