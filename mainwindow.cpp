@@ -1,8 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QDesktopWidget>
 #include <QGuiApplication>
+#include <QDesktopWidget>
+#include <QScreen>
 #include "about.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -16,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
-  setWindowTitle(m_title = QApplication::applicationDisplayName());
 
   QRect rect = QApplication::desktop()->geometry();
   ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),
@@ -75,6 +75,11 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->wiimoteScreen->setChecked(m_settings->value("screenControl", true).toBool());
   m_settings->endGroup();
 
+  rect = QGuiApplication::primaryScreen()->geometry();
+  move (rect.x() + ((rect.width() - width()) / 2), rect.y() + ((rect.height() - height()) / 2) - 50);
+
+  updateScreenArea(ui->screenArea->currentIndex());
+
 #ifdef Q_OS_UNIX
   connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
 #endif
@@ -86,7 +91,6 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->alghoritm, SIGNAL(currentIndexChanged(int)), &capture, SLOT(setAlghoritm(int)), Qt::DirectConnection);
 
   capture.setAlghoritm(ui->alghoritm->currentIndex());
-  capture.setBrightness(double(ui->brightnessSlider->value())/100.0);
   capture.setFramerateLimit(ui->framerateLimit->value());
   capture.setPixelSkip(ui->pixelSkip->value());
   capture.start();
@@ -113,11 +117,9 @@ void MainWindow::setBrightness(int value) {
 
 void MainWindow:: updateScreenArea(int area) {
   QRect geometry;
-  if (area == 0) {
-    geometry = QApplication::desktop()->geometry();
-  } else {
-    geometry = QApplication::desktop()->screenGeometry(area-1);
-  }
+  if (area == 0)
+    geometry = QApplication::desktop()->geometry(); else
+    geometry = QApplication::desktop()->screenGeometry(area - 1);
 
   ui->x->setValue(0);
   ui->y->setValue(0);
@@ -134,7 +136,7 @@ void MainWindow:: updateScreenArea(int area) {
 
 void MainWindow::updateStats(quint32 fps, double latency, double usage) {
   setWindowTitle(m_title +
-        QString(" - [fps: %1, latency: %2ms, thread usage: %3%]").arg(
+        QString("Performance: [fps: %1, latency: %2ms, thread usage: %3%]").arg(
           QString::number(fps),
           QString::number(latency, 'f', 1),
           QString::number(usage, 'f', 1)));
