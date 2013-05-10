@@ -6,6 +6,7 @@ About::About(QWidget *parent) :
   ui(new Ui::About)
 {
   ui->setupUi(this);
+  ui->text->setText(ui->text->text().arg(QApplication::applicationDisplayName()));
 }
 
 About::~About()

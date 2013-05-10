@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
-  m_title = windowTitle();
+  setWindowTitle(m_title = QApplication::applicationDisplayName());
 
   QRect rect = QApplication::desktop()->geometry();
   ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),

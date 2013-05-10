@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Ambient Led Driver v0.3</string>
+   <string>MainWindow</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources/resource.qrc">
