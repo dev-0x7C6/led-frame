@@ -7,8 +7,9 @@
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
+  m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
 #ifdef Q_OS_UNIX
-  m_wiimotedevEvents(new WiimotedevDeviceEvents()),
+  m_wiimotedevEvents(new WiimotedevDeviceEvents),
   m_buttons(0),
 #endif
   ui(new Ui::MainWindow)
@@ -38,9 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
       i);
   }
 
-#ifdef Q_OS_UNIX
-  connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
-#endif
+  ui->leftWidget->setCurrentIndex(0);
 
   connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
@@ -51,6 +50,35 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), ui->widget, SLOT(setFramerate(int)));
   connect(ui->ledGlow, SIGNAL(valueChanged(int)), this, SLOT(setGlowSize(int)));
   connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerateLed(int)));
+
+  m_settings->beginGroup("GeneralSettings");
+  ui->screenArea->setCurrentIndex(m_settings->value("screenId", 0).toInt());
+  ui->brightnessSlider->setValue(m_settings->value("brightness", 100).toInt());
+  ui->framerateLimit->setValue(m_settings->value("framerateLimit", 30).toInt());
+  m_settings->endGroup();
+
+  m_settings->beginGroup("AdvancedSettings");
+  ui->alghoritm->setCurrentIndex(m_settings->value("alghoritm", 1).toInt());
+  ui->chunkSize->setValue(m_settings->value("chunkSize", 48).toInt());
+  ui->pixelSkip->setValue(m_settings->value("pixelSkip", 4).toInt());
+  m_settings->endGroup();
+
+  m_settings->beginGroup("LedPreviewSettings");
+  ui->ledFramerateLimit->setValue(m_settings->value("framerateLimit", 24).toInt());
+  ui->ledGlow->setValue(m_settings->value("ledGlowSize", 96).toInt());
+  m_settings->endGroup();
+
+  m_settings->beginGroup("WiimotedevSettings");
+  ui->wiimoteId->setValue(m_settings->value("wiimoteId", 1).toInt());
+  ui->wiimoteBrightness->setChecked(m_settings->value("brightnessControl", true).toBool());
+  ui->wiimoteFramerate->setChecked(m_settings->value("framerateControl", true).toBool());
+  ui->wiimoteScreen->setChecked(m_settings->value("screenControl", true).toBool());
+  m_settings->endGroup();
+
+#ifdef Q_OS_UNIX
+  connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
+#endif
+
   connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::QueuedConnection);
   connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
   connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
@@ -161,5 +189,30 @@ MainWindow::~MainWindow()
 {
   capture.setQuitState(true);
   capture.wait();
+
+  m_settings->beginGroup("GeneralSettings");
+  m_settings->setValue("screenId", ui->screenArea->currentIndex());
+  m_settings->setValue("brightness", ui->brightnessSlider->value());
+  m_settings->setValue("framerateLimit", ui->framerateLimit->value());
+  m_settings->endGroup();
+
+  m_settings->beginGroup("AdvancedSettings");
+  m_settings->setValue("alghoritm", ui->alghoritm->currentIndex());
+  m_settings->setValue("chunkSize", ui->chunkSize->value());
+  m_settings->setValue("pixelSkip", ui->pixelSkip->value());
+  m_settings->endGroup();
+
+  m_settings->beginGroup("LedPreviewSettings");
+  m_settings->setValue("framerateLimit", ui->ledFramerateLimit->value());
+  m_settings->setValue("ledGlowSize", ui->ledGlow->value());
+  m_settings->endGroup();
+
+  m_settings->beginGroup("WiimotedevSettings");
+  m_settings->setValue("wiimoteId", ui->wiimoteId->value());
+  m_settings->setValue("brightnessControl", ui->wiimoteBrightness->isChecked());
+  m_settings->setValue("framerateControl", ui->wiimoteFramerate->isChecked());
+  m_settings->setValue("screenControl", ui->wiimoteScreen->isChecked());
+  m_settings->endGroup();
+
   delete ui;
 }

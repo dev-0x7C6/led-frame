@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSettings>
 
 #ifdef Q_OS_UNIX
 #include "wiimotedev/deviceevents.h"
@@ -17,6 +18,7 @@ class MainWindow : public QMainWindow
 {
   Q_OBJECT
 private:
+  QSettings *m_settings;
   CaptureThread capture;
   QString m_title;
 
