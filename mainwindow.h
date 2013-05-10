@@ -2,8 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QScreen>
-#include <QTimer>
 
 #ifdef Q_OS_UNIX
 #include "wiimotedev/deviceevents.h"

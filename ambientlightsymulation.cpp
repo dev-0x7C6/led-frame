@@ -6,8 +6,9 @@
 
 AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) : QWidget(parent)
 {
+  setUpdatesEnabled(false);
   setAutoFillBackground(false);
-  startTimer(32);
+  startTimer(1000.0/24.0);
 
   m_monitor = QPixmap(":/256x256/display.png");
 }
@@ -17,7 +18,9 @@ void AmbientLightSymulation::updateLeds(QList< QRgb> c) {
 }
 
 void AmbientLightSymulation::timerEvent(QTimerEvent *) {
-  update();
+  setUpdatesEnabled(false);
+  repaint();
+  setUpdatesEnabled(true);
 }
 
 void drawLedAmbient(qreal x, qreal y, qreal radius, QColor &color, QPainter &painter) {

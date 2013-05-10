@@ -18,7 +18,6 @@ private:
   int m_alghoritm;
   int m_chunkSize;
   int m_pixelSkip;
-  int m_screenId;
   int m_framerateLimit;
   double m_brightness;
   bool m_quit;
@@ -44,7 +43,6 @@ public slots:
   void setAlghoritm(int);
   void setChunkSize(int);
   void setPixelSkip(int);
-  void setScreenId(int);
   void setFramerateLimit(int);
   void setBrightness(double);
   void setQuitState(bool);

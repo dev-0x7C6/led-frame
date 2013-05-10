@@ -14,5 +14,6 @@
         <file>custom/wiimotedev-small.png</file>
         <file>custom/wiimotedev.png</file>
         <file>128x128/about.png</file>
+        <file>64x64/icon.png</file>
     </qresource>
 </RCC>

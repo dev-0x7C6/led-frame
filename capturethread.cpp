@@ -3,23 +3,20 @@
 #include <QScreen>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QElapsedTimer>
+#include <QMutexLocker>
 
 CaptureThread::CaptureThread(QObject *parent) :
   QThread(parent),
   m_alghoritm(1),
   m_chunkSize(32),
   m_pixelSkip(8),
-  m_screenId(1),
   m_framerateLimit(30),
   m_brightness(1.0),
   m_quit(false)
 {
   m_screen = QGuiApplication::primaryScreen();
 }
-
-#include <QDebug>
-#include <QElapsedTimer>
-#include <QMutexLocker>
 
 void CaptureThread::setCaptureArea(QRect capture) {
   QMutexLocker locker(&m_mutex);
@@ -41,11 +38,6 @@ void CaptureThread::setPixelSkip(int value) {
   m_pixelSkip = value;
 }
 
-void CaptureThread::setScreenId(int value) {
-  QMutexLocker locker(&m_mutex);
-  m_screenId = value;
-}
-
 void CaptureThread::setFramerateLimit(int value) {
   QMutexLocker locker(&m_mutex);
   m_framerateLimit = value;
@@ -62,29 +54,28 @@ void CaptureThread::setQuitState(bool value) {
 }
 
 void CaptureThread::run(){
+  QList < QRgb> list;
+  QElapsedTimer timer;
+  QElapsedTimer counter;
   QPixmap wholeScreen;
   QPixmap screenChunk[4];
   QImage imageCache;
   quint64 rgbCache[3];
-
-  QElapsedTimer timer;
-  QElapsedTimer t2;
+  QRect capture;
 
   int fps = 0;
-  double latency = 0.0;
-  t2.start();
+  double latency[2];
 
-  QRect capture;
   int alghoritm;
   int chunkSize;
   int pixelSkip;
-  int screenId;
   int framerateLimit;
   double brightness;
   bool quit;
 
-  QList < QRgb> list;
-
+  counter.start();
+  latency[0] = 0;
+  latency[1] = 0;
   do {
     timer.start();
     m_mutex.lock();
@@ -92,7 +83,6 @@ void CaptureThread::run(){
     alghoritm = m_alghoritm;
     chunkSize = m_chunkSize;
     pixelSkip = m_pixelSkip + 1;
-    screenId = m_screenId;
     framerateLimit = m_framerateLimit;
     brightness = m_brightness;
     quit = m_quit;
@@ -180,12 +170,11 @@ void CaptureThread::run(){
         list << qRgb(rgbCache[0], rgbCache[1], rgbCache[2]);
       }
     }
-
     emit updateLeds(list);
 
-    qint64 x = timer.nsecsElapsed();
-    latency += x;
-    double  delay = 1000000000.0/double(framerateLimit) - x;
+    latency[0] = timer.nsecsElapsed();
+    latency[1] += latency[0];
+    double  delay = 1000000000.0/double(framerateLimit) - latency[0];
     if (delay < 0) {
       delay = 0.0;
     }
@@ -193,12 +182,11 @@ void CaptureThread::run(){
     fps++;
     usleep(delay/1000.0);
 
-    if (t2.hasExpired(1000)) {
-      emit updateStats(fps, (latency/double(fps)/1000000.0), latency/10000000.0);
-      t2.restart();
-      latency = 0;
+    if (counter.hasExpired(1000)) {
+      emit updateStats(fps, (latency[1]/double(fps)/1000000.0), latency[1]/10000000.0);
+      counter.restart();
+      latency[1] = 0;
       fps = 0;
-
     }
 
   } while (!quit);

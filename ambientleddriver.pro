@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui qml quick
 
 unix {
   QT += dbus
@@ -34,3 +34,7 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     resources/resource.qrc
+
+OTHER_FILES += \
+    qml/main.qml \
+    qml/LedAmbient.qml
