@@ -22,10 +22,10 @@ QList <QRgb> grab(QScreen *screen, QRect &area, ScreenFragments fragment,
     pixmap = screen->grabWindow(0, area.x(), area.y() + area.height() - chunk, area.width() - chunk);
     break;
   case Left:
-    pixmap = screen->grabWindow(0, area.x(), area.y(), chunk, area.height());
+    pixmap = screen->grabWindow(0, area.x(), area.y() + chunk, chunk, area.height() - chunk*2);
     break;
   case Right:
-    pixmap = screen->grabWindow(0, area.x() + area.width() - chunk, area.y(), chunk, area.height());
+    pixmap = screen->grabWindow(0, area.x() + area.width() - chunk, area.y() + chunk, chunk, area.height() - chunk*2);
     break;
   }
 
