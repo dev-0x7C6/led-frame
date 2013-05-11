@@ -15,7 +15,6 @@ private:
   QMutex m_mutex;
   QRect m_captureArea;
 
-  int m_alghoritm;
   int m_chunkSize;
   int m_pixelSkip;
   int m_framerateLimit;
@@ -25,22 +24,8 @@ private:
 public:
   explicit CaptureThread(QObject *parent = 0);
   
-  enum {
-    ScreenFragmentsTop = 0,
-    ScreenFragmentsButtom,
-    ScreenFragmentsLeft,
-    ScreenFragmentsRight
-  };
-
-  enum ScreenCaptureAlghoritm {
-    ScreenCaptureFullShots = 0,
-    ScreenCapturePartialShots,
-    ScreenCaptureCriticalShots
-  };
-
 public slots:
   void setCaptureArea(QRect);
-  void setAlghoritm(int);
   void setChunkSize(int);
   void setPixelSkip(int);
   void setFramerateLimit(int);

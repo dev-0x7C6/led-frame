@@ -18,22 +18,11 @@ MainWindow::MainWindow(QWidget *parent) :
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
 
-  m_statisticReference[0] = new QTreeWidgetItem(ui->treeWidget, QStringList() << "Full" << "~" << "~" << "~" << "~");
-  m_statisticReference[1] = new QTreeWidgetItem(ui->treeWidget, QStringList() << "Partial" << "~" << "~" << "~" << "~");
-  m_statisticReference[2] = new QTreeWidgetItem(ui->treeWidget, QStringList() << "Critical" << "~" << "~" << "~" << "~");
-
-  m_statisticAverageFPS[0] = 0;
-  m_statisticAverageFPS[1] = 0;
-  m_statisticAverageFPS[2] = 0;
-  m_statisticAverageLatency[0] = 0;
-  m_statisticAverageLatency[1] = 0;
-  m_statisticAverageLatency[2] = 0;
-  m_statisticAverageThreadUse[0] = 0;
-  m_statisticAverageThreadUse[1] = 0;
-  m_statisticAverageThreadUse[2] = 0;
-  m_statisticClock[0] = 0;
-  m_statisticClock[1] = 0;
-  m_statisticClock[2] = 0;
+  m_statisticAverageFPS = 0;
+  m_statisticAverageLatency = 0;
+  m_statisticAverageThreadUse = 0;
+  m_statisticClock = 0;
+  m_statisticFirstTime = true;
 
   QRect rect = QApplication::desktop()->geometry();
   ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),
@@ -75,7 +64,6 @@ MainWindow::MainWindow(QWidget *parent) :
   m_settings->endGroup();
 
   m_settings->beginGroup("AdvancedSettings");
-  ui->alghoritm->setCurrentIndex(m_settings->value("alghoritm", 1).toInt());
   ui->chunkSize->setValue(m_settings->value("chunkSize", 48).toInt());
   ui->pixelSkip->setValue(m_settings->value("pixelSkip", 4).toInt());
   m_settings->endGroup();
@@ -105,12 +93,14 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
   connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
   connect(ui->pixelSkip, SIGNAL(valueChanged(int)), &capture, SLOT(setPixelSkip(int)), Qt::DirectConnection);
-  connect(ui->alghoritm, SIGNAL(currentIndexChanged(int)), &capture, SLOT(setAlghoritm(int)), Qt::DirectConnection);
 
-  capture.setAlghoritm(ui->alghoritm->currentIndex());
   capture.setFramerateLimit(ui->framerateLimit->value());
   capture.setPixelSkip(ui->pixelSkip->value());
-  capture.start();
+}
+
+void MainWindow::showEvent(QShowEvent *) {
+  if (!capture.isRunning())
+    capture.start(QThread::HighPriority);
 }
 
 void MainWindow::setGlowSize(int value) {
@@ -152,34 +142,23 @@ void MainWindow:: updateScreenArea(int area) {
 }
 
 void MainWindow::updateStats(quint32 fps, double latency, double usage) {
-  setWindowTitle(m_title +
-        QString("Performance: [fps: %1, latency: %2ms, thread usage: %3%]").arg(
-          QString::number(fps),
-          QString::number(latency, 'f', 1),
-          QString::number(usage, 'f', 1)));
+  m_statisticAverageFPS += fps;
+  m_statisticAverageLatency += latency;
+  m_statisticAverageThreadUse += usage;
+  m_statisticClock++;
 
-  int alg = ui->alghoritm->currentIndex();
-  m_statisticAverageFPS[alg] += fps;
-  m_statisticAverageLatency[alg] += latency;
-  m_statisticAverageThreadUse[alg] += usage;
-  m_statisticClock[alg]++;
-
-  if (m_statisticClock[alg] == 11) {
-    m_statisticAverageFPS[alg] /= double(m_statisticClock[alg]);
-    m_statisticAverageLatency[alg] /= double(m_statisticClock[alg]);
-    m_statisticAverageThreadUse[alg] /= double(m_statisticClock[alg]);
-    m_statisticReference[alg]->setText(1, QString("%1fps").arg(QString::number(m_statisticAverageFPS[alg], 'f', 2)));
-    m_statisticReference[alg]->setText(2, QString("%1ms").arg(QString::number(m_statisticAverageLatency[alg], 'f', 2)));
-    m_statisticReference[alg]->setText(3, QString("%1%").arg(QString::number(m_statisticAverageThreadUse[alg], 'f', 2)));
-    m_statisticReference[alg]->setText(4, "up-to-date");
-    m_statisticClock[alg] = 1;
-  } else
-    for (register int i = 0; i < 3; ++i) {
-      if (i == alg)
-        m_statisticReference[alg]->setText(4, QString("%1sec").arg(QString::number(11 - m_statisticClock[alg]))); else
-        m_statisticReference[i]->setText(4, "~");
-    }
-
+  if (m_statisticClock == 11 || m_statisticFirstTime) {
+    m_statisticAverageFPS /= double(m_statisticClock);
+    m_statisticAverageLatency /= double(m_statisticClock);
+    m_statisticAverageThreadUse /= double(m_statisticClock);
+    m_statisticClock = 1;
+    setWindowTitle(m_title +
+          QString("Performance: [fps: %1, latency: %2ms, thread usage: %3%]").arg(
+            QString::number(fps),
+            QString::number(latency, 'f', 1),
+            QString::number(usage, 'f', 1)));
+    m_statisticFirstTime = false;
+  }
 }
 
 void MainWindow::about() {
@@ -238,7 +217,6 @@ MainWindow::~MainWindow()
   m_settings->endGroup();
 
   m_settings->beginGroup("AdvancedSettings");
-  m_settings->setValue("alghoritm", ui->alghoritm->currentIndex());
   m_settings->setValue("chunkSize", ui->chunkSize->value());
   m_settings->setValue("pixelSkip", ui->pixelSkip->value());
   m_settings->endGroup();

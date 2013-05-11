@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTreeWidgetItem>
 #include <QSettings>
 
 #ifdef Q_OS_UNIX
@@ -23,11 +22,11 @@ private:
   CaptureThread capture;
   QString m_title;
 
-  QTreeWidgetItem *m_statisticReference[3];
-  double m_statisticAverageFPS[3];
-  double m_statisticAverageLatency[3];
-  double m_statisticAverageThreadUse[3];
-  int m_statisticClock[3];
+  double m_statisticAverageFPS;
+  double m_statisticAverageLatency;
+  double m_statisticAverageThreadUse;
+  int m_statisticClock;
+  bool m_statisticFirstTime;
 
 #ifdef Q_OS_UNIX
   WiimotedevDeviceEvents *m_wiimotedevEvents;
@@ -37,6 +36,9 @@ private:
 public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
+
+protected:
+  void showEvent(QShowEvent *);
 
 private slots:
   void setGlowSize(int);

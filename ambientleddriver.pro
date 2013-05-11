@@ -22,12 +22,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     ambientlightsymulation.cpp \
     about.cpp \
-    capturethread.cpp
+    capturethread.cpp \
+    capturepart.cpp
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
     about.h \
-    capturethread.h
+    capturethread.h \
+    capturepart.h
 
 FORMS    += mainwindow.ui \
     about.ui

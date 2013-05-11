@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
   application.setApplicationDisplayName(QString("%1 %2").arg(
                                           application.applicationName(),
                                           application.applicationVersion()));
-  QPixmapCache::setCacheLimit(1024 * 64);
+  QPixmapCache::setCacheLimit(1024 * 32);
   MainWindow w;
   w.show();
   
