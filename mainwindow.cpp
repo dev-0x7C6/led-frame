@@ -18,6 +18,23 @@ MainWindow::MainWindow(QWidget *parent) :
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
 
+  m_statisticReference[0] = new QTreeWidgetItem(ui->treeWidget, QStringList() << "Full" << "~" << "~" << "~" << "~");
+  m_statisticReference[1] = new QTreeWidgetItem(ui->treeWidget, QStringList() << "Partial" << "~" << "~" << "~" << "~");
+  m_statisticReference[2] = new QTreeWidgetItem(ui->treeWidget, QStringList() << "Critical" << "~" << "~" << "~" << "~");
+
+  m_statisticAverageFPS[0] = 0;
+  m_statisticAverageFPS[1] = 0;
+  m_statisticAverageFPS[2] = 0;
+  m_statisticAverageLatency[0] = 0;
+  m_statisticAverageLatency[1] = 0;
+  m_statisticAverageLatency[2] = 0;
+  m_statisticAverageThreadUse[0] = 0;
+  m_statisticAverageThreadUse[1] = 0;
+  m_statisticAverageThreadUse[2] = 0;
+  m_statisticClock[0] = 0;
+  m_statisticClock[1] = 0;
+  m_statisticClock[2] = 0;
+
   QRect rect = QApplication::desktop()->geometry();
   ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),
     QString("Visible area, x:%1, y:%2 (%3x%4)").arg(
@@ -140,6 +157,29 @@ void MainWindow::updateStats(quint32 fps, double latency, double usage) {
           QString::number(fps),
           QString::number(latency, 'f', 1),
           QString::number(usage, 'f', 1)));
+
+  int alg = ui->alghoritm->currentIndex();
+  m_statisticAverageFPS[alg] += fps;
+  m_statisticAverageLatency[alg] += latency;
+  m_statisticAverageThreadUse[alg] += usage;
+  m_statisticClock[alg]++;
+
+  if (m_statisticClock[alg] == 11) {
+    m_statisticAverageFPS[alg] /= double(m_statisticClock[alg]);
+    m_statisticAverageLatency[alg] /= double(m_statisticClock[alg]);
+    m_statisticAverageThreadUse[alg] /= double(m_statisticClock[alg]);
+    m_statisticReference[alg]->setText(1, QString("%1fps").arg(QString::number(m_statisticAverageFPS[alg], 'f', 2)));
+    m_statisticReference[alg]->setText(2, QString("%1ms").arg(QString::number(m_statisticAverageLatency[alg], 'f', 2)));
+    m_statisticReference[alg]->setText(3, QString("%1%").arg(QString::number(m_statisticAverageThreadUse[alg], 'f', 2)));
+    m_statisticReference[alg]->setText(4, "up-to-date");
+    m_statisticClock[alg] = 1;
+  } else
+    for (register int i = 0; i < 3; ++i) {
+      if (i == alg)
+        m_statisticReference[alg]->setText(4, QString("%1sec").arg(QString::number(11 - m_statisticClock[alg]))); else
+        m_statisticReference[i]->setText(4, "~");
+    }
+
 }
 
 void MainWindow::about() {

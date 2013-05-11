@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTreeWidgetItem>
 #include <QSettings>
 
 #ifdef Q_OS_UNIX
@@ -21,6 +22,12 @@ private:
   QSettings *m_settings;
   CaptureThread capture;
   QString m_title;
+
+  QTreeWidgetItem *m_statisticReference[3];
+  double m_statisticAverageFPS[3];
+  double m_statisticAverageLatency[3];
+  double m_statisticAverageThreadUse[3];
+  int m_statisticClock[3];
 
 #ifdef Q_OS_UNIX
   WiimotedevDeviceEvents *m_wiimotedevEvents;

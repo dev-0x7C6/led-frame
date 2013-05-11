@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>989</width>
-    <height>466</height>
+    <width>1089</width>
+    <height>464</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -803,6 +803,42 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="tab_4">
+          <attribute name="title">
+           <string>Statistics</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <widget class="QTreeWidget" name="treeWidget">
+             <column>
+              <property name="text">
+               <string>alghoritm</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>fps</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>latency</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>thread use</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>update after</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="tab_2">
           <attribute name="title">
            <string>Wiiremote</string>
@@ -1015,7 +1051,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>989</width>
+     <width>1089</width>
      <height>18</height>
     </rect>
    </property>
