@@ -1,6 +1,8 @@
 #ifndef AMBIENTLIGHTSYMULATION_H
 #define AMBIENTLIGHTSYMULATION_H
 
+#include "serialbackend.h"
+
 #include <QWidget>
 #include <QRgb>
 
@@ -10,6 +12,7 @@ class AmbientLightSymulation :public QWidget
 private:
   QList< QRgb> colors;
   QPixmap m_monitor;
+  SerialBackend m_backend;
 
   int m_timerId;
   int m_framerateLimit;

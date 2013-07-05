@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui qml quick widgets
-CONFIG += serialport
+QT += core gui qml quick widgets serialport
+
 
 unix {
   QT += dbus
@@ -15,7 +15,6 @@ unix {
 
 TARGET = ambientleddriver
 TEMPLATE = app
-
 
 SOURCES += main.cpp\
         mainwindow.cpp \

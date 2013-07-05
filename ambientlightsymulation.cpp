@@ -14,6 +14,8 @@ AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) :
   setAutoFillBackground(false);
   m_monitor = QPixmap(":/256x256/display.png");
 
+
+
   setFramerate(30);
 }
 
@@ -29,6 +31,7 @@ void AmbientLightSymulation::setGlowSize(int value) {
 
 void AmbientLightSymulation::updateLeds(QList< QRgb> c) {
   colors = c;
+  m_backend.updateLeds(c);
 }
 
 void AmbientLightSymulation::timerEvent(QTimerEvent *) {
