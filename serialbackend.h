@@ -24,10 +24,14 @@ public:
 private:
   void open (const QString &addr) {
     m_port = new QSerialPort(addr);
-    m_port->setBaudRate(QSerialPort::Baud115200);
+    m_port->setBaudRate(QSerialPort::Baud57600);
     m_port->setDataBits(QSerialPort::Data8);
     m_port->setStopBits(QSerialPort::OneStop);
     m_port->setParity(QSerialPort::NoParity);
+
+    m_port->setPortName(addr);
+    m_port->open(QIODevice::ReadWrite);
+
   }
 
   void close() {
@@ -37,12 +41,12 @@ private:
 public slots:
   void updateLeds(QList< QRgb> c) {
     QBitArray bits;
-    bits.resize(8*3);
+    bits.resize(16*3);
     bits.fill(false, bits.size());
 
     int offset = 0;
 
-    for (register int i = 8; i < 16; ++i) {
+    for (register int i = 0; i < 16; ++i) {
       bits.setBit(offset++, qRed(c[i]) > 100);
       bits.setBit(offset++, qGreen(c[i]) > 100);
       bits.setBit(offset++, qBlue(c[i]) > 100);
@@ -50,15 +54,25 @@ public slots:
 
     qDebug() << bits;
 
-//    char hex[6];
 
 
-//    for (register int i = 0; bits.count(); ++i) {
-//      hex=
+    unsigned char hex[6];
+    memset(reinterpret_cast< void*>(hex), 0, 6);
+    int hexOffset = -1;
 
-//    }
 
-//    m_port->write(&hex, sizeof(hex));
+    for (register int i = 0; i < bits.size(); ++i) {
+      if (i % 8 == 0)
+          hexOffset++;
+
+      hex[hexOffset] |= bits[i] << (i % 8);
+    }
+    qDebug() << QString::number(hex[0], 16) << QString::number(hex[1], 16)
+            << QString::number(hex[2], 16) << QString::number(hex[3], 16)
+            << QString::number(hex[4], 16)
+            << QString::number(hex[5], 16);
+
+    m_port->write(reinterpret_cast< char*>(hex), 6);
 
   }
 
