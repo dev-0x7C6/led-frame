@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui qml quick widgets serial
+QT       += core gui qml quick widgets
+CONFIG += serialport
 
 unix {
   QT += dbus
