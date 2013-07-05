@@ -4,15 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += core gui qml quick
+QT       += core gui qml quick widgets serial
 
 unix {
   QT += dbus
   HEADERS  += wiimotedev/deviceevents.h \
     wiimotedev/consts.h
 }
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ambientleddriver
 TEMPLATE = app
@@ -23,13 +21,15 @@ SOURCES += main.cpp\
     ambientlightsymulation.cpp \
     about.cpp \
     capturethread.cpp \
-    capturepart.cpp
+    capturepart.cpp \
+    serialbackend.cpp
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
     about.h \
     capturethread.h \
-    capturepart.h
+    capturepart.h \
+    serialbackend.h
 
 FORMS    += mainwindow.ui \
     about.ui
