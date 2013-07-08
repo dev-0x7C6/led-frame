@@ -114,9 +114,9 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     ui->treeWidget->setItemWidget(item, 1, cmb);
-    RadioButtonItem *rdi = new RadioButtonItem(item, 1);
-    rdi->setIconSize(QSize(22, 22));
-    ui->treeWidget->setItemWidget(item, 2, rdi);
+   // RadioButtonItem *rdi = new RadioButtonItem(item, 1);
+   // rdi->setIconSize(QSize(22, 22));
+   // ui->treeWidget->setItemWidget(item, 2, rdi);
 
 
 
