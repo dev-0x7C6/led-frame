@@ -5,6 +5,7 @@
 #include <QDesktopWidget>
 #include <QElapsedTimer>
 #include <QMutexLocker>
+#include <QScreen>
 
 CaptureThread::CaptureThread(QObject *parent) :
   QThread(parent),
@@ -14,6 +15,7 @@ CaptureThread::CaptureThread(QObject *parent) :
   m_brightness(1.0),
   m_quit(false)
 {
+  moveToThread(this);
   m_screen = QGuiApplication::primaryScreen();
 }
 
@@ -51,6 +53,8 @@ void CaptureThread::setQuitState(bool value) {
 #include <QThreadPool>
 #include "capturepart.h"
 
+QMutex safeScreenCapture;
+
 void CaptureThread::run(){
   QElapsedTimer timer;
   QElapsedTimer counter;
@@ -81,11 +85,13 @@ void CaptureThread::run(){
     m_mutex.unlock();
 
 
+    safeScreenCapture.lock();
     emit updateLeds(QList <QRgb>() <<
       grab(m_screen, capture, Top, chunkSize, pixelSkip, brightness) <<
       grab(m_screen, capture, Bottom, chunkSize, pixelSkip, brightness) <<
       grab(m_screen, capture, Left, chunkSize, pixelSkip, brightness) <<
       grab(m_screen, capture, Right, chunkSize, pixelSkip, brightness));
+    safeScreenCapture.unlock();
 
     latency[0] = timer.nsecsElapsed();
     latency[1] += latency[0];
@@ -98,6 +104,7 @@ void CaptureThread::run(){
     usleep(delay/1000.0);
 
     if (counter.hasExpired(1000)) {
+      //qDebug() << this << fps;
       emit updateStats(fps, (latency[1]/double(fps)/1000000.0), latency[1]/10000000.0);
       counter.restart();
       latency[1] = 0;

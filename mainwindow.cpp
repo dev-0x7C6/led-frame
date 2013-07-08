@@ -6,6 +6,41 @@
 #include <QScreen>
 #include "about.h"
 
+
+
+ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column)
+{
+    this->item = item;
+    this->column = column;
+    connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
+}
+
+void ComboBoxItem::changeItem(int index)
+{
+    if(index >=0)
+    {
+        item->setData(this->column, Qt::UserRole, this->itemText(index));
+        //item->data(this->column, Qt::UserRole).toString();
+    }
+}
+
+RadioButtonItem::RadioButtonItem(QTreeWidgetItem *item, int column)
+{
+  this->setText("Yes");
+    this->item = item;
+    this->column = column;
+    connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
+}
+
+void RadioButtonItem::changeItem(int index)
+{
+    if(index >=0)
+    {
+      item->setData(this->column, Qt::UserRole, "44");
+        //item->data(this->column, Qt::UserRole).toString();
+    }
+}
+
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
@@ -17,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
+
+
 
   m_statisticAverageFPS = 0;
   m_statisticAverageLatency = 0;
@@ -33,6 +70,100 @@ MainWindow::MainWindow(QWidget *parent) :
       QString::number(rect.height())),
     -1);
 
+
+  for (register int i = 0; i < 10; ++i) {
+    QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
+    item->setText(0, QString("/dev/ttyUSB%1\t").arg(QString::number(i)));
+    item->setIcon(0, QIcon(":/22x22/device.png"));
+
+    ComboBoxItem *cmb = new ComboBoxItem(item, 1);
+    cmb->setIconSize(QSize(22, 22));
+    cmb->addItem(QIcon(":/22x22/no-device.png"), QString("Not assigned"));
+
+    for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
+      if (i == -1 || i == -2)
+        rect = QApplication::desktop()->geometry(); else
+        rect = QApplication::desktop()->screenGeometry(i);
+
+      QString str = QString("(%3x%4) x:%1, y:%2").arg(QString::number(rect.x()),
+                                                             QString::number(rect.y()),
+                                                             QString::number(rect.width()),
+                                                             QString::number(rect.height()));
+
+
+
+
+      switch (i) {
+      case -2:
+        cmb->addItem(QIcon(":/22x22/selected-area.png"), QString("Selected area: " + str));
+        break;
+      case -1:
+        cmb->addItem(QIcon(":/22x22/all-screens.png"), QString("Visible area: "  + str));
+        break;
+      default:
+        cmb->addItem(QIcon(":/22x22/screen.png"), QString("Screen %1: "  + str).arg(QString::number(i)));
+      }
+
+    }
+
+    for (register int i = 1; i < 7; ++i) {
+      cmb->addItem(QIcon(":/22x22/color.png"), QString("Solid color profile #%1").arg(QString::number(i)));
+    }
+    for (register int i = 1; i < 7; ++i) {
+      cmb->addItem(QIcon(":/22x22/animation.png"), QString("Animation color profile #%1").arg(QString::number(i)));
+    }
+
+    ui->treeWidget->setItemWidget(item, 1, cmb);
+    RadioButtonItem *rdi = new RadioButtonItem(item, 1);
+    rdi->setIconSize(QSize(22, 22));
+    ui->treeWidget->setItemWidget(item, 2, rdi);
+
+
+
+
+  }
+
+
+
+
+//  for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
+//    if (i == -1 || i == -2)
+//      rect = QApplication::desktop()->geometry(); else
+//      rect = QApplication::desktop()->screenGeometry(i);
+
+//    QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
+
+
+//    switch (i) {
+//    case -2:
+//      item->setText(0, QString("Selected area"));
+//      item->setIcon(0, QIcon(":/22x22/selected-area.png"));
+//      break;
+//    case -1:
+//      item->setText(0, QString("Visible area"));
+//      item->setIcon(0, QIcon(":/22x22/all-screens.png"));
+//      break;
+//    default:
+//      item->setText(0, QString("Screen %1").arg(QString::number(i)));
+//      item->setIcon(0, QIcon(":/22x22/screen.png"));
+//    }
+
+
+
+
+
+
+
+//    cmb->addItem(QIcon(":/22x22/no-device.png"), "disabled");
+//    cmb->addItem(QIcon(":/22x22/device.png"), "/dev/ttyUSB0");
+//    cmb->addItem(QIcon(":/22x22/device.png"), "/dev/ttyUSB1");
+//    cmb->addItem(QIcon(":/22x22/device.png"), "/dev/ttyUSB2");
+//    ui->treeWidget->setItemWidget(item, 2, cmb);
+
+//
+//  }
+
+
   for (register int i = 0; i < QApplication::desktop()->screenCount(); ++i) {
     rect = QApplication::desktop()->screenGeometry(i);
     ui->screenArea->addItem(QIcon(":/16x16/selected-screen.png"),
@@ -43,9 +174,13 @@ MainWindow::MainWindow(QWidget *parent) :
         QString::number(rect.width()),
         QString::number(rect.height())),
       i);
+
   }
 
+
   ui->leftWidget->setCurrentIndex(0);
+
+ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
 
   connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
@@ -90,17 +225,42 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
   connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::QueuedConnection);
+  connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), &m_backend, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
   connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
   connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
   connect(ui->pixelSkip, SIGNAL(valueChanged(int)), &capture, SLOT(setPixelSkip(int)), Qt::DirectConnection);
 
   capture.setFramerateLimit(ui->framerateLimit->value());
   capture.setPixelSkip(ui->pixelSkip->value());
+  capture.setChunkSize(ui->chunkSize->value());
+
+
+
+
+
+  m_backend.start();
 }
 
 void MainWindow::showEvent(QShowEvent *) {
-  if (!capture.isRunning())
-    capture.start(QThread::HighPriority);
+  if (!capture.isRunning()) {
+    capture.start();
+//    capture.wait(100);
+
+//  CaptureThread *cp1 = new CaptureThread();
+//  for (register int i = 0; i < 20; ++i) {
+
+
+//    cp1->setCaptureArea(QRect(0, 0, 1000, 1000));
+//    cp1->setFramerateLimit(30);
+//    cp1->setChunkSize(20);
+//    cp1->setPixelSkip(2);
+//    cp1->start();
+//    cp1->wait(10);
+//    qDebug() << cp1;
+//    cp1 = new CaptureThread();
+
+//  }
+  }
 }
 
 void MainWindow::setGlowSize(int value) {

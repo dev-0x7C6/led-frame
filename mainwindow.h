@@ -9,10 +9,47 @@
 #endif
 
 #include "capturethread.h"
+#include "serialbackend.h"
 
 namespace Ui {
 class MainWindow;
 }
+
+#include <QComboBox>
+#include <QRadioButton>
+#include <QTreeWidgetItem>
+
+class ComboBoxItem : public QComboBox
+{
+    Q_OBJECT
+
+private:
+    QTreeWidgetItem *item;
+    int column;
+
+public:
+    ComboBoxItem(QTreeWidgetItem*, int);
+
+public slots:
+    void changeItem(int);
+
+};
+
+class RadioButtonItem  : public QRadioButton
+{
+    Q_OBJECT
+
+private:
+    QTreeWidgetItem *item;
+    int column;
+
+public:
+    RadioButtonItem (QTreeWidgetItem*, int);
+
+public slots:
+    void changeItem(int);
+
+};
 
 class MainWindow : public QMainWindow
 {
@@ -20,6 +57,7 @@ class MainWindow : public QMainWindow
 private:
   QSettings *m_settings;
   CaptureThread capture;
+  SerialBackend m_backend;
   QString m_title;
 
   double m_statisticAverageFPS;

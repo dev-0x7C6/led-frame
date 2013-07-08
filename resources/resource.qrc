@@ -15,5 +15,13 @@
         <file>custom/wiimotedev.png</file>
         <file>128x128/about.png</file>
         <file>64x64/icon.png</file>
+        <file>16x16/selected-area.png</file>
+        <file>22x22/all-screens.png</file>
+        <file>22x22/selected-screen.png</file>
+        <file>22x22/selected-area.png</file>
+        <file>22x22/device.png</file>
+        <file>22x22/no-device.png</file>
+        <file>22x22/color.png</file>
+        <file>22x22/animation.png</file>
     </qresource>
 </RCC>

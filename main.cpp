@@ -5,7 +5,7 @@
 #include "capturethread.h"
 
 const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 4;
+const int applicationMinorVersion = 5;
 
 int main(int argc, char *argv[])
 {

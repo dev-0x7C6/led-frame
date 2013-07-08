@@ -31,7 +31,6 @@ void AmbientLightSymulation::setGlowSize(int value) {
 
 void AmbientLightSymulation::updateLeds(QList< QRgb> c) {
   colors = c;
-  m_backend.updateLeds(c);
 }
 
 void AmbientLightSymulation::timerEvent(QTimerEvent *) {
