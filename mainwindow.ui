@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1141</width>
-    <height>583</height>
+    <width>1139</width>
+    <height>581</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,7 +40,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <property name="iconSize">
           <size>
@@ -421,74 +421,6 @@
                   </property>
                   <property name="text">
                    <string>32 leds</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_18">
-                <item>
-                 <widget class="QLabel" name="brightnessIcon_12">
-                  <property name="minimumSize">
-                   <size>
-                    <width>24</width>
-                    <height>24</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resources/resource.qrc">:/22x22/fpsrate.png</pixmap>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel_11">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>PWM:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSlider" name="framerateLimit_3">
-                  <property name="statusTip">
-                   <string>Tune frames per secound limit (24fps should be enought)</string>
-                  </property>
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>64</number>
-                  </property>
-                  <property name="value">
-                   <number>24</number>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="tickPosition">
-                   <enum>QSlider::TicksBelow</enum>
-                  </property>
-                  <property name="tickInterval">
-                   <number>4</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="fpsCount_3">
-                  <property name="text">
-                   <string>24 cycles</string>
                   </property>
                  </widget>
                 </item>
@@ -1145,8 +1077,6 @@
                <property name="focusPolicy">
                 <enum>Qt::StrongFocus</enum>
                </property>
-               <zorder>leftWidget</zorder>
-               <zorder>brightnessLabel_12</zorder>
               </widget>
              </item>
              <item>
@@ -1382,7 +1312,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1141</width>
+     <width>1139</width>
      <height>18</height>
     </rect>
    </property>

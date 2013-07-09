@@ -95,7 +95,7 @@ void CaptureThread::run(){
 
     latency[0] = timer.nsecsElapsed();
     latency[1] += latency[0];
-    double  delay = 1000000000.0/double(framerateLimit) - latency[0];
+    double delay = 1000000000.0/double(framerateLimit) - latency[0];
     if (delay < 0) {
       delay = 0.0;
     }

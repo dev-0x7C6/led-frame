@@ -51,14 +51,18 @@ public slots:
 
 };
 
+#include "connector/alcdevicemanager.h"
+
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
 private:
   QSettings *m_settings;
   CaptureThread capture;
-  SerialBackend m_backend;
+
   QString m_title;
+
+  ALCDeviceManager *m_manager;
 
   double m_statisticAverageFPS;
   double m_statisticAverageLatency;

@@ -54,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
 
 
+  m_manager = new ALCDeviceManager(this);
+
 
   m_statisticAverageFPS = 0;
   m_statisticAverageLatency = 0;
@@ -177,10 +179,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
   }
 
-
   ui->leftWidget->setCurrentIndex(0);
-
-ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
+  ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
 
   connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
@@ -225,7 +225,7 @@ ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
 #endif
 
   connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::QueuedConnection);
-  connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), &m_backend, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
+  connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), m_manager, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
   connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
   connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
   connect(ui->pixelSkip, SIGNAL(valueChanged(int)), &capture, SLOT(setPixelSkip(int)), Qt::DirectConnection);
@@ -238,7 +238,7 @@ ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
 
 
 
-  m_backend.start();
+  //m_backend.start();
 }
 
 void MainWindow::showEvent(QShowEvent *) {

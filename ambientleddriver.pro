@@ -22,14 +22,18 @@ SOURCES += main.cpp\
     about.cpp \
     capturethread.cpp \
     capturepart.cpp \
-    serialbackend.cpp
+    serialbackend.cpp \
+    connector/alcdevicemanager.cpp \
+    connector/alcdevicethread.cpp
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
     about.h \
     capturethread.h \
     capturepart.h \
-    serialbackend.h
+    serialbackend.h \
+    connector/alcdevicemanager.h \
+    connector/alcdevicethread.h
 
 FORMS    += mainwindow.ui \
     about.ui

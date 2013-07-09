@@ -13,9 +13,6 @@ AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) :
   setUpdatesEnabled(false);
   setAutoFillBackground(false);
   m_monitor = QPixmap(":/256x256/display.png");
-
-
-
   setFramerate(30);
 }
 
