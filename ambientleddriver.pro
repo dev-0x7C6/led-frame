@@ -26,7 +26,9 @@ SOURCES += main.cpp\
     connector/alcdevicemanager.cpp \
     connector/alcdevicethread.cpp \
     emitters/solidcoloremitter.cpp \
-    emitters/animationcoloremitter.cpp
+    emitters/animationcoloremitter.cpp \
+    emitters/imagecoloremitter.cpp \
+    emitters/coloremitter.cpp
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
@@ -37,7 +39,9 @@ HEADERS  += mainwindow.h \
     connector/alcdevicemanager.h \
     connector/alcdevicethread.h \
     emitters/solidcoloremitter.h \
-    emitters/animationcoloremitter.h
+    emitters/animationcoloremitter.h \
+    emitters/imagecoloremitter.h \
+    emitters/coloremitter.h
 
 FORMS    += mainwindow.ui \
     about.ui

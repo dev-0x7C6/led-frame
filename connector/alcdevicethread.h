@@ -18,6 +18,7 @@
 #include <QElapsedTimer>
 
 #include <QDebug>
+#include <qmath.h>
 
 class ALCDeviceThread : public QThread
 {
@@ -38,12 +39,9 @@ public:
   {
     m_device->moveToThread(this);
 
-//    for (register int i = 0; i < 32/4; ++i) {
-//      m_colors << 0xff0000;
-//      m_colors << 0x00ff00;
-//      m_colors << 0x0000ff;
-//      m_colors << 0xff0000;
-//    }
+    for (register int i = 0; i < 32; ++i) {
+      m_colors << 0x000000;
+    }
 
   }
 
@@ -61,66 +59,81 @@ public:
 
 protected:
 
-  int max(int value) {
-    if (value > 255)
-      return 255;
-    return value;
-  }
-
   void run() {
 
-    quint8 byte;
+    register quint8 byte;
 
 
     QList < QRgb> colors;
 
-    int dynamicPwm = 4;
+    int dynamicPwm = 48;
 
     QElapsedTimer timer;
     int bytesWritten = 0;
-    int writeCount = 0;
+    double writeCount = 0;
+    double averageWriteCount = 0;
+
+    double bytesWrittenAverage = 0;
+
 
     timer.start();
     m_mutex.lock();
+
+    quint8 buffer[4096];
+    quint16 bufferSize = 0;
+    quint16 bufferPtr;
+
     do {
       colors = m_colors;
       m_mutex.unlock();
-      QByteArray array;
-      QBuffer buffer(&array);
-      buffer.open(QIODevice::WriteOnly);
 
+      bufferSize = 0;
+      bufferPtr = 0;
       for (int pwm = 1; pwm <= dynamicPwm; ++pwm) {
         for (register int i = 0; i < colors.count(); ++i) {
           byte = 0x00;
           if (i == 0)
             byte |= 1 << 0x03;
-          byte |= (qr(colors[i]) >= max(pwm*(256/dynamicPwm))) << 0x00;
-          byte |= (qg(colors[i]) >= max(pwm*(256/dynamicPwm))) << 0x01;
-          byte |= (qb(colors[i]) >= max(pwm*(256/dynamicPwm))) << 0x02;
-          byte |= (qr(colors[++i]) >= max(pwm*(256/dynamicPwm))) << 0x04;
-          byte |= (qg(colors[i]) >= max(pwm*(256/dynamicPwm))) << 0x05;
-          byte |= (qb(colors[i]) >= max(pwm*(256/dynamicPwm))) << 0x06;
-          buffer.write(reinterpret_cast< char*>(&byte), sizeof(byte));
+          byte |= (qr(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x00;
+          byte |= (qg(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x01;
+          byte |= (qb(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x02;
+          byte |= (qr(colors[++i]) >= (pwm*(255/dynamicPwm))) << 0x04;
+          byte |= (qg(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x05;
+          byte |= (qb(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x06;
+          buffer[bufferPtr++] = byte;
+          ++bufferSize;
         }
       }
 
-      if (m_device->isWritable() && !array.isEmpty()) {
-        m_device->write(array);
-        m_device->flush();
-      }
-
-      bytesWritten += array.size();
       writeCount++;
 
+      if (m_device->isWritable() && bufferSize) {
+        m_device->write(reinterpret_cast< char*>(buffer), bufferSize);
+        bytesWritten += m_device->bytesToWrite();
+        m_device->flush();
+        bytesWritten -= m_device->bytesToWrite();
+      }
 
       if (timer.hasExpired(1000)) {
         qDebug() << "Transfer rate:" << (bytesWritten/1024.0)
                  << "kb/s, Updates per second: "<< writeCount << "fps, Dynamic PWM: " << dynamicPwm;
 
-        if (writeCount > 70)
-          dynamicPwm++;
-        if (writeCount < 60)
-          dynamicPwm--;
+        if (bytesWrittenAverage == 0)
+         bytesWrittenAverage = bytesWritten;
+
+        bytesWrittenAverage += qreal(bytesWritten);
+        bytesWrittenAverage /= 2.0;
+
+        dynamicPwm = dynamicPwm * (bytesWritten/bytesWrittenAverage);
+
+        if (averageWriteCount == 0)
+          averageWriteCount = writeCount;
+
+        averageWriteCount += qreal(writeCount);
+        averageWriteCount /= 2.0;
+
+        dynamicPwm = dynamicPwm * (averageWriteCount/62.0);
+
 
         timer.restart();
         bytesWritten = 0;

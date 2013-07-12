@@ -52,7 +52,7 @@ protected:
 
       QSerialPort *device = new QSerialPort(ports[i].portName());
       if (device->open(QIODevice::ReadWrite)) {
-        device->setBaudRate(230400*2);//460800);
+        device->setBaudRate(460800);//460800);
         ALCDeviceThread *thread = new ALCDeviceThread(device, ports[i]);
         connect(thread, SIGNAL(started()), this, SLOT(deviceThreadStarted()));
         connect(thread, SIGNAL(finished()), this, SLOT(deviceThreadFinished()));
@@ -77,8 +77,6 @@ private slots:
     QSerialPortInfo details = thread->details();
     m_threads.removeAll(thread);
     delete thread;
-
-    qDebug() << "unregistred";
   }
 
 

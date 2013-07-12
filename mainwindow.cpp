@@ -224,7 +224,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
 #endif
 
-  connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::QueuedConnection);
+ // connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::QueuedConnection);
   connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), m_manager, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
   connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
   connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
@@ -235,7 +235,8 @@ MainWindow::MainWindow(QWidget *parent) :
   capture.setChunkSize(ui->chunkSize->value());
 
 
-
+ connect(&anim, SIGNAL(updateLeds(QList<QRgb>)), m_manager, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
+ connect(&anim, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
 
 
   //m_backend.start();
@@ -243,7 +244,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::showEvent(QShowEvent *) {
   if (!capture.isRunning()) {
-    capture.start();
+   // capture.start();
 //    capture.wait(100);
 
 //  CaptureThread *cp1 = new CaptureThread();

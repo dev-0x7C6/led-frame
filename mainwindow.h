@@ -51,6 +51,7 @@ public slots:
 
 };
 
+#include "emitters/animationcoloremitter.h"
 #include "connector/alcdevicemanager.h"
 
 class MainWindow : public QMainWindow
@@ -63,6 +64,7 @@ private:
   QString m_title;
 
   ALCDeviceManager *m_manager;
+  AnimationColorEmitter anim;
 
   double m_statisticAverageFPS;
   double m_statisticAverageLatency;

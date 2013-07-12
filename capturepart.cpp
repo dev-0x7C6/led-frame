@@ -36,10 +36,14 @@ QList <QRgb> grab(QScreen *screen, QRect &area, ScreenFragments fragment,
 
     switch (fragment) {
     case Top:
-    case Bottom:
       image = pixmap.copy(i * area.width() / 8, 0, chunk, chunk).toImage();
       break;
+    case Bottom:
+      image = pixmap.copy((8-i) * area.width() / 8, 0, chunk, chunk).toImage();
+      break;
     case Left:
+      image = pixmap.copy(0, (8-i) * area.height() / 8, chunk, chunk).toImage();
+      break;
     case Right:
       image = pixmap.copy(0, i * area.height() / 8, chunk, chunk).toImage();
       break;

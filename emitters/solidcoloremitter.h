@@ -8,11 +8,13 @@ class SolidColorEmitter : public QObject
   Q_OBJECT
 public:
   explicit SolidColorEmitter(QObject *parent = 0);
+
+
+protected:
+  void timerEvent(QTimerEvent *) {}
   
 signals:
-  
-public slots:
-  
+  //void setLeds(QList <QRgb> colors);
 };
 
 #endif // SOLIDCOLOREMITTER_H

@@ -88,9 +88,10 @@ void CaptureThread::run(){
     safeScreenCapture.lock();
     emit updateLeds(QList <QRgb>() <<
       grab(m_screen, capture, Top, chunkSize, pixelSkip, brightness) <<
+      grab(m_screen, capture, Right, chunkSize, pixelSkip, brightness) <<
       grab(m_screen, capture, Bottom, chunkSize, pixelSkip, brightness) <<
-      grab(m_screen, capture, Left, chunkSize, pixelSkip, brightness) <<
-      grab(m_screen, capture, Right, chunkSize, pixelSkip, brightness));
+      grab(m_screen, capture, Left, chunkSize, pixelSkip, brightness));
+
     safeScreenCapture.unlock();
 
     latency[0] = timer.nsecsElapsed();
