@@ -3,7 +3,10 @@
 
 #include <QObject>
 
-class imagecoloremitter : public QObject
+
+#include "emitters/coloremitter.h"
+
+class imagecoloremitter : public ColorEmitter
 {
   Q_OBJECT
 public:

@@ -8,6 +8,7 @@ AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) :
   QWidget(parent),
   m_timerId(0),
   m_framerateLimit(30),
+  m_emitter(0),
   m_glowSize(96)
 {
   setUpdatesEnabled(false);
@@ -26,12 +27,11 @@ void AmbientLightSymulation::setGlowSize(int value) {
   m_glowSize = value;
 }
 
-void AmbientLightSymulation::updateLeds(QList< QRgb> c) {
-  colors = c;
-}
 
 void AmbientLightSymulation::timerEvent(QTimerEvent *) {
   setUpdatesEnabled(false);
+  if (m_emitter)
+    colors = m_emitter->state();
   repaint();
   setUpdatesEnabled(true);
 }

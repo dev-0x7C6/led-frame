@@ -2,17 +2,38 @@
 #define COLOREMITTER_H
 
 #include <QObject>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QRgb>
+#include <QDebug>
 
 class ColorEmitter : public QObject
 {
   Q_OBJECT
+protected:
+  QMutex m_mutex;
+  int m_connectedCount;
+  QList <QRgb> m_colors;
+
 public:
   explicit ColorEmitter(QObject *parent = 0);
   
-protected:
-  void timerEvent(QTimerEvent *) {}
-  
-public slots:
+  void init() {
+    QMutexLocker locker(&m_mutex);
+    m_connectedCount++;
+    qDebug() << this << " device connected, count: " << m_connectedCount;
+  }
+
+  void done() {
+    QMutexLocker locker(&m_mutex);
+    m_connectedCount--;
+    qDebug() << this << " device disconnected, count: " << m_connectedCount;
+  }
+
+  QList < QRgb> state() {
+    QMutexLocker locker(&m_mutex);
+    return m_colors;
+  }
   
 };
 

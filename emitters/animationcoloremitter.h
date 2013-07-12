@@ -8,8 +8,10 @@
 #include <QPropertyAnimation>
 #include <QDebug>
 
+#include "emitters/coloremitter.h"
 
-class AnimationColorEmitter : public QObject
+
+class AnimationColorEmitter : public ColorEmitter
 {
   Q_OBJECT
   Q_PROPERTY(QColor color READ color WRITE setColor)
@@ -17,7 +19,6 @@ class AnimationColorEmitter : public QObject
 private:
   QPropertyAnimation *m_animation;
   QColor m_color;
-  QList < QRgb> m_colors;
 
   QColor color() { return m_color; }
   void setColor(QColor value) {
@@ -31,7 +32,7 @@ private:
 
 public:
   explicit AnimationColorEmitter(QObject *parent = 0) :
-    QObject(parent),
+    ColorEmitter(parent),
     m_animation(0)
   {
     rotatePalette();
@@ -69,6 +70,8 @@ private:
 
 protected:
   void timerEvent(QTimerEvent *) {
+    if (!m_connectedCount)
+      return;
 
     if (m_colors.count() == 32)
       m_colors.removeFirst();

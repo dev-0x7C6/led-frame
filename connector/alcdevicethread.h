@@ -20,11 +20,14 @@
 #include <QDebug>
 #include <qmath.h>
 
+#include "emitters/coloremitter.h"
+
 class ALCDeviceThread : public QThread
 {
   Q_OBJECT
 private:
   QSerialPort *m_device;
+  ColorEmitter *m_emitter;
   QSerialPortInfo m_details;
   bool m_continue;
   QMutex m_mutex;
@@ -34,6 +37,7 @@ public:
   ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0)
    :QThread(parent),
      m_device(device),
+     m_emitter(0),
      m_details(details),
      m_continue(true)
   {
@@ -84,8 +88,18 @@ protected:
     quint16 bufferPtr;
 
     do {
-      colors = m_colors;
+
+      if (m_emitter) {
+        colors = m_emitter->state();
+      }
+
+
       m_mutex.unlock();
+
+      if (colors.isEmpty()) {
+        msleep(10);
+        continue;
+      }
 
       bufferSize = 0;
       bufferPtr = 0;
@@ -154,12 +168,23 @@ protected:
       m_device->close();
 
     delete m_device;
+
+    if (m_emitter)
+      m_emitter->done();
   }
 
 public slots:
   void updateLeds(QList< QRgb> c) {
     QMutexLocker locker(&m_mutex);
     m_colors = c;
+  }
+
+  void connectEmitter(ColorEmitter *emitter) {
+    QMutexLocker locker(&m_mutex);
+    if (m_emitter)
+      m_emitter->done();
+
+    (m_emitter = emitter)->init();
   }
 
 };

@@ -2,6 +2,7 @@
 #define AMBIENTLIGHTSYMULATION_H
 
 #include "serialbackend.h"
+#include "emitters/coloremitter.h"
 
 #include <QWidget>
 #include <QRgb>
@@ -12,6 +13,7 @@ class AmbientLightSymulation :public QWidget
 private:
   QList< QRgb> colors;
   QPixmap m_monitor;
+  ColorEmitter *m_emitter;
 
   int m_timerId;
   int m_framerateLimit;
@@ -19,12 +21,21 @@ private:
 
 public:
   explicit AmbientLightSymulation(QWidget *parent = 0);
+  ~AmbientLightSymulation() {
+    if (m_emitter)
+      m_emitter->done();
+  }
 
 public slots:
-  void updateLeds(QList< QRgb> c);
   void setFramerate(int);
   void setGlowSize(int);
 
+  void connectEmitter(ColorEmitter *emitter) {
+    if (m_emitter)
+      m_emitter->done();
+
+    (m_emitter = emitter)->init();
+  }
 
 protected:
   void timerEvent(QTimerEvent *);

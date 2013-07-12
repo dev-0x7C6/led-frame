@@ -235,11 +235,22 @@ MainWindow::MainWindow(QWidget *parent) :
   capture.setChunkSize(ui->chunkSize->value());
 
 
- connect(&anim, SIGNAL(updateLeds(QList<QRgb>)), m_manager, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
- connect(&anim, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
+  connect(m_manager, SIGNAL(deviceConnected(ALCDeviceThread*)), this, SLOT(deviceConnected(ALCDeviceThread*)), Qt::DirectConnection);
+  connect(m_manager, SIGNAL(deviceDisconnected(ALCDeviceThread*)), this, SLOT(deviceDisconnected(ALCDeviceThread*)), Qt::DirectConnection);
+
+  ui->widget->connectEmitter(&anim);
 
 
   //m_backend.start();
+}
+
+
+void MainWindow::deviceConnected(ALCDeviceThread *thread) {
+  thread->connectEmitter(&anim);
+}
+
+void MainWindow::deviceDisconnected(ALCDeviceThread *thread) {
+
 }
 
 void MainWindow::showEvent(QShowEvent *) {

@@ -85,6 +85,10 @@ protected:
   void showEvent(QShowEvent *);
 
 private slots:
+  void deviceConnected(ALCDeviceThread *thread);
+  void deviceDisconnected(ALCDeviceThread *thread);
+
+private slots:
   void setGlowSize(int);
   void setFramerate(int);
   void setFramerateLed(int);

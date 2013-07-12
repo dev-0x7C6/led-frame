@@ -43,6 +43,13 @@ public:
     m_threads.clear();
   }
 
+  ALCDeviceThread* device(int idx) {
+    if (idx >= m_threads.count())
+      return 0;
+
+    return m_threads[idx];
+  }
+
 protected:
   void timerEvent(QTimerEvent *event) {
     QList < QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
@@ -70,12 +77,14 @@ private slots:
   void deviceThreadStarted() {
     ALCDeviceThread *thread = dynamic_cast < ALCDeviceThread *>(sender());
     m_threads << thread;
+    emit deviceConnected(thread);
   }
 
   void deviceThreadFinished() {
     ALCDeviceThread *thread = dynamic_cast < ALCDeviceThread *>(sender());
     QSerialPortInfo details = thread->details();
     m_threads.removeAll(thread);
+    emit deviceDisconnected(thread);
     delete thread;
   }
 
@@ -87,6 +96,10 @@ public slots:
     for (register int i = 0; i < m_threads.count(); ++i)
       m_threads[i]->updateLeds(c);
   }
+
+signals:
+  void deviceConnected(ALCDeviceThread *thread);
+  void deviceDisconnected(ALCDeviceThread *thread);
 
 };
 
