@@ -8,8 +8,9 @@
 #include "wiimotedev/deviceevents.h"
 #endif
 
+class ALCDeviceThread;
+
 #include "emitters/screencapturecoloremitter.h"
-#include "serialbackend.h"
 
 namespace Ui {
 class MainWindow;
@@ -51,6 +52,29 @@ public slots:
 
 };
 
+class ALCDeviceTreeWidget :public QObject, public QTreeWidgetItem {
+  Q_OBJECT
+private:
+  ALCDeviceThread *m_device;
+
+public:
+  ALCDeviceTreeWidget(QTreeWidget *tree, ALCDeviceThread *device)
+    :QTreeWidgetItem(tree),
+      QObject(0),
+      m_device(device)
+  {
+  }
+
+  ALCDeviceThread * device() { return m_device; }
+  void setDevice(ALCDeviceThread *device) { m_device = device; }
+
+private slots:
+  void currentIndexChanged(int);
+
+signals:
+  void setCustomEmitter(ALCDeviceThread*, int);
+};
+
 #include "emitters/animationcoloremitter.h"
 #include "connector/alcdevicemanager.h"
 
@@ -60,6 +84,7 @@ class MainWindow : public QMainWindow
 private:
   QSettings *m_settings;
   QList < ColorEmitter*> m_colorEmitters;
+  QList < ALCDeviceTreeWidget*> m_devices;
 
   QString m_title;
 
@@ -81,9 +106,6 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
-protected:
-  void showEvent(QShowEvent *);
-
 private slots:
   void deviceConnected(ALCDeviceThread *thread);
   void deviceDisconnected(ALCDeviceThread *thread);
@@ -101,6 +123,9 @@ private slots:
 #ifdef Q_OS_UNIX
   void dbusWiimotedevButtons(uint, uint64);
 #endif
+
+private slots:
+  void setCustomEmitter(ALCDeviceThread*, int);
 
 private:
   Ui::MainWindow *ui;

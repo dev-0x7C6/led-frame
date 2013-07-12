@@ -1,7 +1,6 @@
 #ifndef AMBIENTLIGHTSYMULATION_H
 #define AMBIENTLIGHTSYMULATION_H
 
-#include "serialbackend.h"
 #include "emitters/coloremitter.h"
 
 #include <QWidget>

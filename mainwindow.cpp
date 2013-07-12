@@ -64,48 +64,6 @@ MainWindow::MainWindow(QWidget *parent) :
   m_statisticClock = 0;
   m_statisticFirstTime = true;
 
-  for (register int i = 0; i < 10; ++i) {
-    QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
-    item->setText(0, QString("/dev/ttyUSB%1\t").arg(QString::number(i)));
-    item->setIcon(0, QIcon(":/22x22/device.png"));
-
-    ComboBoxItem *cmb = new ComboBoxItem(item, 1);
-    cmb->setIconSize(QSize(22, 22));
-    cmb->addItem(QIcon(":/22x22/no-device.png"), QString("Not assigned"));
-
-    for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
-      if (i == -1 || i == -2)
-        rect = QApplication::desktop()->geometry(); else
-        rect = QApplication::desktop()->screenGeometry(i);
-
-      QString str = QString("(%3x%4) x:%1, y:%2").arg(QString::number(rect.x()),
-                                                             QString::number(rect.y()),
-                                                             QString::number(rect.width()),
-                                                             QString::number(rect.height()));
-
-      switch (i) {
-      case -2:
-        cmb->addItem(QIcon(":/22x22/selected-area.png"), QString("Selected area: " + str));
-        break;
-      case -1:
-        cmb->addItem(QIcon(":/22x22/all-screens.png"), QString("Visible area: "  + str));
-        break;
-      default:
-        cmb->addItem(QIcon(":/22x22/screen.png"), QString("Screen %1: "  + str).arg(QString::number(i)));
-      }
-
-    }
-
-    for (register int i = 1; i < 7; ++i) {
-      cmb->addItem(QIcon(":/22x22/color.png"), QString("Solid color profile #%1").arg(QString::number(i)));
-    }
-    for (register int i = 1; i < 7; ++i) {
-      cmb->addItem(QIcon(":/22x22/animation.png"), QString("Animation color profile #%1").arg(QString::number(i)));
-    }
-
-    ui->treeWidget->setItemWidget(item, 1, cmb);
-  }
-
 
   rect = QApplication::desktop()->geometry();
 
@@ -138,7 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
   }
 
   ui->leftWidget->setCurrentIndex(0);
-  ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
+
 
   connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
@@ -209,7 +167,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_colorEmitters << dynamic_cast< ColorEmitter*>(capture);
   }
 
-  for (register int i = 0; i < 12; ++i) {
+  for (register int i = 0; i < 16; ++i) {
     AnimationColorEmitter *animation = new AnimationColorEmitter();
     m_colorEmitters << dynamic_cast< ColorEmitter*>(animation);
   }
@@ -223,37 +181,76 @@ MainWindow::MainWindow(QWidget *parent) :
 
   //m_backend.start();
    connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
+
 }
 
 
 void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   thread->connectEmitter(&anim);
+
+  QRect rect;
+  ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->treeWidget, thread);
+  connect(item, SIGNAL(setCustomEmitter(ALCDeviceThread*,int)),
+          this, SLOT(setCustomEmitter(ALCDeviceThread*,int)));
+  item->setText(0, thread->details().portName() + '\t');
+  item->setIcon(0, QIcon(":/22x22/device.png"));
+
+  ComboBoxItem *cmb = new ComboBoxItem(item, 1);
+  cmb->setIconSize(QSize(22, 22));
+  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("Not assigned"));
+
+  for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
+    if (i == -1 || i == -2)
+      rect = QApplication::desktop()->geometry(); else
+      rect = QApplication::desktop()->screenGeometry(i);
+
+    QString str = QString("(%3x%4) x:%1, y:%2").arg(QString::number(rect.x()),
+                                                           QString::number(rect.y()),
+                                                           QString::number(rect.width()),
+                                                           QString::number(rect.height()));
+
+    switch (i) {
+    case -2:
+      cmb->addItem(QIcon(":/22x22/selected-area.png"), QString("Selected area: " + str));
+      break;
+    case -1:
+      cmb->addItem(QIcon(":/22x22/all-screens.png"), QString("Visible area: "  + str));
+      break;
+    default:
+      cmb->addItem(QIcon(":/22x22/screen.png"), QString("Screen %1: "  + str).arg(QString::number(i)));
+    }
+
+  }
+
+
+  for (register int i = 1; i <= 8; ++i) {
+    cmb->addItem(QIcon(":/22x22/animation.png"), QString("Animation color profile #%1").arg(QString::number(i)));
+  }
+
+  connect(cmb, SIGNAL(currentIndexChanged(int)), item, SLOT(currentIndexChanged(int)), Qt::DirectConnection);
+
+  ui->treeWidget->setItemWidget(item, 1, cmb);
+  ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
+  m_devices << item;
+}
+
+void ALCDeviceTreeWidget::currentIndexChanged(int idx) {
+  emit setCustomEmitter(m_device, idx);
+}
+
+void MainWindow::setCustomEmitter(ALCDeviceThread* device, int idx) {
+  device->connectEmitter(m_colorEmitters[idx]);
 }
 
 void MainWindow::deviceDisconnected(ALCDeviceThread *thread) {
 
-}
-
-void MainWindow::showEvent(QShowEvent *) {
-  //if (!capture.isRunning()) {
-   // capture.start();
-//    capture.wait(100);
-
-//  CaptureThread *cp1 = new CaptureThread();
-//  for (register int i = 0; i < 20; ++i) {
-
-
-//    cp1->setCaptureArea(QRect(0, 0, 1000, 1000));
-//    cp1->setFramerateLimit(30);
-//    cp1->setChunkSize(20);
-//    cp1->setPixelSkip(2);
-//    cp1->start();
-//    cp1->wait(10);
-//    qDebug() << cp1;
-//    cp1 = new CaptureThread();
-
-//  }
- // }
+  for (register int i = 0; i < m_devices.count(); ++i) {
+    if (thread == m_devices[i]->device()) {
+      delete m_devices[i];
+      m_devices.removeAt(i);
+      return;
+    }
+  }
 }
 
 void MainWindow::setGlowSize(int value) {
