@@ -7,16 +7,19 @@
 #include <QRgb>
 #include <QDebug>
 
-class ColorEmitter : public QObject
+class ColorEmitter
 {
-  Q_OBJECT
 protected:
   QMutex m_mutex;
   int m_connectedCount;
   QList <QRgb> m_colors;
 
 public:
-  explicit ColorEmitter(QObject *parent = 0);
+  explicit ColorEmitter() {
+    m_connectedCount = 0;
+    for (register int i = 0; i < 32; ++i)
+      m_colors << 0;
+  }
   
   void init() {
     QMutexLocker locker(&m_mutex);

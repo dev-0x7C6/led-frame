@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
   m_manager = new ALCDeviceManager(this);
+  QRect rect;
 
 
   m_statisticAverageFPS = 0;
@@ -62,16 +63,6 @@ MainWindow::MainWindow(QWidget *parent) :
   m_statisticAverageThreadUse = 0;
   m_statisticClock = 0;
   m_statisticFirstTime = true;
-
-  QRect rect = QApplication::desktop()->geometry();
-  ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),
-    QString("Visible area, x:%1, y:%2 (%3x%4)").arg(
-      QString::number(rect.x()),
-      QString::number(rect.y()),
-      QString::number(rect.width()),
-      QString::number(rect.height())),
-    -1);
-
 
   for (register int i = 0; i < 10; ++i) {
     QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
@@ -91,9 +82,6 @@ MainWindow::MainWindow(QWidget *parent) :
                                                              QString::number(rect.y()),
                                                              QString::number(rect.width()),
                                                              QString::number(rect.height()));
-
-
-
 
       switch (i) {
       case -2:
@@ -116,55 +104,20 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     ui->treeWidget->setItemWidget(item, 1, cmb);
-   // RadioButtonItem *rdi = new RadioButtonItem(item, 1);
-   // rdi->setIconSize(QSize(22, 22));
-   // ui->treeWidget->setItemWidget(item, 2, rdi);
-
-
-
-
   }
 
 
+  rect = QApplication::desktop()->geometry();
 
-
-//  for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
-//    if (i == -1 || i == -2)
-//      rect = QApplication::desktop()->geometry(); else
-//      rect = QApplication::desktop()->screenGeometry(i);
-
-//    QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
-
-
-//    switch (i) {
-//    case -2:
-//      item->setText(0, QString("Selected area"));
-//      item->setIcon(0, QIcon(":/22x22/selected-area.png"));
-//      break;
-//    case -1:
-//      item->setText(0, QString("Visible area"));
-//      item->setIcon(0, QIcon(":/22x22/all-screens.png"));
-//      break;
-//    default:
-//      item->setText(0, QString("Screen %1").arg(QString::number(i)));
-//      item->setIcon(0, QIcon(":/22x22/screen.png"));
-//    }
-
-
-
-
-
-
-
-//    cmb->addItem(QIcon(":/22x22/no-device.png"), "disabled");
-//    cmb->addItem(QIcon(":/22x22/device.png"), "/dev/ttyUSB0");
-//    cmb->addItem(QIcon(":/22x22/device.png"), "/dev/ttyUSB1");
-//    cmb->addItem(QIcon(":/22x22/device.png"), "/dev/ttyUSB2");
-//    ui->treeWidget->setItemWidget(item, 2, cmb);
-
-//
-//  }
-
+  for (register int i = 0; i < 2; ++i) {
+    ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),
+      QString("Visible area, x:%1, y:%2 (%3x%4)").arg(
+      QString::number(rect.x()),
+      QString::number(rect.y()),
+      QString::number(rect.width()),
+      QString::number(rect.height())),
+    -1);
+  }
 
   for (register int i = 0; i < QApplication::desktop()->screenCount(); ++i) {
     rect = QApplication::desktop()->screenGeometry(i);
@@ -176,7 +129,12 @@ MainWindow::MainWindow(QWidget *parent) :
         QString::number(rect.width()),
         QString::number(rect.height())),
       i);
+  }
 
+  for (register int i = 0; i < 8; ++i) {
+    ui->screenArea->addItem(QIcon(":/22x22/animation.png"),
+      QString("Animation color profile #%1").arg(QString::number(i+1)),
+      i);
   }
 
   ui->leftWidget->setCurrentIndex(0);
@@ -184,7 +142,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
-  connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
+
   connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
   connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
   connect(ui->ledGlow, SIGNAL(valueChanged(int)), ui->widget, SLOT(setGlowSize(int)));
@@ -193,7 +151,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerateLed(int)));
 
   m_settings->beginGroup("GeneralSettings");
-  ui->screenArea->setCurrentIndex(m_settings->value("screenId", 0).toInt());
+ // ui->screenArea->setCurrentIndex(m_settings->value("screenId", 0).toInt());
   ui->brightnessSlider->setValue(m_settings->value("brightness", 100).toInt());
   ui->framerateLimit->setValue(m_settings->value("framerateLimit", 30).toInt());
   m_settings->endGroup();
@@ -218,21 +176,43 @@ MainWindow::MainWindow(QWidget *parent) :
   rect = QGuiApplication::primaryScreen()->geometry();
   move (rect.x() + ((rect.width() - width()) / 2), rect.y() + ((rect.height() - height()) / 2) - 50);
 
-  updateScreenArea(ui->screenArea->currentIndex());
+ // updateScreenArea(ui->screenArea->currentIndex());
 
 #ifdef Q_OS_UNIX
   connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
 #endif
 
  // connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::QueuedConnection);
-  connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), m_manager, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
-  connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
-  connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
-  connect(ui->pixelSkip, SIGNAL(valueChanged(int)), &capture, SLOT(setPixelSkip(int)), Qt::DirectConnection);
+  //connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), m_manager, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
+  //connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
+  //connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
+  //connect(ui->pixelSkip, SIGNAL(valueChanged(int)), &capture, SLOT(setPixelSkip(int)), Qt::DirectConnection);
 
-  capture.setFramerateLimit(ui->framerateLimit->value());
-  capture.setPixelSkip(ui->pixelSkip->value());
-  capture.setChunkSize(ui->chunkSize->value());
+  //capture.setFramerateLimit(ui->framerateLimit->value());
+  //capture.setPixelSkip(ui->pixelSkip->value());
+  //capture.setChunkSize(ui->chunkSize->value());
+
+
+  for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
+    ScreenCaptureColorEmitter *capture = new ScreenCaptureColorEmitter(0);
+
+    if (i == -1 || i == -2)
+      rect = QApplication::desktop()->geometry(); else
+      rect = QApplication::desktop()->screenGeometry(i);
+
+    capture->setCaptureArea(rect);
+    capture->setPixelSkip(4);
+    capture->setChunkSize(64);
+    capture->setFramerateLimit(24);
+    capture->start();
+
+    m_colorEmitters << dynamic_cast< ColorEmitter*>(capture);
+  }
+
+  for (register int i = 0; i < 12; ++i) {
+    AnimationColorEmitter *animation = new AnimationColorEmitter();
+    m_colorEmitters << dynamic_cast< ColorEmitter*>(animation);
+  }
 
 
   connect(m_manager, SIGNAL(deviceConnected(ALCDeviceThread*)), this, SLOT(deviceConnected(ALCDeviceThread*)), Qt::DirectConnection);
@@ -242,6 +222,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
   //m_backend.start();
+   connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 }
 
 
@@ -254,7 +235,7 @@ void MainWindow::deviceDisconnected(ALCDeviceThread *thread) {
 }
 
 void MainWindow::showEvent(QShowEvent *) {
-  if (!capture.isRunning()) {
+  //if (!capture.isRunning()) {
    // capture.start();
 //    capture.wait(100);
 
@@ -272,7 +253,7 @@ void MainWindow::showEvent(QShowEvent *) {
 //    cp1 = new CaptureThread();
 
 //  }
-  }
+ // }
 }
 
 void MainWindow::setGlowSize(int value) {
@@ -285,32 +266,36 @@ void MainWindow::setFramerateLed(int value) {
 
 void MainWindow::setFramerate(int value) {
   ui->fpsCount->setText(QString::number(value) + "fps");
-  capture.setFramerateLimit(value);
+  ////////////////////////////////////////capture.setFramerateLimit(value);
 }
 
 void MainWindow::setBrightness(int value) {
   double brightness = double(value) / 100.0;
   ui->proc->setText(QString::number(int(brightness*100)) + "%");
-  capture.setBrightness(brightness);
+  ////////////////////////////////////////capture.setBrightness(brightness);
 }
 
 void MainWindow:: updateScreenArea(int area) {
-  QRect geometry;
-  if (area == 0)
-    geometry = QApplication::desktop()->geometry(); else
-    geometry = QApplication::desktop()->screenGeometry(area - 1);
+//  QRect geometry;
+//  if (area == 0)
+//    geometry = QApplication::desktop()->geometry(); else
+//    geometry = QApplication::desktop()->screenGeometry(area - 1);
 
-  ui->x->setValue(0);
-  ui->y->setValue(0);
-  ui->xoffset->setValue(geometry.width());
-  ui->yoffset->setValue(geometry.height());
+//  ui->x->setValue(0);
+//  ui->y->setValue(0);
+//  ui->xoffset->setValue(geometry.width());
+//  ui->yoffset->setValue(geometry.height());
 
-  geometry.setCoords(ui->x->value() + geometry.x(),
-                     ui->y->value() + geometry.y(),
-                     ui->xoffset->value() + geometry.x() - 1,
-                     ui->yoffset->value() + geometry.y() - 1);
+//  geometry.setCoords(ui->x->value() + geometry.x(),
+//                     ui->y->value() + geometry.y(),
+//                     ui->xoffset->value() + geometry.x() - 1,
+//                     ui->yoffset->value() + geometry.y() - 1);
 
-  capture.setCaptureArea(geometry);
+  //qDebug() << area;
+
+  ui->widget->connectEmitter(m_colorEmitters[area]);
+
+  ///////////////////////////////////////capture.setCaptureArea(geometry);
 }
 
 void MainWindow::updateStats(quint32 fps, double latency, double usage) {
@@ -379,8 +364,8 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 
 MainWindow::~MainWindow()
 {
-  capture.setQuitState(true);
-  capture.wait();
+  ////////////////////////////////////////////////////////capture.setQuitState(true);
+  //////////////////////////////////////////////////////////capture.wait();
 
   m_settings->beginGroup("GeneralSettings");
   m_settings->setValue("screenId", ui->screenArea->currentIndex());

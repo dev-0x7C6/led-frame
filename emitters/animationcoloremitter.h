@@ -11,7 +11,7 @@
 #include "emitters/coloremitter.h"
 
 
-class AnimationColorEmitter : public ColorEmitter
+class AnimationColorEmitter : public QObject, public ColorEmitter
 {
   Q_OBJECT
   Q_PROPERTY(QColor color READ color WRITE setColor)
@@ -32,7 +32,8 @@ private:
 
 public:
   explicit AnimationColorEmitter(QObject *parent = 0) :
-    ColorEmitter(parent),
+    QObject(parent),
+    ColorEmitter(),
     m_animation(0)
   {
     rotatePalette();

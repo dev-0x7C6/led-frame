@@ -20,26 +20,26 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     ambientlightsymulation.cpp \
     about.cpp \
-    capturethread.cpp \
     capturepart.cpp \
     serialbackend.cpp \
     connector/alcdevicemanager.cpp \
     connector/alcdevicethread.cpp \
     emitters/animationcoloremitter.cpp \
     emitters/imagecoloremitter.cpp \
-    emitters/coloremitter.cpp
+    emitters/coloremitter.cpp \
+    emitters/screencapturecoloremitter.cpp
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
     about.h \
-    capturethread.h \
     capturepart.h \
     serialbackend.h \
     connector/alcdevicemanager.h \
     connector/alcdevicethread.h \
     emitters/animationcoloremitter.h \
     emitters/imagecoloremitter.h \
-    emitters/coloremitter.h
+    emitters/coloremitter.h \
+    emitters/screencapturecoloremitter.h
 
 FORMS    += mainwindow.ui \
     about.ui

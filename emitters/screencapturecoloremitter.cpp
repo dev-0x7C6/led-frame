@@ -1,4 +1,4 @@
-#include "capturethread.h"
+#include "screencapturecoloremitter.h"
 
 #include <QScreen>
 #include <QApplication>
@@ -7,7 +7,7 @@
 #include <QMutexLocker>
 #include <QScreen>
 
-CaptureThread::CaptureThread(QObject *parent) :
+ScreenCaptureColorEmitter::ScreenCaptureColorEmitter(QObject *parent) :
   QThread(parent),
   m_chunkSize(32),
   m_pixelSkip(8),
@@ -19,32 +19,32 @@ CaptureThread::CaptureThread(QObject *parent) :
   m_screen = QGuiApplication::primaryScreen();
 }
 
-void CaptureThread::setCaptureArea(QRect capture) {
+void ScreenCaptureColorEmitter::setCaptureArea(QRect capture) {
   QMutexLocker locker(&m_mutex);
   m_captureArea = capture;
 }
 
-void CaptureThread::setChunkSize(int value) {
+void ScreenCaptureColorEmitter::setChunkSize(int value) {
   QMutexLocker locker(&m_mutex);
   m_chunkSize = value;
 }
 
-void CaptureThread::setPixelSkip(int value) {
+void ScreenCaptureColorEmitter::setPixelSkip(int value) {
   QMutexLocker locker(&m_mutex);
   m_pixelSkip = value;
 }
 
-void CaptureThread::setFramerateLimit(int value) {
+void ScreenCaptureColorEmitter::setFramerateLimit(int value) {
   QMutexLocker locker(&m_mutex);
   m_framerateLimit = value;
 }
 
-void CaptureThread::setBrightness(double value) {
+void ScreenCaptureColorEmitter::setBrightness(double value) {
   QMutexLocker locker(&m_mutex);
   m_brightness = value;
 }
 
-void CaptureThread::setQuitState(bool value) {
+void ScreenCaptureColorEmitter::setQuitState(bool value) {
   QMutexLocker locker(&m_mutex);
   m_quit = value;
 }
@@ -55,7 +55,7 @@ void CaptureThread::setQuitState(bool value) {
 
 QMutex safeScreenCapture;
 
-void CaptureThread::run(){
+void ScreenCaptureColorEmitter::run(){
   QElapsedTimer timer;
   QElapsedTimer counter;
   QRect capture;
@@ -73,7 +73,14 @@ void CaptureThread::run(){
   latency[0] = 0;
   latency[1] = 0;
 
+  QList < QRgb> colors;
+
   do {
+    if (!m_connectedCount) {
+      msleep(25);
+      continue;
+    }
+
     timer.start();
     m_mutex.lock();
     capture = m_captureArea;
@@ -85,13 +92,17 @@ void CaptureThread::run(){
     m_mutex.unlock();
 
 
+
+
     safeScreenCapture.lock();
-    emit updateLeds(QList <QRgb>() <<
+    colors.clear();
+    colors <<
       grab(m_screen, capture, Top, chunkSize, pixelSkip, brightness) <<
       grab(m_screen, capture, Right, chunkSize, pixelSkip, brightness) <<
       grab(m_screen, capture, Bottom, chunkSize, pixelSkip, brightness) <<
-      grab(m_screen, capture, Left, chunkSize, pixelSkip, brightness));
+      grab(m_screen, capture, Left, chunkSize, pixelSkip, brightness);
 
+    m_colors = colors;
     safeScreenCapture.unlock();
 
     latency[0] = timer.nsecsElapsed();

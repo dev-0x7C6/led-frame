@@ -6,7 +6,7 @@
 
 #include "emitters/coloremitter.h"
 
-class imagecoloremitter : public ColorEmitter
+class imagecoloremitter : public QObject, public ColorEmitter
 {
   Q_OBJECT
 public:

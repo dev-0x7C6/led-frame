@@ -174,11 +174,6 @@ protected:
   }
 
 public slots:
-  void updateLeds(QList< QRgb> c) {
-    QMutexLocker locker(&m_mutex);
-    m_colors = c;
-  }
-
   void connectEmitter(ColorEmitter *emitter) {
     QMutexLocker locker(&m_mutex);
     if (m_emitter)

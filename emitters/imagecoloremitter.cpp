@@ -1,6 +1,7 @@
 #include "imagecoloremitter.h"
 
 imagecoloremitter::imagecoloremitter(QObject *parent) :
-  ColorEmitter(parent)
+  QObject(parent),
+  ColorEmitter()
 {
 }

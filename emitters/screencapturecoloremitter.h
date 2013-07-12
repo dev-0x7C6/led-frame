@@ -1,5 +1,6 @@
-#ifndef CAPTURETHREAD_H
-#define CAPTURETHREAD_H
+#ifndef SCREENCAPTURECOLOREMITTER_H
+#define SCREENCAPTURECOLOREMITTER_H
+
 
 #include <QThread>
 #include <QPixmap>
@@ -7,9 +8,14 @@
 
 class QScreen;
 
-class CaptureThread : public QThread
+#include "emitters/coloremitter.h"
+
+class ScreenCaptureColorEmitter : public QThread, public ColorEmitter
 {
   Q_OBJECT
+public:
+  ScreenCaptureColorEmitter(QObject *parent = 0);
+
 private:
   QScreen *m_screen;
   QMutex m_mutex;
@@ -21,9 +27,6 @@ private:
   double m_brightness;
   bool m_quit;
 
-public:
-  explicit CaptureThread(QObject *parent = 0);
-  
 public slots:
   void setCaptureArea(QRect);
   void setChunkSize(int);
@@ -38,7 +41,7 @@ protected:
 signals:
   void updateLeds(QList< QRgb> colors);
   void updateStats(quint32 fps, double latency, double usage);
-
+  
 };
 
-#endif // CAPTURETHREAD_H
+#endif // SCREENCAPTURECOLOREMITTER_H

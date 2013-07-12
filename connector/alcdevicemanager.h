@@ -88,15 +88,7 @@ private slots:
     delete thread;
   }
 
-
-
-public slots:
   
-  void updateLeds(QList< QRgb> c) {
-    for (register int i = 0; i < m_threads.count(); ++i)
-      m_threads[i]->updateLeds(c);
-  }
-
 signals:
   void deviceConnected(ALCDeviceThread *thread);
   void deviceDisconnected(ALCDeviceThread *thread);

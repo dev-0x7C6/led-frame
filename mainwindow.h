@@ -8,7 +8,7 @@
 #include "wiimotedev/deviceevents.h"
 #endif
 
-#include "capturethread.h"
+#include "emitters/screencapturecoloremitter.h"
 #include "serialbackend.h"
 
 namespace Ui {
@@ -59,7 +59,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 private:
   QSettings *m_settings;
-  CaptureThread capture;
+  QList < ColorEmitter*> m_colorEmitters;
 
   QString m_title;
 

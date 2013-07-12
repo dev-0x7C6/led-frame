@@ -2,8 +2,6 @@
 #include <QApplication>
 #include <QPixmapCache>
 
-#include "capturethread.h"
-
 const int applicationMajorVersion = 0;
 const int applicationMinorVersion = 6;
 
