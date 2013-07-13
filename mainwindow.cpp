@@ -6,6 +6,7 @@
 #include <QScreen>
 #include "about.h"
 
+#include "emitters/blackholecoloremitter.h"
 
 
 ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column)
@@ -150,6 +151,7 @@ MainWindow::MainWindow(QWidget *parent) :
   //capture.setPixelSkip(ui->pixelSkip->value());
   //capture.setChunkSize(ui->chunkSize->value());
 
+  m_colorEmitters << new BlackholeColorEmitter(0);
 
   for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
     ScreenCaptureColorEmitter *capture = new ScreenCaptureColorEmitter(0);
@@ -179,6 +181,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->widget->connectEmitter(&anim);
 
 
+
   //m_backend.start();
    connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 
@@ -194,6 +197,8 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
           this, SLOT(setCustomEmitter(ALCDeviceThread*,int)));
   item->setText(0, thread->details().portName() + '\t');
   item->setIcon(0, QIcon(":/22x22/device.png"));
+
+  qDebug() << thread->details().systemLocation();
 
   ComboBoxItem *cmb = new ComboBoxItem(item, 1);
   cmb->setIconSize(QSize(22, 22));

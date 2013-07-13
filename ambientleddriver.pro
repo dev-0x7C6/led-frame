@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     emitters/animationcoloremitter.cpp \
     emitters/imagecoloremitter.cpp \
     emitters/coloremitter.cpp \
-    emitters/screencapturecoloremitter.cpp
+    emitters/screencapturecoloremitter.cpp \
+    emitters/blackholecoloremitter.cpp
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h \
     emitters/animationcoloremitter.h \
     emitters/imagecoloremitter.h \
     emitters/coloremitter.h \
-    emitters/screencapturecoloremitter.h
+    emitters/screencapturecoloremitter.h \
+    emitters/blackholecoloremitter.h
 
 FORMS    += mainwindow.ui \
     about.ui
