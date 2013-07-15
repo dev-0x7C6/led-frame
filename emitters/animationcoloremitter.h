@@ -46,11 +46,24 @@ private:
       delete m_animation;
 
     m_animation = new QPropertyAnimation(this, "color");
-    m_animation->setDuration(320*4);
-    m_animation->setKeyValueAt(0.000, QColor::fromRgbF(1, 1, 0));
-    m_animation->setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
-    m_animation->setKeyValueAt(0.666, QColor::fromRgbF(1, 0, 1));
-    m_animation->setKeyValueAt(1.000, QColor::fromRgbF(1, 1, 0));
+    m_animation->setDuration(320*4*10);
+//    m_animation->setKeyValueAt(0.000, QColor::fromRgbF(1, 1, 0));
+//    m_animation->setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
+//    m_animation->setKeyValueAt(0.666, QColor::fromRgbF(1, 0, 1));
+//    m_animation->setKeyValueAt(1.000, QColor::fromRgbF(1, 1, 0));
+
+    m_animation->setKeyValueAt(0.0, QColor::fromRgbF(1, 1, 0));
+    m_animation->setKeyValueAt(0.1, QColor::fromRgbF(0, 1, 0));
+    m_animation->setKeyValueAt(0.2, QColor::fromRgbF(0, 1, 1));
+    m_animation->setKeyValueAt(0.3, QColor::fromRgbF(0, 0, 1));
+    m_animation->setKeyValueAt(0.4, QColor::fromRgbF(1, 1, 0));
+    m_animation->setKeyValueAt(0.5, QColor::fromRgbF(1, 0, 1));
+    m_animation->setKeyValueAt(0.6, QColor::fromRgbF(0, 0, 0));
+    m_animation->setKeyValueAt(0.7, QColor::fromRgbF(0, 1, 0));
+    m_animation->setKeyValueAt(0.8, QColor::fromRgbF(0, 1, 1));
+    m_animation->setKeyValueAt(0.9, QColor::fromRgbF(1, 1, 0));
+    m_animation->setKeyValueAt(1.0, QColor::fromRgbF(0, 1, 1));
+
     m_animation->setLoopCount(-1);
     m_animation->start();
   }

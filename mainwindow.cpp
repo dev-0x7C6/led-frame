@@ -66,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_statisticFirstTime = true;
 
 
+  ui->screenArea->addItem(QIcon(":/16x16/selected-screen.png"), "Not definited");
+
   rect = QApplication::desktop()->geometry();
 
   for (register int i = 0; i < 2; ++i) {
@@ -161,9 +163,10 @@ MainWindow::MainWindow(QWidget *parent) :
       rect = QApplication::desktop()->screenGeometry(i);
 
     capture->setCaptureArea(rect);
-    capture->setPixelSkip(4);
-    capture->setChunkSize(64);
+    capture->setPixelSkip(2);
+    capture->setChunkSize(128);
     capture->setFramerateLimit(24);
+    capture->setBrightness(1);
     capture->start();
 
     m_colorEmitters << dynamic_cast< ColorEmitter*>(capture);
@@ -195,10 +198,8 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->treeWidget, thread);
   connect(item, SIGNAL(setCustomEmitter(ALCDeviceThread*,int)),
           this, SLOT(setCustomEmitter(ALCDeviceThread*,int)));
-  item->setText(0, thread->details().portName() + '\t');
+  item->setText(0, thread->details().systemLocation() + '\t');
   item->setIcon(0, QIcon(":/22x22/device.png"));
-
-  qDebug() << thread->details().systemLocation();
 
   ComboBoxItem *cmb = new ComboBoxItem(item, 1);
   cmb->setIconSize(QSize(22, 22));

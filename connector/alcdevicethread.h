@@ -22,6 +22,8 @@
 
 #include "emitters/coloremitter.h"
 
+
+
 class ALCDeviceThread : public QThread
 {
   Q_OBJECT
@@ -32,6 +34,7 @@ private:
   bool m_continue;
   QMutex m_mutex;
   QList < QRgb> m_colors;
+  double m_brightness;
 
 public:
   ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0)
@@ -39,7 +42,8 @@ public:
      m_device(device),
      m_emitter(0),
      m_details(details),
-     m_continue(true)
+     m_continue(true),
+     m_brightness(1.0)
   {
     m_device->moveToThread(this);
 
@@ -93,7 +97,6 @@ protected:
         colors = m_emitter->state();
       }
 
-
       m_mutex.unlock();
 
       if (colors.isEmpty()) {
@@ -108,12 +111,12 @@ protected:
           byte = 0x00;
           if (i == 0)
             byte |= 1 << 0x03;
-          byte |= (qr(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x00;
-          byte |= (qg(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x01;
-          byte |= (qb(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x02;
-          byte |= (qr(colors[++i]) >= (pwm*(255/dynamicPwm))) << 0x04;
-          byte |= (qg(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x05;
-          byte |= (qb(colors[i]) >= (pwm*(255/dynamicPwm))) << 0x06;
+          byte |= ((qr(colors[i])*m_brightness) >= (pwm*(255/dynamicPwm))) << 0x00;
+          byte |= ((qg(colors[i])*m_brightness) >= (pwm*(255/dynamicPwm))) << 0x01;
+          byte |= ((qb(colors[i])*m_brightness) >= (pwm*(255/dynamicPwm))) << 0x02;
+          byte |= ((qr(colors[++i])*m_brightness) >= (pwm*(255/dynamicPwm))) << 0x04;
+          byte |= ((qg(colors[i])*m_brightness) >= (pwm*(255/dynamicPwm))) << 0x05;
+          byte |= ((qb(colors[i])*m_brightness) >= (pwm*(255/dynamicPwm))) << 0x06;
           buffer[bufferPtr++] = byte;
           ++bufferSize;
         }
