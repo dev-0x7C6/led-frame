@@ -53,8 +53,8 @@ QList <QRgb> grab(QScreen *screen, QRect &area, ScreenFragments fragment,
     length = image.byteCount() / image.depth();
 
     for (register int i = 0; i < length; i += skip) {
-      r += uchar(source[i] >> 8);
-      g += uchar(source[i] >> 16);
+      r += uchar(source[i] >> 16);
+      g += uchar(source[i] >> 8);
       b += uchar(source[i]);
     }
 

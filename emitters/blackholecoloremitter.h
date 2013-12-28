@@ -8,12 +8,7 @@ class BlackholeColorEmitter : public QObject, public ColorEmitter
 {
   Q_OBJECT
 public:
-  explicit BlackholeColorEmitter(QObject *parent = 0);
-  
-signals:
-  
-public slots:
-  
+  explicit BlackholeColorEmitter(QObject *parent = 0);  
 };
 
 #endif // BLACKHOLECOLOREMITTER_H
