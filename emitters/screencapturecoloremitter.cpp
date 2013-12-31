@@ -12,7 +12,6 @@ ScreenCaptureColorEmitter::ScreenCaptureColorEmitter(QObject *parent) :
   m_chunkSize(32),
   m_pixelSkip(8),
   m_framerateLimit(30),
-  m_brightness(1.0),
   m_quit(false)
 {
   moveToThread(this);
@@ -39,11 +38,6 @@ void ScreenCaptureColorEmitter::setFramerateLimit(int value) {
   m_framerateLimit = value;
 }
 
-void ScreenCaptureColorEmitter::setBrightness(double value) {
-  QMutexLocker locker(&m_mutex);
-  m_brightness = value;
-}
-
 void ScreenCaptureColorEmitter::setQuitState(bool value) {
   QMutexLocker locker(&m_mutex);
   m_quit = value;
@@ -66,7 +60,7 @@ void ScreenCaptureColorEmitter::run(){
   int chunkSize;
   int pixelSkip;
   int framerateLimit;
-  double brightness;
+  double light;
   bool quit;
 
   counter.start();
@@ -87,23 +81,19 @@ void ScreenCaptureColorEmitter::run(){
     chunkSize = m_chunkSize;
     pixelSkip = m_pixelSkip + 1;
     framerateLimit = m_framerateLimit;
-    brightness = m_brightness;
     quit = m_quit;
     m_mutex.unlock();
 
 
-
-
-    safeScreenCapture.lock();
+    light = brightness();
     colors.clear();
     colors <<
-      grab(m_screen, capture, Top, chunkSize, pixelSkip, brightness) <<
-      grab(m_screen, capture, Right, chunkSize, pixelSkip, brightness) <<
-      grab(m_screen, capture, Bottom, chunkSize, pixelSkip, brightness) <<
-      grab(m_screen, capture, Left, chunkSize, pixelSkip, brightness);
+      grab(m_screen, capture, Top, chunkSize, pixelSkip, light) <<
+      grab(m_screen, capture, Right, chunkSize, pixelSkip, light) <<
+      grab(m_screen, capture, Bottom, chunkSize, pixelSkip, light) <<
+      grab(m_screen, capture, Left, chunkSize, pixelSkip, light);
 
-    m_colors = colors;
-    safeScreenCapture.unlock();
+    setState(colors);
 
     latency[0] = timer.nsecsElapsed();
     latency[1] += latency[0];
@@ -116,7 +106,6 @@ void ScreenCaptureColorEmitter::run(){
     usleep(delay/1000.0);
 
     if (counter.hasExpired(1000)) {
-      //qDebug() << this << fps;
       emit updateStats(fps, (latency[1]/double(fps)/1000000.0), latency[1]/10000000.0);
       counter.restart();
       latency[1] = 0;

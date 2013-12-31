@@ -65,8 +65,9 @@ public:
     return m_continue;
   }
 
-protected:
 
+
+protected:
   void run();
 
 public slots:
@@ -77,6 +78,8 @@ public slots:
 
     (m_emitter = emitter)->init();
   }
+
+  void setBrightness(double value);
 
 };
 

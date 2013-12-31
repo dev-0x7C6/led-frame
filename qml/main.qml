@@ -78,7 +78,7 @@ Rectangle {
         Image {
           x: 0
           y: 0
-     //     source: "qrc:/display.png"
+          source: "qrc:/256x256/display.png"
         }
      }
    }

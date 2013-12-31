@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1091</width>
-    <height>565</height>
+    <width>1092</width>
+    <height>569</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -159,7 +159,7 @@
                    <string>Tune led brightness</string>
                   </property>
                   <property name="minimum">
-                   <number>10</number>
+                   <number>1</number>
                   </property>
                   <property name="maximum">
                    <number>500</number>
@@ -1327,8 +1327,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1091</width>
-     <height>18</height>
+     <width>1092</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

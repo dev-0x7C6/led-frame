@@ -31,21 +31,21 @@ QList <QRgb> grab(QScreen *screen, QRect &area, ScreenFragments fragment,
 
   QImage image;
 
-  for (register int i = 0; i < 8; ++i) {
+  for (register int i = 0; i < 16; ++i) {
     r = g = b = 0;
 
     switch (fragment) {
     case Top:
-      image = pixmap.copy(i * area.width() / 8, 0, chunk, chunk).toImage();
+      image = pixmap.copy(i * area.width() / 16, 0, chunk, chunk).toImage();
       break;
     case Bottom:
-      image = pixmap.copy((8-i) * area.width() / 8, 0, chunk, chunk).toImage();
+      image = pixmap.copy((8-i) * area.width() / 16, 0, chunk, chunk).toImage();
       break;
     case Left:
-      image = pixmap.copy(0, (8-i) * area.height() / 8, chunk, chunk).toImage();
+      image = pixmap.copy(0, (16-i) * area.height() / 16, chunk, chunk).toImage();
       break;
     case Right:
-      image = pixmap.copy(0, i * area.height() / 8, chunk, chunk).toImage();
+      image = pixmap.copy(0, i * area.height() / 16, chunk, chunk).toImage();
       break;
     }
 

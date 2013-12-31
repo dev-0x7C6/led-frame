@@ -9,17 +9,31 @@
 
 class ColorEmitter
 {
+private:
+  QList <QRgb> m_colors;
+  double m_brightness;
+
 protected:
   QMutex m_mutex;
   int m_connectedCount;
-  QList <QRgb> m_colors;
 
 public:
-  explicit ColorEmitter() {
+  explicit ColorEmitter() : m_brightness(1.0) {
     m_connectedCount = 0;
-    for (register int i = 0; i < 32; ++i)
+    for (register int i = 0; i < 64; ++i)
       m_colors << 0;
   }
+
+  void setBrightness(double brightness) {
+    QMutexLocker locker(&m_mutex);
+    m_brightness = brightness;
+  }
+
+  double brightness() {
+    QMutexLocker locker(&m_mutex);
+    return m_brightness;
+  }
+
   
   void init() {
     QMutexLocker locker(&m_mutex);
@@ -31,6 +45,11 @@ public:
     QMutexLocker locker(&m_mutex);
     m_connectedCount--;
     qDebug() << this << " device disconnected, count: " << m_connectedCount;
+  }
+
+  void setState(QList < QRgb> colors) {
+    QMutexLocker locker(&m_mutex);
+    m_colors = colors;
   }
 
   QList < QRgb> state() {

@@ -18,13 +18,11 @@ public:
 
 private:
   QScreen *m_screen;
-  QMutex m_mutex;
   QRect m_captureArea;
 
   int m_chunkSize;
   int m_pixelSkip;
   int m_framerateLimit;
-  double m_brightness;
   bool m_quit;
 
 public slots:
@@ -32,7 +30,6 @@ public slots:
   void setChunkSize(int);
   void setPixelSkip(int);
   void setFramerateLimit(int);
-  void setBrightness(double);
   void setQuitState(bool);
 
 protected:

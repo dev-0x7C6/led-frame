@@ -23,9 +23,6 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
       connect(thread, SIGNAL(started()), this, SLOT(deviceThreadStarted()));
       connect(thread, SIGNAL(finished()), this, SLOT(deviceThreadFinished()));
       thread->start();
-
-      qDebug() << "registred";
-
     } else
       delete device;
 

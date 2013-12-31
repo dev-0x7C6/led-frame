@@ -40,7 +40,6 @@ Item {
    }
 
 
-
    MouseArea {
        anchors.fill: parent
        onClicked: {

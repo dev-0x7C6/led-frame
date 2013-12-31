@@ -42,6 +42,8 @@ void RadioButtonItem::changeItem(int index)
     }
 }
 
+#include <QQuickView>
+
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
@@ -53,6 +55,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
+
+//  QQuickView *view = new QQuickView();
+//  QWidget *container = QWidget::createWindowContainer(view, this);
+//  container->setMinimumSize(500, 300);
+//  container->setMaximumSize(500, 300);
+//  container->setFocusPolicy(Qt::TabFocus);
+
+//  view->setSource(QUrl("qrc:/qml/main.qml"));
+//  ui->qml->addWidget(container);
 
 
   m_manager = new ALCDeviceManager(this);
@@ -165,11 +176,13 @@ MainWindow::MainWindow(QWidget *parent) :
     capture->setCaptureArea(rect);
     capture->setPixelSkip(2);
     capture->setChunkSize(128);
-    capture->setFramerateLimit(24);
+    capture->setFramerateLimit(60);
     capture->setBrightness(1);
     capture->start();
 
     m_colorEmitters << dynamic_cast< ColorEmitter*>(capture);
+    dynamic_cast< ColorEmitter*>(capture)->setBrightness(1.0);
+    connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
   }
 
   for (register int i = 0; i < 16; ++i) {
@@ -275,6 +288,10 @@ void MainWindow::setFramerate(int value) {
 void MainWindow::setBrightness(int value) {
   double brightness = double(value) / 100.0;
   ui->proc->setText(QString::number(int(brightness*100)) + "%");
+
+  for (register int i = 0; i < m_colorEmitters.count(); ++i)
+    m_colorEmitters[i]->setBrightness(brightness);
+
   ////////////////////////////////////////capture.setBrightness(brightness);
 }
 
@@ -298,7 +315,6 @@ void MainWindow:: updateScreenArea(int area) {
 
   ui->widget->connectEmitter(m_colorEmitters[area]);
 
-  ///////////////////////////////////////capture.setCaptureArea(geometry);
 }
 
 void MainWindow::updateStats(quint32 fps, double latency, double usage) {
@@ -333,9 +349,9 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 
   if (ui->wiimoteBrightness->isChecked()) {
     if ((buttons & WIIMOTE_BTN_PLUS) && !(m_buttons & WIIMOTE_BTN_PLUS))
-      ui->brightnessSlider->setValue(ui->brightnessSlider->value() + 10);
+      ui->brightnessSlider->setValue(ui->brightnessSlider->value() + 4);
     if ((buttons & WIIMOTE_BTN_MINUS) && !(m_buttons & WIIMOTE_BTN_MINUS))
-      ui->brightnessSlider->setValue(ui->brightnessSlider->value() - 10);
+      ui->brightnessSlider->setValue(ui->brightnessSlider->value() - 4);
   }
 
   if (ui->wiimoteFramerate->isChecked()) {
@@ -367,9 +383,6 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 
 MainWindow::~MainWindow()
 {
-  ////////////////////////////////////////////////////////capture.setQuitState(true);
-  //////////////////////////////////////////////////////////capture.wait();
-
   m_settings->beginGroup("GeneralSettings");
   m_settings->setValue("screenId", ui->screenArea->currentIndex());
   m_settings->setValue("brightness", ui->brightnessSlider->value());

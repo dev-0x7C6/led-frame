@@ -45,7 +45,8 @@ FORMS    += mainwindow.ui \
     about.ui
 
 RESOURCES += \
-    resources/resource.qrc
+    resources/resource.qrc \
+    qml.qrc
 
 OTHER_FILES += \
     qml/main.qml \

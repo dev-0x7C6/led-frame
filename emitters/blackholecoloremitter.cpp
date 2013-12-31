@@ -4,5 +4,9 @@ BlackholeColorEmitter::BlackholeColorEmitter(QObject *parent) :
   ColorEmitter(),
   QObject(parent)
 {
-  m_colors << 0x00 << 0x00;
+  QList < QRgb> colors;
+  for (register int i = 0; i < 32; ++i)
+    colors << 0;
+
+  setState(colors);
 }
