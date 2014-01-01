@@ -7,6 +7,8 @@
 #include "about.h"
 
 #include "emitters/blackholecoloremitter.h"
+#include "connector/alc-device-thread.h"
+#include "connector/alc-device-manager.h"
 
 
 ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column)
@@ -61,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //  container->setMinimumSize(500, 300);
 //  container->setMaximumSize(500, 300);
 //  container->setFocusPolicy(Qt::TabFocus);
-
 //  view->setSource(QUrl("qrc:/qml/main.qml"));
 //  ui->qml->addWidget(container);
 
@@ -148,21 +149,12 @@ MainWindow::MainWindow(QWidget *parent) :
   rect = QGuiApplication::primaryScreen()->geometry();
   move (rect.x() + ((rect.width() - width()) / 2), rect.y() + ((rect.height() - height()) / 2) - 50);
 
- // updateScreenArea(ui->screenArea->currentIndex());
 
 #ifdef Q_OS_UNIX
   connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
 #endif
 
- // connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), ui->widget, SLOT(updateLeds(QList<QRgb>)), Qt::QueuedConnection);
-  //connect(&capture, SIGNAL(updateLeds(QList<QRgb>)), m_manager, SLOT(updateLeds(QList<QRgb>)), Qt::DirectConnection);
-  //connect(&capture, SIGNAL(updateStats(quint32,double,double)), this, SLOT(updateStats(quint32,double,double)), Qt::QueuedConnection);
-  //connect(ui->chunkSize, SIGNAL(valueChanged(int)), &capture, SLOT(setChunkSize(int)), Qt::DirectConnection);
-  //connect(ui->pixelSkip, SIGNAL(valueChanged(int)), &capture, SLOT(setPixelSkip(int)), Qt::DirectConnection);
-
-  //capture.setFramerateLimit(ui->framerateLimit->value());
-  //capture.setPixelSkip(ui->pixelSkip->value());
-  //capture.setChunkSize(ui->chunkSize->value());
+  connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
 
   m_colorEmitters << new BlackholeColorEmitter(0);
 
@@ -177,36 +169,29 @@ MainWindow::MainWindow(QWidget *parent) :
     capture->setPixelSkip(2);
     capture->setChunkSize(128);
     capture->setFramerateLimit(60);
-    capture->setBrightness(1);
+    capture->setBrightness(ui->brightnessSlider->value());
     capture->start();
 
+    dynamic_cast< ColorEmitter*>(capture)->setBrightness(ui->brightnessSlider->value());
+
     m_colorEmitters << dynamic_cast< ColorEmitter*>(capture);
-    dynamic_cast< ColorEmitter*>(capture)->setBrightness(1.0);
-    connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
   }
 
-  for (register int i = 0; i < 16; ++i) {
-    AnimationColorEmitter *animation = new AnimationColorEmitter();
+  AnimationColorEmitter *animation;
+  for (register int i = 0; i < 8; ++i) {
+    animation = new AnimationColorEmitter();
+    animation->setBrightness(ui->brightnessSlider->value());
     m_colorEmitters << dynamic_cast< ColorEmitter*>(animation);
   }
 
+  ui->widget->connectEmitter(animation);
 
   connect(m_manager, SIGNAL(deviceConnected(ALCDeviceThread*)), this, SLOT(deviceConnected(ALCDeviceThread*)), Qt::DirectConnection);
   connect(m_manager, SIGNAL(deviceDisconnected(ALCDeviceThread*)), this, SLOT(deviceDisconnected(ALCDeviceThread*)), Qt::DirectConnection);
-
-  ui->widget->connectEmitter(&anim);
-
-
-
-  //m_backend.start();
-   connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
-
+  connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 }
 
-
 void MainWindow::deviceConnected(ALCDeviceThread *thread) {
-  thread->connectEmitter(&anim);
-
   QRect rect;
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->treeWidget, thread);
   connect(item, SIGNAL(setCustomEmitter(ALCDeviceThread*,int)),
@@ -227,7 +212,6 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
                                                            QString::number(rect.y()),
                                                            QString::number(rect.width()),
                                                            QString::number(rect.height()));
-
     switch (i) {
     case -2:
       cmb->addItem(QIcon(":/22x22/selected-area.png"), QString("Selected area: " + str));
@@ -242,9 +226,12 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   }
 
 
+  thread->connectEmitter(&anim);
+
   for (register int i = 1; i <= 8; ++i) {
     cmb->addItem(QIcon(":/22x22/animation.png"), QString("Animation color profile #%1").arg(QString::number(i)));
   }
+
 
   connect(cmb, SIGNAL(currentIndexChanged(int)), item, SLOT(currentIndexChanged(int)), Qt::DirectConnection);
 

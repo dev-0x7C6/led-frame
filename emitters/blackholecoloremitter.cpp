@@ -1,11 +1,11 @@
 #include "blackholecoloremitter.h"
 
 BlackholeColorEmitter::BlackholeColorEmitter(QObject *parent) :
-  ColorEmitter(),
-  QObject(parent)
+  QObject(parent),
+  ColorEmitter()
 {
   QList < QRgb> colors;
-  for (register int i = 0; i < 32; ++i)
+  for (register int i = 0; i < 64; ++i)
     colors << 0;
 
   setState(colors);

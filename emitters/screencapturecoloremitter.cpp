@@ -9,6 +9,7 @@
 
 ScreenCaptureColorEmitter::ScreenCaptureColorEmitter(QObject *parent) :
   QThread(parent),
+  ColorEmitter(),
   m_chunkSize(32),
   m_pixelSkip(8),
   m_framerateLimit(30),

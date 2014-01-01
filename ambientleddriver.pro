@@ -21,25 +21,25 @@ SOURCES += main.cpp\
     ambientlightsymulation.cpp \
     about.cpp \
     capturepart.cpp \
-    connector/alcdevicemanager.cpp \
-    connector/alcdevicethread.cpp \
     emitters/animationcoloremitter.cpp \
     emitters/imagecoloremitter.cpp \
     emitters/coloremitter.cpp \
     emitters/screencapturecoloremitter.cpp \
-    emitters/blackholecoloremitter.cpp
+    emitters/blackholecoloremitter.cpp \
+    connector/alc-device-manager.cpp \
+    connector/alc-device-thread.cpp
 
 HEADERS  += mainwindow.h \
     ambientlightsymulation.h \
     about.h \
     capturepart.h \
-    connector/alcdevicemanager.h \
-    connector/alcdevicethread.h \
     emitters/animationcoloremitter.h \
     emitters/imagecoloremitter.h \
     emitters/coloremitter.h \
     emitters/screencapturecoloremitter.h \
-    emitters/blackholecoloremitter.h
+    emitters/blackholecoloremitter.h \
+    connector/alc-device-manager.h \
+    connector/alc-device-thread.h
 
 FORMS    += mainwindow.ui \
     about.ui

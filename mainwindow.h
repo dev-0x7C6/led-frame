@@ -76,7 +76,7 @@ signals:
 };
 
 #include "emitters/animationcoloremitter.h"
-#include "connector/alcdevicemanager.h"
+#include "connector/alc-device-manager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -90,7 +90,6 @@ private:
 
   ALCDeviceManager *m_manager;
   AnimationColorEmitter anim;
-
   double m_statisticAverageFPS;
   double m_statisticAverageLatency;
   double m_statisticAverageThreadUse;
