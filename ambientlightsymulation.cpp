@@ -59,17 +59,17 @@ void AmbientLightSymulation::paintEvent(QPaintEvent *) {
   int y = ((height() - m_monitor.height())/2) + 9;
   if (!colors.isEmpty()) {
     int colorid = 0;
-    for (register int i = 0; i < 8; ++i)
-      drawLedAmbient(i * ((m_monitor.width())/7.6) + x, y, m_glowSize, QColor(colors[colorid++]), painter);
+    for (register int i = 0; i < 16; ++i)
+      drawLedAmbient(i * ((m_monitor.width())/16.0) + x, y, m_glowSize, QColor(colors[colorid++]), painter);
 
-    for (register int i = 0; i < 8; ++i)
-      drawLedAmbient(width() - x, i * ((m_monitor.height())/13.5)+y+15, m_glowSize, QColor (colors[colorid++]), painter);
+    for (register int i = 0; i < 16; ++i)
+      drawLedAmbient(width() - x, i * ((m_monitor.height())/27)+y+15, m_glowSize, QColor (colors[colorid++]), painter);
 
-    for (register int i = 7; i > 0; --i)
-      drawLedAmbient(i * ((m_monitor.width())/7.6) + x, height() - y - (m_monitor.height()/3.8), m_glowSize, QColor(colors[colorid++]), painter);
+    for (register int i = 15; i >= 0; --i)
+      drawLedAmbient(i * ((m_monitor.width())/16.0) + x, height() - y - (m_monitor.height()/4.0), m_glowSize, QColor(colors[colorid++]), painter);
 
-    for (register int i = 7; i > 0; --i)
-      drawLedAmbient(x, i * ((m_monitor.height())/13.5)+y+15, m_glowSize, QColor (colors[colorid++]), painter);
+    for (register int i = 15; i >= 0; --i)
+      drawLedAmbient(x, i * ((m_monitor.height())/27)+y+15, m_glowSize, QColor (colors[colorid++]), painter);
 
   }
 

@@ -45,6 +45,8 @@ ALCDeviceThread *ALCDeviceManager::device(int idx) {
   return m_threads[idx];
 }
 
+#include <QDebug>
+
 void ALCDeviceManager::timerEvent(QTimerEvent *event) {
   Q_UNUSED(event);
   QList < QSerialPortInfo> ports = QSerialPortInfo::availablePorts();

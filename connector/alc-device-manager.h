@@ -25,12 +25,21 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
+#define DEBUG_CONNECTOR
+
 namespace AmbientLedConnector {
 
+#ifdef DEBUG_CONNECTOR
+  namespace IDs {
+    const QString Description = "FT232R USB UART";
+    const QString Manufacturer = "FTDI";
+  }
+#else
   namespace IDs {
     const QString Description = "Ambient Led Connector";
     const QString Manufacturer = "ALC";
   }
+#endif
 
   namespace Transmision {
     const quint32 BaudRate = 500000;

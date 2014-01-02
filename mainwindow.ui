@@ -34,9 +34,6 @@
     <item>
      <widget class="QWidget" name="mainWidget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <property name="margin">
-        <number>3</number>
-       </property>
        <item>
         <widget class="QTabWidget" name="leftWidget">
          <property name="sizePolicy">
@@ -105,7 +102,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>Attached to</string>
+                  <string>Settings</string>
                  </property>
                 </column>
                </widget>
@@ -155,6 +152,12 @@
                 </item>
                 <item>
                  <widget class="QSlider" name="brightnessSlider">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="statusTip">
                    <string>Tune led brightness</string>
                   </property>
@@ -162,7 +165,7 @@
                    <number>1</number>
                   </property>
                   <property name="maximum">
-                   <number>500</number>
+                   <number>200</number>
                   </property>
                   <property name="value">
                    <number>100</number>
@@ -177,82 +180,27 @@
                    <enum>QSlider::TicksBelow</enum>
                   </property>
                   <property name="tickInterval">
-                   <number>30</number>
+                   <number>10</number>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="proc">
+                  <property name="minimumSize">
+                   <size>
+                    <width>40</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>100%</string>
                   </property>
                  </widget>
                 </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <item>
-                 <widget class="QLabel" name="brightnessIcon_3">
-                  <property name="minimumSize">
-                   <size>
-                    <width>24</width>
-                    <height>24</height>
-                   </size>
-                  </property>
+                 <widget class="QCheckBox" name="brightnessBoost">
                   <property name="text">
-                   <string/>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resources/resource.qrc">:/22x22/fpsrate.png</pixmap>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel_3">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>FPS limit:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSlider" name="framerateLimit">
-                  <property name="statusTip">
-                   <string>Tune frames per secound limit (24fps should be enought)</string>
-                  </property>
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>300</number>
-                  </property>
-                  <property name="value">
-                   <number>30</number>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="tickPosition">
-                   <enum>QSlider::TicksBelow</enum>
-                  </property>
-                  <property name="tickInterval">
-                   <number>4</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="fpsCount">
-                  <property name="text">
-                   <string>30fps</string>
+                   <string>Brightness boost</string>
                   </property>
                  </widget>
                 </item>
@@ -1189,7 +1137,7 @@
                      <string>Tune led brightness</string>
                     </property>
                     <property name="minimum">
-                     <number>60</number>
+                     <number>24</number>
                     </property>
                     <property name="maximum">
                      <number>200</number>
@@ -1311,13 +1259,6 @@
         </widget>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
      </widget>
     </item>
    </layout>

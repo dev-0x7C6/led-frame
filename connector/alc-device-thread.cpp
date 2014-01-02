@@ -48,7 +48,7 @@ void ALCDeviceThread::run() {
   QElapsedTimer timer;
   QElapsedTimer counter;
   int fps = 0;
-  int framerateLimit = 120;
+  int framerateLimit = 151;
   double latency[2];
 
   counter.start();
@@ -72,9 +72,9 @@ void ALCDeviceThread::run() {
     ptr = 0;
     for (register int i = 0; i < colors.count()-4; ++i) {
       const quint32 color = colors[i];
-      data[ptr++] = qg(color);
-      data[ptr++] = qr(color);
-      data[ptr++] = qb(color);
+      data[ptr++] = max(qg(color)*1.2);
+      data[ptr++] = max(qr(color));
+      data[ptr++] = max(qb(color));
     }
 
     m_device->write((char*)data, ptr);
@@ -93,6 +93,8 @@ void ALCDeviceThread::run() {
     if (counter.hasExpired(1000)) {
       counter.restart();
       latency[1] = 0;
+      qDebug() << (fps);
+
       fps = 0;
     }
 

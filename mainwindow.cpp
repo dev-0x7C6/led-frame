@@ -10,40 +10,6 @@
 #include "connector/alc-device-thread.h"
 #include "connector/alc-device-manager.h"
 
-
-ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column)
-{
-    this->item = item;
-    this->column = column;
-    connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
-}
-
-void ComboBoxItem::changeItem(int index)
-{
-    if(index >=0)
-    {
-        item->setData(this->column, Qt::UserRole, this->itemText(index));
-        //item->data(this->column, Qt::UserRole).toString();
-    }
-}
-
-RadioButtonItem::RadioButtonItem(QTreeWidgetItem *item, int column)
-{
-  this->setText("Yes");
-    this->item = item;
-    this->column = column;
-    connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
-}
-
-void RadioButtonItem::changeItem(int index)
-{
-    if(index >=0)
-    {
-      item->setData(this->column, Qt::UserRole, "44");
-        //item->data(this->column, Qt::UserRole).toString();
-    }
-}
-
 #include <QQuickView>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -113,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->leftWidget->setCurrentIndex(0);
 
 
-  connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
+ // connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
 
   connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
@@ -126,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_settings->beginGroup("GeneralSettings");
  // ui->screenArea->setCurrentIndex(m_settings->value("screenId", 0).toInt());
   ui->brightnessSlider->setValue(m_settings->value("brightness", 100).toInt());
-  ui->framerateLimit->setValue(m_settings->value("framerateLimit", 30).toInt());
+ // ui->framerateLimit->setValue(m_settings->value("framerateLimit", 30).toInt());
   m_settings->endGroup();
 
   m_settings->beginGroup("AdvancedSettings");
@@ -166,8 +132,8 @@ MainWindow::MainWindow(QWidget *parent) :
       rect = QApplication::desktop()->screenGeometry(i);
 
     capture->setCaptureArea(rect);
-    capture->setPixelSkip(2);
-    capture->setChunkSize(128);
+    capture->setPixelSkip(4);
+    capture->setChunkSize(160);
     capture->setFramerateLimit(60);
     capture->setBrightness(ui->brightnessSlider->value());
     capture->start();
@@ -180,11 +146,12 @@ MainWindow::MainWindow(QWidget *parent) :
   AnimationColorEmitter *animation;
   for (register int i = 0; i < 8; ++i) {
     animation = new AnimationColorEmitter();
-    animation->setBrightness(ui->brightnessSlider->value());
     m_colorEmitters << dynamic_cast< ColorEmitter*>(animation);
   }
 
-  ui->widget->connectEmitter(animation);
+  setBrightness(ui->brightnessSlider->value());
+
+  connect(ui->brightnessBoost, &QCheckBox::clicked, this, &MainWindow::setBrightnessBoost);
 
   connect(m_manager, SIGNAL(deviceConnected(ALCDeviceThread*)), this, SLOT(deviceConnected(ALCDeviceThread*)), Qt::DirectConnection);
   connect(m_manager, SIGNAL(deviceDisconnected(ALCDeviceThread*)), this, SLOT(deviceDisconnected(ALCDeviceThread*)), Qt::DirectConnection);
@@ -225,18 +192,40 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
 
   }
 
-
-  thread->connectEmitter(&anim);
-
   for (register int i = 1; i <= 8; ++i) {
     cmb->addItem(QIcon(":/22x22/animation.png"), QString("Animation color profile #%1").arg(QString::number(i)));
   }
-
 
   connect(cmb, SIGNAL(currentIndexChanged(int)), item, SLOT(currentIndexChanged(int)), Qt::DirectConnection);
 
   ui->treeWidget->setItemWidget(item, 1, cmb);
   ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
+
+
+  QTreeWidgetItem *brightness = new QTreeWidgetItem(item);
+
+  SliderItem *slider = new SliderItem(Qt::Horizontal, brightness, 1);
+  brightness->setText(0, "Brightness");
+  brightness->setIcon(0, QIcon(":/22x22/brightness.png"));
+  ui->treeWidget->setItemWidget(brightness, 1, slider);
+  slider->setTickInterval(10);
+ // slider->setTickPosition(QSlider::TicksBelow);
+  slider->setMinimum(1);
+  slider->setMaximum(200);
+  slider->setValue(100);
+
+  QTreeWidgetItem *delay = new QTreeWidgetItem(item);
+
+  SpinBoxItem *spinbox = new SpinBoxItem(brightness, 1);
+  delay->setText(0, "I/O delay");
+  delay->setIcon(0, QIcon(":/22x22/fpsrate.png"));
+  ui->treeWidget->setItemWidget(delay, 1, spinbox);
+  spinbox->setMinimum(0);
+  spinbox->setMaximum(100);
+  spinbox->setValue(8);
+  spinbox->setSuffix(" ms");
+  spinbox->setMaximumWidth(70);
+
   m_devices << item;
 }
 
@@ -268,18 +257,25 @@ void MainWindow::setFramerateLed(int value) {
 }
 
 void MainWindow::setFramerate(int value) {
-  ui->fpsCount->setText(QString::number(value) + "fps");
+  //ui->fpsCount->setText(QString::number(value) + "fps");
   ////////////////////////////////////////capture.setFramerateLimit(value);
 }
 
 void MainWindow::setBrightness(int value) {
   double brightness = double(value) / 100.0;
+  if (ui->brightnessBoost->isChecked())
+    brightness *= 2.5;
   ui->proc->setText(QString::number(int(brightness*100)) + "%");
 
   for (register int i = 0; i < m_colorEmitters.count(); ++i)
     m_colorEmitters[i]->setBrightness(brightness);
 
   ////////////////////////////////////////capture.setBrightness(brightness);
+}
+
+void MainWindow::setBrightnessBoost(bool value)
+{
+  setBrightness(ui->brightnessSlider->value());
 }
 
 void MainWindow:: updateScreenArea(int area) {
@@ -342,10 +338,10 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
   }
 
   if (ui->wiimoteFramerate->isChecked()) {
-    if ((buttons & WIIMOTE_BTN_RIGHT) && !(m_buttons & WIIMOTE_BTN_RIGHT))
-      ui->framerateLimit->setValue(ui->framerateLimit->value() + 2);
-    if ((buttons & WIIMOTE_BTN_LEFT) && !(m_buttons & WIIMOTE_BTN_LEFT))
-      ui->framerateLimit->setValue(ui->framerateLimit->value() - 2);
+  //  if ((buttons & WIIMOTE_BTN_RIGHT) && !(m_buttons & WIIMOTE_BTN_RIGHT))
+  //    ui->framerateLimit->setValue(ui->framerateLimit->value() + 2);
+  //  if ((buttons & WIIMOTE_BTN_LEFT) && !(m_buttons & WIIMOTE_BTN_LEFT))
+   //   ui->framerateLimit->setValue(ui->framerateLimit->value() - 2);
   }
 
   if (ui->wiimoteScreen->isChecked()) {
@@ -373,7 +369,7 @@ MainWindow::~MainWindow()
   m_settings->beginGroup("GeneralSettings");
   m_settings->setValue("screenId", ui->screenArea->currentIndex());
   m_settings->setValue("brightness", ui->brightnessSlider->value());
-  m_settings->setValue("framerateLimit", ui->framerateLimit->value());
+//  m_settings->setValue("framerateLimit", ui->framerateLimit->value());
   m_settings->endGroup();
 
   m_settings->beginGroup("AdvancedSettings");
@@ -394,4 +390,65 @@ MainWindow::~MainWindow()
   m_settings->endGroup();
 
   delete ui;
+}
+
+
+ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column)
+{
+    this->item = item;
+    this->column = column;
+    connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
+}
+
+void ComboBoxItem::changeItem(int index)
+{
+    if(index >=0)
+    {
+        item->setData(this->column, Qt::UserRole, this->itemText(index));
+        //item->data(this->column, Qt::UserRole).toString();
+    }
+}
+
+RadioButtonItem::RadioButtonItem(QTreeWidgetItem *item, int column)
+{
+  this->setText("Yes");
+    this->item = item;
+    this->column = column;
+    connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
+}
+
+void RadioButtonItem::changeItem(int index)
+{
+    if(index >=0)
+    {
+      item->setData(this->column, Qt::UserRole, "44");
+        //item->data(this->column, Qt::UserRole).toString();
+    }
+}
+
+SliderItem::SliderItem(Qt::Orientation orientation, QTreeWidgetItem *item, int column) :
+  QSlider(orientation, 0)
+{
+  this->item = item;
+  this->column = column;
+  connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
+}
+
+void SliderItem::changeItem(int index) {
+  if(index >=0)
+    item->setData(this->column, Qt::UserRole, "44");
+}
+
+
+SpinBoxItem::SpinBoxItem(QTreeWidgetItem *item, int column)
+{
+  this->item = item;
+  this->column = column;
+  connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
+}
+
+void SpinBoxItem::changeItem(int index)
+{
+  if(index >=0)
+    item->setData(this->column, Qt::UserRole, "44");
 }

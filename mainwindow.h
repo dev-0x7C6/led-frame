@@ -19,21 +19,45 @@ class MainWindow;
 #include <QComboBox>
 #include <QRadioButton>
 #include <QTreeWidgetItem>
+#include <QSpinBox>
 
-class ComboBoxItem : public QComboBox
-{
-    Q_OBJECT
-
+class ComboBoxItem : public QComboBox {
+  Q_OBJECT
 private:
-    QTreeWidgetItem *item;
-    int column;
+  QTreeWidgetItem *item;
+  int column;
 
 public:
-    ComboBoxItem(QTreeWidgetItem*, int);
+  ComboBoxItem(QTreeWidgetItem*, int);
 
 public slots:
-    void changeItem(int);
+  void changeItem(int);
+};
 
+class SliderItem: public QSlider {
+  Q_OBJECT
+private:
+  QTreeWidgetItem *item;
+  int column;
+
+public:
+  SliderItem(Qt::Orientation orientation, QTreeWidgetItem*, int);
+
+public slots:
+  void changeItem(int);
+};
+
+class SpinBoxItem: public QSpinBox {
+  Q_OBJECT
+private:
+  QTreeWidgetItem *item;
+  int column;
+
+public:
+  SpinBoxItem(QTreeWidgetItem*, int);
+
+public slots:
+  void changeItem(int);
 };
 
 class RadioButtonItem  : public QRadioButton
@@ -89,7 +113,6 @@ private:
   QString m_title;
 
   ALCDeviceManager *m_manager;
-  AnimationColorEmitter anim;
   double m_statisticAverageFPS;
   double m_statisticAverageLatency;
   double m_statisticAverageThreadUse;
@@ -114,6 +137,7 @@ private slots:
   void setFramerate(int);
   void setFramerateLed(int);
   void setBrightness(int value);
+  void setBrightnessBoost(bool value);
   void updateScreenArea(int);
   void about();
 

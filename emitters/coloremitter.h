@@ -38,6 +38,9 @@ public:
   void init() {
     QMutexLocker locker(&m_mutex);
     m_connectedCount++;
+    m_colors.clear();
+    for (register int i = 0; i < 64; ++i)
+      m_colors << 0;
     qDebug() << this << " device connected, count: " << m_connectedCount;
   }
 
