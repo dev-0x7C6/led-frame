@@ -3,7 +3,7 @@
 #include <QPixmapCache>
 
 const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 6;
+const int applicationMinorVersion = 7;
 
 int main(int argc, char *argv[])
 {

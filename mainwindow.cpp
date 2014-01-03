@@ -132,9 +132,9 @@ MainWindow::MainWindow(QWidget *parent) :
       rect = QApplication::desktop()->screenGeometry(i);
 
     capture->setCaptureArea(rect);
-    capture->setPixelSkip(4);
-    capture->setChunkSize(160);
-    capture->setFramerateLimit(60);
+    capture->setPixelSkip(8);
+    capture->setChunkSize(96);
+    capture->setFramerateLimit(24);
     capture->setBrightness(ui->brightnessSlider->value());
     capture->start();
 
@@ -199,7 +199,6 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   connect(cmb, SIGNAL(currentIndexChanged(int)), item, SLOT(currentIndexChanged(int)), Qt::DirectConnection);
 
   ui->treeWidget->setItemWidget(item, 1, cmb);
-  ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
 
 
   QTreeWidgetItem *brightness = new QTreeWidgetItem(item);
@@ -213,6 +212,7 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   slider->setMinimum(1);
   slider->setMaximum(200);
   slider->setValue(100);
+  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceBrightness);
 
   QTreeWidgetItem *delay = new QTreeWidgetItem(item);
 
@@ -221,11 +221,71 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   delay->setIcon(0, QIcon(":/22x22/fpsrate.png"));
   ui->treeWidget->setItemWidget(delay, 1, spinbox);
   spinbox->setMinimum(0);
-  spinbox->setMaximum(100);
+  spinbox->setMaximum(1000);
   spinbox->setValue(8);
   spinbox->setSuffix(" ms");
   spinbox->setMaximumWidth(70);
 
+  connect(spinbox, static_cast< void(QSpinBox::*)(int) >(&QSpinBox::valueChanged),
+          this, &MainWindow::setDeviceIODelay);
+
+  QTreeWidgetItem *led = new QTreeWidgetItem(item);
+  led->setText(0, "Color corretion");
+  led->setIcon(0, QIcon("://22x22/color.png"));
+
+  cmb = new ComboBoxItem(led, 1);
+  cmb->setIconSize(QSize(22, 22));
+  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("RGB"));
+  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("RBG"));
+  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("GRB"));
+  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("BRG"));
+  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("GBR"));
+  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("BGR"));
+  ui->treeWidget->setItemWidget(led, 1, cmb);
+  connect(cmb, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(setDeviceColorFormat(int)), Qt::DirectConnection);
+
+  QTreeWidgetItem *red = new QTreeWidgetItem(led);
+  red->setText(0, "Red");
+  red->setIcon(0, QIcon("://22x22/color.png"));
+  slider = new SliderItem(Qt::Horizontal, red, 1);
+  ui->treeWidget->setItemWidget(red, 1, slider);
+  slider->setTickInterval(10);
+  slider->setTickPosition(QSlider::TicksBelow);
+  slider->setMinimum(0);
+  slider->setMaximum(200);
+  slider->setValue(100);
+  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceRedColorCorrection);
+
+
+  QTreeWidgetItem *green = new QTreeWidgetItem(led);
+  green->setText(0, "Green");
+  green->setIcon(0, QIcon("://22x22/color.png"));
+  slider = new SliderItem(Qt::Horizontal, green, 1);
+  ui->treeWidget->setItemWidget(green, 1, slider);
+  slider->setTickInterval(10);
+  slider->setTickPosition(QSlider::TicksBelow);
+  slider->setMinimum(0);
+  slider->setMaximum(200);
+  slider->setValue(100);
+  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceGreenColorCorrection);
+
+
+
+  QTreeWidgetItem *blue = new QTreeWidgetItem(led);
+  blue->setText(0, "Blue");
+  blue->setIcon(0, QIcon("://22x22/color.png"));
+  slider = new SliderItem(Qt::Horizontal, blue, 1);
+  ui->treeWidget->setItemWidget(blue, 1, slider);
+  slider->setTickInterval(10);
+  slider->setTickPosition(QSlider::TicksBelow);
+  slider->setMinimum(0);
+  slider->setMaximum(200);
+  slider->setValue(100);
+  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceBlueColorCorrection);
+
+
+  ui->treeWidget->header()->resizeSections(QHeaderView::ResizeToContents);
   m_devices << item;
 }
 
@@ -269,8 +329,6 @@ void MainWindow::setBrightness(int value) {
 
   for (register int i = 0; i < m_colorEmitters.count(); ++i)
     m_colorEmitters[i]->setBrightness(brightness);
-
-  ////////////////////////////////////////capture.setBrightness(brightness);
 }
 
 void MainWindow::setBrightnessBoost(bool value)
@@ -323,6 +381,38 @@ void MainWindow::updateStats(quint32 fps, double latency, double usage) {
 void MainWindow::about() {
   About form(this);
   form.exec();
+}
+
+void MainWindow::setDeviceColorFormat(int value) {
+  for (register int i = 0; i < m_devices.count(); ++i)
+    m_devices[i]->device()->setColorFormat((ALCDeviceThread::ColorFormat)value);
+}
+
+void MainWindow::setDeviceIODelay(int value)
+{
+  for (register int i = 0; i < m_devices.count(); ++i)
+    m_devices[i]->device()->setDelay(value);
+}
+
+void MainWindow::setDeviceBrightness(int value)
+{
+  for (register int i = 0; i < m_devices.count(); ++i)
+    m_devices[i]->device()->setBrigthness(value / 100.0);
+}
+
+void MainWindow::setDeviceBlueColorCorrection(int value) {
+  for (register int i = 0; i < m_devices.count(); ++i)
+    m_devices[i]->device()->setBlueColorCorrection(value / 100.0);
+}
+
+void MainWindow::setDeviceGreenColorCorrection(int value) {
+  for (register int i = 0; i < m_devices.count(); ++i)
+    m_devices[i]->device()->setGreenColorCorrection(value / 100.0);
+}
+
+void MainWindow::setDeviceRedColorCorrection(int value) {
+  for (register int i = 0; i < m_devices.count(); ++i)
+    m_devices[i]->device()->setRedColorCorrection(value / 100.0);
 }
 
 #ifdef Q_OS_UNIX

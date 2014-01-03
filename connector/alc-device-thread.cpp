@@ -36,6 +36,11 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
     m_continue(true)
 {
   m_device->moveToThread(this);
+  for (register int i = 0; i < 3; ++i)
+    m_colorCorrection[i] = 1.0;
+  m_brightness = 1.0;
+  m_delay = 0;
+  m_format = GRB;
 }
 
 void ALCDeviceThread::run() {
@@ -48,12 +53,16 @@ void ALCDeviceThread::run() {
   QElapsedTimer timer;
   QElapsedTimer counter;
   int fps = 0;
-  int framerateLimit = 151;
+  int framerateLimit = 140;
   double latency[2];
 
   counter.start();
   latency[0] = 0;
   latency[1] = 0;
+  int io_delay = 0;
+  ColorFormat format;
+  double brightness;
+  double colorCorrection[3];
 
   quint16 ptr = 0;
   do {
@@ -61,7 +70,12 @@ void ALCDeviceThread::run() {
     if (m_emitter) {
       colors = m_emitter->state();
     }
-
+    brightness = m_brightness;
+    colorCorrection[Red] = m_colorCorrection[Red];
+    colorCorrection[Green] = m_colorCorrection[Green];
+    colorCorrection[Blue] = m_colorCorrection[Blue];
+    io_delay = m_delay;
+    format = m_format;
     m_mutex.unlock();
 
     if (colors.isEmpty()) {
@@ -72,9 +86,38 @@ void ALCDeviceThread::run() {
     ptr = 0;
     for (register int i = 0; i < colors.count()-4; ++i) {
       const quint32 color = colors[i];
-      data[ptr++] = max(qg(color)*1.2);
-      data[ptr++] = max(qr(color));
-      data[ptr++] = max(qb(color));
+      switch (m_format) {
+      case RGB:
+        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
+        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
+        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
+        break;
+      case RBG:
+        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
+        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
+        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
+        break;
+      case GRB:
+        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
+        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
+        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
+        break;
+      case BRG:
+        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
+        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
+        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
+        break;
+      case GBR:
+        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
+        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
+        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
+        break;
+      case BGR:
+        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
+        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
+        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
+        break;
+      }
     }
 
     m_device->write((char*)data, ptr);
@@ -89,12 +132,11 @@ void ALCDeviceThread::run() {
 
     fps++;
     usleep(delay/1000.0);
+    msleep(io_delay);
 
     if (counter.hasExpired(1000)) {
       counter.restart();
       latency[1] = 0;
-      qDebug() << (fps);
-
       fps = 0;
     }
 
@@ -130,4 +172,64 @@ void ALCDeviceThread::setContinueValue(bool value) {
 bool ALCDeviceThread::continueValue() {
   QMutexLocker locker(&m_mutex);
   return m_continue;
+}
+
+void ALCDeviceThread::setDelay(int delay) {
+  QMutexLocker locker(&m_mutex);
+  m_delay = delay;
+}
+
+void ALCDeviceThread::setColorFormat(ALCDeviceThread::ColorFormat format) {
+  QMutexLocker locker(&m_mutex);
+  m_format = format;
+}
+
+void ALCDeviceThread::setBrigthness(double value) {
+  QMutexLocker locker(&m_mutex);
+  m_brightness = value;
+}
+
+void ALCDeviceThread::setBlueColorCorrection(double value) {
+  QMutexLocker locker(&m_mutex);
+  m_colorCorrection[Blue] = value;
+}
+
+void ALCDeviceThread::setGreenColorCorrection(double value) {
+  QMutexLocker locker(&m_mutex);
+  m_colorCorrection[Green] = value;
+}
+
+void ALCDeviceThread::setRedColorCorrection(double value) {
+  QMutexLocker locker(&m_mutex);
+  m_colorCorrection[Red] = value;
+}
+
+ALCDeviceThread::ColorFormat ALCDeviceThread::colorFormat() {
+  QMutexLocker locker(&m_mutex);
+  return m_format;
+}
+
+int ALCDeviceThread::delay() {
+  QMutexLocker locker(&m_mutex);
+  return m_delay;
+}
+
+double ALCDeviceThread::brightness() {
+  QMutexLocker locker(&m_mutex);
+  return m_brightness;
+}
+
+double ALCDeviceThread::blueColorCorrection() {
+  QMutexLocker locker(&m_mutex);
+  return m_colorCorrection[Blue];
+}
+
+double ALCDeviceThread::greenColorCorrection() {
+  QMutexLocker locker(&m_mutex);
+  return m_colorCorrection[Green];
+}
+
+double ALCDeviceThread::redColorCorrection() {
+  QMutexLocker locker(&m_mutex);
+  return m_colorCorrection[Red];
 }

@@ -25,7 +25,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
-#define DEBUG_CONNECTOR
+//#define DEBUG_CONNECTOR
 
 namespace AmbientLedConnector {
 
@@ -43,6 +43,12 @@ namespace AmbientLedConnector {
 
   namespace Transmision {
     const quint32 BaudRate = 500000;
+  }
+
+  namespace ColorId {
+    const quint8 Red = 0;
+    const quint8 Green = 1;
+    const quint8 Blue = 2;
   }
 }
 

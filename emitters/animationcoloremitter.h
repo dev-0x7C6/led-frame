@@ -37,7 +37,7 @@ public:
     m_animation(0)
   {
     rotatePalette();
-    startTimer(1000/30);
+    startTimer(1000/60);
   }
 
 private:

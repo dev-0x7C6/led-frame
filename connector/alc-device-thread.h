@@ -38,6 +38,22 @@ class ColorEmitter;
 class ALCDeviceThread : public QThread
 {
   Q_OBJECT
+public:
+  enum ColorFormat {
+    RGB = 0x00,
+    RBG,
+    GRB,
+    BRG,
+    GBR,
+    BGR
+  };
+
+  enum ColorId {
+    Red = 0x00,
+    Green,
+    Blue
+  };
+
 private:
   QSerialPort *m_device;
   ColorEmitter *m_emitter;
@@ -46,11 +62,31 @@ private:
   QMutex m_mutex;
   QList < QRgb> m_colors;
 
+  int m_delay;
+  double m_brightness;
+  double m_colorCorrection[3];
+  ColorFormat m_format;
+
 public:
   ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
   QSerialPortInfo details();
   void setContinueValue(bool value);
   bool continueValue();
+
+  void setBlueColorCorrection(double);
+  void setBrigthness(double);
+  void setColorFormat(ColorFormat format);
+  void setDelay(int);
+  void setGreenColorCorrection(double);
+  void setRedColorCorrection(double);
+
+
+  ColorFormat colorFormat();
+  double blueColorCorrection();
+  double brightness();
+  double greenColorCorrection();
+  double redColorCorrection();
+  int delay();
 
 protected:
   void run();

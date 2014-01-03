@@ -141,6 +141,14 @@ private slots:
   void updateScreenArea(int);
   void about();
 
+
+  void setDeviceColorFormat(int);
+  void setDeviceIODelay(int);
+  void setDeviceBrightness(int);
+  void setDeviceBlueColorCorrection(int);
+  void setDeviceGreenColorCorrection(int);
+  void setDeviceRedColorCorrection(int);
+
   void updateStats(quint32, double, double);
 
 #ifdef Q_OS_UNIX
