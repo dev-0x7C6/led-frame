@@ -71,11 +71,6 @@ void ScreenCaptureColorEmitter::run(){
   QList < QRgb> colors;
 
   do {
-    if (!m_connectedCount) {
-      msleep(25);
-      continue;
-    }
-
     timer.start();
     m_mutex.lock();
     capture = m_captureArea;
@@ -83,8 +78,13 @@ void ScreenCaptureColorEmitter::run(){
     pixelSkip = m_pixelSkip + 1;
     framerateLimit = m_framerateLimit;
     quit = m_quit;
-    m_mutex.unlock();
 
+    if (!m_connectedCount) {
+      m_mutex.unlock();
+      msleep(25);
+      continue;
+    } else
+      m_mutex.unlock();
 
     light = brightness();
     colors.clear();

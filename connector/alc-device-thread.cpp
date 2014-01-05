@@ -84,8 +84,9 @@ void ALCDeviceThread::run() {
     }
 
     ptr = 0;
-    for (register int i = 0; i < colors.count()-4; ++i) {
+    for (register int i = 0; i < (colors.count()-4)/2; ++i) {
       const quint32 color = colors[i];
+      for (register int j = 0; j < 2; ++j)
       switch (m_format) {
       case RGB:
         data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
