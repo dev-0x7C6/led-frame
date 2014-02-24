@@ -18,7 +18,7 @@
  **********************************************************************************/
 
 #include "connector/alc-device-thread.h"
-#include "emitters/coloremitter.h"
+#include "emitters/color-emitter.h"
 
 #include <QElapsedTimer>
 
@@ -45,15 +45,14 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
 
 void ALCDeviceThread::run() {
   QList < QRgb> colors;
-
   m_mutex.lock();
-  unsigned char data[1024];
+  unsigned char data[2048];
   memset((char*)data, 0, sizeof(data));
 
   QElapsedTimer timer;
   QElapsedTimer counter;
   int fps = 0;
-  int framerateLimit = 140;
+  int framerateLimit = 60;
   double latency[2];
 
   counter.start();
@@ -67,9 +66,8 @@ void ALCDeviceThread::run() {
   quint16 ptr = 0;
   do {
     timer.start();
-    if (m_emitter) {
-      colors = m_emitter->state();
-    }
+    if (m_emitter)
+      m_emitter->state(m_samples);
     brightness = m_brightness;
     colorCorrection[Red] = m_colorCorrection[Red];
     colorCorrection[Green] = m_colorCorrection[Green];
@@ -78,15 +76,16 @@ void ALCDeviceThread::run() {
     format = m_format;
     m_mutex.unlock();
 
-    if (colors.isEmpty()) {
-      msleep(10);
+    if (!m_emitter) {
+      msleep(100);
       continue;
     }
 
+    QVector < int> *colors = m_samples.scaled(ColorSamples::SAMPLE_TOP, 27);
     ptr = 0;
-    for (register int i = 0; i < (colors.count()-4)/2; ++i) {
-      const quint32 color = colors[i];
-      for (register int j = 0; j < 2; ++j)
+
+    for (register int i = 0; i < colors->size(); ++i) {
+      const quint32 color = (*colors)[i];
       switch (m_format) {
       case RGB:
         data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
@@ -121,7 +120,11 @@ void ALCDeviceThread::run() {
       }
     }
 
+    ptr += 33*3;
+    delete colors;
+
     m_device->write((char*)data, ptr);
+    m_device->waitForBytesWritten(1000);
     m_device->flush();
 
     latency[0] = timer.nsecsElapsed();
@@ -159,7 +162,8 @@ void ALCDeviceThread::connectEmitter(ColorEmitter *emitter) {
   if (m_emitter)
     m_emitter->done();
 
-  (m_emitter = emitter)->init();
+  if ((m_emitter = emitter))
+    m_emitter->init();
 }
 
 

@@ -6,7 +6,8 @@
 #include <QScreen>
 #include "about.h"
 
-#include "emitters/blackholecoloremitter.h"
+#include "emitters/blackhole-color-emitter.h"
+#include "emitters/plain-color-emitter.h"
 #include "connector/alc-device-thread.h"
 #include "connector/alc-device-manager.h"
 
@@ -31,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //  container->setFocusPolicy(Qt::TabFocus);
 //  view->setSource(QUrl("qrc:/qml/main.qml"));
 //  ui->qml->addWidget(container);
-
 
   m_manager = new ALCDeviceManager(this);
   QRect rect;
@@ -70,11 +70,13 @@ MainWindow::MainWindow(QWidget *parent) :
       i);
   }
 
-  for (register int i = 0; i < 8; ++i) {
+  for (register int i = 0; i < 4; ++i)
     ui->screenArea->addItem(QIcon(":/22x22/animation.png"),
-      QString("Animation color profile #%1").arg(QString::number(i+1)),
-      i);
-  }
+      QString("Animation color profile #%1").arg(QString::number(i+1)), i);
+
+  for (register int i = 0; i < 4; ++i)
+    ui->screenArea->addItem(QIcon(":/22x22/animation.png"),
+      QString("Plain color profile #%1").arg(QString::number(i+1)), i);
 
   ui->leftWidget->setCurrentIndex(0);
 
@@ -95,10 +97,6 @@ MainWindow::MainWindow(QWidget *parent) :
  // ui->framerateLimit->setValue(m_settings->value("framerateLimit", 30).toInt());
   m_settings->endGroup();
 
-  m_settings->beginGroup("AdvancedSettings");
-  ui->chunkSize->setValue(m_settings->value("chunkSize", 48).toInt());
-  ui->pixelSkip->setValue(m_settings->value("pixelSkip", 4).toInt());
-  m_settings->endGroup();
 
   m_settings->beginGroup("LedPreviewSettings");
   ui->ledFramerateLimit->setValue(m_settings->value("framerateLimit", 24).toInt());
@@ -122,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
 
-  m_colorEmitters << new BlackholeColorEmitter(0);
+  m_colorEmitters << (new BlackholeColorEmitter());
 
   for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
     ScreenCaptureColorEmitter *capture = new ScreenCaptureColorEmitter(0);
@@ -132,21 +130,28 @@ MainWindow::MainWindow(QWidget *parent) :
       rect = QApplication::desktop()->screenGeometry(i);
 
     capture->setCaptureArea(rect);
-    capture->setPixelSkip(8);
-    capture->setChunkSize(96);
-    capture->setFramerateLimit(24);
+    capture->setPixelSkip(4);
+    capture->setChunkSize(160);
+    capture->setFramerateLimit(25);
     capture->setBrightness(ui->brightnessSlider->value());
-    capture->start();
-
+    capture->start(QThread::HighPriority);
     dynamic_cast< ColorEmitter*>(capture)->setBrightness(ui->brightnessSlider->value());
-
-    m_colorEmitters << dynamic_cast< ColorEmitter*>(capture);
+    m_screenCapture << capture;
+    m_colorEmitters << capture;
   }
 
   AnimationColorEmitter *animation;
-  for (register int i = 0; i < 8; ++i) {
-    animation = new AnimationColorEmitter();
-    m_colorEmitters << dynamic_cast< ColorEmitter*>(animation);
+  for (register int i = 0; i < 4; ++i)
+    m_colorEmitters << (animation = new AnimationColorEmitter());
+
+  for (register int i = 0; i < 12; ++i)
+    m_colorEmitters << new PlainColorEmitter();
+
+  for (register int i = 0; i < 1; ++i) {
+    ImageColorEmitter *m_image = new ImageColorEmitter();
+    m_image->fromImage(new QImage("/home/dev/data.jpg"));
+    m_colorEmitters << m_image;
+
   }
 
   setBrightness(ui->brightnessSlider->value());
@@ -192,11 +197,20 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
 
   }
 
-  for (register int i = 1; i <= 8; ++i) {
+  for (register int i = 1; i <= 4; ++i) {
     cmb->addItem(QIcon(":/22x22/animation.png"), QString("Animation color profile #%1").arg(QString::number(i)));
   }
 
-  connect(cmb, SIGNAL(currentIndexChanged(int)), item, SLOT(currentIndexChanged(int)), Qt::DirectConnection);
+  for (register int i = 1; i <= 12; ++i) {
+    cmb->addItem(QIcon(":/22x22/animation.png"), QString("Plain color profile #%1").arg(QString::number(i)));
+  }
+
+  for (register int i = 1; i <= 1; ++i) {
+    cmb->addItem(QIcon(":/22x22/animation.png"), QString("From image #%1").arg(QString::number(i)));
+  }
+
+  connect(cmb, static_cast < void( QComboBox::*)( int)>(&QComboBox::currentIndexChanged),
+          item, &ALCDeviceTreeWidget::currentIndexChanged, Qt::DirectConnection);
 
   ui->treeWidget->setItemWidget(item, 1, cmb);
 
@@ -222,12 +236,32 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   ui->treeWidget->setItemWidget(delay, 1, spinbox);
   spinbox->setMinimum(0);
   spinbox->setMaximum(1000);
-  spinbox->setValue(8);
+  spinbox->setValue(0);
   spinbox->setSuffix(" ms");
-  spinbox->setMaximumWidth(70);
+ // spinbox->setMaximumWidth(70);
 
   connect(spinbox, static_cast< void(QSpinBox::*)(int) >(&QSpinBox::valueChanged),
           this, &MainWindow::setDeviceIODelay);
+
+
+  delay = new QTreeWidgetItem(item);
+  spinbox = new SpinBoxItem(brightness, 1);
+  delay->setText(0, "Leds");
+  delay->setIcon(0, QIcon(":/22x22/fpsrate.png"));
+  ui->treeWidget->setItemWidget(delay, 1, spinbox);
+  spinbox->setMinimum(0);
+  spinbox->setMaximum(1000);
+  spinbox->setValue(0);
+  spinbox->setSuffix(" leds");
+  //spinbox->setMaximumWidth(70);
+
+  for (register int i = 0; i < 4; ++i) {
+    QTreeWidgetItem *a = new QTreeWidgetItem(delay);
+    a->setText(0, "Stripe #" + QString::number(i+1));
+    LedConfigurationItem *ledc = new LedConfigurationItem(a, 1);
+    ui->treeWidget->setItemWidget(a, 1, ledc);
+  }
+
 
   QTreeWidgetItem *led = new QTreeWidgetItem(item);
   led->setText(0, "Color corretion");
@@ -331,8 +365,7 @@ void MainWindow::setBrightness(int value) {
     m_colorEmitters[i]->setBrightness(brightness);
 }
 
-void MainWindow::setBrightnessBoost(bool value)
-{
+void MainWindow::setBrightnessBoost(bool value) {
   setBrightness(ui->brightnessSlider->value());
 }
 
@@ -453,6 +486,7 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 }
 #endif
 
+#include "emitters/color-emitter.h"
 
 MainWindow::~MainWindow()
 {
@@ -460,11 +494,6 @@ MainWindow::~MainWindow()
   m_settings->setValue("screenId", ui->screenArea->currentIndex());
   m_settings->setValue("brightness", ui->brightnessSlider->value());
 //  m_settings->setValue("framerateLimit", ui->framerateLimit->value());
-  m_settings->endGroup();
-
-  m_settings->beginGroup("AdvancedSettings");
-  m_settings->setValue("chunkSize", ui->chunkSize->value());
-  m_settings->setValue("pixelSkip", ui->pixelSkip->value());
   m_settings->endGroup();
 
   m_settings->beginGroup("LedPreviewSettings");
@@ -478,6 +507,18 @@ MainWindow::~MainWindow()
   m_settings->setValue("framerateControl", ui->wiimoteFramerate->isChecked());
   m_settings->setValue("screenControl", ui->wiimoteScreen->isChecked());
   m_settings->endGroup();
+
+  delete m_manager;
+
+  for (register int i = 0; i < m_colorEmitters.count(); ++i) {
+    register ColorEmitter *emitter = m_colorEmitters[i];
+    if (emitter->type() == ColorEmitter::EMITTER_SCREEN_CAPTURE) {
+      ScreenCaptureColorEmitter *capture = dynamic_cast < ScreenCaptureColorEmitter*>(emitter);
+      capture->setQuitState(true);
+      capture->wait();
+    }
+    delete emitter;
+  }
 
   delete ui;
 }
@@ -541,4 +582,16 @@ void SpinBoxItem::changeItem(int index)
 {
   if(index >=0)
     item->setData(this->column, Qt::UserRole, "44");
+}
+
+
+LedConfigurationItem::LedConfigurationItem(QTreeWidgetItem *, int)
+{
+  this->item = item;
+  this->column = column;
+}
+
+void LedConfigurationItem::changeItem(int)
+{
+
 }

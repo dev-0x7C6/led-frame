@@ -1,9 +1,13 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QPixmapCache>
-
+#include "classes/color-samples.h"
 const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 7;
+const int applicationMinorVersion = 8;
+
+
+#include "emitters/image-color-emitter.h"
+#include <QImage>
 
 int main(int argc, char *argv[])
 {

@@ -10,7 +10,7 @@
 
 class ALCDeviceThread;
 
-#include "emitters/screencapturecoloremitter.h"
+#include "emitters/screen-capture-color-emitter.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +20,7 @@ class MainWindow;
 #include <QRadioButton>
 #include <QTreeWidgetItem>
 #include <QSpinBox>
+#include <QSystemTrayIcon>
 
 class ComboBoxItem : public QComboBox {
   Q_OBJECT
@@ -47,6 +48,8 @@ public slots:
   void changeItem(int);
 };
 
+#include "led-configuration-widget.h"
+
 class SpinBoxItem: public QSpinBox {
   Q_OBJECT
 private:
@@ -59,6 +62,21 @@ public:
 public slots:
   void changeItem(int);
 };
+
+
+class LedConfigurationItem: public LedConfigurationWidget {
+  Q_OBJECT
+private:
+  QTreeWidgetItem *item;
+  int column;
+
+public:
+  LedConfigurationItem(QTreeWidgetItem*, int);
+
+public slots:
+  void changeItem(int);
+};
+
 
 class RadioButtonItem  : public QRadioButton
 {
@@ -92,15 +110,17 @@ public:
   ALCDeviceThread * device() { return m_device; }
   void setDevice(ALCDeviceThread *device) { m_device = device; }
 
-private slots:
   void currentIndexChanged(int);
 
 signals:
   void setCustomEmitter(ALCDeviceThread*, int);
 };
 
-#include "emitters/animationcoloremitter.h"
+#include "emitters/animation-color-emitter.h"
 #include "connector/alc-device-manager.h"
+#include "emitters/image-color-emitter.h"
+
+class ScreenCaptureColorEmitter;
 
 class MainWindow : public QMainWindow
 {
@@ -108,8 +128,8 @@ class MainWindow : public QMainWindow
 private:
   QSettings *m_settings;
   QList < ColorEmitter*> m_colorEmitters;
+  QList < ScreenCaptureColorEmitter* > m_screenCapture;
   QList < ALCDeviceTreeWidget*> m_devices;
-
   QString m_title;
 
   ALCDeviceManager *m_manager;
@@ -140,7 +160,6 @@ private slots:
   void setBrightnessBoost(bool value);
   void updateScreenArea(int);
   void about();
-
 
   void setDeviceColorFormat(int);
   void setDeviceIODelay(int);

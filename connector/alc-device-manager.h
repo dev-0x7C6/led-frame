@@ -45,11 +45,6 @@ namespace AmbientLedConnector {
     const quint32 BaudRate = 500000;
   }
 
-  namespace ColorId {
-    const quint8 Red = 0;
-    const quint8 Green = 1;
-    const quint8 Blue = 2;
-  }
 }
 
 class ALCDeviceThread;
@@ -58,6 +53,7 @@ class ALCDeviceManager : public QObject {
   Q_OBJECT
 private:
   QList < ALCDeviceThread*> m_threads;
+  QSerialPortInfo m_info;
 
 public:
   explicit ALCDeviceManager(QObject *parent = 0);

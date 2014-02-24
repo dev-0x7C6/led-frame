@@ -23,5 +23,16 @@
         <file>22x22/no-device.png</file>
         <file>22x22/color.png</file>
         <file>22x22/animation.png</file>
+        <file>16x16/draw-triangle3.png</file>
+        <file>16x16/draw-triangle4.png</file>
+        <file>16x16/edit-delete.png</file>
+        <file>16x16/go-down.png</file>
+        <file>16x16/go-top.png</file>
+        <file>16x16/go-up.png</file>
+        <file>16x16/go-bottom.png</file>
+        <file>16x16/align-horizontal-left.png</file>
+        <file>16x16/align-horizontal-right.png</file>
+        <file>16x16/align-vertical-bottom.png</file>
+        <file>16x16/align-vertical-top.png</file>
     </qresource>
 </RCC>

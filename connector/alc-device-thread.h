@@ -28,6 +28,7 @@
 #include <QThread>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+#include "classes/color-samples.h"
 
 #define qr(r) qRed(r)
 #define qg(g) qGreen(g)
@@ -56,6 +57,7 @@ public:
 
 private:
   QSerialPort *m_device;
+  ColorSamples m_samples;
   ColorEmitter *m_emitter;
   QSerialPortInfo m_details;
   bool m_continue;

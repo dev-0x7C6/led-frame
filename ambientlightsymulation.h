@@ -1,7 +1,7 @@
 #ifndef AMBIENTLIGHTSYMULATION_H
 #define AMBIENTLIGHTSYMULATION_H
 
-#include "emitters/coloremitter.h"
+#include "emitters/color-emitter.h"
 
 #include <QWidget>
 #include <QRgb>

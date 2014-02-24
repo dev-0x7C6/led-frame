@@ -21,15 +21,17 @@
 #include "connector/alc-device-thread.h"
 
 #include <QTimerEvent>
+#include <malloc.h>
 
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
   :QObject(parent)
 {
-  startTimer(250);
+  startTimer(100);
 }
 
 ALCDeviceManager::~ALCDeviceManager() {
   for (register int i = 0; i < m_threads.count(); ++i) {
+    m_threads[i]->connectEmitter(0);
     m_threads[i]->setContinueValue(false);
     m_threads[i]->wait();
     delete m_threads[i];
@@ -45,8 +47,6 @@ ALCDeviceThread *ALCDeviceManager::device(int idx) {
   return m_threads[idx];
 }
 
-#include <QDebug>
-
 void ALCDeviceManager::timerEvent(QTimerEvent *event) {
   Q_UNUSED(event);
   QList < QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
@@ -60,7 +60,7 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
       ALCDeviceThread *thread = new ALCDeviceThread(device, ports[i]);
       connect(thread, SIGNAL(started()), this, SLOT(deviceThreadStarted()));
       connect(thread, SIGNAL(finished()), this, SLOT(deviceThreadFinished()));
-      thread->start();
+      thread->start(QThread::HighPriority);
     } else
       delete device;
   }

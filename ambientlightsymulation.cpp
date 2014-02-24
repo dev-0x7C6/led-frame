@@ -30,8 +30,8 @@ void AmbientLightSymulation::setGlowSize(int value) {
 
 void AmbientLightSymulation::timerEvent(QTimerEvent *) {
   setUpdatesEnabled(false);
-  if (m_emitter)
-    colors = m_emitter->state();
+//  if (m_emitter)
+//    colors = m_emitter->state();
   repaint();
   setUpdatesEnabled(true);
 }
