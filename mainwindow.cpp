@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent) :
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
 
+  m_tray.setContextMenu(new QMenu());
+  m_tray.setIcon(QIcon(":/22x22/leds.png"));
+  m_tray.show();
+
 //  QQuickView *view = new QQuickView();
 //  QWidget *container = QWidget::createWindowContainer(view, this);
 //  container->setMinimumSize(500, 300);

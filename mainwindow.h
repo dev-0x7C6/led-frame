@@ -127,6 +127,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 private:
   QSettings *m_settings;
+  QSystemTrayIcon m_tray;
   QList < ColorEmitter*> m_colorEmitters;
   QList < ScreenCaptureColorEmitter* > m_screenCapture;
   QList < ALCDeviceTreeWidget*> m_devices;

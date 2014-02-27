@@ -1,5 +1,8 @@
 #include "emitters/image-color-emitter.h"
 
+#include <QFileInfo>
+#include <QFileDialog>
+
 ImageColorEmitter::ImageColorEmitter(QObject *parent) :
   QObject(parent),
   ColorEmitter(),
@@ -32,7 +35,7 @@ void ImageColorEmitter::fromImage(QImage *image) {
   for (register int i = 0; i < 64; ++i)
     fragments[3][i] = image->copy((image->width()/64)*i, image->height() - 200, (image->width()/64), 200);
 
-  QVector < int> *colors = m_samples.get(ColorSamples::Position(0));
+
 
   int c = 0;
   double r = 0;
@@ -41,6 +44,7 @@ void ImageColorEmitter::fromImage(QImage *image) {
   int rgb = 0;
 
   for (register int k = 0; k < 4; ++k) {
+    QVector < int> *colors = m_samples.get(ColorSamples::Position(k));
     for (register int i = 0; i < SAMPLE_RESOLUTION; ++i) {
       r = g = b = 0;
       c = 0;
@@ -74,9 +78,6 @@ void ImageColorEmitter::init() {
   QMetaObject::invokeMethod(this, "open", Qt::QueuedConnection);
   ColorEmitter::init();
 }
-
-#include <QFileInfo>
-#include <QFileDialog>
 
 void ImageColorEmitter::open()
 {
