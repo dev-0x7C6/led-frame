@@ -5,7 +5,7 @@
 #include <QRadialGradient>
 
 AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) :
-  QWidget(parent),
+  QGLWidget(parent),
   m_timerId(0),
   m_framerateLimit(30),
   m_emitter(0),
@@ -15,6 +15,7 @@ AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) :
   setAutoFillBackground(false);
   m_monitor = QPixmap(":/256x256/display.png");
   setFramerate(30);
+  startTimer(13);
 }
 
 void AmbientLightSymulation::setFramerate(int value) {
@@ -28,13 +29,13 @@ void AmbientLightSymulation::setGlowSize(int value) {
 }
 
 
-void AmbientLightSymulation::timerEvent(QTimerEvent *) {
-  setUpdatesEnabled(false);
-//  if (m_emitter)
-//    colors = m_emitter->state();
-  repaint();
-  setUpdatesEnabled(true);
-}
+//void AmbientLightSymulation::timerEvent(QTimerEvent *) {
+//  setUpdatesEnabled(false);
+////  if (m_emitter)
+////    colors = m_emitter->state();
+//  repaint();
+//  setUpdatesEnabled(true);
+//}
 
 void drawLedAmbient(qreal x, qreal y, qreal radius, QColor color, QPainter &painter) {
   QRadialGradient grad(x, y, radius);
@@ -50,6 +51,7 @@ void drawLedAmbient(qreal x, qreal y, qreal radius, QColor color, QPainter &pain
 
 
 void AmbientLightSymulation::paintEvent(QPaintEvent *) {
+  return;
   QPainter painter(this);
   painter.setPen(Qt::NoPen);
   painter.setBrush(Qt::black);

@@ -22,6 +22,11 @@
 
 #include <QElapsedTimer>
 
+
+#define qr(r) qRed(r)
+#define qg(g) qGreen(g)
+#define qb(b) qBlue(b)
+
 unsigned char max(int value) {
   if (value > 255)
     return 255; else
@@ -36,91 +41,83 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
     m_continue(true)
 {
   m_device->moveToThread(this);
-  for (register int i = 0; i < 3; ++i)
-    m_colorCorrection[i] = 1.0;
-  m_brightness = 1.0;
-  m_delay = 0;
-  m_format = GRB;
 }
 
 void ALCDeviceThread::run() {
-  QList < QRgb> colors;
-  m_mutex.lock();
   unsigned char data[2048];
   memset((char*)data, 0, sizeof(data));
-
   QElapsedTimer timer;
   QElapsedTimer counter;
+
   int fps = 0;
-  int framerateLimit = 60;
+  int framerateLimit = 120; // ZA DUZA LICZBA ROZWALALA WYSWIETLANIE NA LEDACH
   double latency[2];
 
   counter.start();
   latency[0] = 0;
   latency[1] = 0;
   int io_delay = 0;
-  ColorFormat format;
-  double brightness;
-  double colorCorrection[3];
+
+  Format format_t;
+  double brightness_t;
+  double colorCorrection_t[3];
 
   quint16 ptr = 0;
   do {
     timer.start();
     if (m_emitter)
       m_emitter->state(m_samples);
-    brightness = m_brightness;
-    colorCorrection[Red] = m_colorCorrection[Red];
-    colorCorrection[Green] = m_colorCorrection[Green];
-    colorCorrection[Blue] = m_colorCorrection[Blue];
-    io_delay = m_delay;
-    format = m_format;
-    m_mutex.unlock();
+    brightness_t = brightness(true);
+    colorCorrection_t[Red] = redCorrection(true);
+    colorCorrection_t[Green] = greenCorrection(true);
+    colorCorrection_t[Blue] = blueCorrection(true);
+    format_t = GRB;
 
     if (!m_emitter) {
       msleep(100);
       continue;
     }
 
-    QVector < int> *colors = m_samples.scaled(ColorSamples::SAMPLE_TOP, 27);
+    QVector < int> *colors = m_samples.scaled(ColorSamples::SAMPLE_TOP, 27); // DLA 27 ledow
     ptr = 0;
 
     for (register int i = 0; i < colors->size(); ++i) {
       const quint32 color = (*colors)[i];
-      switch (m_format) {
+      switch (format_t) {
       case RGB:
-        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
-        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
-        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
+        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
         break;
       case RBG:
-        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
-        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
-        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
+        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
         break;
       case GRB:
-        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
-        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
-        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
+        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
         break;
       case BRG:
-        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
-        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
-        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
+        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
         break;
       case GBR:
-        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
-        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
-        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
+        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
         break;
       case BGR:
-        data[ptr++] = max(qb(color) * colorCorrection[Blue] * brightness);
-        data[ptr++] = max(qg(color) * colorCorrection[Green] * brightness);
-        data[ptr++] = max(qr(color) * colorCorrection[Red] * brightness);
+        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
         break;
       }
     }
 
-    ptr += 33*3;
+    ptr += 33*3; // reszta ledow czyli 33 ledy (rgb)
     delete colors;
 
     m_device->write((char*)data, ptr);
@@ -144,9 +141,8 @@ void ALCDeviceThread::run() {
       fps = 0;
     }
 
-    m_mutex.lock();
-  } while (m_continue && m_device->error() == QSerialPort::NoError);
-  m_mutex.unlock();
+
+  } while (continueValue() && m_device->error() == QSerialPort::NoError);
 
   if (m_device->isOpen() && m_device->isWritable())
     m_device->close();
@@ -158,7 +154,7 @@ void ALCDeviceThread::run() {
 }
 
 void ALCDeviceThread::connectEmitter(ColorEmitter *emitter) {
-  QMutexLocker locker(&m_mutex);
+  QMutexLocker locker(m_mutex);
   if (m_emitter)
     m_emitter->done();
 
@@ -170,71 +166,11 @@ void ALCDeviceThread::connectEmitter(ColorEmitter *emitter) {
 QSerialPortInfo ALCDeviceThread::details() { return m_details; }
 
 void ALCDeviceThread::setContinueValue(bool value) {
-  QMutexLocker locker(&m_mutex);
+  QMutexLocker locker(m_mutex);
   m_continue = value;
 }
 
 bool ALCDeviceThread::continueValue() {
-  QMutexLocker locker(&m_mutex);
+  QMutexLocker locker(m_mutex);
   return m_continue;
-}
-
-void ALCDeviceThread::setDelay(int delay) {
-  QMutexLocker locker(&m_mutex);
-  m_delay = delay;
-}
-
-void ALCDeviceThread::setColorFormat(ALCDeviceThread::ColorFormat format) {
-  QMutexLocker locker(&m_mutex);
-  m_format = format;
-}
-
-void ALCDeviceThread::setBrigthness(double value) {
-  QMutexLocker locker(&m_mutex);
-  m_brightness = value;
-}
-
-void ALCDeviceThread::setBlueColorCorrection(double value) {
-  QMutexLocker locker(&m_mutex);
-  m_colorCorrection[Blue] = value;
-}
-
-void ALCDeviceThread::setGreenColorCorrection(double value) {
-  QMutexLocker locker(&m_mutex);
-  m_colorCorrection[Green] = value;
-}
-
-void ALCDeviceThread::setRedColorCorrection(double value) {
-  QMutexLocker locker(&m_mutex);
-  m_colorCorrection[Red] = value;
-}
-
-ALCDeviceThread::ColorFormat ALCDeviceThread::colorFormat() {
-  QMutexLocker locker(&m_mutex);
-  return m_format;
-}
-
-int ALCDeviceThread::delay() {
-  QMutexLocker locker(&m_mutex);
-  return m_delay;
-}
-
-double ALCDeviceThread::brightness() {
-  QMutexLocker locker(&m_mutex);
-  return m_brightness;
-}
-
-double ALCDeviceThread::blueColorCorrection() {
-  QMutexLocker locker(&m_mutex);
-  return m_colorCorrection[Blue];
-}
-
-double ALCDeviceThread::greenColorCorrection() {
-  QMutexLocker locker(&m_mutex);
-  return m_colorCorrection[Green];
-}
-
-double ALCDeviceThread::redColorCorrection() {
-  QMutexLocker locker(&m_mutex);
-  return m_colorCorrection[Red];
 }

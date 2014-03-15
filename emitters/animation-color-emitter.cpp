@@ -7,7 +7,11 @@ AnimationColorEmitter::AnimationColorEmitter() :
 {
   m_type = EMITTER_ANIMATION;
   rotatePalette();
-  startTimer(1000/60);
+  startTimer(1000/30);
+  for (register int i = 0; i < 256; ++i)
+    m_colorStream << qRgb(0, 0, 0);
+
+  m_animationType = Rotation;
 }
 
 AnimationColorEmitter::~AnimationColorEmitter() {

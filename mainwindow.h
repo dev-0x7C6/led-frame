@@ -119,6 +119,7 @@ signals:
 #include "emitters/animation-color-emitter.h"
 #include "connector/alc-device-manager.h"
 #include "emitters/image-color-emitter.h"
+#include "managers/alc-screen-manager.h"
 
 class ScreenCaptureColorEmitter;
 
@@ -131,6 +132,7 @@ private:
   QList < ColorEmitter*> m_colorEmitters;
   QList < ScreenCaptureColorEmitter* > m_screenCapture;
   QList < ALCDeviceTreeWidget*> m_devices;
+  ALCScreenManager *m_screenManager;
   QString m_title;
 
   ALCDeviceManager *m_manager;

@@ -49,8 +49,37 @@ void ScreenCaptureColorEmitter::setQuitState(bool value) {
   m_quit = value;
 }
 
-#include <QDebug>
-#include <QThreadPool>
+
+void ScreenCaptureColorEmitter::setName(QString name) {
+  QMutexLocker locker(&m_mutex);
+  m_name = name;
+}
+
+QRect ScreenCaptureColorEmitter::area() {
+  QMutexLocker locker(&m_mutex);
+  return m_captureArea;
+}
+
+int ScreenCaptureColorEmitter::chunk() {
+  QMutexLocker locker(&m_mutex);
+  return m_chunkSize;
+}
+
+int ScreenCaptureColorEmitter::pixelSkip() {
+  QMutexLocker locker(&m_mutex);
+  return m_pixelSkip;
+}
+
+int ScreenCaptureColorEmitter::framerateLimit() {
+  QMutexLocker locker(&m_mutex);
+  return m_framerateLimit;
+}
+
+QString ScreenCaptureColorEmitter::name() {
+  QMutexLocker locker(&m_mutex);
+  return m_name;
+}
+
 
 void ScreenCaptureColorEmitter::run(){
   QElapsedTimer timer;
@@ -64,7 +93,6 @@ void ScreenCaptureColorEmitter::run(){
   counter.start();
   latency[0] = 0;
   latency[1] = 0;
-
 
   do {
     timer.start();
@@ -203,3 +231,4 @@ void ScreenCaptureColorEmitter::grab(ScreenFragments fragment, ColorSamples &sam
   }
 
 }
+

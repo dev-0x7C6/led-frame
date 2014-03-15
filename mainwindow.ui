@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1098</width>
-    <height>572</height>
+    <width>1094</width>
+    <height>570</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -111,94 +111,7 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_2">
-                <item>
-                 <widget class="QLabel" name="brightnessIcon">
-                  <property name="minimumSize">
-                   <size>
-                    <width>24</width>
-                    <height>24</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resources/resource.qrc">:/22x22/brightness.png</pixmap>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Brightness:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSlider" name="brightnessSlider">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="statusTip">
-                   <string>Tune led brightness</string>
-                  </property>
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>200</number>
-                  </property>
-                  <property name="value">
-                   <number>100</number>
-                  </property>
-                  <property name="sliderPosition">
-                   <number>100</number>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="tickPosition">
-                   <enum>QSlider::TicksBelow</enum>
-                  </property>
-                  <property name="tickInterval">
-                   <number>10</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="proc">
-                  <property name="minimumSize">
-                   <size>
-                    <width>40</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>100%</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="brightnessBoost">
-                  <property name="text">
-                   <string>Brightness boost</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <widget class="ALCColorCorrectionWidget" name="widget" native="true"/>
               </item>
              </layout>
             </widget>
@@ -717,17 +630,7 @@
               <number>3</number>
              </property>
              <item>
-              <widget class="AmbientLightSymulation" name="widget" native="true">
-               <property name="minimumSize">
-                <size>
-                 <width>500</width>
-                 <height>360</height>
-                </size>
-               </property>
-               <property name="focusPolicy">
-                <enum>Qt::StrongFocus</enum>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="qml"/>
              </item>
              <item>
               <widget class="QGroupBox" name="groupBox_6">
@@ -955,7 +858,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1098</width>
+     <width>1094</width>
      <height>20</height>
     </rect>
    </property>
@@ -1012,9 +915,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>AmbientLightSymulation</class>
+   <class>ALCColorCorrectionWidget</class>
    <extends>QWidget</extends>
-   <header>ambientlightsymulation.h</header>
+   <header>widgets/alc-color-correction-widget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

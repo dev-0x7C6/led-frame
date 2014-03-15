@@ -34,5 +34,8 @@
         <file>16x16/align-horizontal-right.png</file>
         <file>16x16/align-vertical-bottom.png</file>
         <file>16x16/align-vertical-top.png</file>
+        <file>custom/blue.png</file>
+        <file>custom/green.png</file>
+        <file>custom/red.png</file>
     </qresource>
 </RCC>

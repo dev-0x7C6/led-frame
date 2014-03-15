@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui qml quick widgets serialport
+QT += core gui qml quick widgets serialport opengl
 
 QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native
 QMAKE_CXXFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
@@ -34,7 +34,11 @@ SOURCES += main.cpp\
     emitters/animation-color-emitter.cpp \
     emitters/blackhole-color-emitter.cpp \
     emitters/color-emitter.cpp \
-    emitters/screen-capture-color-emitter.cpp
+    emitters/screen-capture-color-emitter.cpp \
+    classes/alc-settings.cpp \
+    managers/alc-screen-manager.cpp \
+    classes/alc-color-correction.cpp \
+    widgets/alc-color-correction-widget.cpp
 
 HEADERS += mainwindow.h \
     ambientlightsymulation.h \
@@ -48,11 +52,16 @@ HEADERS += mainwindow.h \
     emitters/color-emitter.h \
     emitters/blackhole-color-emitter.h \
     emitters/animation-color-emitter.h \
-    emitters/screen-capture-color-emitter.h
+    emitters/screen-capture-color-emitter.h \
+    classes/alc-settings.h \
+    managers/alc-screen-manager.h \
+    classes/alc-color-correction.h \
+    widgets/alc-color-correction-widget.h
 
 FORMS += mainwindow.ui \
     about.ui \
-    led-configuration-widget.ui
+    led-configuration-widget.ui \
+    widgets/alc-color-correction-widget.ui
 
 RESOURCES += \
     resources/resource.qrc \

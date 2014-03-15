@@ -26,7 +26,7 @@
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
   :QObject(parent)
 {
-  startTimer(100);
+  startTimer(250);
 }
 
 ALCDeviceManager::~ALCDeviceManager() {
@@ -58,8 +58,8 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
     if (device->open(QIODevice::ReadWrite)) {
       device->setBaudRate(AmbientLedConnector::Transmision::BaudRate);
       ALCDeviceThread *thread = new ALCDeviceThread(device, ports[i]);
-      connect(thread, SIGNAL(started()), this, SLOT(deviceThreadStarted()));
-      connect(thread, SIGNAL(finished()), this, SLOT(deviceThreadFinished()));
+      connect(thread, &ALCDeviceThread::started, this, &ALCDeviceManager::deviceThreadStarted);
+      connect(thread, &ALCDeviceThread::finished, this, &ALCDeviceManager::deviceThreadFinished);
       thread->start(QThread::HighPriority);
     } else
       delete device;
@@ -67,13 +67,13 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
 }
 
 void ALCDeviceManager::deviceThreadStarted() {
-  ALCDeviceThread *thread = dynamic_cast < ALCDeviceThread *>(sender());
+  ALCDeviceThread *thread = reinterpret_cast < ALCDeviceThread *>(sender());
   m_threads << thread;
   emit deviceConnected(thread);
 }
 
 void ALCDeviceManager::deviceThreadFinished() {
-  ALCDeviceThread *thread = dynamic_cast < ALCDeviceThread *>(sender());
+  ALCDeviceThread *thread = reinterpret_cast < ALCDeviceThread *>(sender());
   QSerialPortInfo details = thread->details();
   m_threads.removeAll(thread);
   emit deviceDisconnected(thread);

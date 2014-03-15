@@ -20,26 +20,17 @@ MainWindow::MainWindow(QWidget *parent) :
   m_wiimotedevEvents(new WiimotedevDeviceEvents),
   m_buttons(0),
 #endif
-  ui(new Ui::MainWindow)
+  ui(new Ui::MainWindow),
+  m_screenManager(new ALCScreenManager(this))
 {
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
-
   m_tray.setContextMenu(new QMenu());
   m_tray.setIcon(QIcon(":/22x22/leds.png"));
   m_tray.show();
 
-//  QQuickView *view = new QQuickView();
-//  QWidget *container = QWidget::createWindowContainer(view, this);
-//  container->setMinimumSize(500, 300);
-//  container->setMaximumSize(500, 300);
-//  container->setFocusPolicy(Qt::TabFocus);
-//  view->setSource(QUrl("qrc:/qml/main.qml"));
-//  ui->qml->addWidget(container);
-
   m_manager = new ALCDeviceManager(this);
   QRect rect;
-
 
   m_statisticAverageFPS = 0;
   m_statisticAverageLatency = 0;
@@ -47,6 +38,13 @@ MainWindow::MainWindow(QWidget *parent) :
   m_statisticClock = 0;
   m_statisticFirstTime = true;
 
+    QQuickView *view = new QQuickView();
+    QWidget *container = QWidget::createWindowContainer(view, this);
+    container->setMinimumSize(500, 300);
+    container->setMaximumSize(500, 300);
+    container->setFocusPolicy(Qt::TabFocus);
+    view->setSource(QUrl("qrc:/qml/main.qml"));
+    ui->qml->addWidget(container);
 
   ui->screenArea->addItem(QIcon(":/16x16/selected-screen.png"), "Not definited");
 
@@ -86,18 +84,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
  // connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
-  connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
+  //connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
 
   connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
   connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
-  connect(ui->ledGlow, SIGNAL(valueChanged(int)), ui->widget, SLOT(setGlowSize(int)));
-  connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), ui->widget, SLOT(setFramerate(int)));
+  //connect(ui->ledGlow, SIGNAL(valueChanged(int)), ui->widget, SLOT(setGlowSize(int)));
+ // connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), ui->widget, SLOT(setFramerate(int)));
   connect(ui->ledGlow, SIGNAL(valueChanged(int)), this, SLOT(setGlowSize(int)));
   connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerateLed(int)));
 
   m_settings->beginGroup("GeneralSettings");
  // ui->screenArea->setCurrentIndex(m_settings->value("screenId", 0).toInt());
-  ui->brightnessSlider->setValue(m_settings->value("brightness", 100).toInt());
+ // ui->brightnessSlider->setValue(m_settings->value("brightness", 100).toInt());
  // ui->framerateLimit->setValue(m_settings->value("framerateLimit", 30).toInt());
   m_settings->endGroup();
 
@@ -122,27 +120,14 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
 #endif
 
-  connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
+  //connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
 
   m_colorEmitters << (new BlackholeColorEmitter());
 
-  for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
-    ScreenCaptureColorEmitter *capture = new ScreenCaptureColorEmitter(0);
 
-    if (i == -1 || i == -2)
-      rect = QApplication::desktop()->geometry(); else
-      rect = QApplication::desktop()->screenGeometry(i);
+  for (register int i = 0; i < m_screenManager->emitters()->count(); ++i)
+    m_colorEmitters << (*m_screenManager->emitters())[i];
 
-    capture->setCaptureArea(rect);
-    capture->setPixelSkip(4);
-    capture->setChunkSize(160);
-    capture->setFramerateLimit(25);
-    capture->setBrightness(ui->brightnessSlider->value());
-    capture->start(QThread::HighPriority);
-    dynamic_cast< ColorEmitter*>(capture)->setBrightness(ui->brightnessSlider->value());
-    m_screenCapture << capture;
-    m_colorEmitters << capture;
-  }
 
   AnimationColorEmitter *animation;
   for (register int i = 0; i < 4; ++i)
@@ -158,9 +143,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
   }
 
-  setBrightness(ui->brightnessSlider->value());
+  //setBrightness(ui->brightnessSlider->value());
 
-  connect(ui->brightnessBoost, &QCheckBox::clicked, this, &MainWindow::setBrightnessBoost);
+ // connect(ui->brightnessBoost, &QCheckBox::clicked, this, &MainWindow::setBrightnessBoost);
 
   connect(m_manager, SIGNAL(deviceConnected(ALCDeviceThread*)), this, SLOT(deviceConnected(ALCDeviceThread*)), Qt::DirectConnection);
   connect(m_manager, SIGNAL(deviceDisconnected(ALCDeviceThread*)), this, SLOT(deviceDisconnected(ALCDeviceThread*)), Qt::DirectConnection);
@@ -179,7 +164,7 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   cmb->setIconSize(QSize(22, 22));
   cmb->addItem(QIcon(":/22x22/no-device.png"), QString("Not assigned"));
 
-  for (register int i = -2; i < QApplication::desktop()->screenCount(); ++i) {
+  for (register int i = -1; i < QApplication::desktop()->screenCount(); ++i) {
     if (i == -1 || i == -2)
       rect = QApplication::desktop()->geometry(); else
       rect = QApplication::desktop()->screenGeometry(i);
@@ -361,16 +346,16 @@ void MainWindow::setFramerate(int value) {
 
 void MainWindow::setBrightness(int value) {
   double brightness = double(value) / 100.0;
-  if (ui->brightnessBoost->isChecked())
-    brightness *= 2.5;
-  ui->proc->setText(QString::number(int(brightness*100)) + "%");
+  //if (ui->brightnessBoost->isChecked())
+ //   brightness *= 2.5;
+ // ui->proc->setText(QString::number(int(brightness*100)) + "%");
 
-  for (register int i = 0; i < m_colorEmitters.count(); ++i)
-    m_colorEmitters[i]->setBrightness(brightness);
+ // for (register int i = 0; i < m_colorEmitters.count(); ++i)
+  //  m_colorEmitters[i]->setBrightness(brightness);
 }
 
 void MainWindow::setBrightnessBoost(bool value) {
-  setBrightness(ui->brightnessSlider->value());
+// setBrightness(ui->brightnessSlider->value());
 }
 
 void MainWindow:: updateScreenArea(int area) {
@@ -391,7 +376,7 @@ void MainWindow:: updateScreenArea(int area) {
 
   //qDebug() << area;
 
-  ui->widget->connectEmitter(m_colorEmitters[area]);
+  //ui->widget->connectEmitter(m_colorEmitters[area]);
 
 }
 
@@ -421,35 +406,32 @@ void MainWindow::about() {
 }
 
 void MainWindow::setDeviceColorFormat(int value) {
-  for (register int i = 0; i < m_devices.count(); ++i)
-    m_devices[i]->device()->setColorFormat((ALCDeviceThread::ColorFormat)value);
 }
 
 void MainWindow::setDeviceIODelay(int value)
 {
-  for (register int i = 0; i < m_devices.count(); ++i)
-    m_devices[i]->device()->setDelay(value);
+
 }
 
 void MainWindow::setDeviceBrightness(int value)
 {
   for (register int i = 0; i < m_devices.count(); ++i)
-    m_devices[i]->device()->setBrigthness(value / 100.0);
+    m_devices[i]->device()->setBrightness(value / 100.0);
 }
 
 void MainWindow::setDeviceBlueColorCorrection(int value) {
   for (register int i = 0; i < m_devices.count(); ++i)
-    m_devices[i]->device()->setBlueColorCorrection(value / 100.0);
+    m_devices[i]->device()->setBlueCorrection(value / 100.0);
 }
 
 void MainWindow::setDeviceGreenColorCorrection(int value) {
   for (register int i = 0; i < m_devices.count(); ++i)
-    m_devices[i]->device()->setGreenColorCorrection(value / 100.0);
+    m_devices[i]->device()->setGreenCorrection(value / 100.0);
 }
 
 void MainWindow::setDeviceRedColorCorrection(int value) {
   for (register int i = 0; i < m_devices.count(); ++i)
-    m_devices[i]->device()->setRedColorCorrection(value / 100.0);
+    m_devices[i]->device()->setRedCorrection(value / 100.0);
 }
 
 #ifdef Q_OS_UNIX
@@ -458,10 +440,10 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
     return;
 
   if (ui->wiimoteBrightness->isChecked()) {
-    if ((buttons & WIIMOTE_BTN_PLUS) && !(m_buttons & WIIMOTE_BTN_PLUS))
-      ui->brightnessSlider->setValue(ui->brightnessSlider->value() + 4);
-    if ((buttons & WIIMOTE_BTN_MINUS) && !(m_buttons & WIIMOTE_BTN_MINUS))
-      ui->brightnessSlider->setValue(ui->brightnessSlider->value() - 4);
+//    if ((buttons & WIIMOTE_BTN_PLUS) && !(m_buttons & WIIMOTE_BTN_PLUS))
+ //     ui->brightnessSlider->setValue(ui->brightnessSlider->value() + 4);
+  //  if ((buttons & WIIMOTE_BTN_MINUS) && !(m_buttons & WIIMOTE_BTN_MINUS))
+  //    ui->brightnessSlider->setValue(ui->brightnessSlider->value() - 4);
   }
 
   if (ui->wiimoteFramerate->isChecked()) {
@@ -496,7 +478,6 @@ MainWindow::~MainWindow()
 {
   m_settings->beginGroup("GeneralSettings");
   m_settings->setValue("screenId", ui->screenArea->currentIndex());
-  m_settings->setValue("brightness", ui->brightnessSlider->value());
 //  m_settings->setValue("framerateLimit", ui->framerateLimit->value());
   m_settings->endGroup();
 
@@ -516,11 +497,7 @@ MainWindow::~MainWindow()
 
   for (register int i = 0; i < m_colorEmitters.count(); ++i) {
     register ColorEmitter *emitter = m_colorEmitters[i];
-    if (emitter->type() == ColorEmitter::EMITTER_SCREEN_CAPTURE) {
-      ScreenCaptureColorEmitter *capture = dynamic_cast < ScreenCaptureColorEmitter*>(emitter);
-      capture->setQuitState(true);
-      capture->wait();
-    }
+    if (emitter->type() != ColorEmitter::EMITTER_SCREEN_CAPTURE)
     delete emitter;
   }
 

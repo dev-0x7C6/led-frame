@@ -20,8 +20,10 @@ int main(int argc, char *argv[])
                                           application.applicationName(),
                                           application.applicationVersion()));
 
+
   MainWindow w;
   w.show();
+
   
   return application.exec();
 }

@@ -32,6 +32,7 @@ public:
 private:
   ColorSamples m_samples;
   QScreen *m_screen;
+  QString m_name;
 
   QRect m_captureArea;
   int m_chunkSize;
@@ -50,11 +51,19 @@ private:
 
 
 public slots:
+  void setName(QString name);
   void setCaptureArea(QRect);
   void setChunkSize(int);
   void setPixelSkip(int);
   void setFramerateLimit(int);
   void setQuitState(bool);
+
+  QRect area();
+  int chunk();
+  int pixelSkip();
+  int framerateLimit();
+
+  QString name();
 
 protected:
   void run();

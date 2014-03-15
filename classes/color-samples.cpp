@@ -1,17 +1,13 @@
 #include "color-samples.h"
 
-ColorSamples::ColorSamples()
-{
+ColorSamples::ColorSamples() {
   m_samples[0].resize(SAMPLE_RESOLUTION);
   m_samples[1].resize(SAMPLE_RESOLUTION);
   m_samples[2].resize(SAMPLE_RESOLUTION);
   m_samples[3].resize(SAMPLE_RESOLUTION);
 }
 
-ColorSamples::~ColorSamples()
-{
-
-}
+ColorSamples::~ColorSamples() { }
 
 void ColorSamples::set(ColorSamples::Position pos, QVector < int> &colors) {
   memcpy(reinterpret_cast < void*> (m_samples[pos].data()),
@@ -21,7 +17,6 @@ void ColorSamples::set(ColorSamples::Position pos, QVector < int> &colors) {
 QVector < int> *ColorSamples::get(ColorSamples::Position pos) {
   return &m_samples[pos];
 }
-#include <QDebug>
 
 QVector < int> *ColorSamples::scaled(ColorSamples::Position pos, int size) {
   register QVector < int> *result = new QVector < int> (size);

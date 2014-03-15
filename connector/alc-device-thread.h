@@ -20,54 +20,23 @@
 #ifndef ACLDEVICETHREAD_H
 #define ACLDEVICETHREAD_H
 
-#include <QBuffer>
-#include <QByteArray>
-#include <QMutex>
-#include <QMutexLocker>
-#include <QRgb>
 #include <QThread>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include "classes/color-samples.h"
+#include "classes/alc-color-correction.h"
 
-#define qr(r) qRed(r)
-#define qg(g) qGreen(g)
-#define qb(b) qBlue(b)
 
 class ColorEmitter;
 
-class ALCDeviceThread : public QThread
-{
+class ALCDeviceThread : public QThread, public ALCColorCorrection {
   Q_OBJECT
-public:
-  enum ColorFormat {
-    RGB = 0x00,
-    RBG,
-    GRB,
-    BRG,
-    GBR,
-    BGR
-  };
-
-  enum ColorId {
-    Red = 0x00,
-    Green,
-    Blue
-  };
-
 private:
   QSerialPort *m_device;
-  ColorSamples m_samples;
   ColorEmitter *m_emitter;
+  ColorSamples m_samples;
   QSerialPortInfo m_details;
   bool m_continue;
-  QMutex m_mutex;
-  QList < QRgb> m_colors;
-
-  int m_delay;
-  double m_brightness;
-  double m_colorCorrection[3];
-  ColorFormat m_format;
 
 public:
   ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
@@ -75,27 +44,11 @@ public:
   void setContinueValue(bool value);
   bool continueValue();
 
-  void setBlueColorCorrection(double);
-  void setBrigthness(double);
-  void setColorFormat(ColorFormat format);
-  void setDelay(int);
-  void setGreenColorCorrection(double);
-  void setRedColorCorrection(double);
-
-
-  ColorFormat colorFormat();
-  double blueColorCorrection();
-  double brightness();
-  double greenColorCorrection();
-  double redColorCorrection();
-  int delay();
-
 protected:
   void run();
 
 public slots:
   void connectEmitter(ColorEmitter *emitter);
-
 };
 
 #endif // ACLDEVICETHREAD_H
