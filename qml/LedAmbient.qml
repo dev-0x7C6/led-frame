@@ -3,8 +3,6 @@ import QtGraphicalEffects 1.0
 
 Item {
     id: abc
-    width: 300
-    height: 300
 
 
     property color initColor: "lightblue"
@@ -14,7 +12,7 @@ Item {
         anchors.fill: parent
         gradient: Gradient {
             GradientStop { position: 0.0; color: initColor }
-            GradientStop { position: 0.5; color: "#00000000" }
+            GradientStop { position: 0.4; color: "#00000000" }
         }
     }
 

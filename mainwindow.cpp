@@ -40,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QQuickView *view = new QQuickView();
     QWidget *container = QWidget::createWindowContainer(view, this);
-    container->setMinimumSize(500, 300);
-    container->setMaximumSize(500, 300);
+    container->setMinimumSize(500, 400);
+    container->setMaximumSize(500, 400);
     container->setFocusPolicy(Qt::TabFocus);
     view->setSource(QUrl("qrc:/qml/main.qml"));
     ui->qml->addWidget(container);
