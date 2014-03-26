@@ -19,7 +19,12 @@ public:
   explicit PlainColorEmitter();
   virtual ~PlainColorEmitter();
 
+  void setColor(QColor);
+  QColor color();
+
   void pushState();
+
+  QColor open();
 };
 
 #endif // PLAINCOLOREMITTER_H

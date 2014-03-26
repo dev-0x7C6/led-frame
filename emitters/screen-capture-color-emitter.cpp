@@ -132,6 +132,7 @@ void ScreenCaptureColorEmitter::run(){
       emit updateStats(fps, (latency[1]/double(fps)/1000000.0), latency[1]/10000000.0);
       counter.restart();
       latency[1] = 0;
+      qDebug() << fps;
       fps = 0;
     }
 

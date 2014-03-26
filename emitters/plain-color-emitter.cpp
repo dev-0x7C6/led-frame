@@ -1,16 +1,17 @@
 #include "plain-color-emitter.h"
 
 #include <QTimer>
-
 #include <QTime>
+
 PlainColorEmitter::PlainColorEmitter() :
   QObject(),
   ColorEmitter(),
-  m_timer(new QTimer(this))
+  m_timer(new QTimer(this)),
+  m_color(Qt::white)
 {
-  srand(QTime::currentTime().msecsSinceStartOfDay());
+ // srand(QTime::currentTime().msecsSinceStartOfDay());
   m_type = EMITTER_PLAIN_COLOR;
-  m_color = QColor::fromRgb(qrand()%255, qrand()%255, qrand()%255);
+
 
 
   connect(m_timer, &QTimer::timeout, this, &PlainColorEmitter::pushState);
@@ -19,6 +20,14 @@ PlainColorEmitter::PlainColorEmitter() :
 }
 
 PlainColorEmitter::~PlainColorEmitter() {}
+
+void PlainColorEmitter::setColor(QColor color) {
+  m_color = color;
+}
+
+QColor PlainColorEmitter::color() {
+  return m_color;
+}
 
 double max(double value) {
   if (value > 255)
@@ -41,4 +50,11 @@ void PlainColorEmitter::pushState() {
   m_samples.set(ColorSamples::SAMPLE_RIGHT, samples);
   m_samples.set(ColorSamples::SAMPLE_BOTTOM, samples);
   setState(m_samples);
+}
+
+#include <QColorDialog>
+
+QColor PlainColorEmitter::open() {
+  QColor color = QColorDialog::getColor(m_color);
+  return (m_color = color);
 }

@@ -17,8 +17,16 @@ ImageColorEmitter::ImageColorEmitter(QObject *parent) :
 
 }
 
-void ImageColorEmitter::fromImage(QImage *image) {
-  m_image = image;
+QString ImageColorEmitter::file() {
+  return m_file;
+}
+
+void ImageColorEmitter::fromFile(QString file) {
+  m_image = QImage(file);
+  m_file = file;
+
+  m_loaded = !m_image.isNull();
+
   QVector < QImage> fragments[4];
 
   fragments[0].resize(64);
@@ -27,13 +35,13 @@ void ImageColorEmitter::fromImage(QImage *image) {
   fragments[3].resize(64);
 
   for (register int i = 0; i < 64; ++i)
-    fragments[0][i] = image->copy((image->width()/64)*i, 0, (image->width()/64), 200);
+    fragments[0][i] = m_image.copy((m_image.width()/64)*i, 0, (m_image.width()/64), 200);
   for (register int i = 0; i < 64; ++i)
-    fragments[1][i] = image->copy((image->width()/64)*i, image->height() - 200, (image->width()/64), 200);
+    fragments[1][i] = m_image.copy((m_image.width()/64)*i, m_image.height() - 200, (m_image.width()/64), 200);
   for (register int i = 0; i < 64; ++i)
-    fragments[2][i] = image->copy((image->width()/64)*i, image->height() - 200, (image->width()/64), 200);
+    fragments[2][i] = m_image.copy((m_image.width()/64)*i, m_image.height() - 200, (m_image.width()/64), 200);
   for (register int i = 0; i < 64; ++i)
-    fragments[3][i] = image->copy((image->width()/64)*i, image->height() - 200, (image->width()/64), 200);
+    fragments[3][i] = m_image.copy((m_image.width()/64)*i, m_image.height() - 200, (m_image.width()/64), 200);
 
 
 
@@ -79,13 +87,14 @@ void ImageColorEmitter::init() {
   ColorEmitter::init();
 }
 
-void ImageColorEmitter::open()
-{
+QString ImageColorEmitter::open() {
   QFileInfo info(QFileDialog::getOpenFileName(0,
                                               "Open Keylogger History File",
-                                              "*.jpg;*.png", "Images (*.png *.xpm *.jpg)"));
+                                              "*.jpg;*.png;*.xpm", "Images (*.png *.xpm *.jpg)"));
 
   if (info.exists() && info.isFile() && info.isReadable()) {
-    fromImage(new QImage(info.filePath()));
+    fromFile(info.filePath());
   }
+
+  return info.filePath();
 }

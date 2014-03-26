@@ -9,20 +9,25 @@
 
 #include "classes/color-samples.h"
 
+class QTreeWidgetItem;
+
+
 class ColorEmitter {
 public:
   enum EmitterType: quint8 {
-    EMITTER_NOT_DEFINED,
+    EMITTER_NOT_DEFINED = 0x00,
+    EMITTER_SCREEN_CAPTURE,
     EMITTER_BLACKHOLE,
     EMITTER_ANIMATION,
     EMITTER_PLAIN_COLOR,
     EMITTER_IMAGE,
-    EMITTER_SCREEN_CAPTURE
+    EMITTER_END_ARRAY
   };
 
 private:
-  QList <QRgb> m_colors;
+  QString m_emitterName;
   ColorSamples m_samples;
+  QTreeWidgetItem *m_treeItem;
 
 protected:
   EmitterType m_type;
@@ -34,6 +39,10 @@ public:
   explicit ColorEmitter();
   virtual ~ColorEmitter();
 
+  void setEmitterName(const QString &name);
+  QString emitterName() const;
+
+
   EmitterType type() const;
   void setType(const EmitterType type) { m_type = type; }
 
@@ -44,6 +53,11 @@ public:
 //  void setState(QList < QRgb> colors);
   void setState(ColorSamples &samples);
   void state(ColorSamples &samples);
+
+
+  void setTreeItem(QTreeWidgetItem *item);
+  QTreeWidgetItem *treeItem();
+
 
   //QList < QRgb> state();
 };

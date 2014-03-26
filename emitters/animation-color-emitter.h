@@ -102,10 +102,10 @@ protected:
       break;
 
       case Glow:
-      if (m_blink < 8)
+      if (m_blink < 2)
         rgb = qRgb(max(qRed(m_color.rgb())), max(qGreen(m_color.rgb())), max(qBlue(m_color.rgb()))); else
         rgb = qRgb(0,0,0);
-      if (m_blink > 16)
+      if (m_blink > 3)
         m_blink = 0;
       for (register int p = 0; p < 4; ++p) {
         QVector < int> *vec = m_samples.get(static_cast < ColorSamples::Position>( p));

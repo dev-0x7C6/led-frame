@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1094</width>
-    <height>570</height>
+    <width>1084</width>
+    <height>560</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -33,565 +33,285 @@
     </property>
     <item>
      <widget class="QWidget" name="mainWidget" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="margin">
+        <number>2</number>
+       </property>
        <item>
-        <widget class="QTabWidget" name="leftWidget">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>22</width>
-           <height>22</height>
-          </size>
-         </property>
-         <widget class="QWidget" name="tab">
-          <attribute name="icon">
-           <iconset resource="resources/resource.qrc">
-            <normaloff>:/22x22/leds.png</normaloff>:/22x22/leds.png</iconset>
-          </attribute>
-          <attribute name="title">
-           <string>Connections</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_6">
-           <item>
-            <widget class="QTreeWidget" name="treeWidget">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="verticalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOff</enum>
-             </property>
-             <property name="horizontalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOff</enum>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::NoSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectColumns</enum>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>22</width>
-               <height>22</height>
-              </size>
-             </property>
-             <attribute name="headerVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="headerStretchLastSection">
-              <bool>true</bool>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>Device</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Settings</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox">
-             <property name="title">
-              <string>Global settings</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout">
-              <item>
-               <widget class="ALCColorCorrectionWidget" name="widget" native="true"/>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Maximum</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="Screens">
-          <attribute name="icon">
-           <iconset resource="resources/resource.qrc">
-            <normaloff>:/22x22/screen.png</normaloff>:/22x22/screen.png</iconset>
-          </attribute>
-          <attribute name="title">
-           <string>Screens</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_14">
-           <item>
-            <widget class="QTreeWidget" name="treeWidget_2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="verticalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOff</enum>
-             </property>
-             <property name="horizontalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOff</enum>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::NoSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectColumns</enum>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>22</width>
-               <height>22</height>
-              </size>
-             </property>
-             <attribute name="headerVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="headerStretchLastSection">
-              <bool>true</bool>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>Device</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Settings</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_4">
-          <attribute name="icon">
-           <iconset resource="resources/resource.qrc">
-            <normaloff>:/22x22/animation.png</normaloff>:/22x22/animation.png</iconset>
-          </attribute>
-          <attribute name="title">
-           <string>Colors &amp;&amp; Animations</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_15">
-           <item>
-            <widget class="QGroupBox" name="groupBox_3">
-             <property name="title">
-              <string>Solid color profiles</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_6">
-                <item>
-                 <widget class="QToolButton" name="toolButton_3">
-                  <property name="text">
-                   <string>Profile 1</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButton_2">
-                  <property name="text">
-                   <string>Profile 2</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButton">
-                  <property name="text">
-                   <string>Profile 3</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_14">
-                <item>
-                 <widget class="QToolButton" name="toolButton_4">
-                  <property name="text">
-                   <string>Profile 4</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButton_5">
-                  <property name="text">
-                   <string>Profile 5</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButton_6">
-                  <property name="text">
-                   <string>Profile 6</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_3">
-          <attribute name="icon">
-           <iconset resource="resources/resource.qrc">
-            <normaloff>:/22x22/device.png</normaloff>:/22x22/device.png</iconset>
-          </attribute>
-          <attribute name="title">
-           <string>Devices</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_13">
-           <item>
-            <widget class="QGroupBox" name="groupBox_7">
-             <property name="title">
-              <string>/dev/ttyUSB0</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_12">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_19">
-                <item>
-                 <widget class="QLabel" name="brightnessIcon_13">
-                  <property name="minimumSize">
-                   <size>
-                    <width>24</width>
-                    <height>24</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resources/resource.qrc">:/22x22/device.png</pixmap>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel_15">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Device serial:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel_16">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>FD43ADC2</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_17">
-                <item>
-                 <widget class="QLabel" name="brightnessIcon_9">
-                  <property name="minimumSize">
-                   <size>
-                    <width>24</width>
-                    <height>24</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resources/resource.qrc">:/22x22/leds.png</pixmap>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel_13">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Led count:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel_14">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>32 leds</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_3">
-                <item>
-                 <widget class="QLabel" name="brightnessIcon_2">
-                  <property name="minimumSize">
-                   <size>
-                    <width>24</width>
-                    <height>24</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resources/resource.qrc">:/22x22/leds.png</pixmap>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel_2">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Led count:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="brightnessLabel_8">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>32 leds</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_2">
-          <attribute name="icon">
-           <iconset resource="resources/resource.qrc">
-            <normaloff>:/custom/wiimotedev-small.png</normaloff>:/custom/wiimotedev-small.png</iconset>
-          </attribute>
-          <attribute name="title">
-           <string>Wiiremote</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
-           <item>
-            <widget class="QGroupBox" name="groupBox_4">
-             <property name="title">
-              <string>Wiiremote support (wiimotedev)</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_2">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_10">
-                <item>
-                 <widget class="QLabel" name="label_5">
-                  <property name="minimumSize">
-                   <size>
-                    <width>32</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resources/resource.qrc">:/custom/wiimotedev.png</pixmap>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_2">
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Wiiremote ID:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="wiimoteId">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="suffix">
-                   <string> id</string>
-                  </property>
-                  <property name="prefix">
-                   <string/>
-                  </property>
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>999999999</number>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_5">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="title">
-              <string>Controls</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_3">
-              <property name="leftMargin">
-               <number>16</number>
-              </property>
-              <item>
-               <widget class="QCheckBox" name="wiimoteBrightness">
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <item>
+          <widget class="QTabWidget" name="leftWidget">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="currentIndex">
+            <number>3</number>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <widget class="QWidget" name="tab">
+            <attribute name="icon">
+             <iconset resource="resources/resource.qrc">
+              <normaloff>:/22x22/device.png</normaloff>:/22x22/device.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Devices &amp;&amp; connections</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <widget class="QTreeWidget" name="devices">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::NoSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectColumns</enum>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>22</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <attribute name="headerVisible">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="headerStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <column>
                 <property name="text">
-                 <string>Brightness control</string>
+                 <string>Device</string>
                 </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="wiimoteFramerate">
+               </column>
+               <column>
                 <property name="text">
-                 <string>Framerate control</string>
+                 <string>Settings</string>
                 </property>
-                <property name="checked">
-                 <bool>true</bool>
+               </column>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Maximum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="ALCLedConfigurationWidget" name="tab_5">
+            <attribute name="icon">
+             <iconset resource="resources/resource.qrc">
+              <normaloff>:/22x22/leds.png</normaloff>:/22x22/leds.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Led strips</string>
+            </attribute>
+           </widget>
+           <widget class="ALCScreensWidget" name="screens">
+            <attribute name="icon">
+             <iconset resource="resources/resource.qrc">
+              <normaloff>:/22x22/screen.png</normaloff>:/22x22/screen.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Screens</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_14"/>
+           </widget>
+           <widget class="ALCSelectionsWidget" name="selections">
+            <attribute name="icon">
+             <iconset resource="resources/resource.qrc">
+              <normaloff>:/22x22/selected-area.png</normaloff>:/22x22/selected-area.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Selected area</string>
+            </attribute>
+           </widget>
+           <widget class="ALCEmittersWidget" name="emitters">
+            <attribute name="icon">
+             <iconset resource="resources/resource.qrc">
+              <normaloff>:/22x22/skip.png</normaloff>:/22x22/skip.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Emitters</string>
+            </attribute>
+           </widget>
+           <widget class="QWidget" name="tab_2">
+            <attribute name="icon">
+             <iconset resource="resources/resource.qrc">
+              <normaloff>:/custom/wiimotedev-small.png</normaloff>:/custom/wiimotedev-small.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Wiiremote</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="QGroupBox" name="groupBox_4">
+               <property name="title">
+                <string>Wiiremote support (wiimotedev)</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_2">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_10">
+                  <item>
+                   <widget class="QLabel" name="label_5">
+                    <property name="minimumSize">
+                     <size>
+                      <width>32</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="pixmap">
+                     <pixmap resource="resources/resource.qrc">:/custom/wiimotedev.png</pixmap>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Wiiremote ID:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="wiimoteId">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="suffix">
+                     <string> id</string>
+                    </property>
+                    <property name="prefix">
+                     <string/>
+                    </property>
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>999999999</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_5">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="title">
+                <string>Controls</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_3">
+                <property name="leftMargin">
+                 <number>16</number>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="wiimoteScreen">
-                <property name="text">
-                 <string>Screen source control</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </widget>
+                <item>
+                 <widget class="QCheckBox" name="wiimoteBrightness">
+                  <property name="text">
+                   <string>Brightness control</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="wiimoteFramerate">
+                  <property name="text">
+                   <string>Framerate control</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="wiimoteScreen">
+                  <property name="text">
+                   <string>Screen source control</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="colorCorrection">
+           <property name="title">
+            <string>Global color correction</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="ALCColorCorrectionWidget" name="widget" native="true"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QWidget" name="rightWidget" native="true">
@@ -630,7 +350,7 @@
               <number>3</number>
              </property>
              <item>
-              <layout class="QVBoxLayout" name="qml"/>
+              <widget class="AmbientLightSymulation" name="qml" native="true"/>
              </item>
              <item>
               <widget class="QGroupBox" name="groupBox_6">
@@ -858,7 +578,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1094</width>
+     <width>1084</width>
      <height>20</height>
     </rect>
    </property>
@@ -874,20 +594,61 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
-   <widget class="QMenu" name="menuSettings">
+   <widget class="QMenu" name="menuEmitters">
     <property name="title">
-     <string>Settings</string>
+     <string>Emitters</string>
     </property>
-    <addaction name="actionAdvanced_settings"/>
+    <addaction name="actionAdd_screen_area"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_animation"/>
+    <addaction name="actionAdd_plain_color"/>
+    <addaction name="actionAdd_image_samples"/>
+    <addaction name="separator"/>
+    <addaction name="actionRemove_selected"/>
+   </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionColor_correction"/>
+    <addaction name="actionGlow_simulation"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuSettings"/>
+   <addaction name="menuEmitters"/>
+   <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="sizeGripEnabled">
     <bool>true</bool>
    </property>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextBesideIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionAdd_screen_area"/>
+   <addaction name="separator"/>
+   <addaction name="actionAdd_animation"/>
+   <addaction name="actionAdd_plain_color"/>
+   <addaction name="actionAdd_image_samples"/>
+   <addaction name="separator"/>
+   <addaction name="actionRemove_selected"/>
   </widget>
   <action name="actionQuit">
    <property name="text">
@@ -911,6 +672,80 @@
     <string>Advanced settings</string>
    </property>
   </action>
+  <action name="actionColor_correction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/custom/blue.png</normaloff>:/custom/blue.png</iconset>
+   </property>
+   <property name="text">
+    <string>Color correction</string>
+   </property>
+  </action>
+  <action name="actionAdd_animation">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/22x22/animation.png</normaloff>:/22x22/animation.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add animation</string>
+   </property>
+  </action>
+  <action name="actionAdd_plain_color">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/22x22/color.png</normaloff>:/22x22/color.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add plain color</string>
+   </property>
+  </action>
+  <action name="actionAdd_image_samples">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/22x22/from-image.png</normaloff>:/22x22/from-image.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add image samples</string>
+   </property>
+  </action>
+  <action name="actionRemove_selected">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/16x16/edit-delete.png</normaloff>:/16x16/edit-delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>Remove selected</string>
+   </property>
+  </action>
+  <action name="actionAdd_screen_area">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/22x22/selected-area.png</normaloff>:/22x22/selected-area.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add screen area</string>
+   </property>
+  </action>
+  <action name="actionGlow_simulation">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/22x22/leds.png</normaloff>:/22x22/leds.png</iconset>
+   </property>
+   <property name="text">
+    <string>Glow simulation</string>
+   </property>
+  </action>
+  <action name="actionGlow_settings">
+   <property name="text">
+    <string>Glow settings</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -918,6 +753,36 @@
    <class>ALCColorCorrectionWidget</class>
    <extends>QWidget</extends>
    <header>widgets/alc-color-correction-widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AmbientLightSymulation</class>
+   <extends>QWidget</extends>
+   <header>ambientlightsymulation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ALCEmittersWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/alc-emitters-widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ALCLedConfigurationWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/alc-led-configuration-widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ALCScreensWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/alc-screens-widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ALCSelectionsWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/alc-selections-widget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -37,6 +37,13 @@ QVector < int> *ColorSamples::pscaled(ColorSamples::Position pos, int size) {
   register const QVector < int> &samples = m_samples[pos];
 
   double step = samples.size() / static_cast < double>( size);
+  Q_UNUSED(step);
+  return result;
+}
+
+void ColorSamples::copy(ColorSamples &ref) {
+  for (register int i = 0; i < SAMPLE_ARRAY; ++i)
+    set(static_cast< Position>(i), ref.m_samples[i]);
 }
 
 //  int r = 0;

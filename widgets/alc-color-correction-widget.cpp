@@ -14,6 +14,11 @@ ALCColorCorrectionWidget::ALCColorCorrectionWidget(QWidget *parent) :
   connect(ui->greenSlider, &QSlider::valueChanged, this, &ALCColorCorrectionWidget::greenSliderChanged);
   connect(ui->redSlider, &QSlider::valueChanged, this, &ALCColorCorrectionWidget::redSliderChanged);
 
+  connect(ui->restoreBrightness, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultBrightness);
+  connect(ui->restoreRed, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultRed);
+  connect(ui->restoreGreen, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultGreen);
+  connect(ui->restoreBlue, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultBlue);
+
   fromGlobal();
 }
 
@@ -50,4 +55,20 @@ void ALCColorCorrectionWidget::redSliderChanged(int value) {
   register double red = value / 100.0d;
   ALCColorCorrection::instance()->setRedCorrection(red);
   ui->redProcent->setText(QString::number(value) + "%");
+}
+
+void ALCColorCorrectionWidget::setDefaultBrightness() {
+  ui->brightnessSlider->setValue(100);
+}
+
+void ALCColorCorrectionWidget::setDefaultRed() {
+  ui->redSlider->setValue(100);
+}
+
+void ALCColorCorrectionWidget::setDefaultGreen() {
+  ui->greenSlider->setValue(100);
+}
+
+void ALCColorCorrectionWidget::setDefaultBlue() {
+  ui->blueSlider->setValue(100);
 }

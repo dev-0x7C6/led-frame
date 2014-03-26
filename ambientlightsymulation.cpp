@@ -5,17 +5,17 @@
 #include <QRadialGradient>
 
 AmbientLightSymulation::AmbientLightSymulation(QWidget *parent) :
-  QGLWidget(parent),
+  QWidget(parent),
   m_timerId(0),
   m_framerateLimit(30),
   m_emitter(0),
-  m_glowSize(96)
+  m_glowSize(60)
 {
   setUpdatesEnabled(false);
   setAutoFillBackground(false);
   m_monitor = QPixmap(":/256x256/display.png");
   setFramerate(30);
-  startTimer(13);
+  startTimer(30);
 }
 
 void AmbientLightSymulation::setFramerate(int value) {
@@ -28,14 +28,16 @@ void AmbientLightSymulation::setGlowSize(int value) {
   m_glowSize = value;
 }
 
+#include "classes/color-samples.h"
 
-//void AmbientLightSymulation::timerEvent(QTimerEvent *) {
-//  setUpdatesEnabled(false);
-////  if (m_emitter)
-////    colors = m_emitter->state();
-//  repaint();
-//  setUpdatesEnabled(true);
-//}
+void AmbientLightSymulation::timerEvent(QTimerEvent *) {
+  setUpdatesEnabled(false);
+  if (m_emitter) {
+    m_emitter->state(m_samples);
+  }
+  repaint();
+  setUpdatesEnabled(true);
+}
 
 void drawLedAmbient(qreal x, qreal y, qreal radius, QColor color, QPainter &painter) {
   QRadialGradient grad(x, y, radius);
@@ -51,7 +53,7 @@ void drawLedAmbient(qreal x, qreal y, qreal radius, QColor color, QPainter &pain
 
 
 void AmbientLightSymulation::paintEvent(QPaintEvent *) {
-  return;
+
   QPainter painter(this);
   painter.setPen(Qt::NoPen);
   painter.setBrush(Qt::black);
@@ -59,21 +61,27 @@ void AmbientLightSymulation::paintEvent(QPaintEvent *) {
 
   int x = ((width() - m_monitor.width())/2) + 9;
   int y = ((height() - m_monitor.height())/2) + 9;
-  if (!colors.isEmpty()) {
-    int colorid = 0;
-    for (register int i = 0; i < 16; ++i)
-      drawLedAmbient(i * ((m_monitor.width())/16.0) + x, y, m_glowSize, QColor(colors[colorid++]), painter);
 
-    for (register int i = 0; i < 16; ++i)
-      drawLedAmbient(width() - x, i * ((m_monitor.height())/27)+y+15, m_glowSize, QColor (colors[colorid++]), painter);
+  QVector <int> *colors = m_samples.scaled(ColorSamples::SAMPLE_TOP, 8);
 
-    for (register int i = 15; i >= 0; --i)
-      drawLedAmbient(i * ((m_monitor.width())/16.0) + x, height() - y - (m_monitor.height()/4.0), m_glowSize, QColor(colors[colorid++]), painter);
+  for (register int i = 0; i < colors->size(); ++i)
+    drawLedAmbient(i * ((m_monitor.width())/8.0) + x, y, m_glowSize, QColor((*colors)[i]), painter);
 
-    for (register int i = 15; i >= 0; --i)
-      drawLedAmbient(x, i * ((m_monitor.height())/27)+y+15, m_glowSize, QColor (colors[colorid++]), painter);
+  colors = m_samples.scaled(ColorSamples::SAMPLE_RIGHT, 8);
 
-  }
+  for (register int i = 0; i < colors->size(); ++i)
+    drawLedAmbient(width() - x, i * ((m_monitor.height())/27*2)+y+15, m_glowSize, QColor ((*colors)[i]), painter);
+
+  colors = m_samples.scaled(ColorSamples::SAMPLE_BOTTOM, 8);
+
+  for (register int i = 0; i < colors->size(); ++i)
+    drawLedAmbient(i * ((m_monitor.width())/8.0) + x, height() - y - (m_monitor.height()/4.0), m_glowSize, QColor((*colors)[i]), painter);
+
+  colors = m_samples.scaled(ColorSamples::SAMPLE_LEFT, 8);
+
+  for (register int i = 0; i < colors->size(); ++i)
+    drawLedAmbient(x, i * ((m_monitor.height())/27*2)+y+15, m_glowSize, QColor ((*colors)[i]), painter);
+
 
   painter.drawPixmap((width() - m_monitor.width())/2,
                      (height() - m_monitor.height())/2,

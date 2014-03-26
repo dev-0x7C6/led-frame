@@ -2,8 +2,11 @@
 #include <QApplication>
 #include <QPixmapCache>
 #include "classes/color-samples.h"
+
+#include "managers/alc-emitter-manager.h"
+
 const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 8;
+const int applicationMinorVersion = 9;
 
 
 #include "emitters/image-color-emitter.h"
@@ -20,6 +23,8 @@ int main(int argc, char *argv[])
                                           application.applicationName(),
                                           application.applicationVersion()));
 
+
+  ALCEmitterManager::instance();
 
   MainWindow w;
   w.show();

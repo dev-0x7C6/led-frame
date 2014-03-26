@@ -22,6 +22,11 @@ private:
   void greenSliderChanged(int);
   void redSliderChanged(int);
 
+  void setDefaultBrightness();
+  void setDefaultRed();
+  void setDefaultGreen();
+  void setDefaultBlue();
+
 };
 
 #endif // ALCCOLORCORRECTIONWIDGET_H

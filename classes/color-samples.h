@@ -10,10 +10,10 @@ const int SAMPLE_RESOLUTION = 64;
 class ColorSamples {
 public:
   enum Position : quint8 {
-    SAMPLE_BOTTOM,
-    SAMPLE_RIGHT,
     SAMPLE_TOP,
     SAMPLE_LEFT,
+    SAMPLE_RIGHT,
+    SAMPLE_BOTTOM,
     SAMPLE_ARRAY
   };
 
@@ -32,10 +32,7 @@ public:
 
   quint16 scale() { return SAMPLE_RESOLUTION; }
 
-  void copy(ColorSamples &ref) {
-    for (register int i = 0; i < SAMPLE_ARRAY; ++i)
-      set(static_cast< Position>(i), ref.m_samples[i]);
-  }
+  void copy(ColorSamples &ref);
 };
 
 #endif // COLORSAMPLES_H

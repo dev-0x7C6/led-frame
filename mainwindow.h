@@ -114,12 +114,13 @@ public:
 
 signals:
   void setCustomEmitter(ALCDeviceThread*, int);
+  void setEmitter(ALCDeviceThread*, ColorEmitter*);
 };
 
 #include "emitters/animation-color-emitter.h"
 #include "connector/alc-device-manager.h"
 #include "emitters/image-color-emitter.h"
-#include "managers/alc-screen-manager.h"
+#include "managers/alc-emitter-manager.h"
 
 class ScreenCaptureColorEmitter;
 
@@ -129,10 +130,8 @@ class MainWindow : public QMainWindow
 private:
   QSettings *m_settings;
   QSystemTrayIcon m_tray;
-  QList < ColorEmitter*> m_colorEmitters;
-  QList < ScreenCaptureColorEmitter* > m_screenCapture;
   QList < ALCDeviceTreeWidget*> m_devices;
-  ALCScreenManager *m_screenManager;
+  ALCEmitterManager *m_screenManager;
   QString m_title;
 
   ALCDeviceManager *m_manager;
@@ -151,6 +150,7 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+
 private slots:
   void deviceConnected(ALCDeviceThread *thread);
   void deviceDisconnected(ALCDeviceThread *thread);
@@ -159,9 +159,6 @@ private slots:
   void setGlowSize(int);
   void setFramerate(int);
   void setFramerateLed(int);
-  void setBrightness(int value);
-  void setBrightnessBoost(bool value);
-  void updateScreenArea(int);
   void about();
 
   void setDeviceColorFormat(int);
@@ -171,14 +168,19 @@ private slots:
   void setDeviceGreenColorCorrection(int);
   void setDeviceRedColorCorrection(int);
 
+  void showColorCorrection(bool);
+
   void updateStats(quint32, double, double);
 
 #ifdef Q_OS_UNIX
   void dbusWiimotedevButtons(uint, uint64);
 #endif
 
+  void populate();
+
 private slots:
-  void setCustomEmitter(ALCDeviceThread*, int);
+  void setEmitter(ALCDeviceThread*, ColorEmitter*);
+
 
 private:
   Ui::MainWindow *ui;

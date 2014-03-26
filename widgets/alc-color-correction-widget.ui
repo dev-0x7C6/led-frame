@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>556</width>
-    <height>138</height>
+    <width>552</width>
+    <height>136</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -107,7 +107,14 @@
      <item>
       <widget class="QCheckBox" name="brightnessBoost">
        <property name="text">
-        <string>Brightness boost</string>
+        <string>Boost</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="restoreBrightness">
+       <property name="text">
+        <string>Restore</string>
        </property>
       </widget>
      </item>
@@ -200,6 +207,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="restoreRed">
+       <property name="text">
+        <string>Restore</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -289,6 +303,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="restoreGreen">
+       <property name="text">
+        <string>Restore</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -375,6 +396,13 @@
        </property>
        <property name="text">
         <string>100%</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="restoreBlue">
+       <property name="text">
+        <string>Restore</string>
        </property>
       </widget>
      </item>

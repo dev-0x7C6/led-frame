@@ -36,9 +36,16 @@ SOURCES += main.cpp\
     emitters/color-emitter.cpp \
     emitters/screen-capture-color-emitter.cpp \
     classes/alc-settings.cpp \
-    managers/alc-screen-manager.cpp \
     classes/alc-color-correction.cpp \
-    widgets/alc-color-correction-widget.cpp
+    widgets/alc-color-correction-widget.cpp \
+    widgets/alc-emitters-widget.cpp \
+    classes/alc-led-strip-configuration.cpp \
+    widgets/alc-led-configuration-widget.cpp \
+    managers/alc-emitter-manager.cpp \
+    managers/alc-led-strip-manager.cpp \
+    widgets/alc-screens-widget.cpp \
+    widgets/alc-selections-widget.cpp \
+    dialogs/alc-screen-configure-dialog.cpp
 
 HEADERS += mainwindow.h \
     ambientlightsymulation.h \
@@ -54,14 +61,26 @@ HEADERS += mainwindow.h \
     emitters/animation-color-emitter.h \
     emitters/screen-capture-color-emitter.h \
     classes/alc-settings.h \
-    managers/alc-screen-manager.h \
     classes/alc-color-correction.h \
-    widgets/alc-color-correction-widget.h
+    widgets/alc-color-correction-widget.h \
+    widgets/alc-emitters-widget.h \
+    classes/alc-led-strip-configuration.h \
+    widgets/alc-led-configuration-widget.h \
+    managers/alc-emitter-manager.h \
+    managers/alc-led-strip-manager.h \
+    widgets/alc-screens-widget.h \
+    widgets/alc-selections-widget.h \
+    dialogs/alc-screen-configure-dialog.h
 
 FORMS += mainwindow.ui \
     about.ui \
     led-configuration-widget.ui \
-    widgets/alc-color-correction-widget.ui
+    widgets/alc-color-correction-widget.ui \
+    widgets/alc-emitters-widget.ui \
+    widgets/alc-led-configuration-widget.ui \
+    widgets/alc-screens-widget.ui \
+    widgets/alc-selections-widget.ui \
+    dialogs/alc-screen-configure-dialog.ui
 
 RESOURCES += \
     resources/resource.qrc \

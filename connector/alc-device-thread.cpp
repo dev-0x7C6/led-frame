@@ -50,7 +50,7 @@ void ALCDeviceThread::run() {
   QElapsedTimer counter;
 
   int fps = 0;
-  int framerateLimit = 120; // ZA DUZA LICZBA ROZWALALA WYSWIETLANIE NA LEDACH
+  int framerateLimit = 30;
   double latency[2];
 
   counter.start();
@@ -78,7 +78,7 @@ void ALCDeviceThread::run() {
       continue;
     }
 
-    QVector < int> *colors = m_samples.scaled(ColorSamples::SAMPLE_TOP, 27); // DLA 27 ledow
+    QVector < int> *colors = m_samples.scaled(ColorSamples::SAMPLE_TOP, 120);
     ptr = 0;
 
     for (register int i = 0; i < colors->size(); ++i) {
@@ -117,7 +117,7 @@ void ALCDeviceThread::run() {
       }
     }
 
-    ptr += 33*3; // reszta ledow czyli 33 ledy (rgb)
+    ptr += 120*3;
     delete colors;
 
     m_device->write((char*)data, ptr);
