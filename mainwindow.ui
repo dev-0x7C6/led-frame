@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1084</width>
-    <height>560</height>
+    <width>1082</width>
+    <height>558</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -578,7 +578,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1084</width>
+     <width>1082</width>
      <height>20</height>
     </rect>
    </property>
@@ -598,13 +598,13 @@
     <property name="title">
      <string>Emitters</string>
     </property>
-    <addaction name="actionAdd_screen_area"/>
+    <addaction name="actionAddScreenArea"/>
     <addaction name="separator"/>
-    <addaction name="actionAdd_animation"/>
-    <addaction name="actionAdd_plain_color"/>
-    <addaction name="actionAdd_image_samples"/>
+    <addaction name="actionAddAnimation"/>
+    <addaction name="actionAddPlainColor"/>
+    <addaction name="actionAddImageSamples"/>
     <addaction name="separator"/>
-    <addaction name="actionRemove_selected"/>
+    <addaction name="actionRemoveSelected"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
@@ -642,13 +642,13 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionAdd_screen_area"/>
+   <addaction name="actionAddScreenArea"/>
    <addaction name="separator"/>
-   <addaction name="actionAdd_animation"/>
-   <addaction name="actionAdd_plain_color"/>
-   <addaction name="actionAdd_image_samples"/>
+   <addaction name="actionAddAnimation"/>
+   <addaction name="actionAddPlainColor"/>
+   <addaction name="actionAddImageSamples"/>
    <addaction name="separator"/>
-   <addaction name="actionRemove_selected"/>
+   <addaction name="actionRemoveSelected"/>
   </widget>
   <action name="actionQuit">
    <property name="text">
@@ -687,7 +687,7 @@
     <string>Color correction</string>
    </property>
   </action>
-  <action name="actionAdd_animation">
+  <action name="actionAddAnimation">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
      <normaloff>:/22x22/animation.png</normaloff>:/22x22/animation.png</iconset>
@@ -696,7 +696,7 @@
     <string>Add animation</string>
    </property>
   </action>
-  <action name="actionAdd_plain_color">
+  <action name="actionAddPlainColor">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
      <normaloff>:/22x22/color.png</normaloff>:/22x22/color.png</iconset>
@@ -705,7 +705,7 @@
     <string>Add plain color</string>
    </property>
   </action>
-  <action name="actionAdd_image_samples">
+  <action name="actionAddImageSamples">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
      <normaloff>:/22x22/from-image.png</normaloff>:/22x22/from-image.png</iconset>
@@ -714,7 +714,7 @@
     <string>Add image samples</string>
    </property>
   </action>
-  <action name="actionRemove_selected">
+  <action name="actionRemoveSelected">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
      <normaloff>:/16x16/edit-delete.png</normaloff>:/16x16/edit-delete.png</iconset>
@@ -723,7 +723,7 @@
     <string>Remove selected</string>
    </property>
   </action>
-  <action name="actionAdd_screen_area">
+  <action name="actionAddScreenArea">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
      <normaloff>:/22x22/selected-area.png</normaloff>:/22x22/selected-area.png</iconset>

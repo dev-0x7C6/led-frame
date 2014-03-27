@@ -35,13 +35,16 @@ void ImageColorEmitter::fromFile(QString file) {
   fragments[3].resize(64);
 
   for (register int i = 0; i < 64; ++i)
-    fragments[0][i] = m_image.copy((m_image.width()/64)*i, 0, (m_image.width()/64), 200);
+    fragments[0][63 - i] = m_image.copy((m_image.width()/64)*i, m_image.height() - 200, (m_image.width()/64), 200);
+
   for (register int i = 0; i < 64; ++i)
-    fragments[1][i] = m_image.copy((m_image.width()/64)*i, m_image.height() - 200, (m_image.width()/64), 200);
+    fragments[1][63 - i] = m_image.copy(0, (m_image.height()/64)*i, 200, (m_image.height()/64));
+
   for (register int i = 0; i < 64; ++i)
-    fragments[2][i] = m_image.copy((m_image.width()/64)*i, m_image.height() - 200, (m_image.width()/64), 200);
+    fragments[2][i] = m_image.copy((m_image.width()/64)*i, 0, (m_image.width()/64), 200);
+
   for (register int i = 0; i < 64; ++i)
-    fragments[3][i] = m_image.copy((m_image.width()/64)*i, m_image.height() - 200, (m_image.width()/64), 200);
+    fragments[3][i] = m_image.copy(m_image.width() - 200, (m_image.height()/64)*i, 200, (m_image.height()/64));
 
 
 

@@ -16,9 +16,9 @@ private:
 public:
   explicit ALCScreensWidget(QWidget *parent = 0);
   ~ALCScreensWidget();
+  void setup();
 
 private:
-  void setup();
   void insertScreenCaptureItem(ColorEmitter *);
   void configure();
 

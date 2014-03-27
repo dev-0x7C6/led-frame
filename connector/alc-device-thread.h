@@ -23,23 +23,25 @@
 #include <QThread>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
-#include "classes/color-samples.h"
+
 #include "classes/alc-color-correction.h"
 
-
 class ColorEmitter;
+class ColorSamples;
 
 class ALCDeviceThread : public QThread, public ALCColorCorrection {
   Q_OBJECT
 private:
   QSerialPort *m_device;
   ColorEmitter *m_emitter;
-  ColorSamples m_samples;
+  ColorSamples *m_samples;
   QSerialPortInfo m_details;
   bool m_continue;
 
 public:
-  ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
+  explicit ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
+  virtual ~ALCDeviceThread();
+
   QSerialPortInfo details();
   void setContinueValue(bool value);
   bool continueValue();

@@ -41,9 +41,9 @@ public:
   void addImageItem();
 
   void prepare();
+  void setup();
 
 private:
-  void setup();
   void insertPlainColorItem(ColorEmitter *);
   void insertAnimationItem(ColorEmitter *);
   void insertImageItem(ColorEmitter *);

@@ -17,15 +17,16 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
+#include "classes/alc-color-correction.h"
+#include "classes/color-samples.h"
 #include "connector/alc-device-thread.h"
 #include "emitters/color-emitter.h"
 
 #include <QElapsedTimer>
 
-
-#define qr(r) qRed(r)
-#define qg(g) qGreen(g)
 #define qb(b) qBlue(b)
+#define qg(g) qGreen(g)
+#define qr(r) qRed(r)
 
 unsigned char max(int value) {
   if (value > 255)
@@ -38,9 +39,14 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
     m_device(device),
     m_emitter(0),
     m_details(details),
-    m_continue(true)
+    m_continue(true),
+    m_samples(new ColorSamples)
 {
   m_device->moveToThread(this);
+}
+
+ALCDeviceThread::~ALCDeviceThread() {
+  delete m_samples;
 }
 
 void ALCDeviceThread::run() {
@@ -50,7 +56,7 @@ void ALCDeviceThread::run() {
   QElapsedTimer counter;
 
   int fps = 0;
-  int framerateLimit = 30;
+  int framerateLimit = 102;
   double latency[2];
 
   counter.start();
@@ -66,63 +72,81 @@ void ALCDeviceThread::run() {
   do {
     timer.start();
     if (m_emitter)
-      m_emitter->state(m_samples);
+      m_emitter->state(*m_samples);
     brightness_t = brightness(true);
     colorCorrection_t[Red] = redCorrection(true);
     colorCorrection_t[Green] = greenCorrection(true);
     colorCorrection_t[Blue] = blueCorrection(true);
-    format_t = GRB;
+    format_t = RGB;
 
     if (!m_emitter) {
       msleep(100);
       continue;
     }
 
-    QVector < int> *colors = m_samples.scaled(ColorSamples::SAMPLE_TOP, 120);
+    QVector < int> *colors;
     ptr = 0;
 
-    for (register int i = 0; i < colors->size(); ++i) {
-      const quint32 color = (*colors)[i];
-      switch (format_t) {
-      case RGB:
-        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+    for (register int ii = 0; ii < 4; ++ii) {
+      switch (ii) {
+      case 0:
+        colors  = m_samples->scaled(ColorSamples::SAMPLE_BOTTOM, 30);
         break;
-      case RBG:
-        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+      case 1:
+        colors = m_samples->scaled(ColorSamples::SAMPLE_LEFT, 15);
         break;
-      case GRB:
-        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+      case 2:
+        colors = m_samples->scaled(ColorSamples::SAMPLE_TOP, 30);
         break;
-      case BRG:
-        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-        break;
-      case GBR:
-        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-        break;
-      case BGR:
-        data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-        data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-        data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+      case 3:
+        colors = m_samples->scaled(ColorSamples::SAMPLE_RIGHT, 15);
         break;
       }
+
+      for (register int i = 0; i < colors->size(); ++i) {
+        const quint32 color = (*colors)[i];
+        switch (format_t) {
+        case RGB:
+          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+          break;
+        case RBG:
+          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+          break;
+        case GRB:
+          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+          break;
+        case BRG:
+          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+          break;
+        case GBR:
+          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+          break;
+        case BGR:
+          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
+          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
+          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
+          break;
+        }
+      }
+      delete colors;
     }
 
-    ptr += 120*3;
-    delete colors;
+   // ptr += 120*3;
+
 
     m_device->write((char*)data, ptr);
-    m_device->waitForBytesWritten(1000);
     m_device->flush();
+    m_device->waitForBytesWritten(1000);
 
     latency[0] = timer.nsecsElapsed();
     latency[1] += latency[0];

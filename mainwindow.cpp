@@ -9,7 +9,6 @@
 #include "about.h"
 #include "connector/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
-#include "emitters/blackhole-color-emitter.h"
 #include "emitters/plain-color-emitter.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -122,11 +121,19 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_wiimotedevEvents, SIGNAL(dbusWiimoteButtons(uint,uint64)), this, SLOT(dbusWiimotedevButtons(uint, uint64)));
 #endif
 
+  connect(ui->actionAddAnimation, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addAnimationItem);
+  connect(ui->actionAddPlainColor, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addPlainColorItem);
+  connect(ui->actionAddImageSamples, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addImageItem);
+
+  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->emitters, &ALCEmittersWidget::setup, Qt::QueuedConnection);
+  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreensWidget::setup, Qt::QueuedConnection);
+  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->selections, &ALCSelectionsWidget::setup, Qt::QueuedConnection);
+
+
   connect(m_manager, SIGNAL(deviceConnected(ALCDeviceThread*)), this, SLOT(deviceConnected(ALCDeviceThread*)), Qt::DirectConnection);
   connect(m_manager, SIGNAL(deviceDisconnected(ALCDeviceThread*)), this, SLOT(deviceDisconnected(ALCDeviceThread*)), Qt::DirectConnection);
   connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 
-  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, this, &MainWindow::populate);
 }
 
 void MainWindow::deviceConnected(ALCDeviceThread *thread) {
@@ -240,16 +247,7 @@ void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   ui->devices->header()->resizeSections(QHeaderView::ResizeToContents);
   m_devices << item;
 
-  connect(ui->actionAdd_animation, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addAnimationItem);
-  connect(ui->actionAdd_plain_color, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addPlainColorItem);
-  connect(ui->actionAdd_image_samples, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addImageItem);
-  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged,
-          ui->emitters, &ALCEmittersWidget::prepare);
-
   populate();
-
-
-
 }
 
 void MainWindow::deviceDisconnected(ALCDeviceThread *thread) {

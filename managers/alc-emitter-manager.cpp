@@ -2,7 +2,6 @@
 
 #include "classes/alc-settings.h"
 #include "emitters/animation-color-emitter.h"
-#include "emitters/blackhole-color-emitter.h"
 #include "emitters/image-color-emitter.h"
 #include "emitters/plain-color-emitter.h"
 #include "emitters/screen-capture-color-emitter.h"

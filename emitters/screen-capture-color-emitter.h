@@ -12,14 +12,12 @@
 class QScreen;
 
 enum ScreenFragments {
-  Top = 0,
-  Bottom,
+  Bottom = 0,
   Left,
+  Top,
   Right
 };
 
-
-class QScreen;
 
 #include "emitters/color-emitter.h"
 #include "classes/color-samples.h"
@@ -47,7 +45,7 @@ private:
   double m_safeBrightness;
 
 private:
-  void grab(ScreenFragments fragment, ColorSamples &samples);
+  void grab(ColorSamples &samples);
 
 
 public slots:

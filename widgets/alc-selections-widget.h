@@ -16,9 +16,9 @@ private:
 public:
   explicit ALCSelectionsWidget(QWidget *parent = 0);
   ~ALCSelectionsWidget();
+  void setup();
 
 private:
-  void setup();
   void insertScreenCaptureItem(ColorEmitter *);
 
 //  void prepareColorButton(QPushButton *, QColor);

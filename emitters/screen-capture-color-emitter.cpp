@@ -111,10 +111,7 @@ void ScreenCaptureColorEmitter::run(){
     } else
       m_mutex.unlock();
 
-    grab(Top, m_samples);
-    grab(Right, m_samples);
-    grab(Bottom, m_samples);
-    grab(Left, m_samples);
+    grab(m_samples);
 
     setState(m_samples);
 
@@ -139,97 +136,92 @@ void ScreenCaptureColorEmitter::run(){
   } while (!quit);
 }
 
-void ScreenCaptureColorEmitter::grab(ScreenFragments fragment, ColorSamples &samples) {
-  quint64 r = 0;
-  quint64 g = 0;
-  quint64 b = 0;
-  QImage image;
+void ScreenCaptureColorEmitter::grab(ColorSamples &samples) {
+  register quint64 r = 0;
+  register quint64 g = 0;
+  register quint64 b = 0;
 
-  double x_shift;
-  double x_chunk;
-  double y_shift;
-  double y_chunk;
+  QImage image[4];
+  double x_shift[4];
+  double x_chunk[4];
+  double y_shift[4];
+  double y_chunk[4];
 
   double chunks = samples.scale();
-  QVector < int> *colors;
 
-  switch (fragment) {
-  case Top:
-    colors = samples.get(ColorSamples::SAMPLE_TOP);
-    image = m_screen->grabWindow(0, m_safeCaptureArea.x(), m_safeCaptureArea.y(),
+  QVector < int> *colors[4];
+  colors[static_cast< quint8>( ColorSamples::SAMPLE_BOTTOM)] = samples.get(ColorSamples::SAMPLE_BOTTOM);
+  colors[static_cast< quint8>( ColorSamples::SAMPLE_LEFT)] = samples.get(ColorSamples::SAMPLE_LEFT);
+  colors[static_cast< quint8>( ColorSamples::SAMPLE_TOP)] = samples.get(ColorSamples::SAMPLE_TOP);
+  colors[static_cast< quint8>( ColorSamples::SAMPLE_RIGHT)] = samples.get(ColorSamples::SAMPLE_RIGHT);
+
+
+  image[2] = m_screen->grabWindow(0, m_safeCaptureArea.x(), m_safeCaptureArea.y(),
                                m_safeCaptureArea.width(), m_safeChunkSize).toImage();
-    x_chunk = image.width() / chunks;
-    y_chunk = m_safeChunkSize;
-    break;
-  case Bottom:
-    colors = samples.get(ColorSamples::SAMPLE_BOTTOM);
-    image = m_screen->grabWindow(0, m_safeCaptureArea.x(), m_safeCaptureArea.y() +
+  image[0] = m_screen->grabWindow(0, m_safeCaptureArea.x(), m_safeCaptureArea.y() +
                                m_safeCaptureArea.height() - m_safeChunkSize, m_safeCaptureArea.width()).toImage();
-    x_chunk = image.width() / chunks;
-    y_chunk = m_safeChunkSize;
-    break;
-  case Left:
-    colors = samples.get(ColorSamples::SAMPLE_LEFT);
-    image = m_screen->grabWindow(0, m_safeCaptureArea.x(), m_safeCaptureArea.y() + m_safeChunkSize,
-                               m_safeChunkSize, m_safeCaptureArea.height() - m_safeChunkSize * 2).toImage();
-    x_chunk = m_safeChunkSize;
-    y_chunk = image.height() / chunks;
-    break;
-  case Right:
-    colors = samples.get(ColorSamples::SAMPLE_RIGHT);
-    image = m_screen->grabWindow(0, m_safeCaptureArea.x() + m_safeCaptureArea.width() - m_safeChunkSize,
-                               m_safeCaptureArea.y() + m_safeChunkSize, m_safeChunkSize,
-                               m_safeCaptureArea.height() - m_safeChunkSize * 2).toImage();
-    x_chunk = m_safeChunkSize;
-    y_chunk = image.height() / chunks;
-    break;
-  }
+  image[1] = m_screen->grabWindow(0, m_safeCaptureArea.x(), m_safeCaptureArea.y() + m_safeChunkSize,
+                             m_safeChunkSize, m_safeCaptureArea.height() - m_safeChunkSize * 2).toImage();
+  image[3] = m_screen->grabWindow(0, m_safeCaptureArea.x() + m_safeCaptureArea.width() - m_safeChunkSize,
+                             m_safeCaptureArea.y() + m_safeChunkSize, m_safeChunkSize,
+                             m_safeCaptureArea.height() - m_safeChunkSize * 2).toImage();
 
-  for (register int i = 0; i < chunks; ++i) {
-    r = g = b = 0;
+  y_chunk[0] = m_safeChunkSize;
+  x_chunk[1] = m_safeChunkSize;
+  y_chunk[2] = m_safeChunkSize;
+  x_chunk[3] = m_safeChunkSize;
 
-    switch (fragment) {
-    case Top:
-      x_shift = i * (image.width() - x_chunk) / chunks;
-      y_shift = 0;
-      break;
-    case Bottom:
-      x_shift = (chunks-i) * (image.width() - x_chunk) / chunks;
-      y_shift = 0;
-      break;
-    case Left:
-      x_shift = 0;
-      y_shift = (chunks-i) * (image.height() - y_chunk) / chunks;
-      break;
-    case Right:
-      x_shift = 0;
-      y_shift = i * (image.height() - y_chunk)  / chunks;
-      break;
-    }
+  x_chunk[0] = image[0].width() / chunks;
+  y_chunk[1] = image[1].height() / chunks;
+  x_chunk[2] = image[2].width() / chunks;
+  y_chunk[3] = image[3].height() / chunks;
 
-    int rgb = 0;
-    int counter = 0;
+  for (register int ii = 0; ii < 4; ++ii) {
+    for (register int i = 0; i < chunks; ++i) {
+      r = g = b = 0;
 
-    for (int x = 0; x < x_chunk; x += 4) {
-      for (int y = 0; y < y_chunk; y += 4) {
-        rgb = image.pixel(x_shift + x, y_shift + y);
-        r += uchar(rgb >> 16);
-        g += uchar(rgb >> 8);
-        b += uchar(rgb);
-        counter++;
+      switch (ii) {
+      case Top:
+        x_shift[ii] = i * (image[ii].width() - x_chunk[ii]) / chunks;
+        y_shift[ii] = 0;
+        break;
+      case Bottom:
+        x_shift[ii] = (chunks-i) * (image[ii].width() - x_chunk[ii]) / chunks;
+        y_shift[ii] = 0;
+        break;
+      case Left:
+        x_shift[ii] = 0;
+        y_shift[ii] = (chunks-i) * (image[ii].height() - y_chunk[ii]) / chunks;
+        break;
+      case Right:
+        x_shift[ii] = 0;
+        y_shift[ii] = i * (image[ii].height() - y_chunk[ii])  / chunks;
+        break;
       }
+
+      int rgb = 0;
+      int counter = 0;
+
+      for (int x = 0; x < x_chunk[ii]; x += 4) {
+        for (int y = 0; y < y_chunk[ii]; y += 4) {
+          rgb = image[ii].pixel(x_shift[ii] + x, y_shift[ii] + y);
+          r += uchar(rgb >> 16);
+          g += uchar(rgb >> 8);
+          b += uchar(rgb);
+          counter++;
+        }
+      }
+
+      r /= counter; r *= m_safeBrightness;
+      g /= counter; g *= m_safeBrightness;
+      b /= counter; b *= m_safeBrightness;
+
+      if (r > 255) r = 255;
+      if (g > 255) g = 255;
+      if (b > 255) b = 255;
+
+      (*colors)[ii][i] = qRgb(r, g, b);
     }
-
-    r /= counter; r *= m_safeBrightness;
-    g /= counter; g *= m_safeBrightness;
-    b /= counter; b *= m_safeBrightness;
-
-    if (r > 255) r = 255;
-    if (g > 255) g = 255;
-    if (b > 255) b = 255;
-
-    (*colors)[i] = qRgb(r, g, b);
   }
-
 }
 

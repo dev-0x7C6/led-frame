@@ -32,7 +32,6 @@ SOURCES += main.cpp\
     classes/color-samples.cpp \
     emitters/image-color-emitter.cpp \
     emitters/animation-color-emitter.cpp \
-    emitters/blackhole-color-emitter.cpp \
     emitters/color-emitter.cpp \
     emitters/screen-capture-color-emitter.cpp \
     classes/alc-settings.cpp \
@@ -57,7 +56,6 @@ HEADERS += mainwindow.h \
     classes/color-samples.h \
     emitters/image-color-emitter.h \
     emitters/color-emitter.h \
-    emitters/blackhole-color-emitter.h \
     emitters/animation-color-emitter.h \
     emitters/screen-capture-color-emitter.h \
     classes/alc-settings.h \

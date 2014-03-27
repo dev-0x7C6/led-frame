@@ -18,17 +18,28 @@ ALCEmittersWidget::~ALCEmittersWidget() {
   delete ui;
 }
 
+#include <QInputDialog>
+#include "emitters/plain-color-emitter.h"
+#include "emitters/animation-color-emitter.h"
+#include "emitters/screen-capture-color-emitter.h"
+#include "emitters/image-color-emitter.h"
 
 void ALCEmittersWidget::addPlainColorItem() {
-  ALCEmitterManager::instance()->addPlainColorEmitter();
+  QString input = QInputDialog::getText(this, "Name", "Get name:");
+  if (!input.isEmpty())
+    ALCEmitterManager::instance()->addPlainColorEmitter()->setEmitterName(input);
 }
 
 void ALCEmittersWidget::addAnimationItem() {
-  ALCEmitterManager::instance()->addAnimationColorEmitter();
+  QString input = QInputDialog::getText(this, "Name", "Get name:");
+  if (!input.isEmpty())
+    ALCEmitterManager::instance()->addAnimationColorEmitter()->setEmitterName(input);
 }
 
 void ALCEmittersWidget::addImageItem() {
-  ALCEmitterManager::instance()->addImageColorEmitter();
+  QString input = QInputDialog::getText(this, "Name", "Get name:");
+  if (!input.isEmpty())
+    ALCEmitterManager::instance()->addImageColorEmitter()->setEmitterName(input);
 }
 
 void ALCEmittersWidget::prepare() {

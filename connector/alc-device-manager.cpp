@@ -20,8 +20,6 @@
 #include "connector/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
 
-#include <QTimerEvent>
-#include <malloc.h>
 
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
   :QObject(parent)
