@@ -135,18 +135,37 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
+#include <QCommandLinkButton>
+
 void MainWindow::deviceConnected(ALCDeviceThread *thread) {
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->devices, thread);
   connect(item, &ALCDeviceTreeWidget::setEmitter, this, &MainWindow::setEmitter);
   item->setText(0, thread->details().systemLocation() + '\t');
   item->setIcon(0, QIcon(":/22x22/device.png"));
 
-  QTreeWidgetItem *settings = new QTreeWidgetItem(item);
- // settings->setText(0, "Settings");
+  QTreeWidgetItem *settings;
+  QCommandLinkButton *button;
 
-  QPushButton *button = new QPushButton();
+  settings = new QTreeWidgetItem(item);
+  button = new QCommandLinkButton();
   ui->devices->setItemWidget(settings, 1, button);
-  button->setText("settings");
+  button->setText("Device settings");
+  button->setDescription("You can set there setings like: device brightness, update speed");
+  button->setMaximumHeight(60);
+
+  settings = new QTreeWidgetItem(item);
+  button = new QCommandLinkButton();
+  ui->devices->setItemWidget(settings, 1, button);
+  button->setText("Emitter settings");
+  button->setDescription("Quick settings for your currently selected emitter");
+  button->setMaximumHeight(60);
+
+  settings = new QTreeWidgetItem(item);
+  button = new QCommandLinkButton();
+  ui->devices->setItemWidget(settings, 1, button);
+  button->setText("Strip configuration");
+  button->setDescription("Wizard configurator for led strips and your monitor");
+  button->setMaximumHeight(60);
 
 //  SliderItem *slider = new SliderItem(Qt::Horizontal, brightness, 1);
 //  brightness->setText(0, "Brightness");
