@@ -37,21 +37,21 @@ double ColorEmitter::brightness() {
 void ColorEmitter::init() {
   QMutexLocker locker(&m_mutex);
   m_connectedCount++;
-  qDebug() << this << " device connected, count: " << m_connectedCount;
+ // qDebug() << this << " device connected, count: " << m_connectedCount;
 }
 
 void ColorEmitter::done() {
   QMutexLocker locker(&m_mutex);
   m_connectedCount--;
-  qDebug() << this << " device disconnected, count: " << m_connectedCount;
+//  qDebug() << this << " device disconnected, count: " << m_connectedCount;
 }
 
-void ColorEmitter::setState(ColorSamples &samples) {
+void ColorEmitter::setState(ALCColorSamples &samples) {
   QMutexLocker locker(&m_mutex);
   m_samples.copy(samples);
 }
 
-void ColorEmitter::state(ColorSamples &samples) {
+void ColorEmitter::state(ALCColorSamples &samples) {
   QMutexLocker locker(&m_mutex);
   samples.copy(m_samples);
 }
@@ -64,12 +64,3 @@ QTreeWidgetItem *ColorEmitter::treeItem() {
   return m_treeItem;
 }
 
-//void ColorEmitter::setState(QList<QRgb> colors) {
-//  QMutexLocker locker(&m_mutex);
-//  m_colors = colors;
-//}
-
-//QList<QRgb> ColorEmitter::state() {
-//  QMutexLocker locker(&m_mutex);
-//  return m_colors;
-//}

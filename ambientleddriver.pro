@@ -11,6 +11,8 @@ QMAKE_CXXFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
 QMAKE_LFLAGS_RELEASE += -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native
 QMAKE_LFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
 
+LIBS += -lX11
+
 
 unix {
   QT += dbus
@@ -29,7 +31,6 @@ SOURCES += main.cpp\
     connector/alc-device-thread.cpp \
     led-configuration-widget.cpp \
     emitters/plain-color-emitter.cpp \
-    classes/color-samples.cpp \
     emitters/image-color-emitter.cpp \
     emitters/animation-color-emitter.cpp \
     emitters/color-emitter.cpp \
@@ -44,7 +45,8 @@ SOURCES += main.cpp\
     managers/alc-led-strip-manager.cpp \
     widgets/alc-screens-widget.cpp \
     widgets/alc-selections-widget.cpp \
-    dialogs/alc-screen-configure-dialog.cpp
+    dialogs/alc-screen-configure-dialog.cpp \
+    classes/alc-color-samples.cpp
 
 HEADERS += mainwindow.h \
     ambientlightsymulation.h \
@@ -53,7 +55,6 @@ HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
     led-configuration-widget.h \
     emitters/plain-color-emitter.h \
-    classes/color-samples.h \
     emitters/image-color-emitter.h \
     emitters/color-emitter.h \
     emitters/animation-color-emitter.h \
@@ -68,7 +69,8 @@ HEADERS += mainwindow.h \
     managers/alc-led-strip-manager.h \
     widgets/alc-screens-widget.h \
     widgets/alc-selections-widget.h \
-    dialogs/alc-screen-configure-dialog.h
+    dialogs/alc-screen-configure-dialog.h \
+    classes/alc-color-samples.h
 
 FORMS += mainwindow.ui \
     about.ui \

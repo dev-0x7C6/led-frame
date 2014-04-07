@@ -5,9 +5,9 @@
 #include <QDebug>
 
 
-const int SAMPLE_RESOLUTION = 64;
+const int SAMPLE_RESOLUTION = 30;
 
-class ColorSamples {
+class ALCColorSamples {
 public:
   enum Position : quint8 {
     SAMPLE_BOTTOM,
@@ -22,8 +22,8 @@ private:
   quint16 m_sampleCount;
 
 public:
-  explicit ColorSamples();
-  virtual ~ColorSamples();
+  explicit ALCColorSamples();
+  virtual ~ALCColorSamples();
 
   void set(Position pos, QVector < int> &colors);
   QVector < int> *get(Position pos);
@@ -32,7 +32,7 @@ public:
 
   quint16 scale() { return SAMPLE_RESOLUTION; }
 
-  void copy(ColorSamples &ref);
+  void copy(ALCColorSamples &ref);
 };
 
 #endif // COLORSAMPLES_H

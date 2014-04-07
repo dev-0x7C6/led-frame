@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QPixmapCache>
-#include "classes/color-samples.h"
+#include "classes/alc-color-samples.h"
 
 #include "managers/alc-emitter-manager.h"
 

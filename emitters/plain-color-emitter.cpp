@@ -9,10 +9,8 @@ PlainColorEmitter::PlainColorEmitter() :
   m_timer(new QTimer(this)),
   m_color(Qt::white)
 {
- // srand(QTime::currentTime().msecsSinceStartOfDay());
+  srand(QTime::currentTime().msecsSinceStartOfDay());
   m_type = EMITTER_PLAIN_COLOR;
-
-
 
   connect(m_timer, &QTimer::timeout, this, &PlainColorEmitter::pushState);
   m_timer->setInterval(20);
@@ -45,10 +43,10 @@ void PlainColorEmitter::pushState() {
   for (register int i = 0; i < samples.size(); ++i)
     samples[i] = rgb;
 
-  m_samples.set(ColorSamples::SAMPLE_TOP, samples);
-  m_samples.set(ColorSamples::SAMPLE_LEFT, samples);
-  m_samples.set(ColorSamples::SAMPLE_RIGHT, samples);
-  m_samples.set(ColorSamples::SAMPLE_BOTTOM, samples);
+  m_samples.set(ALCColorSamples::SAMPLE_TOP, samples);
+  m_samples.set(ALCColorSamples::SAMPLE_LEFT, samples);
+  m_samples.set(ALCColorSamples::SAMPLE_RIGHT, samples);
+  m_samples.set(ALCColorSamples::SAMPLE_BOTTOM, samples);
   setState(m_samples);
 }
 

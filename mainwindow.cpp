@@ -129,120 +129,106 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreensWidget::setup, Qt::QueuedConnection);
   connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->selections, &ALCSelectionsWidget::setup, Qt::QueuedConnection);
 
-
-  connect(m_manager, SIGNAL(deviceConnected(ALCDeviceThread*)), this, SLOT(deviceConnected(ALCDeviceThread*)), Qt::DirectConnection);
-  connect(m_manager, SIGNAL(deviceDisconnected(ALCDeviceThread*)), this, SLOT(deviceDisconnected(ALCDeviceThread*)), Qt::DirectConnection);
+  connect(m_manager, &ALCDeviceManager::deviceConnected, this, &MainWindow::deviceConnected, Qt::DirectConnection);
+  connect(m_manager, &ALCDeviceManager::deviceDisconnected, this, &MainWindow::deviceDisconnected, Qt::DirectConnection);
   connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 
 }
 
 void MainWindow::deviceConnected(ALCDeviceThread *thread) {
-  QRect rect;
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->devices, thread);
   connect(item, &ALCDeviceTreeWidget::setEmitter, this, &MainWindow::setEmitter);
   item->setText(0, thread->details().systemLocation() + '\t');
   item->setIcon(0, QIcon(":/22x22/device.png"));
 
+  QTreeWidgetItem *settings = new QTreeWidgetItem(item);
+ // settings->setText(0, "Settings");
 
-  QTreeWidgetItem *brightness = new QTreeWidgetItem(item);
+  QPushButton *button = new QPushButton();
+  ui->devices->setItemWidget(settings, 1, button);
+  button->setText("settings");
 
-  SliderItem *slider = new SliderItem(Qt::Horizontal, brightness, 1);
-  brightness->setText(0, "Brightness");
-  brightness->setIcon(0, QIcon(":/22x22/brightness.png"));
-  ui->devices->setItemWidget(brightness, 1, slider);
-  slider->setTickInterval(10);
- // slider->setTickPosition(QSlider::TicksBelow);
-  slider->setMinimum(1);
-  slider->setMaximum(200);
-  slider->setValue(100);
-  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceBrightness);
+//  SliderItem *slider = new SliderItem(Qt::Horizontal, brightness, 1);
+//  brightness->setText(0, "Brightness");
+//  brightness->setIcon(0, QIcon(":/22x22/brightness.png"));
+//  ui->devices->setItemWidget(brightness, 1, slider);
+//  slider->setTickInterval(10);
+// // slider->setTickPosition(QSlider::TicksBelow);
+//  slider->setMinimum(1);
+//  slider->setMaximum(200);
+//  slider->setValue(100);
+//  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceBrightness);
 
-  QTreeWidgetItem *delay = new QTreeWidgetItem(item);
+//  QTreeWidgetItem *delay = new QTreeWidgetItem(item);
 
-  SpinBoxItem *spinbox = new SpinBoxItem(brightness, 1);
-  delay->setText(0, "I/O delay");
-  delay->setIcon(0, QIcon(":/22x22/fpsrate.png"));
-  ui->devices->setItemWidget(delay, 1, spinbox);
-  spinbox->setMinimum(0);
-  spinbox->setMaximum(1000);
-  spinbox->setValue(0);
-  spinbox->setSuffix(" ms");
- // spinbox->setMaximumWidth(70);
+//  SpinBoxItem *spinbox = new SpinBoxItem(brightness, 1);
+//  delay->setText(0, "I/O delay");
+//  delay->setIcon(0, QIcon(":/22x22/fpsrate.png"));
+//  ui->devices->setItemWidget(delay, 1, spinbox);
+//  spinbox->setMinimum(0);
+//  spinbox->setMaximum(1000);
+//  spinbox->setValue(0);
+//  spinbox->setSuffix(" ms");
+// // spinbox->setMaximumWidth(70);
 
-  connect(spinbox, static_cast< void(QSpinBox::*)(int) >(&QSpinBox::valueChanged),
-          this, &MainWindow::setDeviceIODelay);
-
-  delay = new QTreeWidgetItem(item);
-  spinbox = new SpinBoxItem(brightness, 1);
-  delay->setText(0, "Leds");
-  delay->setIcon(0, QIcon(":/22x22/fpsrate.png"));
-  ui->devices->setItemWidget(delay, 1, spinbox);
-  spinbox->setMinimum(0);
-  spinbox->setMaximum(1000);
-  spinbox->setValue(0);
-  spinbox->setSuffix(" leds");
-  //spinbox->setMaximumWidth(70);
-
-  for (register int i = 0; i < 4; ++i) {
-    QTreeWidgetItem *a = new QTreeWidgetItem(delay);
-    a->setText(0, "Stripe #" + QString::number(i+1));
-    LedConfigurationItem *ledc = new LedConfigurationItem(a, 1);
-    ui->devices->setItemWidget(a, 1, ledc);
-  }
+//  connect(spinbox, static_cast< void(QSpinBox::*)(int) >(&QSpinBox::valueChanged),
+//          this, &MainWindow::setDeviceIODelay);
 
 
-  QTreeWidgetItem *led = new QTreeWidgetItem(item);
-  led->setText(0, "Color corretion");
-  led->setIcon(0, QIcon("://22x22/color.png"));
-
-  ComboBoxItem *cmb = new ComboBoxItem(led, 1);
-  cmb->setIconSize(QSize(22, 22));
-  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("RGB"));
-  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("RBG"));
-  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("GRB"));
-  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("BRG"));
-  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("GBR"));
-  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("BGR"));
-  ui->devices->setItemWidget(led, 1, cmb);
-  connect(cmb, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setDeviceColorFormat(int)), Qt::DirectConnection);
-
-  QTreeWidgetItem *red = new QTreeWidgetItem(led);
-  red->setText(0, "Red");
-  red->setIcon(0, QIcon("://22x22/color.png"));
-  slider = new SliderItem(Qt::Horizontal, red, 1);
-  ui->devices->setItemWidget(red, 1, slider);
-  slider->setTickInterval(10);
-  slider->setTickPosition(QSlider::TicksBelow);
-  slider->setMinimum(0);
-  slider->setMaximum(200);
-  slider->setValue(100);
-  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceRedColorCorrection);
 
 
-  QTreeWidgetItem *green = new QTreeWidgetItem(led);
-  green->setText(0, "Green");
-  green->setIcon(0, QIcon("://22x22/color.png"));
-  slider = new SliderItem(Qt::Horizontal, green, 1);
-  ui->devices->setItemWidget(green, 1, slider);
-  slider->setTickInterval(10);
-  slider->setTickPosition(QSlider::TicksBelow);
-  slider->setMinimum(0);
-  slider->setMaximum(200);
-  slider->setValue(100);
-  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceGreenColorCorrection);
+//  QTreeWidgetItem *led = new QTreeWidgetItem(item);
+//  led->setText(0, "Color corretion");
+//  led->setIcon(0, QIcon("://22x22/color.png"));
 
-  QTreeWidgetItem *blue = new QTreeWidgetItem(led);
-  blue->setText(0, "Blue");
-  blue->setIcon(0, QIcon("://22x22/color.png"));
-  slider = new SliderItem(Qt::Horizontal, blue, 1);
-  ui->devices->setItemWidget(blue, 1, slider);
-  slider->setTickInterval(10);
-  slider->setTickPosition(QSlider::TicksBelow);
-  slider->setMinimum(0);
-  slider->setMaximum(200);
-  slider->setValue(100);
-  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceBlueColorCorrection);
+//  ComboBoxItem *cmb = new ComboBoxItem(led, 1);
+//  cmb->setIconSize(QSize(22, 22));
+//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("RGB"));
+//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("RBG"));
+//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("GRB"));
+//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("BRG"));
+//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("GBR"));
+//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("BGR"));
+//  ui->devices->setItemWidget(led, 1, cmb);
+//  connect(cmb, SIGNAL(currentIndexChanged(int)), this,
+//          SLOT(setDeviceColorFormat(int)), Qt::DirectConnection);
+
+//  QTreeWidgetItem *red = new QTreeWidgetItem(led);
+//  red->setText(0, "Red");
+//  red->setIcon(0, QIcon("://22x22/color.png"));
+//  slider = new SliderItem(Qt::Horizontal, red, 1);
+//  ui->devices->setItemWidget(red, 1, slider);
+//  slider->setTickInterval(10);
+//  slider->setTickPosition(QSlider::TicksBelow);
+//  slider->setMinimum(0);
+//  slider->setMaximum(200);
+//  slider->setValue(100);
+//  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceRedColorCorrection);
+
+
+//  QTreeWidgetItem *green = new QTreeWidgetItem(led);
+//  green->setText(0, "Green");
+//  green->setIcon(0, QIcon("://22x22/color.png"));
+//  slider = new SliderItem(Qt::Horizontal, green, 1);
+//  ui->devices->setItemWidget(green, 1, slider);
+//  slider->setTickInterval(10);
+//  slider->setTickPosition(QSlider::TicksBelow);
+//  slider->setMinimum(0);
+//  slider->setMaximum(200);
+//  slider->setValue(100);
+//  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceGreenColorCorrection);
+
+//  QTreeWidgetItem *blue = new QTreeWidgetItem(led);
+//  blue->setText(0, "Blue");
+//  blue->setIcon(0, QIcon("://22x22/color.png"));
+//  slider = new SliderItem(Qt::Horizontal, blue, 1);
+//  ui->devices->setItemWidget(blue, 1, slider);
+//  slider->setTickInterval(10);
+//  slider->setTickPosition(QSlider::TicksBelow);
+//  slider->setMinimum(0);
+//  slider->setMaximum(200);
+//  slider->setValue(100);
+//  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceBlueColorCorrection);
 
   ui->devices->header()->resizeSections(QHeaderView::ResizeToContents);
   m_devices << item;

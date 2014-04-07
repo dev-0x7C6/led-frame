@@ -2,21 +2,33 @@
 #define ALCSCREENCONFIGUREDIALOG_H
 
 #include <QDialog>
+#include <QAbstractButton>
 
 namespace Ui {
 class ALCScreenConfigureDialog;
 }
 
-class ALCScreenConfigureDialog : public QDialog
-{
+
+class ScreenCaptureColorEmitter;
+
+class ALCScreenConfigureDialog : public QDialog {
   Q_OBJECT
+private:
+  Ui::ALCScreenConfigureDialog *ui;
+  ScreenCaptureColorEmitter *m_emitter;
 
 public:
   explicit ALCScreenConfigureDialog(QWidget *parent = 0);
   ~ALCScreenConfigureDialog();
 
+  void setEmitter(ScreenCaptureColorEmitter *);
+
 private:
-  Ui::ALCScreenConfigureDialog *ui;
+  void fpsValueChanged(int);
+  void clipValueChanged(int);
+
+
+  void accepted(QAbstractButton *);
 };
 
 #endif // ALCSCREENCONFIGUREDIALOG_H

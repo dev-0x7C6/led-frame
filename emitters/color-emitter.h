@@ -7,10 +7,9 @@
 #include <QRgb>
 #include <QDebug>
 
-#include "classes/color-samples.h"
+#include "classes/alc-color-samples.h"
 
 class QTreeWidgetItem;
-
 
 class ColorEmitter {
 public:
@@ -26,7 +25,7 @@ public:
 
 private:
   QString m_emitterName;
-  ColorSamples m_samples;
+  ALCColorSamples m_samples;
   QTreeWidgetItem *m_treeItem;
 
 protected:
@@ -51,9 +50,8 @@ public:
   virtual void init();
   void done();
 //  void setState(QList < QRgb> colors);
-  void setState(ColorSamples &samples);
-  void state(ColorSamples &samples);
-
+  void setState(ALCColorSamples &samples);
+  void state(ALCColorSamples &samples);
 
   void setTreeItem(QTreeWidgetItem *item);
   QTreeWidgetItem *treeItem();

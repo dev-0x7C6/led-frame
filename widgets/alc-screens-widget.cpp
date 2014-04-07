@@ -1,7 +1,7 @@
 #include "alc-screens-widget.h"
 #include "ui_alc-screens-widget.h"
 
-#include "classes/color-samples.h"
+#include "classes/alc-color-samples.h"
 #include "emitters/screen-capture-color-emitter.h"
 #include "managers/alc-emitter-manager.h"
 
@@ -51,13 +51,18 @@ void ALCScreensWidget::insertScreenCaptureItem(ColorEmitter *ptr) {
   //prepareColorButton(button, emitter->color());
   button->setText("configure...");
   ui->tree->setItemWidget(item, 1, button);
+  button->setToolTip(emitter->emitterName());
   connect(button, &QPushButtonEx::clicked, this, &ALCScreensWidget::configure);
 }
 
 #include "dialogs/alc-screen-configure-dialog.h"
 
+#include "emitters/screen-capture-color-emitter.h"
+
 void ALCScreensWidget::configure() {
   ALCScreenConfigureDialog dialog;
+  dialog.setWindowTitle(reinterpret_cast< QPushButtonEx*>(sender())->toolTip());
+  dialog.setEmitter(dynamic_cast< ScreenCaptureColorEmitter*> (reinterpret_cast< QPushButtonEx*>(sender())->emitter()));
   dialog.exec();
 }
 

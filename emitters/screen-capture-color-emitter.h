@@ -2,6 +2,7 @@
 #define SCREENCAPTURECOLOREMITTER_H
 
 
+
 #include <QThread>
 #include <QPixmap>
 #include <QMutex>
@@ -18,9 +19,8 @@ enum ScreenFragments {
   Right
 };
 
-
 #include "emitters/color-emitter.h"
-#include "classes/color-samples.h"
+#include "classes/alc-color-samples.h"
 
 class ScreenCaptureColorEmitter : public QThread, public ColorEmitter {
   Q_OBJECT
@@ -28,7 +28,7 @@ public:
   ScreenCaptureColorEmitter(QObject *parent = 0);
 
 private:
-  ColorSamples m_samples;
+  ALCColorSamples m_samples;
   QScreen *m_screen;
   QString m_name;
 
@@ -37,16 +37,9 @@ private:
   int m_pixelSkip;
   int m_framerateLimit;
   bool m_quit;
+  double m_marginProcent;
 
-  QRect m_safeCaptureArea;
-  int m_safeChunkSize;
-  int m_safePixelSkip;
-  int m_safeFramerateLimit;
-  double m_safeBrightness;
-
-private:
-  void grab(ColorSamples &samples);
-
+  QVector < int> *colors[4];
 
 public slots:
   void setName(QString name);
@@ -55,11 +48,13 @@ public slots:
   void setPixelSkip(int);
   void setFramerateLimit(int);
   void setQuitState(bool);
+  void setMarginProcent(double);
 
   QRect area();
   int chunk();
   int pixelSkip();
   int framerateLimit();
+  double marginProcent();
 
   QString name();
 
@@ -67,7 +62,7 @@ protected:
   void run();
 
 signals:
-  void update(ColorSamples *samples);
+  void update(ALCColorSamples *samples);
   void updateStats(quint32 fps, double latency, double usage);
   
 };

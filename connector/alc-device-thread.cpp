@@ -18,7 +18,7 @@
  **********************************************************************************/
 
 #include "classes/alc-color-correction.h"
-#include "classes/color-samples.h"
+#include "classes/alc-color-samples.h"
 #include "connector/alc-device-thread.h"
 #include "emitters/color-emitter.h"
 
@@ -34,15 +34,31 @@ unsigned char max(int value) {
     return value;
 }
 
+#include "classes/alc-led-strip-configuration.h"
+
+ALCLedStripConfiguration config;
+
 ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent)
   :QThread(parent),
     m_device(device),
     m_emitter(0),
     m_details(details),
     m_continue(true),
-    m_samples(new ColorSamples)
+    m_samples(new ALCColorSamples)
 {
   m_device->moveToThread(this);
+
+  config.add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, RGB, 2.0);
+  config.add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
+  config.add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
+  config.add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
+
+  /* //LEDY JARKA
+  config.add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 6, true, GRB, 2.0);
+  config.add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
+  config.add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
+  config.add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
+   */
 }
 
 ALCDeviceThread::~ALCDeviceThread() {
@@ -56,17 +72,15 @@ void ALCDeviceThread::run() {
   QElapsedTimer counter;
 
   int fps = 0;
-  int framerateLimit = 102;
+  int framerateLimit = 100;
   double latency[2];
 
   counter.start();
   latency[0] = 0;
   latency[1] = 0;
-  int io_delay = 0;
 
-  Format format_t;
   double brightness_t;
-  double colorCorrection_t[3];
+  double rgbc[3];
 
   quint16 ptr = 0;
   do {
@@ -74,10 +88,9 @@ void ALCDeviceThread::run() {
     if (m_emitter)
       m_emitter->state(*m_samples);
     brightness_t = brightness(true);
-    colorCorrection_t[Red] = redCorrection(true);
-    colorCorrection_t[Green] = greenCorrection(true);
-    colorCorrection_t[Blue] = blueCorrection(true);
-    format_t = RGB;
+    rgbc[Red] = redCorrection(true);
+    rgbc[Green] = greenCorrection(true);
+    rgbc[Blue] = blueCorrection(true);
 
     if (!m_emitter) {
       msleep(100);
@@ -87,66 +100,28 @@ void ALCDeviceThread::run() {
     QVector < int> *colors;
     ptr = 0;
 
-    for (register int ii = 0; ii < 4; ++ii) {
-      switch (ii) {
-      case 0:
-        colors  = m_samples->scaled(ColorSamples::SAMPLE_BOTTOM, 30);
-        break;
-      case 1:
-        colors = m_samples->scaled(ColorSamples::SAMPLE_LEFT, 15);
-        break;
-      case 2:
-        colors = m_samples->scaled(ColorSamples::SAMPLE_TOP, 30);
-        break;
-      case 3:
-        colors = m_samples->scaled(ColorSamples::SAMPLE_RIGHT, 15);
-        break;
+    QList < ALCLedStrip *>  strips = config.list();
+
+    for (register int ii = 0; ii < strips.count(); ++ii) {
+      ALCLedStrip *strip = strips[ii];
+      colors = m_samples->scaled((ALCColorSamples::Position)strip->source(), strip->count());
+      const Format format = strip->colorFormat();
+      const double s = strip->brightness();
+      const int size = colors->size();
+
+      if (strip->clockwise()) {
+        for (register int i = 0; i < size; ++i)
+          push(data, ptr, format, (*colors)[i], rgbc, brightness_t * s);
+      } else {
+        for (register int i = size - 1; i >= 0; --i)
+          push(data, ptr, format, (*colors)[i], rgbc, brightness_t * s);
       }
 
-      for (register int i = 0; i < colors->size(); ++i) {
-        const quint32 color = (*colors)[i];
-        switch (format_t) {
-        case RGB:
-          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-          break;
-        case RBG:
-          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-          break;
-        case GRB:
-          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-          break;
-        case BRG:
-          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-          break;
-        case GBR:
-          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-          break;
-        case BGR:
-          data[ptr++] = max(qb(color) * colorCorrection_t[Blue] * brightness_t);
-          data[ptr++] = max(qg(color) * colorCorrection_t[Green] * brightness_t);
-          data[ptr++] = max(qr(color) * colorCorrection_t[Red] * brightness_t);
-          break;
-        }
-      }
-      delete colors;
     }
 
-   // ptr += 120*3;
-
-
     m_device->write((char*)data, ptr);
-    m_device->flush();
     m_device->waitForBytesWritten(1000);
+
 
     latency[0] = timer.nsecsElapsed();
     latency[1] += latency[0];
@@ -157,7 +132,6 @@ void ALCDeviceThread::run() {
 
     fps++;
     usleep(delay/1000.0);
-    msleep(io_delay);
 
     if (counter.hasExpired(1000)) {
       counter.restart();
@@ -165,8 +139,7 @@ void ALCDeviceThread::run() {
       fps = 0;
     }
 
-
-  } while (continueValue() && m_device->error() == QSerialPort::NoError);
+  } while (continueValue() && m_device->isWritable() && m_device->isOpen());
 
   if (m_device->isOpen() && m_device->isWritable())
     m_device->close();
@@ -197,4 +170,39 @@ void ALCDeviceThread::setContinueValue(bool value) {
 bool ALCDeviceThread::continueValue() {
   QMutexLocker locker(m_mutex);
   return m_continue;
+}
+
+void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[], double brightness) {
+  switch (format) {
+  case RGB:
+    data[ptr++] = max(qr(color) * rgbc[Red] * brightness);
+    data[ptr++] = max(qg(color) * rgbc[Green] * brightness);
+    data[ptr++] = max(qb(color) * rgbc[Blue] * brightness);
+    break;
+  case RBG:
+    data[ptr++] = max(qr(color) * rgbc[Red] * brightness);
+    data[ptr++] = max(qb(color) * rgbc[Blue] * brightness);
+    data[ptr++] = max(qg(color) * rgbc[Green] * brightness);
+    break;
+  case GRB:
+    data[ptr++] = max(qg(color) * rgbc[Green] * brightness);
+    data[ptr++] = max(qr(color) * rgbc[Red] * brightness);
+    data[ptr++] = max(qb(color) * rgbc[Blue] * brightness);
+    break;
+  case BRG:
+    data[ptr++] = max(qb(color) * rgbc[Blue] * brightness);
+    data[ptr++] = max(qr(color) * rgbc[Red] * brightness);
+    data[ptr++] = max(qg(color) * rgbc[Green] * brightness);
+    break;
+  case GBR:
+    data[ptr++] = max(qg(color) * rgbc[Green] * brightness);
+    data[ptr++] = max(qb(color) * rgbc[Blue] * brightness);
+    data[ptr++] = max(qr(color) * rgbc[Red] * brightness);
+    break;
+  case BGR:
+    data[ptr++] = max(qb(color) * rgbc[Blue] * brightness);
+    data[ptr++] = max(qg(color) * rgbc[Green] * brightness);
+    data[ptr++] = max(qr(color) * rgbc[Red] * brightness);
+    break;
+  }
 }

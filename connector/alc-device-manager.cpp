@@ -58,7 +58,7 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
       ALCDeviceThread *thread = new ALCDeviceThread(device, ports[i]);
       connect(thread, &ALCDeviceThread::started, this, &ALCDeviceManager::deviceThreadStarted);
       connect(thread, &ALCDeviceThread::finished, this, &ALCDeviceManager::deviceThreadFinished);
-      thread->start(QThread::HighPriority);
+      thread->start();
     } else
       delete device;
   }

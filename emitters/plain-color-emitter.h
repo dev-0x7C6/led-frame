@@ -4,7 +4,7 @@
 #include <QColor>
 #include <QObject>
 #include "emitters/color-emitter.h"
-#include "classes/color-samples.h"
+#include "classes/alc-color-samples.h"
 
 class QTimer;
 
@@ -13,7 +13,7 @@ class PlainColorEmitter: public QObject, public ColorEmitter {
 private:
   QColor m_color;
   QTimer *m_timer;
-  ColorSamples m_samples;
+  ALCColorSamples m_samples;
 
 public:
   explicit PlainColorEmitter();

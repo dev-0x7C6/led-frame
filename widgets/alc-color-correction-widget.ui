@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>552</width>
+    <width>550</width>
     <height>136</height>
    </rect>
   </property>
@@ -101,13 +101,6 @@
        </property>
        <property name="text">
         <string>100%</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="brightnessBoost">
-       <property name="text">
-        <string>Boost</string>
        </property>
       </widget>
      </item>

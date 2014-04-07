@@ -55,7 +55,7 @@ void ImageColorEmitter::fromFile(QString file) {
   int rgb = 0;
 
   for (register int k = 0; k < 4; ++k) {
-    QVector < int> *colors = m_samples.get(ColorSamples::Position(k));
+    QVector < int> *colors = m_samples.get(ALCColorSamples::Position(k));
     for (register int i = 0; i < SAMPLE_RESOLUTION; ++i) {
       r = g = b = 0;
       c = 0;

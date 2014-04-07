@@ -9,17 +9,17 @@
 class ALCLedStrip {
 public:
   enum Source {
-    SourceTop,
+    SourceBottom,
     SourceLeft,
-    SourceRight,
-    SourceBottom
+    SourceTop,
+    SourceRight
   };
 
   enum Destination {
-    DestinationTop,
+    DestinationBottom,
     DestinationLeft,
-    DestinationRight,
-    DestinationBottom
+    DestinationTop,
+    DestinationRight
   };
 
 private:
@@ -28,6 +28,7 @@ private:
   Source m_source;
   Destination m_destination;
   Format m_colorFormat;
+  double m_brightness;
 
 public:
   void setClockwise(bool);
@@ -39,12 +40,16 @@ public:
   void setColorFormat(Format format);
   Format colorFormat() const;
 
-
   void setSource(Source);
   Source source() const;
 
   void setDestination(Destination);
   Destination destination() const;
+
+
+  void setBrightness(double value);
+  double brightness();
+
 };
 
 class ALCLedStripConfiguration : public QObject {
@@ -56,8 +61,10 @@ public:
   explicit ALCLedStripConfiguration(QObject *parent = 0);
 
   void add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
-           int count, bool clockwise = true);
+           int count, bool clockwise = true, Format color = RGB, double brightness = 1.0);
 
+
+  QList < ALCLedStrip *> list();
 
 };
 

@@ -1,24 +1,24 @@
-#include "color-samples.h"
+#include "alc-color-samples.h"
 
-ColorSamples::ColorSamples() {
+ALCColorSamples::ALCColorSamples() {
   m_samples[0].resize(SAMPLE_RESOLUTION);
   m_samples[1].resize(SAMPLE_RESOLUTION);
   m_samples[2].resize(SAMPLE_RESOLUTION);
   m_samples[3].resize(SAMPLE_RESOLUTION);
 }
 
-ColorSamples::~ColorSamples() { }
+ALCColorSamples::~ALCColorSamples() { }
 
-void ColorSamples::set(ColorSamples::Position pos, QVector < int> &colors) {
+void ALCColorSamples::set(ALCColorSamples::Position pos, QVector < int> &colors) {
   memcpy(reinterpret_cast < void*> (m_samples[pos].data()),
          reinterpret_cast < void*> ( colors.data()), colors.size() * sizeof(int));
 }
 
-QVector < int> *ColorSamples::get(ColorSamples::Position pos) {
+QVector < int> *ALCColorSamples::get(ALCColorSamples::Position pos) {
   return &m_samples[pos];
 }
 
-QVector < int> *ColorSamples::scaled(ColorSamples::Position pos, int size) {
+QVector < int> *ALCColorSamples::scaled(ALCColorSamples::Position pos, int size) {
   register QVector < int> *result = new QVector < int> (size);
   register const QVector < int> &samples = m_samples[pos];
 
@@ -32,7 +32,7 @@ QVector < int> *ColorSamples::scaled(ColorSamples::Position pos, int size) {
   return result;
 }
 
-QVector < int> *ColorSamples::pscaled(ColorSamples::Position pos, int size) {
+QVector < int> *ALCColorSamples::pscaled(ALCColorSamples::Position pos, int size) {
   register QVector < int> *result = new QVector < int> (size);
   register const QVector < int> &samples = m_samples[pos];
 
@@ -41,7 +41,7 @@ QVector < int> *ColorSamples::pscaled(ColorSamples::Position pos, int size) {
   return result;
 }
 
-void ColorSamples::copy(ColorSamples &ref) {
+void ALCColorSamples::copy(ALCColorSamples &ref) {
   for (register int i = 0; i < SAMPLE_ARRAY; ++i)
     set(static_cast< Position>(i), ref.m_samples[i]);
 }
@@ -75,7 +75,6 @@ void ColorSamples::copy(ColorSamples &ref) {
 //  (*result)[0] = samples.first();
 //  (*result)[size - 1] = samples.last();
 
-  //qDebug() << (*result)
 
   //return result;
 

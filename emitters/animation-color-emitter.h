@@ -30,7 +30,7 @@ private:
   }
 
   QList < QRgb> m_colorStream;
-  ColorSamples m_samples;
+  ALCColorSamples m_samples;
   AnimationType m_animationType;
   quint64 m_blink;
 
@@ -94,7 +94,7 @@ protected:
 
         QListIterator < QRgb> it(m_colorStream);
         for (register int p = 0; p < 4; ++p) {
-          QVector < int> *vec = m_samples.get(static_cast < ColorSamples::Position>( p));
+          QVector < int> *vec = m_samples.get(static_cast < ALCColorSamples::Position>( p));
           for (register int i = 0; i < SAMPLE_RESOLUTION; ++i)
             (*vec)[i] = it.next();
         }
@@ -108,7 +108,7 @@ protected:
       if (m_blink > 3)
         m_blink = 0;
       for (register int p = 0; p < 4; ++p) {
-        QVector < int> *vec = m_samples.get(static_cast < ColorSamples::Position>( p));
+        QVector < int> *vec = m_samples.get(static_cast < ALCColorSamples::Position>( p));
         for (register int i = 0; i < SAMPLE_RESOLUTION; ++i)
           (*vec)[i] = rgb;
       }

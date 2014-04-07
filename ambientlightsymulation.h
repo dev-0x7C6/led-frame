@@ -6,7 +6,7 @@
 #include <QWidget>
 #include <QRgb>
 
-#include "classes/color-samples.h"
+#include "classes/alc-color-samples.h"
 
 class AmbientLightSymulation :public QWidget
 {
@@ -14,7 +14,7 @@ class AmbientLightSymulation :public QWidget
 private:
   QPixmap m_monitor;
   ColorEmitter *m_emitter;
-  ColorSamples m_samples;
+  ALCColorSamples m_samples;
 
   int z;
 
@@ -87,9 +87,7 @@ public slots:
   void connectEmitter(ColorEmitter *emitter) {
     if (m_emitter)
       m_emitter->done();
-
     (m_emitter = emitter)->init();
-    qDebug() << "working ?";
   }
 
 

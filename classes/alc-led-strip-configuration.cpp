@@ -6,13 +6,19 @@ ALCLedStripConfiguration::ALCLedStripConfiguration(QObject *parent) :
 }
 
 void ALCLedStripConfiguration::add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
-                                   int count, bool clockwise) {
+                                   int count, bool clockwise, Format color, double brightness) {
   ALCLedStrip *strip = new ALCLedStrip();
   strip->setSource(source);
   strip->setDestination(destination);
   strip->setCount(count);
   strip->setClockwise(clockwise);
+  strip->setColorFormat(color);
+  strip->setBrightness(brightness);
   m_strips << strip;
+}
+
+QList<ALCLedStrip *> ALCLedStripConfiguration::list() {
+  return m_strips;
 }
 
 void ALCLedStrip::setClockwise(bool clockwise) {
@@ -53,4 +59,12 @@ void ALCLedStrip::setDestination(ALCLedStrip::Destination dest) {
 
 ALCLedStrip::Destination ALCLedStrip::destination() const{
   return m_destination;
+}
+
+void ALCLedStrip::setBrightness(double value) {
+  m_brightness = value;
+}
+
+double ALCLedStrip::brightness() {
+  return m_brightness;
 }

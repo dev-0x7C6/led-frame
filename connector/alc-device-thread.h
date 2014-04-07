@@ -27,14 +27,14 @@
 #include "classes/alc-color-correction.h"
 
 class ColorEmitter;
-class ColorSamples;
+class ALCColorSamples;
 
 class ALCDeviceThread : public QThread, public ALCColorCorrection {
   Q_OBJECT
 private:
   QSerialPort *m_device;
   ColorEmitter *m_emitter;
-  ColorSamples *m_samples;
+  ALCColorSamples *m_samples;
   QSerialPortInfo m_details;
   bool m_continue;
 
@@ -45,6 +45,9 @@ public:
   QSerialPortInfo details();
   void setContinueValue(bool value);
   bool continueValue();
+
+private:
+  void push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[3], double brightness);
 
 protected:
   void run();

@@ -1,7 +1,7 @@
 #include "alc-emitters-widget.h"
 #include "ui_alc-emitters-widget.h"
 
-#include "classes/color-samples.h"
+#include "classes/alc-color-samples.h"
 #include "emitters/color-emitter.h"
 #include "emitters/screen-capture-color-emitter.h"
 #include "managers/alc-emitter-manager.h"

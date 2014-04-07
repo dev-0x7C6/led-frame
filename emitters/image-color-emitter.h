@@ -10,7 +10,7 @@
 class ImageColorEmitter : public QObject, public ColorEmitter {
   Q_OBJECT
 private:
-  ColorSamples m_samples;
+  ALCColorSamples m_samples;
   QImage m_image;
   QString m_file;
   bool m_loaded;
