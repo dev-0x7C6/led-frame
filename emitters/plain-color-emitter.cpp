@@ -40,6 +40,8 @@ void PlainColorEmitter::pushState() {
                  max(m_color.green() * m_brightness),
                  max(m_color.blue() * m_brightness));
 
+
+
   for (register int i = 0; i < samples.size(); ++i)
     samples[i] = rgb;
 
@@ -54,5 +56,7 @@ void PlainColorEmitter::pushState() {
 
 QColor PlainColorEmitter::open() {
   QColor color = QColorDialog::getColor(m_color);
-  return (m_color = color);
+  if (color.isValid())
+    return (m_color = color); else
+    return (m_color);
 }

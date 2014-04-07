@@ -99,7 +99,8 @@ void ALCEmittersWidget::insertAnimationItem(ColorEmitter *ptr) {
   button->setEmitter(emitter);
   button->setText("configure animation...");
   ui->tree->setItemWidget(item, 1, button);
- // connect(button, &QPushButtonEx::clicked, this, &ALCEmittersWidget::pickColor);
+
+  connect(button, &QPushButtonEx::clicked, this, &ALCEmittersWidget::pickAnimation);
 }
 
 void ALCEmittersWidget::insertImageItem(ColorEmitter *ptr) {
@@ -117,10 +118,17 @@ void ALCEmittersWidget::insertImageItem(ColorEmitter *ptr) {
 
 }
 
+void ALCEmittersWidget::pickAnimation() {
+  QPushButtonEx *button = reinterpret_cast < QPushButtonEx*>( sender());
+  AnimationColorEmitter *emitter = dynamic_cast < AnimationColorEmitter*> ( button->emitter());
+  emitter->open();
+}
+
 void ALCEmittersWidget::pickImage() {
   QPushButtonEx *button = reinterpret_cast < QPushButtonEx*>( sender());
   ImageColorEmitter *emitter = dynamic_cast < ImageColorEmitter*> ( button->emitter());
-  QString fileName = emitter->open();
+  emitter->open();
+  QString fileName = emitter->file();
   button->setText((fileName.isEmpty()) ? "load samples from image..." : fileName);
 }
 

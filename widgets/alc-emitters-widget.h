@@ -47,6 +47,8 @@ private:
   void insertPlainColorItem(ColorEmitter *);
   void insertAnimationItem(ColorEmitter *);
   void insertImageItem(ColorEmitter *);
+
+  void pickAnimation();
   void pickImage();
   void pickColor();
 
