@@ -90,6 +90,10 @@ void ImageColorEmitter::init() {
   ColorEmitter::init();
 }
 
+bool ImageColorEmitter::configure() {
+  return open().isEmpty();
+}
+
 QString ImageColorEmitter::open() {
   QFileInfo info(QFileDialog::getOpenFileName(0,
                                               "Open Keylogger History File",

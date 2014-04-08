@@ -91,6 +91,15 @@ QString ScreenCaptureColorEmitter::name() {
   return m_name;
 }
 
+#include "dialogs/alc-screen-configure-dialog.h"
+
+bool ScreenCaptureColorEmitter::configure() {
+  ALCScreenConfigureDialog dialog;
+  dialog.setWindowTitle(emitterName());
+  dialog.setEmitter(this);
+  return dialog.exec();
+}
+
 #include "X11/Xutil.h"
 #include "X11/Xlib.h"
 

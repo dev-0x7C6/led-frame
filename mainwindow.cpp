@@ -23,11 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
-  m_tray.setContextMenu(new QMenu());
-  m_tray.setIcon(QIcon(":/22x22/leds.png"));
-  m_tray.show();
 
-  m_manager = new ALCDeviceManager(this);
   QRect rect;
 
   m_statisticAverageFPS = 0;
@@ -81,24 +77,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
   ui->leftWidget->setCurrentIndex(0);
 
-
- // connect(ui->framerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerate(int)));
-  //connect(ui->brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(setBrightness(int)));
-
   connect(ui->actionColor_correction, &QAction::toggled, this, &MainWindow::showColorCorrection);
-
   connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
   connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
-  //connect(ui->ledGlow, SIGNAL(valueChanged(int)), ui->widget, SLOT(setGlowSize(int)));
- // connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), ui->widget, SLOT(setFramerate(int)));
   connect(ui->ledGlow, SIGNAL(valueChanged(int)), this, SLOT(setGlowSize(int)));
   connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerateLed(int)));
 
   m_settings->beginGroup("GeneralSettings");
-  ui->actionColor_correction->setChecked(m_settings->value("visible", false).toBool());
- // ui->screenArea->setCurrentIndex(m_settings->value("screenId", 0).toInt());
- // ui->brightnessSlider->setValue(m_settings->value("brightness", 100).toInt());
- // ui->framerateLimit->setValue(m_settings->value("framerateLimit", 30).toInt());
+  ui->actionColor_correction->setChecked(m_settings->value("visible", false).toBool());;
   m_settings->endGroup();
 
 
@@ -127,143 +113,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->emitters, &ALCEmittersWidget::setup, Qt::QueuedConnection);
   connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreensWidget::setup, Qt::QueuedConnection);
-  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->selections, &ALCSelectionsWidget::setup, Qt::QueuedConnection);
+  //connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->selections, &ALCSelectionsWidget::setup, Qt::QueuedConnection);
 
-  connect(m_manager, &ALCDeviceManager::deviceConnected, this, &MainWindow::deviceConnected, Qt::DirectConnection);
-  connect(m_manager, &ALCDeviceManager::deviceDisconnected, this, &MainWindow::deviceDisconnected, Qt::DirectConnection);
   connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 
-}
-
-#include <QCommandLinkButton>
-
-void MainWindow::deviceConnected(ALCDeviceThread *thread) {
-  ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->devices, thread);
-  connect(item, &ALCDeviceTreeWidget::setEmitter, this, &MainWindow::setEmitter);
-  item->setText(0, thread->details().systemLocation() + '\t');
-  item->setIcon(0, QIcon(":/22x22/device.png"));
-
-  QTreeWidgetItem *settings;
-  QCommandLinkButton *button;
-
-  settings = new QTreeWidgetItem(item);
-  button = new QCommandLinkButton();
-  ui->devices->setItemWidget(settings, 1, button);
-  button->setText("Device settings");
-  button->setDescription("You can set there setings like: device brightness, update speed");
-  button->setMaximumHeight(60);
-
-  settings = new QTreeWidgetItem(item);
-  button = new QCommandLinkButton();
-  ui->devices->setItemWidget(settings, 1, button);
-  button->setText("Emitter settings");
-  button->setDescription("Quick settings for your currently selected emitter");
-  button->setMaximumHeight(60);
-
-  settings = new QTreeWidgetItem(item);
-  button = new QCommandLinkButton();
-  ui->devices->setItemWidget(settings, 1, button);
-  button->setText("Strip configuration");
-  button->setDescription("Wizard configurator for led strips and your monitor");
-  button->setMaximumHeight(60);
-
-//  SliderItem *slider = new SliderItem(Qt::Horizontal, brightness, 1);
-//  brightness->setText(0, "Brightness");
-//  brightness->setIcon(0, QIcon(":/22x22/brightness.png"));
-//  ui->devices->setItemWidget(brightness, 1, slider);
-//  slider->setTickInterval(10);
-// // slider->setTickPosition(QSlider::TicksBelow);
-//  slider->setMinimum(1);
-//  slider->setMaximum(200);
-//  slider->setValue(100);
-//  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceBrightness);
-
-//  QTreeWidgetItem *delay = new QTreeWidgetItem(item);
-
-//  SpinBoxItem *spinbox = new SpinBoxItem(brightness, 1);
-//  delay->setText(0, "I/O delay");
-//  delay->setIcon(0, QIcon(":/22x22/fpsrate.png"));
-//  ui->devices->setItemWidget(delay, 1, spinbox);
-//  spinbox->setMinimum(0);
-//  spinbox->setMaximum(1000);
-//  spinbox->setValue(0);
-//  spinbox->setSuffix(" ms");
-// // spinbox->setMaximumWidth(70);
-
-//  connect(spinbox, static_cast< void(QSpinBox::*)(int) >(&QSpinBox::valueChanged),
-//          this, &MainWindow::setDeviceIODelay);
-
-
-
-
-//  QTreeWidgetItem *led = new QTreeWidgetItem(item);
-//  led->setText(0, "Color corretion");
-//  led->setIcon(0, QIcon("://22x22/color.png"));
-
-//  ComboBoxItem *cmb = new ComboBoxItem(led, 1);
-//  cmb->setIconSize(QSize(22, 22));
-//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("RGB"));
-//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("RBG"));
-//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("GRB"));
-//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("BRG"));
-//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("GBR"));
-//  cmb->addItem(QIcon(":/22x22/no-device.png"), QString("BGR"));
-//  ui->devices->setItemWidget(led, 1, cmb);
-//  connect(cmb, SIGNAL(currentIndexChanged(int)), this,
-//          SLOT(setDeviceColorFormat(int)), Qt::DirectConnection);
-
-//  QTreeWidgetItem *red = new QTreeWidgetItem(led);
-//  red->setText(0, "Red");
-//  red->setIcon(0, QIcon("://22x22/color.png"));
-//  slider = new SliderItem(Qt::Horizontal, red, 1);
-//  ui->devices->setItemWidget(red, 1, slider);
-//  slider->setTickInterval(10);
-//  slider->setTickPosition(QSlider::TicksBelow);
-//  slider->setMinimum(0);
-//  slider->setMaximum(200);
-//  slider->setValue(100);
-//  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceRedColorCorrection);
-
-
-//  QTreeWidgetItem *green = new QTreeWidgetItem(led);
-//  green->setText(0, "Green");
-//  green->setIcon(0, QIcon("://22x22/color.png"));
-//  slider = new SliderItem(Qt::Horizontal, green, 1);
-//  ui->devices->setItemWidget(green, 1, slider);
-//  slider->setTickInterval(10);
-//  slider->setTickPosition(QSlider::TicksBelow);
-//  slider->setMinimum(0);
-//  slider->setMaximum(200);
-//  slider->setValue(100);
-//  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceGreenColorCorrection);
-
-//  QTreeWidgetItem *blue = new QTreeWidgetItem(led);
-//  blue->setText(0, "Blue");
-//  blue->setIcon(0, QIcon("://22x22/color.png"));
-//  slider = new SliderItem(Qt::Horizontal, blue, 1);
-//  ui->devices->setItemWidget(blue, 1, slider);
-//  slider->setTickInterval(10);
-//  slider->setTickPosition(QSlider::TicksBelow);
-//  slider->setMinimum(0);
-//  slider->setMaximum(200);
-//  slider->setValue(100);
-//  connect(slider, &QSlider::valueChanged, this, &MainWindow::setDeviceBlueColorCorrection);
-
-  ui->devices->header()->resizeSections(QHeaderView::ResizeToContents);
-  m_devices << item;
-
-  populate();
-}
-
-void MainWindow::deviceDisconnected(ALCDeviceThread *thread) {
-
-  for (register int i = 0; i < m_devices.count(); ++i) {
-    if (thread == m_devices[i]->device()) {
-      delete m_devices[i];
-      m_devices.removeAt(i);
-      return;
-    }
-  }
 }
 
 void MainWindow::setGlowSize(int value) {
@@ -278,7 +131,6 @@ void MainWindow::setFramerate(int value) {
   //ui->fpsCount->setText(QString::number(value) + "fps");
   ////////////////////////////////////////capture.setFramerateLimit(value);
 }
-
 
 void MainWindow::updateStats(quint32 fps, double latency, double usage) {
   m_statisticAverageFPS += fps;
@@ -371,57 +223,11 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 
 #endif
 
-#include "emitters/color-emitter.h"
-
-void MainWindow::populate() {
-  for (register int i = 0; i < m_devices.count(); ++i) {
-    ui->devices->removeItemWidget(m_devices[i], 1);
-    ComboBoxItem *cmb = new ComboBoxItem(m_devices[i], 1);
-    cmb->setIconSize(QSize(22, 22));
-    cmb->addItem(QIcon(":/22x22/no-device.png"), QString("Not assigned"));
-
-    QList < ColorEmitter*> emitters = ALCEmitterManager::instance()->allEmitters();
-    QListIterator < ColorEmitter*> ii(emitters);
-    ColorEmitter *emitter;
-    while (ii.hasNext()) {
-      switch ((emitter = ii.next())->type()) {
-      case ColorEmitter::EMITTER_SCREEN_CAPTURE:
-        cmb->addItem(QIcon(":/22x22/screen.png"), emitter->emitterName(),
-                     qVariantFromValue((void*)emitter));
-        break;
-      case ColorEmitter::EMITTER_PLAIN_COLOR:
-        cmb->addItem(QIcon(":/22x22/color.png"), emitter->emitterName(),
-                     qVariantFromValue((void*)emitter));
-        break;
-      case ColorEmitter::EMITTER_ANIMATION:
-        cmb->addItem(QIcon(":/22x22/animation.png"), emitter->emitterName(),
-                     qVariantFromValue((void*)emitter));
-        break;
-      case ColorEmitter::EMITTER_IMAGE:
-        cmb->addItem(QIcon(":/22x22/from-image.png"), emitter->emitterName(),
-                     qVariantFromValue((void*)emitter));
-        break;
-      }
-    }
-
-    connect(cmb, static_cast < void( QComboBox::*)( int)>(&QComboBox::currentIndexChanged),
-            m_devices[i], &ALCDeviceTreeWidget::currentIndexChanged, Qt::DirectConnection);
-
-    ui->devices->setItemWidget(m_devices[i], 1, cmb);
-  }
-}
-
 void ALCDeviceTreeWidget::currentIndexChanged(int idx) {
   Q_UNUSED(idx)
   ComboBoxItem *cmb = dynamic_cast < ComboBoxItem*> ( sender());
   emit setEmitter(m_device, reinterpret_cast< ColorEmitter*> (qvariant_cast < void*> (cmb->currentData())));
 }
-
-
-void MainWindow::setEmitter(ALCDeviceThread *device, ColorEmitter *emitter) {
-  device->connectEmitter(emitter);
-}
-
 
 MainWindow::~MainWindow()
 {
@@ -442,74 +248,5 @@ MainWindow::~MainWindow()
   m_settings->setValue("screenControl", ui->wiimoteScreen->isChecked());
   m_settings->endGroup();
 
-  delete m_manager;
   delete ui;
 }
-
-
-ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column)
-{
-  this->item = item;
-  this->column = column;
-  connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
-}
-
-void ComboBoxItem::changeItem(int index)
-{
-  if(index >= 0) {
-    item->setData(this->column, Qt::UserRole, itemText(index));
-  }
-}
-
-RadioButtonItem::RadioButtonItem(QTreeWidgetItem *item, int column)
-{
-  this->setText("Yes");
-  this->item = item;
-  this->column = column;
-  connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
-}
-
-void RadioButtonItem::changeItem(int index)
-{
-    if(index >=0)
-    {
-      item->setData(this->column, Qt::UserRole, "44");
-        //item->data(this->column, Qt::UserRole).toString();
-    }
-}
-
-SliderItem::SliderItem(Qt::Orientation orientation, QTreeWidgetItem *item, int column) :
-  QSlider(orientation, 0)
-{
-  this->item = item;
-  this->column = column;
-  connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
-}
-
-void SliderItem::changeItem(int index) {
-  if(index >=0)
-    item->setData(this->column, Qt::UserRole, "44");
-}
-
-
-SpinBoxItem::SpinBoxItem(QTreeWidgetItem *item, int column)
-{
-  this->item = item;
-  this->column = column;
-  connect(this, SIGNAL(currentIndexChanged(int)), SLOT(changeItem(int)));
-}
-
-void SpinBoxItem::changeItem(int index)
-{
-  if(index >=0)
-    item->setData(this->column, Qt::UserRole, "44");
-}
-
-
-LedConfigurationItem::LedConfigurationItem(QTreeWidgetItem *, int)
-{
-  this->item = item;
-  this->column = column;
-}
-
-void LedConfigurationItem::changeItem(int) { }

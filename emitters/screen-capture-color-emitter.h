@@ -58,6 +58,9 @@ public slots:
 
   QString name();
 
+public:
+  bool configure();
+
 protected:
   void run();
 

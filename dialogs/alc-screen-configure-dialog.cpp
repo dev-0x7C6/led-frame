@@ -63,8 +63,7 @@ void ALCScreenConfigureDialog::accepted(QAbstractButton *button) {
     m_emitter->setFramerateLimit(ui->fps->value());
     m_emitter->setCaptureArea(area);
     m_emitter->setMarginProcent(ui->clip->value() / 100.0);
-    break;
   default:
-    break;
+    close();
   }
 }

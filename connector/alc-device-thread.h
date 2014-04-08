@@ -54,6 +54,7 @@ protected:
 
 public slots:
   void connectEmitter(ColorEmitter *emitter);
+  ColorEmitter *connectedEmitter();
 };
 
 #endif // ACLDEVICETHREAD_H

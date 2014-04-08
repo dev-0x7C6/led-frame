@@ -196,7 +196,6 @@ ALCEmitterManager::~ALCEmitterManager() {
   }
 
   settings->endGroup();
-  settings->endGroup();
 }
 
 void ALCEmitterManager::add(ColorEmitter *emitter, ColorEmitter::EmitterType type) {

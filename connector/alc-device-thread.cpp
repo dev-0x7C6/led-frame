@@ -159,6 +159,11 @@ void ALCDeviceThread::connectEmitter(ColorEmitter *emitter) {
     m_emitter->init();
 }
 
+ColorEmitter *ALCDeviceThread::connectedEmitter() {
+  QMutexLocker locker(m_mutex);
+  return m_emitter;
+}
+
 
 QSerialPortInfo ALCDeviceThread::details() { return m_details; }
 

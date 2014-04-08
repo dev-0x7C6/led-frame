@@ -38,6 +38,7 @@ public:
   virtual ~AnimationColorEmitter();
 
   bool open();
+  virtual bool configure();
 
 private:
   void rotatePalette();

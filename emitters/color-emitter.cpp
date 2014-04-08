@@ -64,3 +64,6 @@ QTreeWidgetItem *ColorEmitter::treeItem() {
   return m_treeItem;
 }
 
+bool ColorEmitter::configure() {
+}
+

@@ -56,6 +56,8 @@ public:
   void setTreeItem(QTreeWidgetItem *item);
   QTreeWidgetItem *treeItem();
 
+  virtual bool configure();
+
 
   //QList < QRgb> state();
 };

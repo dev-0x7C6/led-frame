@@ -61,6 +61,11 @@ public:
 
   ALCDeviceThread* device(int idx);
 
+  static ALCDeviceManager* instance() {
+    static ALCDeviceManager object;
+    return &object;
+  }
+
 protected:
   void timerEvent(QTimerEvent *event);
 

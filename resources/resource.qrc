@@ -39,5 +39,6 @@
         <file>custom/red.png</file>
         <file>22x22/from-image.png</file>
         <file>256x256/display2.png</file>
+        <file>16x16/configure.png</file>
     </qresource>
 </RCC>

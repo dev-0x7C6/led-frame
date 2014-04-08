@@ -60,3 +60,7 @@ QColor PlainColorEmitter::open() {
     return (m_color = color); else
     return (m_color);
 }
+
+bool PlainColorEmitter::configure() {
+  return open().isValid();
+}

@@ -44,9 +44,9 @@ SOURCES += main.cpp\
     managers/alc-emitter-manager.cpp \
     managers/alc-led-strip-manager.cpp \
     widgets/alc-screens-widget.cpp \
-    widgets/alc-selections-widget.cpp \
     dialogs/alc-screen-configure-dialog.cpp \
-    classes/alc-color-samples.cpp
+    classes/alc-color-samples.cpp \
+    widgets/alc-devices-widget.cpp
 
 HEADERS += mainwindow.h \
     ambientlightsymulation.h \
@@ -68,9 +68,9 @@ HEADERS += mainwindow.h \
     managers/alc-emitter-manager.h \
     managers/alc-led-strip-manager.h \
     widgets/alc-screens-widget.h \
-    widgets/alc-selections-widget.h \
     dialogs/alc-screen-configure-dialog.h \
-    classes/alc-color-samples.h
+    classes/alc-color-samples.h \
+    widgets/alc-devices-widget.h
 
 FORMS += mainwindow.ui \
     about.ui \
@@ -79,8 +79,8 @@ FORMS += mainwindow.ui \
     widgets/alc-emitters-widget.ui \
     widgets/alc-led-configuration-widget.ui \
     widgets/alc-screens-widget.ui \
-    widgets/alc-selections-widget.ui \
-    dialogs/alc-screen-configure-dialog.ui
+    dialogs/alc-screen-configure-dialog.ui \
+    widgets/alc-devices-widget.ui
 
 RESOURCES += \
     resources/resource.qrc \

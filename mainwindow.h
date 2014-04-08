@@ -4,124 +4,21 @@
 #include <QMainWindow>
 #include <QSettings>
 
+#include "connector/alc-device-manager.h"
+#include "emitters/animation-color-emitter.h"
+#include "emitters/image-color-emitter.h"
+#include "emitters/screen-capture-color-emitter.h"
+#include "led-configuration-widget.h"
+#include "managers/alc-emitter-manager.h"
+#include "widgets/alc-devices-widget.h"
+
 #ifdef Q_OS_UNIX
 #include "wiimotedev/deviceevents.h"
 #endif
 
+namespace Ui { class MainWindow; }
+
 class ALCDeviceThread;
-
-#include "emitters/screen-capture-color-emitter.h"
-
-namespace Ui {
-class MainWindow;
-}
-
-#include <QComboBox>
-#include <QRadioButton>
-#include <QTreeWidgetItem>
-#include <QSpinBox>
-#include <QSystemTrayIcon>
-
-class ComboBoxItem : public QComboBox {
-  Q_OBJECT
-private:
-  QTreeWidgetItem *item;
-  int column;
-
-public:
-  ComboBoxItem(QTreeWidgetItem*, int);
-
-public slots:
-  void changeItem(int);
-};
-
-class SliderItem: public QSlider {
-  Q_OBJECT
-private:
-  QTreeWidgetItem *item;
-  int column;
-
-public:
-  SliderItem(Qt::Orientation orientation, QTreeWidgetItem*, int);
-
-public slots:
-  void changeItem(int);
-};
-
-#include "led-configuration-widget.h"
-
-class SpinBoxItem: public QSpinBox {
-  Q_OBJECT
-private:
-  QTreeWidgetItem *item;
-  int column;
-
-public:
-  SpinBoxItem(QTreeWidgetItem*, int);
-
-public slots:
-  void changeItem(int);
-};
-
-
-class LedConfigurationItem: public LedConfigurationWidget {
-  Q_OBJECT
-private:
-  QTreeWidgetItem *item;
-  int column;
-
-public:
-  LedConfigurationItem(QTreeWidgetItem*, int);
-
-public slots:
-  void changeItem(int);
-};
-
-
-class RadioButtonItem  : public QRadioButton
-{
-    Q_OBJECT
-
-private:
-    QTreeWidgetItem *item;
-    int column;
-
-public:
-    RadioButtonItem (QTreeWidgetItem*, int);
-
-public slots:
-    void changeItem(int);
-
-};
-
-class ALCDeviceTreeWidget :public QObject, public QTreeWidgetItem {
-  Q_OBJECT
-private:
-  ALCDeviceThread *m_device;
-
-public:
-  ALCDeviceTreeWidget(QTreeWidget *tree, ALCDeviceThread *device)
-    :QTreeWidgetItem(tree),
-      QObject(0),
-      m_device(device)
-  {
-  }
-
-  ALCDeviceThread * device() { return m_device; }
-  void setDevice(ALCDeviceThread *device) { m_device = device; }
-
-  void currentIndexChanged(int);
-
-signals:
-  void setCustomEmitter(ALCDeviceThread*, int);
-  void setEmitter(ALCDeviceThread*, ColorEmitter*);
-};
-
-#include "emitters/animation-color-emitter.h"
-#include "connector/alc-device-manager.h"
-#include "emitters/image-color-emitter.h"
-#include "managers/alc-emitter-manager.h"
-
 class ScreenCaptureColorEmitter;
 
 class MainWindow : public QMainWindow
@@ -129,12 +26,10 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 private:
   QSettings *m_settings;
-  QSystemTrayIcon m_tray;
   QList < ALCDeviceTreeWidget*> m_devices;
   ALCEmitterManager *m_screenManager;
   QString m_title;
 
-  ALCDeviceManager *m_manager;
   double m_statisticAverageFPS;
   double m_statisticAverageLatency;
   double m_statisticAverageThreadUse;
@@ -149,11 +44,6 @@ private:
 public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
-
-
-private slots:
-  void deviceConnected(ALCDeviceThread *thread);
-  void deviceDisconnected(ALCDeviceThread *thread);
 
 private slots:
   void setGlowSize(int);
@@ -175,12 +65,6 @@ private slots:
 #ifdef Q_OS_UNIX
   void dbusWiimotedevButtons(uint, uint64);
 #endif
-
-  void populate();
-
-private slots:
-  void setEmitter(ALCDeviceThread*, ColorEmitter*);
-
 
 private:
   Ui::MainWindow *ui;

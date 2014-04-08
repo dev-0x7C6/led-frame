@@ -28,6 +28,7 @@ public:
 
   void pushState();
   void init();
+  bool configure();
 };
 
 #endif // IMAGECOLOREMITTER_H

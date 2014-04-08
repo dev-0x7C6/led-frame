@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
-    <height>556</height>
+    <width>1076</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -48,7 +48,7 @@
             </sizepolicy>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>2</number>
            </property>
            <property name="iconSize">
             <size>
@@ -56,97 +56,13 @@
              <height>22</height>
             </size>
            </property>
-           <widget class="QWidget" name="tab">
+           <widget class="ALCDevicesWidget" name="tab">
             <attribute name="icon">
              <iconset resource="resources/resource.qrc">
               <normaloff>:/22x22/device.png</normaloff>:/22x22/device.png</iconset>
             </attribute>
             <attribute name="title">
              <string>Devices &amp;&amp; connections</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
-             <item>
-              <widget class="QTreeWidget" name="devices">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="selectionMode">
-                <enum>QAbstractItemView::NoSelection</enum>
-               </property>
-               <property name="selectionBehavior">
-                <enum>QAbstractItemView::SelectColumns</enum>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>22</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <attribute name="headerVisible">
-                <bool>false</bool>
-               </attribute>
-               <attribute name="headerStretchLastSection">
-                <bool>true</bool>
-               </attribute>
-               <column>
-                <property name="text">
-                 <string>Device</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Settings</string>
-                </property>
-               </column>
-              </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Maximum</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </widget>
-           <widget class="ALCLedConfigurationWidget" name="tab_5">
-            <attribute name="icon">
-             <iconset resource="resources/resource.qrc">
-              <normaloff>:/22x22/leds.png</normaloff>:/22x22/leds.png</iconset>
-            </attribute>
-            <attribute name="title">
-             <string>Led strips</string>
-            </attribute>
-           </widget>
-           <widget class="ALCScreensWidget" name="screens">
-            <attribute name="icon">
-             <iconset resource="resources/resource.qrc">
-              <normaloff>:/22x22/screen.png</normaloff>:/22x22/screen.png</iconset>
-            </attribute>
-            <attribute name="title">
-             <string>Screens</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout_14"/>
-           </widget>
-           <widget class="ALCSelectionsWidget" name="selections">
-            <attribute name="icon">
-             <iconset resource="resources/resource.qrc">
-              <normaloff>:/22x22/selected-area.png</normaloff>:/22x22/selected-area.png</iconset>
-            </attribute>
-            <attribute name="title">
-             <string>Selected area</string>
             </attribute>
            </widget>
            <widget class="ALCEmittersWidget" name="emitters">
@@ -156,6 +72,25 @@
             </attribute>
             <attribute name="title">
              <string>Emitters</string>
+            </attribute>
+           </widget>
+           <widget class="ALCScreensWidget" name="screens">
+            <attribute name="icon">
+             <iconset resource="resources/resource.qrc">
+              <normaloff>:/22x22/selected-screen.png</normaloff>:/22x22/selected-screen.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Screens</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_14"/>
+           </widget>
+           <widget class="ALCLedConfigurationWidget" name="tab_5">
+            <attribute name="icon">
+             <iconset resource="resources/resource.qrc">
+              <normaloff>:/22x22/chunks.png</normaloff>:/22x22/chunks.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Led strips</string>
             </attribute>
            </widget>
            <widget class="QWidget" name="tab_2">
@@ -578,7 +513,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1080</width>
+     <width>1076</width>
      <height>21</height>
     </rect>
    </property>
@@ -780,9 +715,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ALCSelectionsWidget</class>
+   <class>ALCDevicesWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/alc-selections-widget.h</header>
+   <header>widgets/alc-devices-widget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

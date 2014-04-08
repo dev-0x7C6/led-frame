@@ -12,7 +12,9 @@ ALCScreensWidget::ALCScreensWidget(QWidget *parent) :
   ui(new Ui::ALCScreensWidget) {
   ui->setupUi(this);
   setup();
+  ui->tree->header()->setStretchLastSection(false);
   ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
+  ui->tree->header()->setSectionResizeMode(1, QHeaderView::Stretch);
 }
 
 ALCScreensWidget::~ALCScreensWidget() {
@@ -47,10 +49,11 @@ void ALCScreensWidget::insertScreenCaptureItem(ColorEmitter *ptr) {
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/screen.png"));
   QPushButtonEx *button = new QPushButtonEx();
+  button->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   button->setEmitter(emitter);
   //prepareColorButton(button, emitter->color());
-  button->setText("configure...");
-  ui->tree->setItemWidget(item, 1, button);
+  button->setIcon(QIcon(":/16x16/configure.png"));
+  ui->tree->setItemWidget(item, 2, button);
   button->setToolTip(emitter->emitterName());
   connect(button, &QPushButtonEx::clicked, this, &ALCScreensWidget::configure);
 }

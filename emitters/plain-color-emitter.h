@@ -25,6 +25,8 @@ public:
   void pushState();
 
   QColor open();
+
+  virtual bool configure();
 };
 
 #endif // PLAINCOLOREMITTER_H
