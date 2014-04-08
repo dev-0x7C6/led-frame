@@ -51,6 +51,8 @@ void ALCDevicesWidget::deviceConnected(ALCDeviceThread *thread) {
   QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
   workspace->setLayout(layout);
   workspace->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+  workspace->setAutoFillBackground(true);
+
 
   DeviceLinkButton *linkLedStrip = new DeviceLinkButton;
   DeviceLinkButton *linkEmitter = new DeviceLinkButton;
