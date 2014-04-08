@@ -225,10 +225,20 @@ ScreenCaptureColorEmitter *ALCEmitterManager::addScreenCaptureEmitter() {
   add(new ScreenCaptureColorEmitter(this), ColorEmitter::EMITTER_SCREEN_CAPTURE);
 }
 
+#include "connector/alc-device-manager.h"
+#include "connector/alc-device-thread.h"
+
 void ALCEmitterManager::remove(ColorEmitter *emitter) {
+
+  for (register int i = 0; i < ALCDeviceManager::instance()->count(); ++i)
+    if (ALCDeviceManager::instance()->device(i)->connectedEmitter() == emitter)
+      ALCDeviceManager::instance()->device(i)->connectEmitter(0);
+
   for (register int i = 0; i < ColorEmitter::EMITTER_END_ARRAY; ++i)
     m_emitters[static_cast< ColorEmitter::EmitterType>(i)].removeAll(emitter);
   delete emitter;
+
+  emit emitterListChanged();
 }
 
 QList < ColorEmitter *> *ALCEmitterManager::emitters(ColorEmitter::EmitterType type) {

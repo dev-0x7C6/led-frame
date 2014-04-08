@@ -16,6 +16,8 @@ ALCDevicesWidget::ALCDevicesWidget(QWidget *parent) :
   ui->setupUi(this);
   connect(m_manager, &ALCDeviceManager::deviceConnected, this, &ALCDevicesWidget::deviceConnected, Qt::DirectConnection);
   connect(m_manager, &ALCDeviceManager::deviceDisconnected, this, &ALCDevicesWidget::deviceDisconnected, Qt::DirectConnection);
+
+  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, this, &ALCDevicesWidget::populate);
 }
 
 ALCDevicesWidget::~ALCDevicesWidget()
@@ -61,7 +63,7 @@ void ALCDevicesWidget::deviceConnected(ALCDeviceThread *thread) {
   linkDevice->setDeviceThread(thread);
   linkDevice->setText("Device settings");
   linkDevice->setIconSize(QSize(22, 22));
-  linkDevice->setIcon(QIcon(":/22x22/skip.png"));
+  linkDevice->setIcon(QIcon(":/22x22/device.png"));
   linkDevice->setDescription("You can set there setings like: device brightness, update speed");
   linkDevice->setMaximumHeight(50);
 

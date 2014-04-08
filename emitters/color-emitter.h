@@ -57,6 +57,8 @@ public:
   QTreeWidgetItem *treeItem();
 
   virtual bool configure();
+  virtual bool rename();
+  virtual bool remove();
 
 
   //QList < QRgb> state();

@@ -65,5 +65,30 @@ QTreeWidgetItem *ColorEmitter::treeItem() {
 }
 
 bool ColorEmitter::configure() {
+  return false;
+}
+
+#include <QInputDialog>
+#include <QApplication>
+
+bool ColorEmitter::rename() {
+  QString text = QInputDialog::getText(0, "Rename", "Set name:", QLineEdit::Normal, emitterName());
+  if (!text.isEmpty()) {
+    setEmitterName(text);
+  }
+
+  return text.isEmpty();
+}
+
+#include <QMessageBox>
+
+#include "managers/alc-emitter-manager.h"
+
+bool ColorEmitter::remove() {
+  if (QMessageBox::question(0, "Question", "Do you realy want to delete this emitter.",
+                            QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
+    return false;
+
+  ALCEmitterManager::instance()->remove(this);
 }
 

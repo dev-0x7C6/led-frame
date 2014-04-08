@@ -60,6 +60,7 @@ public:
   virtual ~ALCDeviceManager();
 
   ALCDeviceThread* device(int idx);
+  int count();
 
   static ALCDeviceManager* instance() {
     static ALCDeviceManager object;

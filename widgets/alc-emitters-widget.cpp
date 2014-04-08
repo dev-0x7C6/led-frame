@@ -13,11 +13,20 @@
 #include "emitters/screen-capture-color-emitter.h"
 #include "managers/alc-emitter-manager.h"
 
+#include <QPalette>
+
 ALCEmittersWidget::ALCEmittersWidget(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::ALCEmittersWidget) {
+  QPalette p = palette();
+  p.setColor( QPalette::AlternateBase, QColor(226, 237, 253) );
+  setPalette(p);
+
   ui->setupUi(this);
   setup();
+
+
+  ui->tree->setColumnCount(3);
   ui->tree->header()->setStretchLastSection(false);
   ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
   ui->tree->header()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -79,12 +88,20 @@ void ALCEmittersWidget::insertPlainColorItem(ColorEmitter *ptr) {
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/color.png"));
-  QPushButtonEx *button = new QPushButtonEx();
-  button->setIcon(QIcon(":/16x16/configure.png"));
-  button->setEmitter(emitter);
+
+
+  QWidget *workspace = new QWidget();
+  QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
+  workspace->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  workspace->setLayout(layout);
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
+
+  insertDefaultButtons(emitter, layout);
+
+
+  ui->tree->setItemWidget(item, 2, workspace);
   prepareColorItem(item, emitter->color());
-  ui->tree->setItemWidget(item, 2, button);
-  connect(button, &QPushButtonEx::clicked, this, &ALCEmittersWidget::reconfigure);
 }
 
 void ALCEmittersWidget::insertAnimationItem(ColorEmitter *ptr) {
@@ -94,12 +111,18 @@ void ALCEmittersWidget::insertAnimationItem(ColorEmitter *ptr) {
 
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/animation.png"));
-  QPushButtonEx *button = new QPushButtonEx();
-  button->setIcon(QIcon(":/16x16/configure.png"));
-  button->setEmitter(emitter);
-  ui->tree->setItemWidget(item, 2, button);
 
-  connect(button, &QPushButtonEx::clicked, this, &ALCEmittersWidget::reconfigure);
+  QWidget *workspace = new QWidget();
+  QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
+  workspace->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  workspace->setLayout(layout);
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
+
+  insertDefaultButtons(emitter, layout);
+
+
+  ui->tree->setItemWidget(item, 2, workspace);
 }
 
 void ALCEmittersWidget::insertImageItem(ColorEmitter *ptr) {
@@ -110,17 +133,60 @@ void ALCEmittersWidget::insertImageItem(ColorEmitter *ptr) {
   item->setTextColor(1, Qt::darkGray);
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/from-image.png"));
-  QPushButtonEx *button = new QPushButtonEx();
-  button->setIcon(QIcon(":/16x16/configure.png"));
-  button->setEmitter(emitter);
-  ui->tree->setItemWidget(item, 2, button);
 
-  connect(button, &QPushButtonEx::clicked, this, &ALCEmittersWidget::reconfigure);
+  QWidget *workspace = new QWidget();
+  QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
+  workspace->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  workspace->setLayout(layout);
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
 
+  insertDefaultButtons(emitter, layout);
+
+
+  ui->tree->setItemWidget(item, 2, workspace);
+
+}
+
+void ALCEmittersWidget::insertDefaultButtons(ColorEmitter *emitter, QBoxLayout *layout) {
+  QPushButtonEx *configure = new QPushButtonEx;
+  QPushButtonEx *rename = new QPushButtonEx;
+  QPushButtonEx *remove = new QPushButtonEx;
+
+  configure->setIcon(QIcon(":/16x16/configure.png"));
+  configure->setFlat(true);
+  configure->setEmitter(emitter);
+
+  rename->setIcon(QIcon(":/16x16/rename.png"));
+  rename->setFlat(true);
+  rename->setEmitter(emitter);
+
+  remove->setIcon(QIcon(":/16x16/edit-delete.png"));
+  remove->setFlat(true);
+  remove->setEmitter(emitter);
+
+
+  connect(configure, &QPushButtonEx::clicked, this, &ALCEmittersWidget::reconfigure);
+  connect(remove, &QPushButtonEx::clicked, this, &ALCEmittersWidget::remove);
+  connect(rename, &QPushButtonEx::clicked, this, &ALCEmittersWidget::rename);
+
+  layout->addWidget(configure);
+  layout->addWidget(rename);
+  layout->addWidget(remove);
 }
 
 void ALCEmittersWidget::reconfigure() {
   reinterpret_cast < QPushButtonEx*>( sender())->emitter()->configure();
+  setup();
+}
+
+void ALCEmittersWidget::rename() {
+  reinterpret_cast < QPushButtonEx*>( sender())->emitter()->rename();
+  setup();
+}
+
+void ALCEmittersWidget::remove() {
+  reinterpret_cast < QPushButtonEx*>( sender())->emitter()->remove();
   setup();
 }
 

@@ -10,8 +10,15 @@
 ALCScreensWidget::ALCScreensWidget(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::ALCScreensWidget) {
+
+  QPalette p = palette();
+  p.setColor( QPalette::AlternateBase, QColor(226, 237, 253) );
+  setPalette(p);
+
   ui->setupUi(this);
   setup();
+  ui->tree->setAlternatingRowColors(true);
+  ui->tree->setColumnCount(4);
   ui->tree->header()->setStretchLastSection(false);
   ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
   ui->tree->header()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -48,14 +55,28 @@ void ALCScreensWidget::insertScreenCaptureItem(ColorEmitter *ptr) {
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/screen.png"));
+
+
   QPushButtonEx *button = new QPushButtonEx();
   button->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   button->setEmitter(emitter);
-  //prepareColorButton(button, emitter->color());
   button->setIcon(QIcon(":/16x16/configure.png"));
-  ui->tree->setItemWidget(item, 2, button);
+  button->setFlat(true);
   button->setToolTip(emitter->emitterName());
   connect(button, &QPushButtonEx::clicked, this, &ALCScreensWidget::configure);
+
+  ui->tree->setItemWidget(item, 2, button);
+
+  button = new QPushButtonEx();
+  button->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  button->setEmitter(emitter);
+  button->setIcon(QIcon(":/16x16/rename.png"));
+  button->setToolTip(emitter->emitterName());
+  button->setFlat(true);
+  button->setEnabled(false);
+  connect(button, &QPushButtonEx::clicked, this, &ALCScreensWidget::configure);
+  ui->tree->setItemWidget(item, 3, button);
+
 }
 
 #include "dialogs/alc-screen-configure-dialog.h"

@@ -26,6 +26,7 @@ public:
 
 
 class QTreeWidgetItem;
+class QBoxLayout;
 
 namespace Ui { class ALCEmittersWidget; }
 
@@ -50,7 +51,11 @@ private:
   void insertAnimationItem(ColorEmitter *);
   void insertImageItem(ColorEmitter *);
 
+  void insertDefaultButtons(ColorEmitter *, QBoxLayout*);
+
   void reconfigure();
+  void rename();
+  void remove();
 
 
   void prepareColorItem(QTreeWidgetItem *, QColor);
