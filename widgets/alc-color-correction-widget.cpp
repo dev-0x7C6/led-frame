@@ -5,7 +5,8 @@
 
 ALCColorCorrectionWidget::ALCColorCorrectionWidget(QWidget *parent) :
   QWidget(parent),
-  ui(new Ui::ALCColorCorrectionWidget)
+  ui(new Ui::ALCColorCorrectionWidget),
+  m_correction(ALCColorCorrection::instance())
 {
   ui->setupUi(this);
 
@@ -19,41 +20,58 @@ ALCColorCorrectionWidget::ALCColorCorrectionWidget(QWidget *parent) :
   connect(ui->restoreGreen, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultGreen);
   connect(ui->restoreBlue, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultBlue);
 
-  fromGlobal();
+  reload();
 }
 
 ALCColorCorrectionWidget::~ALCColorCorrectionWidget() {
   delete ui;
 }
 
-void ALCColorCorrectionWidget::fromGlobal() {
-  ui->brightnessSlider->setValue(ALCColorCorrection::instance()->brightness() * 100.0d);
-  ui->blueSlider->setValue(ALCColorCorrection::instance()->blueCorrection() * 100.0d);
-  ui->greenSlider->setValue(ALCColorCorrection::instance()->greenCorrection() * 100.0d);
-  ui->redSlider->setValue(ALCColorCorrection::instance()->redCorrection() * 100.0d);
+void ALCColorCorrectionWidget::setColorCorrection(ALCColorCorrection *correction) {
+  m_correction = correction;
+  reload();
+}
+
+void ALCColorCorrectionWidget::restore() {
+  ui->brightnessSlider->setValue(100.0d);
+  ui->blueSlider->setValue(100.0d);
+  ui->greenSlider->setValue(100.0d);
+  ui->redSlider->setValue(100.0d);
+
+  m_correction->setBrightness(1);
+  m_correction->setRedCorrection(1);
+  m_correction->setGreenCorrection(1);
+  m_correction->setBlueCorrection(1);
+}
+
+void ALCColorCorrectionWidget::reload() {
+  ui->brightnessSlider->setValue(m_correction->brightness() * 100.0d);
+  ui->blueSlider->setValue(m_correction->blueCorrection() * 100.0d);
+  ui->greenSlider->setValue(m_correction->greenCorrection() * 100.0d);
+  ui->redSlider->setValue(m_correction->redCorrection() * 100.0d);
 }
 
 void ALCColorCorrectionWidget::brightnessSliderChanged(int value) {
   register double brightness = value / 100.0d;
-  ALCColorCorrection::instance()->setBrightness(brightness);
+  m_correction->setBrightness(brightness);
   ui->brightnessProcent->setText(QString::number(value) + "%");
 }
 
 void ALCColorCorrectionWidget::blueSliderChanged(int value) {
   register double blue = value / 100.0d;
-  ALCColorCorrection::instance()->setBlueCorrection(blue);
+  m_correction->setBlueCorrection(blue);
   ui->blueProcent->setText(QString::number(value) + "%");
 }
 
 void ALCColorCorrectionWidget::greenSliderChanged(int value) {
   register double green = value / 100.0d;
-  ALCColorCorrection::instance()->setGreenCorrection(green);
+  m_correction->setGreenCorrection(green);
   ui->greenProcent->setText(QString::number(value) + "%");
 }
 
 void ALCColorCorrectionWidget::redSliderChanged(int value) {
   register double red = value / 100.0d;
-  ALCColorCorrection::instance()->setRedCorrection(red);
+  m_correction->setRedCorrection(red);
   ui->redProcent->setText(QString::number(value) + "%");
 }
 

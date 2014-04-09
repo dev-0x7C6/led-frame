@@ -8,10 +8,11 @@
 #include <QDebug>
 
 #include "classes/alc-color-samples.h"
+#include "classes/alc-color-correction.h"
 
 class QTreeWidgetItem;
 
-class ColorEmitter {
+class ColorEmitter : public ALCColorCorrection {
 public:
   enum EmitterType: quint8 {
     EMITTER_NOT_DEFINED = 0x00,
@@ -32,7 +33,6 @@ protected:
   EmitterType m_type;
   QMutex m_mutex;
   int m_connectedCount;
-  double m_brightness;
 
 public:
   explicit ColorEmitter();
@@ -45,8 +45,6 @@ public:
   EmitterType type() const;
   void setType(const EmitterType type) { m_type = type; }
 
-  void setBrightness(double brightness);
-  double brightness();
   virtual void init();
   void done();
 //  void setState(QList < QRgb> colors);

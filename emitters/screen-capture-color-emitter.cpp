@@ -144,6 +144,7 @@ void ScreenCaptureColorEmitter::run(){
   int chunks = m_samples.scale();
   int clipx = 0x00;
   int clipy = 0x00;
+  double rgbc[3];
 
 
   do {
@@ -171,6 +172,11 @@ void ScreenCaptureColorEmitter::run(){
     l_captureArea.setY(l_captureArea.y() + clipy);
     l_captureArea.setWidth(l_captureArea.width() - clipx);
     l_captureArea.setHeight(l_captureArea.height() - clipy);
+
+    l_brightness = brightness();
+    rgbc[Red] = redCorrection(true);
+    rgbc[Green] = greenCorrection(true);
+    rgbc[Blue] = blueCorrection(true);
 
     image[2] = XGetImage(display, root, l_captureArea.x(), l_captureArea.y(),
                          l_captureArea.width(), l_chunkSize, AllPlanes, ZPixmap);
@@ -223,7 +229,7 @@ void ScreenCaptureColorEmitter::run(){
 
         c = 0;
         register int rgb;
-        for (register int x = 0; x < cx; x += 10) for (register int y = 0; y < cy; y += 10) {
+        for (register int x = 0; x < cx; x += l_pixelSkip) for (register int y = 0; y < cy; y += l_pixelSkip) {
           rgb = XGetPixel(src, sx + x, sy + y);
           r += (rgb >> 0x10) & 0xFF;
           g += (rgb >> 0x08) & 0xFF;
@@ -231,9 +237,9 @@ void ScreenCaptureColorEmitter::run(){
           c++;
         }
 
-        r /= c; r *= l_brightness;
-        g /= c; g *= l_brightness;
-        b /= c; b *= l_brightness;
+        r /= c; r *= l_brightness * rgbc[Red];
+        g /= c; g *= l_brightness * rgbc[Green];
+        b /= c; b *= l_brightness * rgbc[Blue];
 
         if (r > 255) r = 255;
         if (g > 255) g = 255;

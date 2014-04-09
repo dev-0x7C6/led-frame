@@ -51,6 +51,10 @@ void ALCDevicesWidget::deviceConnected(ALCDeviceThread *thread) {
 
   QWidget *workspace = new QWidget(0);
   QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
+  QPalette p = palette();
+  p.setColor(QPalette::Background, QColor(226, 237, 253) );
+  workspace->setPalette(p);
+  workspace->setBackgroundRole(QPalette::Background);
   workspace->setLayout(layout);
   workspace->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
   workspace->setAutoFillBackground(true);

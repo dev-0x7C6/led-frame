@@ -10,6 +10,7 @@ class ImageColorEmitter;
 class PlainColorEmitter;
 class AnimationColorEmitter;
 class ScreenCaptureColorEmitter;
+class QSettings;
 
 class ALCEmitterManager : public QObject {
   Q_OBJECT
@@ -36,11 +37,13 @@ public:
   QList < ColorEmitter *> *emitters(ColorEmitter::EmitterType type);
   QList < ColorEmitter *> allEmitters();
 
+private:
+  void readColorCorrection(QSettings*, ALCColorCorrection *);
+  void writeColorCorrection(QSettings*, ALCColorCorrection *);
+
 signals:
   void emitterListChanged();
 
 };
-
-
 
 #endif // ALCEmitterManager_H

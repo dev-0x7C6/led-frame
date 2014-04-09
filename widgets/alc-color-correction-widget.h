@@ -5,16 +5,21 @@
 
 namespace Ui { class ALCColorCorrectionWidget; }
 
+class ALCColorCorrection;
+
 class ALCColorCorrectionWidget : public QWidget {
   Q_OBJECT
 private:
   Ui::ALCColorCorrectionWidget *ui;
+  ALCColorCorrection *m_correction;
 
 public:
   explicit ALCColorCorrectionWidget(QWidget *parent = 0);
   ~ALCColorCorrectionWidget();
 
-  void fromGlobal();
+  void setColorCorrection(ALCColorCorrection *);
+  void reload();
+  void restore();
 
 private:
   void brightnessSliderChanged(int);

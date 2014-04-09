@@ -1,6 +1,7 @@
 #include "alc-emitter-manager.h"
 
 #include "classes/alc-settings.h"
+#include "classes/alc-color-correction.h"
 #include "emitters/animation-color-emitter.h"
 #include "emitters/image-color-emitter.h"
 #include "emitters/plain-color-emitter.h"
@@ -51,7 +52,9 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     emitter->setPixelSkip(settings->value("pixelSkip", 4).toInt());
     emitter->setChunkSize(settings->value("chunk", 250).toInt());
     emitter->setFramerateLimit(settings->value("fps", 60).toInt());
-    emitter->setBrightness(settings->value("brightness", 1.0).toDouble());
+    emitter->setMarginProcent(settings->value("clip", 0).toDouble());
+    readColorCorrection(settings, dynamic_cast < ALCColorCorrection*>( emitter));
+
     emitter->start();
 
     settings->endGroup();
@@ -154,7 +157,8 @@ ALCEmitterManager::~ALCEmitterManager() {
       settings->setValue("pixelSkip", screen->pixelSkip());
       settings->setValue("chunk", screen->chunk());
       settings->setValue("fps", screen->framerateLimit());
-      settings->setValue("brightness", screen->brightness());
+      settings->setValue("clip", screen->marginProcent());
+      writeColorCorrection(settings, dynamic_cast < ALCColorCorrection*>(screen));
       settings->endGroup();
       settings->endGroup();
       break;
@@ -251,3 +255,22 @@ QList<ColorEmitter *> ALCEmitterManager::allEmitters() {
     result << m_emitters[static_cast< ColorEmitter::EmitterType>( i)];
   return result;
 }
+
+void ALCEmitterManager::readColorCorrection(QSettings *settings, ALCColorCorrection *correction) {
+  settings->beginGroup("correction");
+  correction->setBrightness(settings->value("light").toDouble());
+  correction->setRedCorrection(settings->value("red").toDouble());
+  correction->setGreenCorrection(settings->value("green").toDouble());
+  correction->setBlueCorrection(settings->value("blue").toDouble());
+  settings->endGroup();
+}
+
+void ALCEmitterManager::writeColorCorrection(QSettings *settings, ALCColorCorrection *correction) {
+  settings->beginGroup("correction");
+  settings->setValue("light", correction->brightness());
+  settings->setValue("red", correction->redCorrection());
+  settings->setValue("green", correction->greenCorrection());
+  settings->setValue("blue", correction->blueCorrection());
+  settings->endGroup();
+}
+

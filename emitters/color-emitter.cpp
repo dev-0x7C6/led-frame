@@ -3,8 +3,7 @@
 #include <QTreeWidgetItem>
 
 ColorEmitter::ColorEmitter()
-  :m_brightness(1.0),
-   m_type(EMITTER_NOT_DEFINED),
+  :m_type(EMITTER_NOT_DEFINED),
    m_treeItem(0)
 {
   m_connectedCount = 0;
@@ -23,16 +22,6 @@ QString ColorEmitter::emitterName() const {
 }
 
 ColorEmitter::EmitterType ColorEmitter::type() const { return m_type; }
-
-void ColorEmitter::setBrightness(double brightness) {
-  QMutexLocker locker(&m_mutex);
-  m_brightness = brightness;
-}
-
-double ColorEmitter::brightness() {
-  QMutexLocker locker(&m_mutex);
-  return m_brightness;
-}
 
 void ColorEmitter::init() {
   QMutexLocker locker(&m_mutex);
