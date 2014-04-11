@@ -36,8 +36,6 @@ unsigned char max(int value) {
 
 #include "classes/alc-led-strip-configuration.h"
 
-ALCLedStripConfiguration config;
-
 ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent)
   :QThread(parent),
     m_device(device),
@@ -48,10 +46,12 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
 {
   m_device->moveToThread(this);
 
-  config.add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, RGB, 1.20);
-  config.add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
-  config.add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
-  config.add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
+  m_config = new ALCLedStripConfiguration();
+
+  m_config->add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, RGB, 1.00);
+  m_config->add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
+  m_config->add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
+  m_config->add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
 
   /* //LEDY JARKA
   config.add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 6, true, GRB, 2.0);
@@ -72,7 +72,7 @@ void ALCDeviceThread::run() {
   QElapsedTimer counter;
 
   int fps = 0;
-  int framerateLimit = 100;
+  int framerateLimit = 90;
   double latency[2];
 
   counter.start();
@@ -100,7 +100,8 @@ void ALCDeviceThread::run() {
     QVector < int> *colors;
     ptr = 0;
 
-    QList < ALCLedStrip *>  strips = config.list();
+    QList < ALCLedStrip *>  strips = m_config->list();
+
 
     for (register int ii = 0; ii < strips.count(); ++ii) {
       ALCLedStrip *strip = strips[ii];
@@ -120,7 +121,7 @@ void ALCDeviceThread::run() {
     }
 
     m_device->write((char*)data, ptr);
-    m_device->waitForBytesWritten(1000);
+    m_device->flush();
 
 
     latency[0] = timer.nsecsElapsed();
@@ -139,7 +140,8 @@ void ALCDeviceThread::run() {
       fps = 0;
     }
 
-  } while (continueValue() && m_device->isWritable() && m_device->isOpen());
+
+  } while (continueValue() && m_device->error() == 0);
 
   if (m_device->isOpen() && m_device->isWritable())
     m_device->close();

@@ -28,10 +28,12 @@
 
 class ColorEmitter;
 class ALCColorSamples;
+class ALCLedStripConfiguration;
 
 class ALCDeviceThread : public QThread, public ALCColorCorrection {
   Q_OBJECT
 private:
+  ALCLedStripConfiguration *m_config;
   QSerialPort *m_device;
   ColorEmitter *m_emitter;
   ALCColorSamples *m_samples;

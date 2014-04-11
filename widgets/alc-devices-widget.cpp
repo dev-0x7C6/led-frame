@@ -25,7 +25,6 @@ ALCDevicesWidget::~ALCDevicesWidget()
   delete ui;
 }
 
-
 ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column)
 {
   this->item = item;
@@ -40,6 +39,22 @@ void ComboBoxItem::changeItem(int index)
   }
 }
 
+#include "ambientlightsymulation.h"
+
+void ALCDevicesWidget::addSymulation(ALCSymulation *symulation) {
+  m_symulation = symulation;
+
+  ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, 0);
+  connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDevicesWidget::setEmitter);
+  item->setText(0, "Symulation");
+  item->setIcon(0, QIcon(":/22x22/leds.png"));
+  addWorkspace(item, 0);
+  m_devices << item;
+  ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
+  populate();
+}
+
+
 
 void ALCDevicesWidget::deviceConnected(ALCDeviceThread *thread) {
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, thread);
@@ -47,8 +62,26 @@ void ALCDevicesWidget::deviceConnected(ALCDeviceThread *thread) {
   item->setText(0, thread->details().systemLocation() + '\t');
   item->setIcon(0, QIcon(":/22x22/device.png"));
 
-  QTreeWidgetItem *child = new QTreeWidgetItem(item);
+  addWorkspace(item, thread);
 
+  ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
+  m_devices << item;
+
+  populate();
+}
+
+void ALCDevicesWidget::deviceDisconnected(ALCDeviceThread *thread) {
+  for (register int i = 0; i < m_devices.count(); ++i) {
+    if (thread == m_devices[i]->device()) {
+      delete m_devices[i];
+      m_devices.removeAt(i);
+      return;
+    }
+  }
+}
+
+void ALCDevicesWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *thread) {
+  QTreeWidgetItem *child = new QTreeWidgetItem(item);
   QWidget *workspace = new QWidget(0);
   QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
   QPalette p = palette();
@@ -92,23 +125,7 @@ void ALCDevicesWidget::deviceConnected(ALCDeviceThread *thread) {
   layout->addWidget(linkDevice);
   layout->addWidget(linkEmitter);
   layout->addWidget(linkLedStrip);
-
   ui->tree->setItemWidget(child, 1, workspace);
-
-  ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
-  m_devices << item;
-
-  populate();
-}
-
-void ALCDevicesWidget::deviceDisconnected(ALCDeviceThread *thread) {
-  for (register int i = 0; i < m_devices.count(); ++i) {
-    if (thread == m_devices[i]->device()) {
-      delete m_devices[i];
-      m_devices.removeAt(i);
-      return;
-    }
-  }
 }
 
 void ALCDevicesWidget::populate() {
@@ -153,15 +170,20 @@ void ALCDevicesWidget::populate() {
 }
 
 void ALCDevicesWidget::setEmitter(ALCDeviceThread *device, ColorEmitter *emitter) {
-  device->connectEmitter(emitter);
+  if (device)
+    device->connectEmitter(emitter); else
+    m_symulation->connectEmitter(emitter);
 }
 
 #include <QMessageBox>
 
 void ALCDevicesWidget::configureEmitter() {
   DeviceLinkButton *link = dynamic_cast < DeviceLinkButton*>( sender());
-  ColorEmitter *emitter = link->deviceThread()->connectedEmitter();
-  if (emitter)
-    emitter->configure(); else
-    QMessageBox::information(this, "Information", "Emitter is not defined.", QMessageBox::Ok);
+  if (link->deviceThread()) {
+
+    ColorEmitter *emitter = link->deviceThread()->connectedEmitter();
+    if (emitter)
+      emitter->configure(); else
+      QMessageBox::information(this, "Information", "Emitter is not defined.", QMessageBox::Ok);
+  }
 }

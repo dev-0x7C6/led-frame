@@ -3,7 +3,7 @@
 
 #include <QDesktopWidget>
 #include <QGuiApplication>
-#include <QQuickView>
+//#include <QQuickView>
 #include <QScreen>
 
 #include "about.h"
@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
 
+  ui->devices->addSymulation(ui->qml);
+
   QRect rect;
 
   m_statisticAverageFPS = 0;
@@ -32,56 +34,51 @@ MainWindow::MainWindow(QWidget *parent) :
   m_statisticClock = 0;
   m_statisticFirstTime = true;
 
-//  QQuickView *view = new QQuickView();
-//  QWidget *container = QWidget::createWindowContainer(view, this);
-//  container->setMinimumSize(500, 400);
-//  container->setMaximumSize(500, 400);
-//  container->setFocusPolicy(Qt::TabFocus);
-//  view->setSource(QUrl("qrc:/qml/main.qml"));
-//  ui->qml->addWidget(container);
-  ui->qml->setMinimumSize(450,350);
+  ui->qml->connectEmitter(new AnimationColorEmitter());
 
-  ui->screenArea->addItem(QIcon(":/16x16/selected-screen.png"), "Not definited");
+
+ // ui->qml->setMinimumSize(450,350);
+ // ui->screenArea->addItem(QIcon(":/16x16/selected-screen.png"), "Not definited");
 
   rect = QApplication::desktop()->geometry();
 
-  for (register int i = 0; i < 2; ++i) {
-    ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),
-      QString("Visible area, x:%1, y:%2 (%3x%4)").arg(
-      QString::number(rect.x()),
-      QString::number(rect.y()),
-      QString::number(rect.width()),
-      QString::number(rect.height())),
-    -1);
-  }
+//  for (register int i = 0; i < 2; ++i) {
+//    ui->screenArea->addItem(QIcon(":/16x16/all-screens.png"),
+//      QString("Visible area, x:%1, y:%2 (%3x%4)").arg(
+//      QString::number(rect.x()),
+//      QString::number(rect.y()),
+//      QString::number(rect.width()),
+//      QString::number(rect.height())),
+//    -1);
+//  }
 
-  for (register int i = 0; i < QApplication::desktop()->screenCount(); ++i) {
-    rect = QApplication::desktop()->screenGeometry(i);
-    ui->screenArea->addItem(QIcon(":/16x16/selected-screen.png"),
-      QString("Screen %1: x:%2, y:%3 (%4x%5)").arg(
-        QString::number(i),
-        QString::number(rect.x()),
-        QString::number(rect.y()),
-        QString::number(rect.width()),
-        QString::number(rect.height())),
-      i);
-  }
+//  for (register int i = 0; i < QApplication::desktop()->screenCount(); ++i) {
+//    rect = QApplication::desktop()->screenGeometry(i);
+//    ui->screenArea->addItem(QIcon(":/16x16/selected-screen.png"),
+//      QString("Screen %1: x:%2, y:%3 (%4x%5)").arg(
+//        QString::number(i),
+//        QString::number(rect.x()),
+//        QString::number(rect.y()),
+//        QString::number(rect.width()),
+//        QString::number(rect.height())),
+//      i);
+//  }
 
-  for (register int i = 0; i < 4; ++i)
-    ui->screenArea->addItem(QIcon(":/22x22/animation.png"),
-      QString("Animation color profile #%1").arg(QString::number(i+1)), i);
+//  for (register int i = 0; i < 4; ++i)
+//    ui->screenArea->addItem(QIcon(":/22x22/animation.png"),
+//      QString("Animation color profile #%1").arg(QString::number(i+1)), i);
 
-  for (register int i = 0; i < 4; ++i)
-    ui->screenArea->addItem(QIcon(":/22x22/animation.png"),
-      QString("Plain color profile #%1").arg(QString::number(i+1)), i);
+//  for (register int i = 0; i < 4; ++i)
+//    ui->screenArea->addItem(QIcon(":/22x22/animation.png"),
+//      QString("Plain color profile #%1").arg(QString::number(i+1)), i);
 
   ui->leftWidget->setCurrentIndex(0);
 
   connect(ui->actionColor_correction, &QAction::toggled, this, &MainWindow::showColorCorrection);
   connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
   connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
-  connect(ui->ledGlow, SIGNAL(valueChanged(int)), this, SLOT(setGlowSize(int)));
-  connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerateLed(int)));
+ // connect(ui->ledGlow, SIGNAL(valueChanged(int)), this, SLOT(setGlowSize(int)));
+ // connect(ui->ledFramerateLimit, SIGNAL(valueChanged(int)), this, SLOT(setFramerateLed(int)));
 
   m_settings->beginGroup("GeneralSettings");
   ui->actionColor_correction->setChecked(m_settings->value("visible", false).toBool());;
@@ -89,8 +86,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
   m_settings->beginGroup("LedPreviewSettings");
-  ui->ledFramerateLimit->setValue(m_settings->value("framerateLimit", 24).toInt());
-  ui->ledGlow->setValue(m_settings->value("ledGlowSize", 96).toInt());
+//  ui->ledFramerateLimit->setValue(m_settings->value("framerateLimit", 24).toInt());
+//  ui->ledGlow->setValue(m_settings->value("ledGlowSize", 96).toInt());
   m_settings->endGroup();
 
   m_settings->beginGroup("WiimotedevSettings");
@@ -115,16 +112,16 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreensWidget::setup, Qt::QueuedConnection);
   //connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->selections, &ALCSelectionsWidget::setup, Qt::QueuedConnection);
 
-  connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
+//  connect(ui->screenArea, SIGNAL(currentIndexChanged(int)), this, SLOT(updateScreenArea(int)));
 
 }
 
 void MainWindow::setGlowSize(int value) {
-  ui->ledGlowLabel->setText(QString::number(value) + "px");
+ // ui->ledGlowLabel->setText(QString::number(value) + "px");
 }
 
 void MainWindow::setFramerateLed(int value) {
-  ui->ledFps->setText(QString::number(value) + "fps");
+//  ui->ledFps->setText(QString::number(value) + "fps");
 }
 
 void MainWindow::setFramerate(int value) {
@@ -205,17 +202,17 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 
   if (ui->wiimoteScreen->isChecked()) {
     if ((buttons & WIIMOTE_BTN_UP) && !(m_buttons & WIIMOTE_BTN_UP)) {
-      int idx = ui->screenArea->currentIndex() - 1;
-      if (idx == -1)
-        idx = ui->screenArea->count() - 1;
-      ui->screenArea->setCurrentIndex(idx);
+//      int idx = ui->screenArea->currentIndex() - 1;
+//      if (idx == -1)
+//        idx = ui->screenArea->count() - 1;
+//      ui->screenArea->setCurrentIndex(idx);
     }
-    if ((buttons & WIIMOTE_BTN_DOWN) && !(m_buttons & WIIMOTE_BTN_DOWN)) {
-      int idx = ui->screenArea->currentIndex() + 1;
-      if (idx == ui->screenArea->count())
-        idx = 0;
-      ui->screenArea->setCurrentIndex(idx);
-    }
+//    if ((buttons & WIIMOTE_BTN_DOWN) && !(m_buttons & WIIMOTE_BTN_DOWN)) {
+//      int idx = ui->screenArea->currentIndex() + 1;
+//      if (idx == ui->screenArea->count())
+//        idx = 0;
+//      ui->screenArea->setCurrentIndex(idx);
+//    }
   }
 
   m_buttons = buttons;
@@ -231,15 +228,15 @@ void ALCDeviceTreeWidget::currentIndexChanged(int idx) {
 
 MainWindow::~MainWindow()
 {
-  m_settings->beginGroup("GeneralSettings");
-  m_settings->setValue("visible", ui->actionColor_correction->isVisible());
-  m_settings->setValue("screenId", ui->screenArea->currentIndex());
-  m_settings->endGroup();
+//  m_settings->beginGroup("GeneralSettings");
+//  m_settings->setValue("visible", ui->actionColor_correction->isVisible());
+//  m_settings->setValue("screenId", ui->screenArea->currentIndex());
+//  m_settings->endGroup();
 
-  m_settings->beginGroup("LedPreviewSettings");
-  m_settings->setValue("framerateLimit", ui->ledFramerateLimit->value());
-  m_settings->setValue("ledGlowSize", ui->ledGlow->value());
-  m_settings->endGroup();
+//  m_settings->beginGroup("LedPreviewSettings");
+//  m_settings->setValue("framerateLimit", ui->ledFramerateLimit->value());
+//  m_settings->setValue("ledGlowSize", ui->ledGlow->value());
+//  m_settings->endGroup();
 
   m_settings->beginGroup("WiimotedevSettings");
   m_settings->setValue("wiimoteId", ui->wiimoteId->value());

@@ -112,15 +112,7 @@ Rectangle {
 //          LedAmbient { id: led32; width: size; height: size; }
 //        }
 
-        Image {
-          anchors.centerIn: scene
-          source: "qrc:/256x256/display.png"
-        }
-
 
    }
 
-   function onShit(arg) {
-     led03.setColor(arg)
-   }
 }

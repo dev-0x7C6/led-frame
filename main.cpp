@@ -5,7 +5,7 @@
 
 const int applicationMajorVersion = 0;
 const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 2;
+const int applicationPatchVersion = 3;
 
 int main(int argc, char *argv[])
 {

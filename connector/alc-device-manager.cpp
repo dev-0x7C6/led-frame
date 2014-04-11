@@ -69,13 +69,13 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
 }
 
 void ALCDeviceManager::deviceThreadStarted() {
-  ALCDeviceThread *thread = reinterpret_cast < ALCDeviceThread *>(sender());
+  ALCDeviceThread *thread = dynamic_cast < ALCDeviceThread *>(sender());
   m_threads << thread;
   emit deviceConnected(thread);
 }
 
 void ALCDeviceManager::deviceThreadFinished() {
-  ALCDeviceThread *thread = reinterpret_cast < ALCDeviceThread *>(sender());
+  ALCDeviceThread *thread = dynamic_cast < ALCDeviceThread *>(sender());
   QSerialPortInfo details = thread->details();
   m_threads.removeAll(thread);
   emit deviceDisconnected(thread);

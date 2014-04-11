@@ -41,7 +41,6 @@ public:
 
   ALCDeviceThread * device() { return m_device; }
   void setDevice(ALCDeviceThread *device) { m_device = device; }
-
   void currentIndexChanged(int);
 
 signals:
@@ -65,20 +64,27 @@ public:
   }
 };
 
+
+class ALCSymulation;
+
 class ALCDevicesWidget : public QMainWindow {
   Q_OBJECT
 private:
   Ui::ALCDevicesWidget *ui;
   QList < ALCDeviceTreeWidget*> m_devices;
   ALCDeviceManager *m_manager;
+  ALCSymulation *m_symulation;
 
 public:
   explicit ALCDevicesWidget(QWidget *parent = 0);
   ~ALCDevicesWidget();
 
+  void addSymulation(ALCSymulation *);
+
 private:
   void deviceConnected(ALCDeviceThread *);
   void deviceDisconnected(ALCDeviceThread *);
+  void addWorkspace(ALCDeviceTreeWidget *, ALCDeviceThread *);
   void populate();
   void setEmitter(ALCDeviceThread *device, ColorEmitter *emitter);
 
