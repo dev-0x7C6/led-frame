@@ -24,10 +24,10 @@ public:
   virtual ~ALCEmitterManager();
 
   void add(ColorEmitter *, ColorEmitter::EmitterType type);
-  ImageColorEmitter *addImageColorEmitter();
-  PlainColorEmitter *addPlainColorEmitter();
-  AnimationColorEmitter *addAnimationColorEmitter();
-  ScreenCaptureColorEmitter *addScreenCaptureEmitter();
+  ImageColorEmitter *addImageColorEmitter(const QString &name);
+  PlainColorEmitter *addPlainColorEmitter(const QString &name);
+  AnimationColorEmitter *addAnimationColorEmitter(const QString &name);
+  ScreenCaptureColorEmitter *addScreenCaptureEmitter(const QString &name);
 
   void remove(ColorEmitter *);
 

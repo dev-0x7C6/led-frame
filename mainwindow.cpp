@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->devices->addSymulation(ui->qml);
   ui->leftWidget->setCurrentIndex(0);
 
-
   m_settings->beginGroup("GeneralSettings");
   ui->actionColor_correction->setChecked(m_settings->value("visible", false).toBool());;
   m_settings->endGroup();

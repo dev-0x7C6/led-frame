@@ -70,14 +70,14 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     QStringList list = settings->childGroups();
     for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
-      AnimationColorEmitter *emitter = addAnimationColorEmitter();
-      emitter->setEmitterName(settings->value("name", QString()).toString());
+      AnimationColorEmitter *emitter =
+          addAnimationColorEmitter(settings->value("name", QString()).toString());
       settings->endGroup();
     }
     settings->endGroup();
   } else {
     for (register int i = 0; i < 3; ++i) {
-      addAnimationColorEmitter()->setEmitterName("Animation #" + QString::number(i+1));
+      addAnimationColorEmitter("Animation #" + QString::number(i+1));
     }
   }
 
@@ -86,18 +86,17 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     QStringList list = settings->childGroups();
     for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
-      PlainColorEmitter *emitter = addPlainColorEmitter();
+      PlainColorEmitter *emitter = addPlainColorEmitter(settings->value("name", QString()).toString());
       int r = settings->value("red", 0).toInt();
       int g = settings->value("green", 0).toInt();
       int b = settings->value("blue", 0).toInt();
-      emitter->setEmitterName(settings->value("name", QString()).toString());
       emitter->setColor(QColor::fromRgb(r, g, b));
       settings->endGroup();
     }
     settings->endGroup();
   } else {
     for (register int i = 0; i < 3; ++i)
-      addPlainColorEmitter()->setEmitterName("Plain color #" + QString::number(i+1));;
+      addPlainColorEmitter("Plain color #" + QString::number(i+1));
   }
 
   if (settings->childGroups().contains("images")) {
@@ -106,15 +105,14 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     QStringList list = settings->childGroups();
     for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
-      ImageColorEmitter *emitter = addImageColorEmitter();
-      emitter->setEmitterName(settings->value("name", QString()).toString());
+      ImageColorEmitter *emitter = addImageColorEmitter(settings->value("name", QString()).toString());
       emitter->fromFile(settings->value("file", QString()).toString());
       settings->endGroup();
     }
     settings->endGroup();
   } else {
     for (register int i = 0; i < 3; ++i)
-      addImageColorEmitter()->setEmitterName("Image samples #" + QString::number(i+1));;
+      addImageColorEmitter("Image samples #" + QString::number(i+1));
   }
 
 
@@ -207,26 +205,30 @@ void ALCEmitterManager::add(ColorEmitter *emitter, ColorEmitter::EmitterType typ
   emit emitterListChanged();
 }
 
-ImageColorEmitter *ALCEmitterManager::addImageColorEmitter() {
+ImageColorEmitter *ALCEmitterManager::addImageColorEmitter(const QString &name) {
   ImageColorEmitter *emitter = new ImageColorEmitter(this);
+  emitter->setEmitterName(name);
   add(emitter, ColorEmitter::EMITTER_IMAGE);
   return emitter;
 }
 
-PlainColorEmitter *ALCEmitterManager::addPlainColorEmitter() {
+PlainColorEmitter *ALCEmitterManager::addPlainColorEmitter(const QString &name) {
   PlainColorEmitter *emitter = new PlainColorEmitter();
+  emitter->setEmitterName(name);
   add(emitter, ColorEmitter::EMITTER_PLAIN_COLOR);
   return emitter;
 }
 
-AnimationColorEmitter *ALCEmitterManager::addAnimationColorEmitter() {
+AnimationColorEmitter *ALCEmitterManager::addAnimationColorEmitter(const QString &name) {
   AnimationColorEmitter *emitter = new AnimationColorEmitter();
+  emitter->setEmitterName(name);
   add(emitter, ColorEmitter::EMITTER_ANIMATION);
   return emitter;
 }
 
-ScreenCaptureColorEmitter *ALCEmitterManager::addScreenCaptureEmitter() {
+ScreenCaptureColorEmitter *ALCEmitterManager::addScreenCaptureEmitter(const QString &name) {
   ScreenCaptureColorEmitter *emitter = new ScreenCaptureColorEmitter(this);
+  emitter->setEmitterName(name);
   add(emitter, ColorEmitter::EMITTER_SCREEN_CAPTURE);
   return emitter;
 }

@@ -39,19 +39,19 @@ ALCEmittersWidget::~ALCEmittersWidget() {
 void ALCEmittersWidget::addPlainColorItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
   if (!input.isEmpty())
-    ALCEmitterManager::instance()->addPlainColorEmitter()->setEmitterName(input);
+    ALCEmitterManager::instance()->addPlainColorEmitter(input);
 }
 
 void ALCEmittersWidget::addAnimationItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
   if (!input.isEmpty())
-    ALCEmitterManager::instance()->addAnimationColorEmitter()->setEmitterName(input);
+    ALCEmitterManager::instance()->addAnimationColorEmitter(input);
 }
 
 void ALCEmittersWidget::addImageItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
   if (!input.isEmpty())
-    ALCEmitterManager::instance()->addImageColorEmitter()->setEmitterName(input);
+    ALCEmitterManager::instance()->addImageColorEmitter(input);
 }
 
 void ALCEmittersWidget::prepare() {
