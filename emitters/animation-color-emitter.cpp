@@ -36,7 +36,7 @@ void AnimationColorEmitter::rotatePalette() {
     delete m_animation;
 
   m_animation = new QPropertyAnimation(this, "color");
-  m_animation->setDuration(3200);
+  m_animation->setDuration(750);
   m_animation->setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
   m_animation->setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
   m_animation->setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));

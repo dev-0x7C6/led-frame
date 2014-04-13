@@ -18,6 +18,8 @@ class ALCSymulationWidget :public QWidget {
 private:
   ALCColorSamples m_samples;
   ColorEmitter *m_emitter;
+  QQuickItem *m_root;
+
   QQuickItem *m_items[4][8];
   QQuickItem *m_monitor;
   QQuickView *m_view;
@@ -33,11 +35,12 @@ public:
 
   void createQmlMonitor();
   void freeQmlMonitor();
-  void createQmlObjects(int size = 280);
+  void createQmlObjects(int size = 300);
   void freeQmlObjects();
   void resetQmlObjects();
 
-
+private:
+  void createQmlObject(int ii, int i, QQuickItem *item, int size);
 
 protected:
   void timerEvent(QTimerEvent *);

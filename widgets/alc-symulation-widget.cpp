@@ -65,78 +65,141 @@ void ALCSymulationWidget::freeQmlMonitor() {
 }
 
 void ALCSymulationWidget::createQmlObjects(int size) {
-  QRect draw(130, 100, 220, 150);
+  QRect draw(80, 80, 500 - 160, 380 - 160);
 
   QQmlComponent led(m_view->engine(), QUrl("qrc:/qml/LedAmbient.qml"));
   QQuickItem *item;
-  QQuickItem *root = qobject_cast< QQuickItem * >(m_view->rootObject());
+  m_root = qobject_cast< QQuickItem * >(m_view->rootObject());
 
   for (register int ii = 0; ii < 4; ++ii) {
-    for (register int i = 0; i < 8; ++i) {
-      item = qobject_cast<QQuickItem*>(led.create());
-      switch (ii) {
-      case 2:
-        item->setX(draw.x() + (draw.width() / 8 * i) - size / 2);
+    switch (ii) {
+    case 2:
+      for (register int i = 0; i < 8; ++i) {
+        item = qobject_cast<QQuickItem*>(led.create());
+        item->setX(draw.x() + (draw.width() / 7 * i) - size/2);
         item->setY(draw.y() - size / 2);
-        break;
-      case 0:
-        item->setX(draw.x() + (draw.width() / 8 * (8 - i)) - size / 2);
-        item->setY(draw.y() + draw.height() - size / 2);
-        break;
-      case 1:
-        item->setX(draw.x() - size / 2);
-        item->setY(draw.y() + draw.height() / 8 * (8 - i) - size / 2);
-        break;
-      case 3:
-        item->setX(draw.x() + draw.width() - size / 2);
-        item->setY(draw.y() + draw.height() / 8 * i - size / 2);
-        break;
+      //  item->setVisible(false);
+        createQmlObject(ii, i, item, size);
       }
-      m_items[ii][i] = item;
-      item->setAntialiasing(false);
-      item->setHeight(size);
-      item->setSmooth(false);
-      item->setWidth(size);
-      item->setParent(m_view->rootObject());
-      item->setParentItem(root);
+      break;
+    case 0:
+      for (register int i = 0; i < 8; ++i) {
+        item = qobject_cast<QQuickItem*>(led.create());
+        item->setX(draw.x() + (draw.width() / 7 * (7 - i)) - size/2 );
+        item->setY(draw.y() + draw.height() - size / 2);
+     //   item->setVisible(false);
+        createQmlObject(ii, i, item, size);
+      }
+      break;
+    case 1:
+      for (register int i = 0; i < 4; ++i) {
+        item = qobject_cast<QQuickItem*>(led.create());
+        item->setX(draw.x() - size / 2);
+        item->setY(draw.y() + ((draw.height() - size /2) / 4 * (3 - i)) - size/4);
+        createQmlObject(ii, i, item, size);
+      }
+    break;
+    case 3:
+      for (register int i = 0; i < 4; ++i) {
+        item = qobject_cast<QQuickItem*>(led.create());
+        item->setX(draw.x() + draw.width() - size / 2);
+        item->setY(draw.y() + ((draw.height() - size /2) / 4 * i) - size/4);
+        createQmlObject(ii, i, item, size);
+      }
+    break;
     }
   }
 }
 
 void ALCSymulationWidget::freeQmlObjects() {
   for (register int ii = 0; ii < 4; ++ii)
-    for (register int i = 0; i < 8; ++i)
-      delete m_items[ii][i];
+    switch (ii) {
+    case 0:
+    case 2:
+      for (register int i = 0; i < 8; ++i)
+        delete m_items[ii][i];
+      break;
+    case 1:
+    case 3:
+      for (register int i = 0; i < 4; ++i)
+        delete m_items[ii][i];
+      break;
+    }
 }
 
 void ALCSymulationWidget::resetQmlObjects() {
   for (register int ii = 0; ii < 4; ++ii)
-    for (register int i = 0; i < 8; ++i) {
-      QQuickItem *item = m_items[ii][i];
-      item->setOpacity(0.0);
-      item->setZ(0);
-      item->setProperty("sample", "black");
+    switch (ii) {
+    case 0:
+    case 2:
+      for (register int i = 0; i < 8; ++i) {
+        QQuickItem *item = m_items[ii][i];
+        item->setOpacity(0.0);
+        item->setZ(0);
+        item->setProperty("sample", "black");
+      }
+      break;
+    case 1:
+    case 3:
+      for (register int i = 0; i < 4; ++i) {
+        QQuickItem *item = m_items[ii][i];
+        item->setOpacity(0.0);
+        item->setZ(0);
+        item->setProperty("sample", "black");
+      }
+      break;
     }
+
+    for (register int i = 0; i < 8; ++i) {
+
+    }
+}
+
+void ALCSymulationWidget::createQmlObject(int ii, int i, QQuickItem *item, int size) {
+  m_items[ii][i] = item;
+  item->setAntialiasing(false);
+  item->setHeight(size);
+  item->setSmooth(false);
+  item->setWidth(size);
+  item->setParent(m_view->rootObject());
+  item->setParentItem(m_root);
 }
 
 void ALCSymulationWidget::timerEvent(QTimerEvent *) {
   if (m_emitter) {
     m_emitter->state(m_samples);
 
-    for (register int ii = 0; ii < 4; ++ii) {
-      QVector < int> *colors = m_samples.scaled(ALCColorSamples::Position(ii), 8);
-      for (register int i = 0; i < 8; ++i)  {
-        QColor color((*colors)[i]);
-        QQuickItem *item = m_items[ii][i];
-        if (item->property("sample").toString() != color.name()) {
-          quint16 s = (color.red() + color.green() + color.blue())/3;
-          item->setOpacity(1.0 - (s/255.0) * 0.5);
-          item->setZ(255 - color.black());
-          item->setProperty("sample", QColor((*colors)[i]).name());
+    QVector < int> *colors;
+
+    for (register int ii = 0; ii < 4; ++ii)
+      switch (ii) {
+      case 0:
+      case 2:
+        colors = m_samples.scaled(ALCColorSamples::Position(ii), 8);
+        for (register int i = 0; i < 8; ++i) {
+          QColor color((*colors)[i]);
+          QQuickItem *item = m_items[ii][i];
+          if (item->property("sample").toString() != color.name()) {
+            item->setOpacity((1.0 - color.blackF()) * 0.8);
+            item->setProperty("sample", QColor((*colors)[i]).name());
+          }
         }
+        delete colors;
+        break;
+      case 1:
+      case 3:
+        colors = m_samples.scaled(ALCColorSamples::Position(ii), 4);
+        for (register int i = 0; i < 4; ++i) {
+          QColor color((*colors)[i]);
+          QQuickItem *item = m_items[ii][i];
+          if (item->property("sample").toString() != color.name()) {
+            item->setOpacity(1.0);
+            item->setProperty("sample", QColor((*colors)[i]).name());
+          }
+        }
+        delete colors;
+        break;
       }
-      delete colors;
-    }
   }
 }
 
