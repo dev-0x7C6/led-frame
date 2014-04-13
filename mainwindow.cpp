@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
 
+  ALCEmitterManager::instance()->addSymulation(ui->qml);
   ui->devices->addSymulation(ui->qml);
   ui->leftWidget->setCurrentIndex(0);
 

@@ -36,6 +36,10 @@ ALCSymulationWidget::~ALCSymulationWidget() {
   delete m_view;
 }
 
+ColorEmitter *ALCSymulationWidget::connectedEmitter() const {
+  return m_emitter;
+}
+
 
 void ALCSymulationWidget::connectEmitter(ColorEmitter *emitter) {
   if (m_emitter)

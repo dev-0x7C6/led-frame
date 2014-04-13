@@ -13,8 +13,7 @@
 class QQuickView;
 class QQuickItem;
 
-class ALCSymulationWidget :public QWidget
-{
+class ALCSymulationWidget :public QWidget {
   Q_OBJECT
 private:
   ALCColorSamples m_samples;
@@ -29,6 +28,7 @@ public:
 
   void onShow();
 
+  ColorEmitter *connectedEmitter() const;
   void connectEmitter(ColorEmitter *emitter);
 
   void createQmlMonitor();

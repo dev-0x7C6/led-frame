@@ -5,17 +5,19 @@
 
 #include "emitters/color-emitter.h"
 
+class ALCSymulationWidget;
+class AnimationColorEmitter;
 class ColorEmitter;
 class ImageColorEmitter;
 class PlainColorEmitter;
-class AnimationColorEmitter;
-class ScreenCaptureColorEmitter;
 class QSettings;
+class ScreenCaptureColorEmitter;
 
 class ALCEmitterManager : public QObject {
   Q_OBJECT
 private:
   QList < ColorEmitter *> m_emitters[ColorEmitter::EMITTER_END_ARRAY];
+  ALCSymulationWidget *m_symulation;
 
 public:
   explicit ALCEmitterManager(QObject *parent = 0);
@@ -33,6 +35,8 @@ public:
     static ALCEmitterManager object;
     return &object;
   }
+
+  void addSymulation(ALCSymulationWidget *);
 
   QList < ColorEmitter *> *emitters(ColorEmitter::EmitterType type);
   QList < ColorEmitter *> allEmitters();
