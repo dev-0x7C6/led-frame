@@ -1,8 +1,8 @@
 import QtQuick 2.0
 
 Rectangle {
-    width: parent.width
-    height: parent.height
+    width: 500
+    height: 380
     z: -1
     color: "black"
 }
