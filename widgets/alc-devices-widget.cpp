@@ -39,9 +39,16 @@ void ComboBoxItem::changeItem(int index)
   }
 }
 
-#include "ambientlightsymulation.h"
+void ALCDeviceTreeWidget::currentIndexChanged(int idx) {
+  Q_UNUSED(idx)
+  ComboBoxItem *cmb = dynamic_cast < ComboBoxItem*> ( sender());
+  emit setEmitter(m_device, reinterpret_cast< ColorEmitter*> (qvariant_cast < void*> (cmb->currentData())));
+}
 
-void ALCDevicesWidget::addSymulation(ALCSymulation *symulation) {
+
+#include "widgets/alc-symulation-widget.h"
+
+void ALCDevicesWidget::addSymulation(ALCSymulationWidget *symulation) {
   m_symulation = symulation;
 
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, 0);

@@ -33,10 +33,10 @@ private:
 
 public:
   ALCDeviceTreeWidget(QTreeWidget *tree, ALCDeviceThread *device)
-    :QTreeWidgetItem(tree),
-      QObject(0),
-      m_device(device)
+    :QObject(0),
+     QTreeWidgetItem(tree)
   {
+    m_device = device;
   }
 
   ALCDeviceThread * device() { return m_device; }
@@ -65,7 +65,7 @@ public:
 };
 
 
-class ALCSymulation;
+class ALCSymulationWidget;
 
 class ALCDevicesWidget : public QMainWindow {
   Q_OBJECT
@@ -73,13 +73,13 @@ private:
   Ui::ALCDevicesWidget *ui;
   QList < ALCDeviceTreeWidget*> m_devices;
   ALCDeviceManager *m_manager;
-  ALCSymulation *m_symulation;
+  ALCSymulationWidget *m_symulation;
 
 public:
   explicit ALCDevicesWidget(QWidget *parent = 0);
   ~ALCDevicesWidget();
 
-  void addSymulation(ALCSymulation *);
+  void addSymulation(ALCSymulationWidget *);
 
 private:
   void deviceConnected(ALCDeviceThread *);

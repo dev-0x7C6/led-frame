@@ -3,8 +3,8 @@
 #include <QTreeWidgetItem>
 
 ColorEmitter::ColorEmitter()
-  :m_type(EMITTER_NOT_DEFINED),
-   m_treeItem(0)
+  :m_treeItem(0),
+   m_type(EMITTER_NOT_DEFINED)
 {
   m_connectedCount = 0;
 }
@@ -79,5 +79,6 @@ bool ColorEmitter::remove() {
     return false;
 
   ALCEmitterManager::instance()->remove(this);
+  return true;
 }
 

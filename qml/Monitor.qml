@@ -1,5 +1,9 @@
 import QtQuick 2.0
 
-Image {
-  source: "qrc:/256x256/display.png"
+Item {
+    Image {
+      width: 256
+      height: 256
+      source: "qrc:/256x256/display.png"
+    }
 }

@@ -6,14 +6,14 @@
 PlainColorEmitter::PlainColorEmitter() :
   QObject(),
   ColorEmitter(),
-  m_timer(new QTimer(this)),
-  m_color(Qt::white)
+  m_color(Qt::white),
+   m_timer(new QTimer(this))
 {
   srand(QTime::currentTime().msecsSinceStartOfDay());
   m_type = EMITTER_PLAIN_COLOR;
 
   connect(m_timer, &QTimer::timeout, this, &PlainColorEmitter::pushState);
-  m_timer->setInterval(20);
+  m_timer->setInterval(1000/15);
   m_timer->start();
 }
 

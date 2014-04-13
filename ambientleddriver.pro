@@ -25,11 +25,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ambientlightsymulation.cpp \
-    about.cpp \
     connector/alc-device-manager.cpp \
     connector/alc-device-thread.cpp \
-    led-configuration-widget.cpp \
     emitters/plain-color-emitter.cpp \
     emitters/image-color-emitter.cpp \
     emitters/animation-color-emitter.cpp \
@@ -46,14 +43,13 @@ SOURCES += main.cpp\
     widgets/alc-screens-widget.cpp \
     dialogs/alc-screen-configure-dialog.cpp \
     classes/alc-color-samples.cpp \
-    widgets/alc-devices-widget.cpp
+    widgets/alc-devices-widget.cpp \
+    widgets/alc-symulation-widget.cpp \
+    dialogs/alc-about-dialog.cpp
 
 HEADERS += mainwindow.h \
-    ambientlightsymulation.h \
-    about.h \
     connector/alc-device-manager.h \
     connector/alc-device-thread.h \
-    led-configuration-widget.h \
     emitters/plain-color-emitter.h \
     emitters/image-color-emitter.h \
     emitters/color-emitter.h \
@@ -70,23 +66,24 @@ HEADERS += mainwindow.h \
     widgets/alc-screens-widget.h \
     dialogs/alc-screen-configure-dialog.h \
     classes/alc-color-samples.h \
-    widgets/alc-devices-widget.h
+    widgets/alc-devices-widget.h \
+    widgets/alc-symulation-widget.h \
+    dialogs/alc-about-dialog.h
 
 FORMS += mainwindow.ui \
-    about.ui \
-    led-configuration-widget.ui \
     widgets/alc-color-correction-widget.ui \
     widgets/alc-emitters-widget.ui \
     widgets/alc-led-configuration-widget.ui \
     widgets/alc-screens-widget.ui \
     dialogs/alc-screen-configure-dialog.ui \
-    widgets/alc-devices-widget.ui
+    widgets/alc-devices-widget.ui \
+    dialogs/alc-about-dialog.ui
 
 RESOURCES += \
     resources/resource.qrc \
     qml.qrc
 
 OTHER_FILES += \
-    qml/main.qml \
     qml/LedAmbient.qml \
-    qml/Monitor.qml
+    qml/Monitor.qml \
+    qml/Scene.qml

@@ -226,7 +226,9 @@ AnimationColorEmitter *ALCEmitterManager::addAnimationColorEmitter() {
 }
 
 ScreenCaptureColorEmitter *ALCEmitterManager::addScreenCaptureEmitter() {
-  add(new ScreenCaptureColorEmitter(this), ColorEmitter::EMITTER_SCREEN_CAPTURE);
+  ScreenCaptureColorEmitter *emitter = new ScreenCaptureColorEmitter(this);
+  add(emitter, ColorEmitter::EMITTER_SCREEN_CAPTURE);
+  return emitter;
 }
 
 #include "connector/alc-device-manager.h"

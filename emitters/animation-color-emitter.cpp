@@ -103,6 +103,8 @@ void AnimationColorEmitter::timerEvent(QTimerEvent *) {
         (*vec)[i] = rgb;
     }
     break;
+  default:
+    break;
   }
   setState(m_samples);
 }

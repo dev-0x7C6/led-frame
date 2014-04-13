@@ -5,7 +5,7 @@
 
 const int applicationMajorVersion = 0;
 const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 3;
+const int applicationPatchVersion = 4;
 
 int main(int argc, char *argv[])
 {
@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
                                           application.applicationVersion()));
 
   ALCEmitterManager::instance();
-  MainWindow w;
-  w.show();
+  MainWindow window;
+  window.show();
 
   return application.exec();
 }

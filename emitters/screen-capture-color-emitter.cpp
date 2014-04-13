@@ -16,8 +16,8 @@ ScreenCaptureColorEmitter::ScreenCaptureColorEmitter(QObject *parent) :
   m_chunkSize(32),
   m_pixelSkip(8),
   m_framerateLimit(30),
-  m_marginProcent(0),
-  m_quit(false)
+  m_quit(false),
+  m_marginProcent(0)
 {
   m_type = EMITTER_SCREEN_CAPTURE;
   moveToThread(this);
@@ -197,7 +197,6 @@ void ScreenCaptureColorEmitter::run(){
         continue;
       width = src->width;
       height = src->height;
-      char *data = src->data;
       for (int i = 0; i < chunks; ++i) {
         switch (ii) {
         case Top:

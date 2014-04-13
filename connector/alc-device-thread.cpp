@@ -40,9 +40,9 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
   :QThread(parent),
     m_device(device),
     m_emitter(0),
+    m_samples(new ALCColorSamples),
     m_details(details),
-    m_continue(true),
-    m_samples(new ALCColorSamples)
+    m_continue(true)
 {
   m_device->moveToThread(this);
 

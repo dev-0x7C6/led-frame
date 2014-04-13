@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1070</width>
-    <height>546</height>
+    <width>1068</width>
+    <height>544</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -40,7 +40,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="iconSize">
        <size>
@@ -74,7 +74,6 @@
        <attribute name="title">
         <string>Screens</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_14"/>
       </widget>
       <widget class="ALCLedConfigurationWidget" name="tab_5">
        <attribute name="icon">
@@ -245,7 +244,7 @@
         <number>2</number>
        </property>
        <item>
-        <widget class="ALCSymulation" name="qml" native="true">
+        <widget class="ALCSymulationWidget" name="qml" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -267,7 +266,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1070</width>
+     <width>1068</width>
      <height>21</height>
     </rect>
    </property>
@@ -418,9 +417,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ALCSymulation</class>
+   <class>ALCSymulationWidget</class>
    <extends>QWidget</extends>
-   <header>ambientlightsymulation.h</header>
+   <header>widgets/alc-symulation-widget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
