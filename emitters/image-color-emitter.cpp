@@ -86,7 +86,6 @@ void ImageColorEmitter::pushState() {
 }
 
 void ImageColorEmitter::init() {
-  QMetaObject::invokeMethod(this, "open", Qt::QueuedConnection);
   ColorEmitter::init();
 }
 

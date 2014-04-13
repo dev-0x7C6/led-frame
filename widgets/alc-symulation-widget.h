@@ -27,6 +27,8 @@ public:
   explicit ALCSymulationWidget(QWidget *parent = 0);
   virtual ~ALCSymulationWidget();
 
+  void onShow();
+
   void connectEmitter(ColorEmitter *emitter);
 
   void createQmlMonitor();
@@ -35,8 +37,11 @@ public:
   void freeQmlObjects();
   void resetQmlObjects();
 
+
+
 protected:
   void timerEvent(QTimerEvent *);
+  void showEvent(QShowEvent *);
 };
 
 #endif // AMBIENTLIGHTSYMULATION_H

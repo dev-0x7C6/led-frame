@@ -45,36 +45,3 @@ void ALCColorSamples::copy(ALCColorSamples &ref) {
   for (register int i = 0; i < SAMPLE_ARRAY; ++i)
     set(static_cast< Position>(i), ref.m_samples[i]);
 }
-
-//  int r = 0;
-//  int g = 0;
-//  int b = 0;
-
-//  for (register int i = 0; i < samples.count(); ++i) {
-//    r += qRed(samples[i]);
-//    g += qGreen(samples[i]);
-//    b += qBlue(samples[i]);
-//    double d = 0;
-//    for (double d = 0; d < step; d += (step/5.0))
-
-
-//  }
-
-
-//  double value = 0;
-//   for (register int i = 0; i < size; ++i) {
-//     for (register double d = 0; d < 1.0; d += step)
-//       v = samples[i*step];
-//  }
-
-//  for (register int i = 0; i < size; ++i)
-//    if ()
-//    (*result)[i] = samples[i*step];
-//  }
-
-//  (*result)[0] = samples.first();
-//  (*result)[size - 1] = samples.last();
-
-
-  //return result;
-

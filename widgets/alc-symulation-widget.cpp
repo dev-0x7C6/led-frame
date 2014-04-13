@@ -25,18 +25,6 @@ ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
   setPalette(p);
   setAutoFillBackground(true);
   startTimer(1000/24);
-
-  QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
-  QWidget *container = QWidget::createWindowContainer(m_view, this);
-  container->setMinimumSize(500, 350);
-  container->setMaximumSize(500, 350);
-  container->setFocusPolicy(Qt::TabFocus);
-  m_view->setSource(QUrl("qrc:/qml/Scene.qml"));
-  layout->addWidget(container);
-  setLayout(layout);
-
-  createQmlMonitor();
-  createQmlObjects();
 }
 
 ALCSymulationWidget::~ALCSymulationWidget() {
@@ -47,6 +35,7 @@ ALCSymulationWidget::~ALCSymulationWidget() {
   freeQmlObjects();
   delete m_view;
 }
+
 
 void ALCSymulationWidget::connectEmitter(ColorEmitter *emitter) {
   if (m_emitter)
@@ -61,7 +50,7 @@ void ALCSymulationWidget::createQmlMonitor() {
   QQmlComponent monitor(m_view->engine(), QUrl("qrc:/qml/Monitor.qml"));
   m_monitor = qobject_cast< QQuickItem* >( monitor.create());
   m_monitor->setX(500 / 2 - 128);
-  m_monitor->setY(350 / 2 - 106);
+  m_monitor->setY(380 / 2 - 106);
   m_monitor->setZ(1000);
   m_monitor->setParent(m_view->rootObject());
   m_monitor->setParentItem(qobject_cast< QQuickItem * >(m_view->rootObject()));
@@ -145,4 +134,19 @@ void ALCSymulationWidget::timerEvent(QTimerEvent *) {
       delete colors;
     }
   }
+}
+
+void ALCSymulationWidget::showEvent(QShowEvent *) {
+  QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
+  QWidget *container = QWidget::createWindowContainer(m_view, this);
+  container->setMinimumSize(500, 380);
+  container->setMaximumSize(500, 380);
+  container->setFocusPolicy(Qt::TabFocus);
+  layout->addWidget(container);
+  setLayout(layout);
+
+  m_view->setSource(QUrl("qrc:/qml/Scene.qml"));
+
+  createQmlMonitor();
+  createQmlObjects();
 }
