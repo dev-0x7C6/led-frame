@@ -17,30 +17,68 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "mainwindow.h"
-#include <QApplication>
+#ifndef ALCEMITTER_H
+#define ALCEMITTER_H
 
-#include "managers/alc-emitter-manager.h"
+#include <QObject>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QRgb>
+#include <QDebug>
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
+#include "classes/alc-color-samples.h"
+#include "classes/alc-color-correction.h"
 
-int main(int argc, char *argv[])
-{
-  QApplication application(argc, argv);
-  application.setApplicationName("AmbientLedDriver");
-  application.setApplicationVersion(QString("v%1.%2.%3").arg(
-                                      QString::number(applicationMajorVersion),
-                                      QString::number(applicationMinorVersion),
-                                      QString::number(applicationPatchVersion)));
-  application.setApplicationDisplayName(QString("%1 %2").arg(
-                                          application.applicationName(),
-                                          application.applicationVersion()));
+class QTreeWidgetItem;
 
-  ALCEmitterManager::instance();
-  MainWindow window;
-  window.show();
+class ALCEmitter : public ALCColorCorrection {
+public:
+  enum EmitterType: quint8 {
+    EMITTER_NOT_DEFINED = 0x00,
+    EMITTER_SCREEN_CAPTURE,
+    EMITTER_BLACKHOLE,
+    EMITTER_ANIMATION,
+    EMITTER_PLAIN_COLOR,
+    EMITTER_IMAGE,
+    EMITTER_END_ARRAY
+  };
 
-  return application.exec();
-}
+private:
+  QString m_emitterName;
+  ALCColorSamples m_samples;
+  QTreeWidgetItem *m_treeItem;
+
+protected:
+  EmitterType m_type;
+  QMutex m_mutex;
+  int m_connectedCount;
+
+public:
+  explicit ALCEmitter();
+  virtual ~ALCEmitter();
+
+  void setEmitterName(const QString &name);
+  QString emitterName() const;
+
+
+  EmitterType type() const;
+  void setType(const EmitterType type) { m_type = type; }
+
+  virtual void init();
+  void done();
+//  void setState(QList < QRgb> colors);
+  void setState(ALCColorSamples &samples);
+  void state(ALCColorSamples &samples);
+
+  void setTreeItem(QTreeWidgetItem *item);
+  QTreeWidgetItem *treeItem();
+
+  virtual bool configure();
+  virtual bool rename();
+  virtual bool remove();
+
+
+  //QList < QRgb> state();
+};
+
+#endif // ALCEMITTER_H

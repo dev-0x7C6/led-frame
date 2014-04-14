@@ -1,6 +1,6 @@
 /**********************************************************************************
- * Wiimotedev Project - http://code.google.com/p/wiimotedev/ -                    *
- * Copyright (C) 2013-2014  Bartłomiej Burdukiewicz                               *
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
  * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
  *                                                                                *
  * This program is free software; you can redistribute it and/or                  *
@@ -20,7 +20,7 @@
 #include "classes/alc-color-correction.h"
 #include "classes/alc-color-samples.h"
 #include "connector/alc-device-thread.h"
-#include "emitters/color-emitter.h"
+#include "emitters/alc-emitter.h"
 
 #include <QElapsedTimer>
 
@@ -34,7 +34,7 @@ unsigned char max(int value) {
     return value;
 }
 
-#include "classes/alc-led-strip-configuration.h"
+#include "classes/alc-strip-configuration.h"
 
 ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent)
   :QThread(parent),
@@ -46,7 +46,7 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
 {
   m_device->moveToThread(this);
 
-  m_config = new ALCLedStripConfiguration();
+  m_config = new ALCStripConfiguration();
 
   m_config->add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, RGB, 1.00);
   m_config->add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
@@ -152,7 +152,7 @@ void ALCDeviceThread::run() {
     m_emitter->done();
 }
 
-void ALCDeviceThread::connectEmitter(ColorEmitter *emitter) {
+void ALCDeviceThread::connectEmitter(ALCEmitter *emitter) {
   QMutexLocker locker(m_mutex);
   if (m_emitter)
     m_emitter->done();
@@ -161,7 +161,7 @@ void ALCDeviceThread::connectEmitter(ColorEmitter *emitter) {
     m_emitter->init();
 }
 
-ColorEmitter *ALCDeviceThread::connectedEmitter() {
+ALCEmitter *ALCDeviceThread::connectedEmitter() {
   QMutexLocker locker(m_mutex);
   return m_emitter;
 }

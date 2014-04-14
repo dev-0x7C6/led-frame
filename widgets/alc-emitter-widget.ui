@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ALCDevicesWidget</class>
- <widget class="QMainWindow" name="ALCDevicesWidget">
+ <class>ALCEmitterWidget</class>
+ <widget class="QMainWindow" name="ALCEmitterWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>644</width>
-    <height>463</height>
+    <width>792</width>
+    <height>592</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QTreeWidget" name="tree">
-      <property name="selectionMode">
-       <enum>QAbstractItemView::NoSelection</enum>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
       </property>
       <property name="iconSize">
        <size>
@@ -26,7 +26,7 @@
         <height>22</height>
        </size>
       </property>
-      <property name="animated">
+      <property name="wordWrap">
        <bool>true</bool>
       </property>
       <attribute name="headerVisible">
@@ -40,6 +40,11 @@
       <column>
        <property name="text">
         <string>Context</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Config</string>
        </property>
       </column>
      </widget>

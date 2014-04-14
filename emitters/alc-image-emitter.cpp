@@ -1,27 +1,46 @@
-#include "emitters/image-color-emitter.h"
+/**********************************************************************************
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
+ * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
+ *                                                                                *
+ * This program is free software; you can redistribute it and/or                  *
+ * modify it under the terms of the GNU Lesser General Public                     *
+ * License as published by the Free Software Foundation; either                   *
+ * version 2.1 of the License, or (at your option) any later version.             *
+ *                                                                                *
+ * This program is distributed in the hope that it will be useful,                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU              *
+ * Lesser General Public License for more details.                                *
+ *                                                                                *
+ * You should have received a copy of the GNU Lesser General Public               *
+ * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
+ **********************************************************************************/
+
+#include "emitters/alc-image-emitter.h"
 
 #include <QFileInfo>
 #include <QFileDialog>
 
-ImageColorEmitter::ImageColorEmitter(QObject *parent) :
+ALCImageEmitter::ALCImageEmitter(QObject *parent) :
   QObject(parent),
-  ColorEmitter(),
+  ALCEmitter(),
   m_image(0),
   m_timer(new QTimer())
 {
   m_type = EMITTER_IMAGE;
-  connect(m_timer, &QTimer::timeout, this, &ImageColorEmitter::pushState);
+  connect(m_timer, &QTimer::timeout, this, &ALCImageEmitter::pushState);
   m_timer->setInterval(20);
   m_timer->start();
 
 
 }
 
-QString ImageColorEmitter::file() {
+QString ALCImageEmitter::file() {
   return m_file;
 }
 
-void ImageColorEmitter::fromFile(QString file) {
+void ALCImageEmitter::fromFile(QString file) {
   m_image = QImage(file);
   m_file = file;
 
@@ -81,19 +100,19 @@ void ImageColorEmitter::fromFile(QString file) {
   }
 }
 
-void ImageColorEmitter::pushState() {
+void ALCImageEmitter::pushState() {
   setState(m_samples);
 }
 
-void ImageColorEmitter::init() {
-  ColorEmitter::init();
+void ALCImageEmitter::init() {
+  ALCEmitter::init();
 }
 
-bool ImageColorEmitter::configure() {
+bool ALCImageEmitter::configure() {
   return open().isEmpty();
 }
 
-QString ImageColorEmitter::open() {
+QString ALCImageEmitter::open() {
   QFileInfo info(QFileDialog::getOpenFileName(0,
                                               "Open Keylogger History File",
                                               "*.jpg;*.png;*.xpm", "Images (*.png *.xpm *.jpg)"));

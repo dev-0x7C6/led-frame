@@ -17,30 +17,74 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "mainwindow.h"
-#include <QApplication>
+#ifndef ALCSTRIPCONFIGURATION_H
+#define ALCSTRIPCONFIGURATION_H
 
-#include "managers/alc-emitter-manager.h"
+#include <QObject>
+#include <QList>
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
+#include "classes/alc-color-correction.h"
 
-int main(int argc, char *argv[])
-{
-  QApplication application(argc, argv);
-  application.setApplicationName("AmbientLedDriver");
-  application.setApplicationVersion(QString("v%1.%2.%3").arg(
-                                      QString::number(applicationMajorVersion),
-                                      QString::number(applicationMinorVersion),
-                                      QString::number(applicationPatchVersion)));
-  application.setApplicationDisplayName(QString("%1 %2").arg(
-                                          application.applicationName(),
-                                          application.applicationVersion()));
+class ALCLedStrip {
+public:
+  enum Source {
+    SourceBottom,
+    SourceLeft,
+    SourceTop,
+    SourceRight
+  };
 
-  ALCEmitterManager::instance();
-  MainWindow window;
-  window.show();
+  enum Destination {
+    DestinationBottom,
+    DestinationLeft,
+    DestinationTop,
+    DestinationRight
+  };
 
-  return application.exec();
-}
+private:
+  int m_count;
+  bool m_clockwise;
+  Source m_source;
+  Destination m_destination;
+  Format m_colorFormat;
+  double m_brightness;
+
+public:
+  void setClockwise(bool);
+  bool clockwise() const;
+
+  void setCount(int count);
+  int count() const;
+
+  void setColorFormat(Format format);
+  Format colorFormat() const;
+
+  void setSource(Source);
+  Source source() const;
+
+  void setDestination(Destination);
+  Destination destination() const;
+
+
+  void setBrightness(double value);
+  double brightness();
+
+};
+
+class ALCStripConfiguration : public QObject {
+  Q_OBJECT
+private:
+  QList < ALCLedStrip*> m_strips;
+
+public:
+  explicit ALCStripConfiguration(QObject *parent = 0);
+
+  void add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
+           int count, bool clockwise = true, Format color = RGB, double brightness = 1.0);
+
+
+  QList < ALCLedStrip *> list();
+
+};
+
+#endif // ALCSTRIPCONFIGURATION_H

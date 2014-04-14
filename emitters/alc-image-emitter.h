@@ -17,30 +17,36 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "mainwindow.h"
-#include <QApplication>
+#ifndef ALCIMAGEEMITTER_H
+#define ALCIMAGEEMITTER_H
 
-#include "managers/alc-emitter-manager.h"
+#include <QObject>
+#include <QImage>
+#include <QTimer>
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
+#include "emitters/alc-emitter.h"
 
-int main(int argc, char *argv[])
-{
-  QApplication application(argc, argv);
-  application.setApplicationName("AmbientLedDriver");
-  application.setApplicationVersion(QString("v%1.%2.%3").arg(
-                                      QString::number(applicationMajorVersion),
-                                      QString::number(applicationMinorVersion),
-                                      QString::number(applicationPatchVersion)));
-  application.setApplicationDisplayName(QString("%1 %2").arg(
-                                          application.applicationName(),
-                                          application.applicationVersion()));
+class ALCImageEmitter : public QObject, public ALCEmitter {
+  Q_OBJECT
+private:
+  ALCColorSamples m_samples;
+  QImage m_image;
+  QString m_file;
+  bool m_loaded;
+  QTimer *m_timer;
 
-  ALCEmitterManager::instance();
-  MainWindow window;
-  window.show();
+public:
+  explicit ALCImageEmitter(QObject *parent = 0);
+  
+  void fromFile(QString file);
+  QString file();
+  QString open();
 
-  return application.exec();
-}
+  bool isLoaded();
+
+  void pushState();
+  void init();
+  bool configure();
+};
+
+#endif // ALCIMAGEEMITTER_H

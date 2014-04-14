@@ -1,6 +1,6 @@
 /**********************************************************************************
- * Wiimotedev Project - http://code.google.com/p/wiimotedev/ -                    *
- * Copyright (C) 2013-2014  Bartłomiej Burdukiewicz                               *
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
  * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
  *                                                                                *
  * This program is free software; you can redistribute it and/or                  *

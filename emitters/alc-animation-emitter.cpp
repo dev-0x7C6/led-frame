@@ -1,8 +1,27 @@
-#include "emitters/animation-color-emitter.h"
+/**********************************************************************************
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
+ * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
+ *                                                                                *
+ * This program is free software; you can redistribute it and/or                  *
+ * modify it under the terms of the GNU Lesser General Public                     *
+ * License as published by the Free Software Foundation; either                   *
+ * version 2.1 of the License, or (at your option) any later version.             *
+ *                                                                                *
+ * This program is distributed in the hope that it will be useful,                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU              *
+ * Lesser General Public License for more details.                                *
+ *                                                                                *
+ * You should have received a copy of the GNU Lesser General Public               *
+ * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
+ **********************************************************************************/
 
-AnimationColorEmitter::AnimationColorEmitter() :
+#include "emitters/alc-animation-emitter.h"
+
+ALCAnimationEmitter::ALCAnimationEmitter() :
   QObject(),
-  ColorEmitter(),
+  ALCEmitter(),
   m_animation(0)
 {
   m_type = EMITTER_ANIMATION;
@@ -14,24 +33,24 @@ AnimationColorEmitter::AnimationColorEmitter() :
   m_animationType = Rotation;
 }
 
-AnimationColorEmitter::~AnimationColorEmitter() {
+ALCAnimationEmitter::~ALCAnimationEmitter() {
   if (m_animation)
     delete m_animation;
 }
 
 #include <QMessageBox>
 
-bool AnimationColorEmitter::open(){
+bool ALCAnimationEmitter::open(){
   QMessageBox::warning(0, "Warning", "To implement.", QMessageBox::Ok);
   return false;
 }
 
-bool AnimationColorEmitter::configure() {
+bool ALCAnimationEmitter::configure() {
   QMessageBox::information(0, "Information", "Animation configurator is under development.", QMessageBox::Ok);
   return false;
 }
 
-void AnimationColorEmitter::rotatePalette() {
+void ALCAnimationEmitter::rotatePalette() {
   if (m_animation)
     delete m_animation;
 
@@ -46,7 +65,7 @@ void AnimationColorEmitter::rotatePalette() {
   ;
 }
 
-void AnimationColorEmitter::glow() {
+void ALCAnimationEmitter::glow() {
   if (m_animation)
     delete m_animation;
 
@@ -59,13 +78,13 @@ void AnimationColorEmitter::glow() {
   m_animation->start();
 }
 
-unsigned char AnimationColorEmitter::max(int value) {
+unsigned char ALCAnimationEmitter::max(int value) {
   if (value > 255)
     return 255; else
     return value;
 }
 
-void AnimationColorEmitter::timerEvent(QTimerEvent *) {
+void ALCAnimationEmitter::timerEvent(QTimerEvent *) {
   if (!m_connectedCount)
     return;
 

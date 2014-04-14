@@ -1,26 +1,46 @@
-#include "alc-devices-widget.h"
-#include "ui_alc-devices-widget.h"
+/**********************************************************************************
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
+ * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
+ *                                                                                *
+ * This program is free software; you can redistribute it and/or                  *
+ * modify it under the terms of the GNU Lesser General Public                     *
+ * License as published by the Free Software Foundation; either                   *
+ * version 2.1 of the License, or (at your option) any later version.             *
+ *                                                                                *
+ * This program is distributed in the hope that it will be useful,                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU              *
+ * Lesser General Public License for more details.                                *
+ *                                                                                *
+ * You should have received a copy of the GNU Lesser General Public               *
+ * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
+ **********************************************************************************/
+
+
+#include "alc-device-widget.h"
+#include "ui_alc-device-widget.h"
 
 #include "connector/alc-device-thread.h"
 #include "managers/alc-emitter-manager.h"
 #include "connector/alc-device-manager.h"
-#include "emitters/color-emitter.h"
+#include "emitters/alc-emitter.h"
 
 #include <QCommandLinkButton>
 
-ALCDevicesWidget::ALCDevicesWidget(QWidget *parent) :
+ALCDeviceWidget::ALCDeviceWidget(QWidget *parent) :
   QMainWindow(parent),
-  ui(new Ui::ALCDevicesWidget),
+  ui(new Ui::ALCDeviceWidget),
   m_manager(ALCDeviceManager::instance())
 {
   ui->setupUi(this);
-  connect(m_manager, &ALCDeviceManager::deviceConnected, this, &ALCDevicesWidget::deviceConnected, Qt::DirectConnection);
-  connect(m_manager, &ALCDeviceManager::deviceDisconnected, this, &ALCDevicesWidget::deviceDisconnected, Qt::DirectConnection);
+  connect(m_manager, &ALCDeviceManager::deviceConnected, this, &ALCDeviceWidget::deviceConnected, Qt::DirectConnection);
+  connect(m_manager, &ALCDeviceManager::deviceDisconnected, this, &ALCDeviceWidget::deviceDisconnected, Qt::DirectConnection);
 
-  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, this, &ALCDevicesWidget::populate);
+  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, this, &ALCDeviceWidget::populate);
 }
 
-ALCDevicesWidget::~ALCDevicesWidget()
+ALCDeviceWidget::~ALCDeviceWidget()
 {
   delete ui;
 }
@@ -42,17 +62,17 @@ void ComboBoxItem::changeItem(int index)
 void ALCDeviceTreeWidget::currentIndexChanged(int idx) {
   Q_UNUSED(idx)
   ComboBoxItem *cmb = dynamic_cast < ComboBoxItem*> ( sender());
-  emit setEmitter(m_device, reinterpret_cast< ColorEmitter*> (qvariant_cast < void*> (cmb->currentData())));
+  emit setEmitter(m_device, reinterpret_cast< ALCEmitter*> (qvariant_cast < void*> (cmb->currentData())));
 }
 
 
 #include "widgets/alc-symulation-widget.h"
 
-void ALCDevicesWidget::addSymulation(ALCSymulationWidget *symulation) {
+void ALCDeviceWidget::addSymulation(ALCSymulationWidget *symulation) {
   m_symulation = symulation;
 
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, 0);
-  connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDevicesWidget::setEmitter);
+  connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDeviceWidget::setEmitter);
   item->setText(0, "Symulation");
   item->setIcon(0, QIcon(":/22x22/leds.png"));
   addWorkspace(item, 0);
@@ -63,9 +83,9 @@ void ALCDevicesWidget::addSymulation(ALCSymulationWidget *symulation) {
 
 
 
-void ALCDevicesWidget::deviceConnected(ALCDeviceThread *thread) {
+void ALCDeviceWidget::deviceConnected(ALCDeviceThread *thread) {
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, thread);
-  connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDevicesWidget::setEmitter);
+  connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDeviceWidget::setEmitter);
   item->setText(0, thread->details().systemLocation() + '\t');
   item->setIcon(0, QIcon(":/22x22/device.png"));
 
@@ -77,7 +97,7 @@ void ALCDevicesWidget::deviceConnected(ALCDeviceThread *thread) {
   populate();
 }
 
-void ALCDevicesWidget::deviceDisconnected(ALCDeviceThread *thread) {
+void ALCDeviceWidget::deviceDisconnected(ALCDeviceThread *thread) {
   for (register int i = 0; i < m_devices.count(); ++i) {
     if (thread == m_devices[i]->device()) {
       delete m_devices[i];
@@ -87,7 +107,7 @@ void ALCDevicesWidget::deviceDisconnected(ALCDeviceThread *thread) {
   }
 }
 
-void ALCDevicesWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *thread) {
+void ALCDeviceWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *thread) {
   QTreeWidgetItem *child = new QTreeWidgetItem(item);
   QWidget *workspace = new QWidget(0);
   QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -117,7 +137,7 @@ void ALCDevicesWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *
   linkEmitter->setText("Emitter settings");
   linkEmitter->setDescription("Quick settings for your currently selected emitter");
   linkEmitter->setMaximumHeight(50);
-  connect(linkEmitter, &DeviceLinkButton::clicked, this, &ALCDevicesWidget::configureEmitter);
+  connect(linkEmitter, &DeviceLinkButton::clicked, this, &ALCDeviceWidget::configureEmitter);
 
   linkLedStrip->setDeviceThread(thread);
   linkLedStrip->setIconSize(QSize(22, 22));
@@ -135,7 +155,7 @@ void ALCDevicesWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *
   ui->tree->setItemWidget(child, 1, workspace);
 }
 
-void ALCDevicesWidget::populate() {
+void ALCDeviceWidget::populate() {
   const QString prefix = "Emitter: ";
   for (register int i = 0; i < m_devices.count(); ++i) {
     ui->tree->removeItemWidget(m_devices[i], 1);
@@ -143,24 +163,24 @@ void ALCDevicesWidget::populate() {
     cmb->setIconSize(QSize(22, 22));
     cmb->addItem(QIcon(":/22x22/no-device.png"), QString("Not assigned"));
 
-    QList < ColorEmitter*> emitters = ALCEmitterManager::instance()->allEmitters();
-    QListIterator < ColorEmitter*> ii(emitters);
-    ColorEmitter *emitter;
+    QList < ALCEmitter*> emitters = ALCEmitterManager::instance()->allEmitters();
+    QListIterator < ALCEmitter*> ii(emitters);
+    ALCEmitter *emitter;
     while (ii.hasNext()) {
       switch ((emitter = ii.next())->type()) {
-      case ColorEmitter::EMITTER_SCREEN_CAPTURE:
+      case ALCEmitter::EMITTER_SCREEN_CAPTURE:
         cmb->addItem(QIcon(":/22x22/screen.png"), prefix + emitter->emitterName(),
                      qVariantFromValue((void*)emitter));
         break;
-      case ColorEmitter::EMITTER_PLAIN_COLOR:
+      case ALCEmitter::EMITTER_PLAIN_COLOR:
         cmb->addItem(QIcon(":/22x22/color.png"),  prefix + emitter->emitterName(),
                      qVariantFromValue((void*)emitter));
         break;
-      case ColorEmitter::EMITTER_ANIMATION:
+      case ALCEmitter::EMITTER_ANIMATION:
         cmb->addItem(QIcon(":/22x22/animation.png"), prefix + emitter->emitterName(),
                      qVariantFromValue((void*)emitter));
         break;
-      case ColorEmitter::EMITTER_IMAGE:
+      case ALCEmitter::EMITTER_IMAGE:
         cmb->addItem(QIcon(":/22x22/from-image.png"), prefix + emitter->emitterName(),
                      qVariantFromValue((void*)emitter));
         break;
@@ -176,7 +196,7 @@ void ALCDevicesWidget::populate() {
   }
 }
 
-void ALCDevicesWidget::setEmitter(ALCDeviceThread *device, ColorEmitter *emitter) {
+void ALCDeviceWidget::setEmitter(ALCDeviceThread *device, ALCEmitter *emitter) {
   if (device)
     device->connectEmitter(emitter); else
     m_symulation->connectEmitter(emitter);
@@ -184,11 +204,11 @@ void ALCDevicesWidget::setEmitter(ALCDeviceThread *device, ColorEmitter *emitter
 
 #include <QMessageBox>
 
-void ALCDevicesWidget::configureEmitter() {
+void ALCDeviceWidget::configureEmitter() {
   DeviceLinkButton *link = dynamic_cast < DeviceLinkButton*>( sender());
   if (link->deviceThread()) {
 
-    ColorEmitter *emitter = link->deviceThread()->connectedEmitter();
+    ALCEmitter *emitter = link->deviceThread()->connectedEmitter();
     if (emitter)
       emitter->configure(); else
       QMessageBox::information(this, "Information", "Emitter is not defined.", QMessageBox::Ok);

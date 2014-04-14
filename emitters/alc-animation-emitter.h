@@ -17,30 +17,57 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "mainwindow.h"
-#include <QApplication>
+#ifndef ALCANIMATIONEMITTER_H
+#define ALCANIMATIONEMITTER_H
 
-#include "managers/alc-emitter-manager.h"
+#include <QObject>
+#include <QColor>
+#include <QRgb>
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
+#include <QPropertyAnimation>
 
-int main(int argc, char *argv[])
-{
-  QApplication application(argc, argv);
-  application.setApplicationName("AmbientLedDriver");
-  application.setApplicationVersion(QString("v%1.%2.%3").arg(
-                                      QString::number(applicationMajorVersion),
-                                      QString::number(applicationMinorVersion),
-                                      QString::number(applicationPatchVersion)));
-  application.setApplicationDisplayName(QString("%1 %2").arg(
-                                          application.applicationName(),
-                                          application.applicationVersion()));
+#include "emitters/alc-emitter.h"
 
-  ALCEmitterManager::instance();
-  MainWindow window;
-  window.show();
+class ALCAnimationEmitter :public QObject, public ALCEmitter {
+  Q_OBJECT
+  Q_PROPERTY(QColor color READ color WRITE setColor)
+public:
+  enum AnimationType : quint8 {
+    Blink,
+    Glow,
+    Rotation
+  };
 
-  return application.exec();
-}
+private:
+  QPropertyAnimation *m_animation;
+  QColor m_color;
+
+  QColor color() { return m_color; }
+  void setColor(QColor value) {
+    m_color = value;
+  }
+
+  QList < QRgb> m_colorStream;
+  ALCColorSamples m_samples;
+  AnimationType m_animationType;
+  quint64 m_blink;
+
+public:
+  explicit ALCAnimationEmitter();
+  virtual ~ALCAnimationEmitter();
+
+  bool open();
+  virtual bool configure();
+
+private:
+  void rotatePalette();
+  void glow ();
+
+protected:
+  unsigned char max(int value);
+
+  void timerEvent(QTimerEvent *);
+
+};
+
+#endif // ALCANIMATIONEMITTER_H

@@ -1,11 +1,33 @@
+/**********************************************************************************
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
+ * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
+ *                                                                                *
+ * This program is free software; you can redistribute it and/or                  *
+ * modify it under the terms of the GNU Lesser General Public                     *
+ * License as published by the Free Software Foundation; either                   *
+ * version 2.1 of the License, or (at your option) any later version.             *
+ *                                                                                *
+ * This program is distributed in the hope that it will be useful,                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU              *
+ * Lesser General Public License for more details.                                *
+ *                                                                                *
+ * You should have received a copy of the GNU Lesser General Public               *
+ * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
+ **********************************************************************************/
+
 #include "alc-emitter-manager.h"
 
-#include "classes/alc-settings.h"
 #include "classes/alc-color-correction.h"
-#include "emitters/animation-color-emitter.h"
-#include "emitters/image-color-emitter.h"
-#include "emitters/plain-color-emitter.h"
-#include "emitters/screen-capture-color-emitter.h"
+#include "classes/alc-settings.h"
+#include "connector/alc-device-manager.h"
+#include "connector/alc-device-thread.h"
+#include "emitters/alc-animation-emitter.h"
+#include "emitters/alc-color-emitter.h"
+#include "emitters/alc-image-emitter.h"
+#include "emitters/alc-screen-emitter.h"
+#include "widgets/alc-symulation-widget.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -23,7 +45,7 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
 
 
   for (register int i = -1; i < QApplication::desktop()->screenCount(); ++i) {
-    ScreenCaptureColorEmitter *emitter = new ScreenCaptureColorEmitter(0);
+    ALCScreenEmitter *emitter = new ALCScreenEmitter(0);
     QRect rect;
     switch (i) {
     case -1:
@@ -58,7 +80,7 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     emitter->start();
 
     settings->endGroup();
-    m_emitters[ColorEmitter::EMITTER_SCREEN_CAPTURE] << emitter;
+    m_emitters[ALCEmitter::EMITTER_SCREEN_CAPTURE] << emitter;
   }
 
   settings->endGroup();
@@ -70,14 +92,13 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     QStringList list = settings->childGroups();
     for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
-      AnimationColorEmitter *emitter =
-          addAnimationColorEmitter(settings->value("name", QString()).toString());
+      addALCAnimationEmitter(settings->value("name", QString()).toString());
       settings->endGroup();
     }
     settings->endGroup();
   } else {
     for (register int i = 0; i < 3; ++i) {
-      addAnimationColorEmitter("Animation #" + QString::number(i+1));
+      addALCAnimationEmitter("Animation #" + QString::number(i+1));
     }
   }
 
@@ -86,7 +107,7 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     QStringList list = settings->childGroups();
     for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
-      PlainColorEmitter *emitter = addPlainColorEmitter(settings->value("name", QString()).toString());
+      ALCALCEmitter *emitter = addALCALCEmitter(settings->value("name", QString()).toString());
       int r = settings->value("red", 0).toInt();
       int g = settings->value("green", 0).toInt();
       int b = settings->value("blue", 0).toInt();
@@ -96,7 +117,7 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     settings->endGroup();
   } else {
     for (register int i = 0; i < 3; ++i)
-      addPlainColorEmitter("Plain color #" + QString::number(i+1));
+      addALCALCEmitter("Plain color #" + QString::number(i+1));
   }
 
   if (settings->childGroups().contains("images")) {
@@ -105,14 +126,14 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     QStringList list = settings->childGroups();
     for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
-      ImageColorEmitter *emitter = addImageColorEmitter(settings->value("name", QString()).toString());
+      ALCImageEmitter *emitter = addALCImageEmitter(settings->value("name", QString()).toString());
       emitter->fromFile(settings->value("file", QString()).toString());
       settings->endGroup();
     }
     settings->endGroup();
   } else {
     for (register int i = 0; i < 3; ++i)
-      addImageColorEmitter("Image samples #" + QString::number(i+1));
+      addALCImageEmitter("Image samples #" + QString::number(i+1));
   }
 
 
@@ -123,12 +144,12 @@ ALCEmitterManager::~ALCEmitterManager() {
   QSettings *settings = ALCSettings::instance()->settings();
   settings->beginGroup("emitters");
 
-  QList < ColorEmitter *> all = allEmitters();
+  QList < ALCEmitter *> all = allEmitters();
 
   for (register int i = 0; i < all.count(); ++i) {
     switch (all[i]->type()) {
-    case ColorEmitter::EMITTER_SCREEN_CAPTURE:
-      dynamic_cast < ScreenCaptureColorEmitter*> ( all[i])->setQuitState(true);
+    case ALCEmitter::EMITTER_SCREEN_CAPTURE:
+      dynamic_cast < ALCScreenEmitter*> ( all[i])->setQuitState(true);
       break;
     default:
       break;
@@ -139,16 +160,16 @@ ALCEmitterManager::~ALCEmitterManager() {
   settings->remove("colors");
   settings->remove("images");
 
-  AnimationColorEmitter *animation;
-  ImageColorEmitter *image;
-  PlainColorEmitter *plain;
-  ScreenCaptureColorEmitter *screen;
+  ALCAnimationEmitter *animation;
+  ALCImageEmitter *image;
+  ALCALCEmitter *plain;
+  ALCScreenEmitter *screen;
 
   for (register int i = 0; i < all.count(); ++i) {
     switch (all[i]->type()) {
-    case ColorEmitter::EMITTER_SCREEN_CAPTURE:
+    case ALCEmitter::EMITTER_SCREEN_CAPTURE:
       settings->beginGroup("screens");
-      screen = dynamic_cast < ScreenCaptureColorEmitter*> ( all[i]);
+      screen = dynamic_cast < ALCScreenEmitter*> ( all[i]);
       screen->wait();
       settings->beginGroup(screen->emitterName());
       settings->setValue("name", screen->emitterName());
@@ -160,8 +181,8 @@ ALCEmitterManager::~ALCEmitterManager() {
       settings->endGroup();
       settings->endGroup();
       break;
-    case ColorEmitter::EMITTER_ANIMATION:
-      animation = dynamic_cast < AnimationColorEmitter*> ( all[i]);
+    case ALCEmitter::EMITTER_ANIMATION:
+      animation = dynamic_cast < ALCAnimationEmitter*> ( all[i]);
       settings->beginGroup("animations");
       settings->beginGroup(QString::number(i));
       settings->setValue("name", animation->emitterName());
@@ -169,8 +190,8 @@ ALCEmitterManager::~ALCEmitterManager() {
       settings->endGroup();
       settings->endGroup();
       break;
-    case ColorEmitter::EMITTER_PLAIN_COLOR:
-      plain = dynamic_cast < PlainColorEmitter*> ( all[i]);
+    case ALCEmitter::EMITTER_PLAIN_COLOR:
+      plain = dynamic_cast < ALCALCEmitter*> ( all[i]);
       settings->beginGroup("colors");
       settings->beginGroup(QString::number(i));
       settings->setValue("name", plain->emitterName());
@@ -180,8 +201,8 @@ ALCEmitterManager::~ALCEmitterManager() {
       settings->endGroup();
       settings->endGroup();
       break;
-    case ColorEmitter::EMITTER_IMAGE:
-      image = dynamic_cast < ImageColorEmitter*> ( all[i]);
+    case ALCEmitter::EMITTER_IMAGE:
+      image = dynamic_cast < ALCImageEmitter*> ( all[i]);
       settings->beginGroup("images");
       settings->beginGroup(QString::number(i));
       settings->setValue("name", image->emitterName());
@@ -200,44 +221,40 @@ ALCEmitterManager::~ALCEmitterManager() {
   settings->endGroup();
 }
 
-void ALCEmitterManager::add(ColorEmitter *emitter, ColorEmitter::EmitterType type) {
+void ALCEmitterManager::add(ALCEmitter *emitter, ALCEmitter::EmitterType type) {
   m_emitters[type] << emitter;
   emit emitterListChanged();
 }
 
-ImageColorEmitter *ALCEmitterManager::addImageColorEmitter(const QString &name) {
-  ImageColorEmitter *emitter = new ImageColorEmitter(this);
+ALCImageEmitter *ALCEmitterManager::addALCImageEmitter(const QString &name) {
+  ALCImageEmitter *emitter = new ALCImageEmitter(this);
   emitter->setEmitterName(name);
-  add(emitter, ColorEmitter::EMITTER_IMAGE);
+  add(emitter, ALCEmitter::EMITTER_IMAGE);
   return emitter;
 }
 
-PlainColorEmitter *ALCEmitterManager::addPlainColorEmitter(const QString &name) {
-  PlainColorEmitter *emitter = new PlainColorEmitter();
+ALCALCEmitter *ALCEmitterManager::addALCALCEmitter(const QString &name) {
+  ALCALCEmitter *emitter = new ALCALCEmitter();
   emitter->setEmitterName(name);
-  add(emitter, ColorEmitter::EMITTER_PLAIN_COLOR);
+  add(emitter, ALCEmitter::EMITTER_PLAIN_COLOR);
   return emitter;
 }
 
-AnimationColorEmitter *ALCEmitterManager::addAnimationColorEmitter(const QString &name) {
-  AnimationColorEmitter *emitter = new AnimationColorEmitter();
+ALCAnimationEmitter *ALCEmitterManager::addALCAnimationEmitter(const QString &name) {
+  ALCAnimationEmitter *emitter = new ALCAnimationEmitter();
   emitter->setEmitterName(name);
-  add(emitter, ColorEmitter::EMITTER_ANIMATION);
+  add(emitter, ALCEmitter::EMITTER_ANIMATION);
   return emitter;
 }
 
-ScreenCaptureColorEmitter *ALCEmitterManager::addScreenCaptureEmitter(const QString &name) {
-  ScreenCaptureColorEmitter *emitter = new ScreenCaptureColorEmitter(this);
+ALCScreenEmitter *ALCEmitterManager::addScreenCaptureEmitter(const QString &name) {
+  ALCScreenEmitter *emitter = new ALCScreenEmitter(this);
   emitter->setEmitterName(name);
-  add(emitter, ColorEmitter::EMITTER_SCREEN_CAPTURE);
+  add(emitter, ALCEmitter::EMITTER_SCREEN_CAPTURE);
   return emitter;
 }
 
-#include "connector/alc-device-manager.h"
-#include "connector/alc-device-thread.h"
-#include "widgets/alc-symulation-widget.h"
-
-void ALCEmitterManager::remove(ColorEmitter *emitter) {
+void ALCEmitterManager::remove(ALCEmitter *emitter) {
 
   for (register int i = 0; i < ALCDeviceManager::instance()->count(); ++i) {
     if (ALCDeviceManager::instance()->device(i)->connectedEmitter() == emitter)
@@ -246,8 +263,8 @@ void ALCEmitterManager::remove(ColorEmitter *emitter) {
       m_symulation->connectEmitter(0);
   }
 
-  for (register int i = 0; i < ColorEmitter::EMITTER_END_ARRAY; ++i)
-    m_emitters[static_cast< ColorEmitter::EmitterType>(i)].removeAll(emitter);
+  for (register int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
+    m_emitters[static_cast< ALCEmitter::EmitterType>(i)].removeAll(emitter);
   delete emitter;
 
   emit emitterListChanged();
@@ -257,14 +274,14 @@ void ALCEmitterManager::addSymulation(ALCSymulationWidget *symulation){
   m_symulation = symulation;
 }
 
-QList < ColorEmitter *> *ALCEmitterManager::emitters(ColorEmitter::EmitterType type) {
+QList < ALCEmitter *> *ALCEmitterManager::emitters(ALCEmitter::EmitterType type) {
   return &m_emitters[type];
 }
 
-QList<ColorEmitter *> ALCEmitterManager::allEmitters() {
-  QList < ColorEmitter *> result;
-  for (register int i = 0; i < ColorEmitter::EMITTER_END_ARRAY; ++i)
-    result << m_emitters[static_cast< ColorEmitter::EmitterType>( i)];
+QList<ALCEmitter *> ALCEmitterManager::allEmitters() {
+  QList < ALCEmitter *> result;
+  for (register int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
+    result << m_emitters[static_cast< ALCEmitter::EmitterType>( i)];
   return result;
 }
 

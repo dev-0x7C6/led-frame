@@ -17,30 +17,69 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "mainwindow.h"
-#include <QApplication>
+#include "alc-color-emitter.h"
 
-#include "managers/alc-emitter-manager.h"
+#include <QTimer>
+#include <QTime>
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
-
-int main(int argc, char *argv[])
+ALCALCEmitter::ALCALCEmitter() :
+  QObject(),
+  ALCEmitter(),
+  m_color(Qt::white),
+   m_timer(new QTimer(this))
 {
-  QApplication application(argc, argv);
-  application.setApplicationName("AmbientLedDriver");
-  application.setApplicationVersion(QString("v%1.%2.%3").arg(
-                                      QString::number(applicationMajorVersion),
-                                      QString::number(applicationMinorVersion),
-                                      QString::number(applicationPatchVersion)));
-  application.setApplicationDisplayName(QString("%1 %2").arg(
-                                          application.applicationName(),
-                                          application.applicationVersion()));
+  srand(QTime::currentTime().msecsSinceStartOfDay());
+  m_type = EMITTER_PLAIN_COLOR;
 
-  ALCEmitterManager::instance();
-  MainWindow window;
-  window.show();
+  connect(m_timer, &QTimer::timeout, this, &ALCALCEmitter::pushState);
+  m_timer->setInterval(1000/15);
+  m_timer->start();
+}
 
-  return application.exec();
+ALCALCEmitter::~ALCALCEmitter() {}
+
+void ALCALCEmitter::setColor(QColor color) {
+  m_color = color;
+}
+
+QColor ALCALCEmitter::color() {
+  return m_color;
+}
+
+double max(double value) {
+  if (value > 255)
+    return 255;
+  return value;
+}
+
+void ALCALCEmitter::pushState() {
+  QVector < int> samples(SAMPLE_RESOLUTION);
+
+  int rgb = qRgb(max(m_color.red() * m_brightness),
+                 max(m_color.green() * m_brightness),
+                 max(m_color.blue() * m_brightness));
+
+
+
+  for (register int i = 0; i < samples.size(); ++i)
+    samples[i] = rgb;
+
+  m_samples.set(ALCColorSamples::SAMPLE_TOP, samples);
+  m_samples.set(ALCColorSamples::SAMPLE_LEFT, samples);
+  m_samples.set(ALCColorSamples::SAMPLE_RIGHT, samples);
+  m_samples.set(ALCColorSamples::SAMPLE_BOTTOM, samples);
+  setState(m_samples);
+}
+
+#include <QColorDialog>
+
+QColor ALCALCEmitter::open() {
+  QColor color = QColorDialog::getColor(m_color);
+  if (color.isValid())
+    return (m_color = color); else
+    return (m_color);
+}
+
+bool ALCALCEmitter::configure() {
+  return open().isValid();
 }

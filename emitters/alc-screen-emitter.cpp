@@ -1,4 +1,23 @@
-#include "screen-capture-color-emitter.h"
+/**********************************************************************************
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
+ * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
+ *                                                                                *
+ * This program is free software; you can redistribute it and/or                  *
+ * modify it under the terms of the GNU Lesser General Public                     *
+ * License as published by the Free Software Foundation; either                   *
+ * version 2.1 of the License, or (at your option) any later version.             *
+ *                                                                                *
+ * This program is distributed in the hope that it will be useful,                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU              *
+ * Lesser General Public License for more details.                                *
+ *                                                                                *
+ * You should have received a copy of the GNU Lesser General Public               *
+ * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
+ **********************************************************************************/
+
+#include "alc-screen-emitter.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -10,9 +29,9 @@
 #include <QPixmap>
 #include <QScreen>
 
-ScreenCaptureColorEmitter::ScreenCaptureColorEmitter(QObject *parent) :
+ALCScreenEmitter::ALCScreenEmitter(QObject *parent) :
   QThread(parent),
-  ColorEmitter(),
+  ALCEmitter(),
   m_chunkSize(32),
   m_pixelSkip(8),
   m_framerateLimit(30),
@@ -25,75 +44,75 @@ ScreenCaptureColorEmitter::ScreenCaptureColorEmitter(QObject *parent) :
 }
 
 
-void ScreenCaptureColorEmitter::setCaptureArea(QRect capture) {
+void ALCScreenEmitter::setCaptureArea(QRect capture) {
   QMutexLocker locker(&m_mutex);
   m_captureArea = capture;
 }
 
-void ScreenCaptureColorEmitter::setChunkSize(int value) {
+void ALCScreenEmitter::setChunkSize(int value) {
   QMutexLocker locker(&m_mutex);
   m_chunkSize = value;
 }
 
-void ScreenCaptureColorEmitter::setPixelSkip(int value) {
+void ALCScreenEmitter::setPixelSkip(int value) {
   QMutexLocker locker(&m_mutex);
   m_pixelSkip = value;
 }
 
-void ScreenCaptureColorEmitter::setFramerateLimit(int value) {
+void ALCScreenEmitter::setFramerateLimit(int value) {
   QMutexLocker locker(&m_mutex);
   m_framerateLimit = value;
 }
 
-void ScreenCaptureColorEmitter::setQuitState(bool value) {
+void ALCScreenEmitter::setQuitState(bool value) {
   QMutexLocker locker(&m_mutex);
   m_quit = value;
 }
 
-void ScreenCaptureColorEmitter::setMarginProcent(double value) {
+void ALCScreenEmitter::setMarginProcent(double value) {
   QMutexLocker locker(&m_mutex);
   m_marginProcent = value;
 }
 
 
-void ScreenCaptureColorEmitter::setName(QString name) {
+void ALCScreenEmitter::setName(QString name) {
   QMutexLocker locker(&m_mutex);
   m_name = name;
 }
 
-QRect ScreenCaptureColorEmitter::area() {
+QRect ALCScreenEmitter::area() {
   QMutexLocker locker(&m_mutex);
   return m_captureArea;
 }
 
-int ScreenCaptureColorEmitter::chunk() {
+int ALCScreenEmitter::chunk() {
   QMutexLocker locker(&m_mutex);
   return m_chunkSize;
 }
 
-int ScreenCaptureColorEmitter::pixelSkip() {
+int ALCScreenEmitter::pixelSkip() {
   QMutexLocker locker(&m_mutex);
   return m_pixelSkip;
 }
 
-int ScreenCaptureColorEmitter::framerateLimit() {
+int ALCScreenEmitter::framerateLimit() {
   QMutexLocker locker(&m_mutex);
   return m_framerateLimit;
 }
 
-double ScreenCaptureColorEmitter::marginProcent() {
+double ALCScreenEmitter::marginProcent() {
   QMutexLocker locker(&m_mutex);
   return m_marginProcent;
 }
 
-QString ScreenCaptureColorEmitter::name() {
+QString ALCScreenEmitter::name() {
   QMutexLocker locker(&m_mutex);
   return m_name;
 }
 
 #include "dialogs/alc-screen-configure-dialog.h"
 
-bool ScreenCaptureColorEmitter::configure() {
+bool ALCScreenEmitter::configure() {
   ALCScreenConfigureDialog dialog;
   dialog.setWindowTitle(emitterName());
   dialog.setEmitter(this);
@@ -103,7 +122,7 @@ bool ScreenCaptureColorEmitter::configure() {
 #include "X11/Xutil.h"
 #include "X11/Xlib.h"
 
-void ScreenCaptureColorEmitter::run(){
+void ALCScreenEmitter::run(){
   Display *display = XOpenDisplay(NULL);
   Window root = DefaultRootWindow(display);
 

@@ -17,30 +17,74 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "mainwindow.h"
-#include <QApplication>
+#ifndef ALCSCREENEMITTER_H
+#define ALCSCREENEMITTER_H
 
-#include "managers/alc-emitter-manager.h"
+#include "classes/alc-color-samples.h"
+#include "emitters/alc-emitter.h"
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
+#include <QList>
+#include <QMutex>
+#include <QPixmap>
+#include <QRect>
+#include <QRgb>
+#include <QThread>
 
-int main(int argc, char *argv[])
-{
-  QApplication application(argc, argv);
-  application.setApplicationName("AmbientLedDriver");
-  application.setApplicationVersion(QString("v%1.%2.%3").arg(
-                                      QString::number(applicationMajorVersion),
-                                      QString::number(applicationMinorVersion),
-                                      QString::number(applicationPatchVersion)));
-  application.setApplicationDisplayName(QString("%1 %2").arg(
-                                          application.applicationName(),
-                                          application.applicationVersion()));
+class QScreen;
 
-  ALCEmitterManager::instance();
-  MainWindow window;
-  window.show();
+enum ScreenFragments {
+  Bottom = 0,
+  Left,
+  Top,
+  Right
+};
 
-  return application.exec();
-}
+class ALCScreenEmitter : public QThread, public ALCEmitter {
+  Q_OBJECT
+public:
+  ALCScreenEmitter(QObject *parent = 0);
+
+private:
+  ALCColorSamples m_samples;
+  QScreen *m_screen;
+  QString m_name;
+
+  QRect m_captureArea;
+  int m_chunkSize;
+  int m_pixelSkip;
+  int m_framerateLimit;
+  bool m_quit;
+  double m_marginProcent;
+
+  QVector < int> *colors[4];
+
+public slots:
+  void setName(QString name);
+  void setCaptureArea(QRect);
+  void setChunkSize(int);
+  void setPixelSkip(int);
+  void setFramerateLimit(int);
+  void setQuitState(bool);
+  void setMarginProcent(double);
+
+  QRect area();
+  int chunk();
+  int pixelSkip();
+  int framerateLimit();
+  double marginProcent();
+
+  QString name();
+
+public:
+  bool configure();
+
+protected:
+  void run();
+
+signals:
+  void update(ALCColorSamples *samples);
+  void updateStats(quint32 fps, double latency, double usage);
+  
+};
+
+#endif // ALCSCREENEMITTER_H

@@ -1,6 +1,6 @@
 /**********************************************************************************
- * Wiimotedev Project - http://code.google.com/p/wiimotedev/ -                    *
- * Copyright (C) 2013-2014  Bartłomiej Burdukiewicz                               *
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
  * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
  *                                                                                *
  * This program is free software; you can redistribute it and/or                  *
@@ -26,16 +26,16 @@
 
 #include "classes/alc-color-correction.h"
 
-class ColorEmitter;
+class ALCEmitter;
 class ALCColorSamples;
-class ALCLedStripConfiguration;
+class ALCStripConfiguration;
 
 class ALCDeviceThread : public QThread, public ALCColorCorrection {
   Q_OBJECT
 private:
-  ALCLedStripConfiguration *m_config;
+  ALCStripConfiguration *m_config;
   QSerialPort *m_device;
-  ColorEmitter *m_emitter;
+  ALCEmitter *m_emitter;
   ALCColorSamples *m_samples;
   QSerialPortInfo m_details;
   bool m_continue;
@@ -55,8 +55,8 @@ protected:
   void run();
 
 public slots:
-  void connectEmitter(ColorEmitter *emitter);
-  ColorEmitter *connectedEmitter();
+  void connectEmitter(ALCEmitter *emitter);
+  ALCEmitter *connectedEmitter();
 };
 
 #endif // ACLDEVICETHREAD_H

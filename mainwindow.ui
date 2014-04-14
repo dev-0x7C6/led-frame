@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1068</width>
-    <height>544</height>
+    <width>1064</width>
+    <height>540</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -33,14 +33,8 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>600</width>
-        <height>0</height>
-       </size>
-      </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -48,7 +42,7 @@
         <height>22</height>
        </size>
       </property>
-      <widget class="ALCDevicesWidget" name="devices">
+      <widget class="ALCDeviceWidget" name="devices">
        <attribute name="icon">
         <iconset resource="resources/resource.qrc">
          <normaloff>:/22x22/device.png</normaloff>:/22x22/device.png</iconset>
@@ -57,7 +51,7 @@
         <string>Devices &amp;&amp; connections</string>
        </attribute>
       </widget>
-      <widget class="ALCEmittersWidget" name="emitters">
+      <widget class="ALCEmitterWidget" name="emitters">
        <attribute name="icon">
         <iconset resource="resources/resource.qrc">
          <normaloff>:/22x22/leds.png</normaloff>:/22x22/leds.png</iconset>
@@ -66,7 +60,7 @@
         <string>Emitters</string>
        </attribute>
       </widget>
-      <widget class="ALCScreensWidget" name="screens">
+      <widget class="ALCScreenWidget" name="screens">
        <attribute name="icon">
         <iconset resource="resources/resource.qrc">
          <normaloff>:/22x22/screen.png</normaloff>:/22x22/screen.png</iconset>
@@ -266,7 +260,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1068</width>
+     <width>1064</width>
      <height>21</height>
     </rect>
    </property>
@@ -423,9 +417,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ALCEmittersWidget</class>
+   <class>ALCEmitterWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/alc-emitters-widget.h</header>
+   <header>widgets/alc-emitter-widget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -435,15 +429,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ALCScreensWidget</class>
+   <class>ALCScreenWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/alc-screens-widget.h</header>
+   <header>widgets/alc-screen-widget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ALCDevicesWidget</class>
+   <class>ALCDeviceWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/alc-devices-widget.h</header>
+   <header>widgets/alc-device-widget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

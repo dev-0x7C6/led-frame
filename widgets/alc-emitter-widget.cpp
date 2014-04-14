@@ -1,23 +1,42 @@
-#include "alc-emitters-widget.h"
-#include "ui_alc-emitters-widget.h"
+/**********************************************************************************
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
+ * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
+ *                                                                                *
+ * This program is free software; you can redistribute it and/or                  *
+ * modify it under the terms of the GNU Lesser General Public                     *
+ * License as published by the Free Software Foundation; either                   *
+ * version 2.1 of the License, or (at your option) any later version.             *
+ *                                                                                *
+ * This program is distributed in the hope that it will be useful,                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU              *
+ * Lesser General Public License for more details.                                *
+ *                                                                                *
+ * You should have received a copy of the GNU Lesser General Public               *
+ * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
+ **********************************************************************************/
+
+#include "alc-emitter-widget.h"
+#include "ui_alc-emitter-widget.h"
 
 #include <QInputDialog>
 #include <QPainter>
 #include <QPushButton>
 
 #include "classes/alc-color-samples.h"
-#include "emitters/animation-color-emitter.h"
-#include "emitters/color-emitter.h"
-#include "emitters/image-color-emitter.h"
-#include "emitters/plain-color-emitter.h"
-#include "emitters/screen-capture-color-emitter.h"
+#include "emitters/alc-animation-emitter.h"
+#include "emitters/alc-emitter.h"
+#include "emitters/alc-image-emitter.h"
+#include "emitters/alc-color-emitter.h"
+#include "emitters/alc-screen-emitter.h"
 #include "managers/alc-emitter-manager.h"
 
 #include <QPalette>
 
-ALCEmittersWidget::ALCEmittersWidget(QWidget *parent) :
+ALCEmitterWidget::ALCEmitterWidget(QWidget *parent) :
   QMainWindow(parent),
-  ui(new Ui::ALCEmittersWidget) {
+  ui(new Ui::ALCEmitterWidget) {
   QPalette p = palette();
   p.setColor( QPalette::AlternateBase, QColor(226, 237, 253) );
   setPalette(p);
@@ -32,48 +51,48 @@ ALCEmittersWidget::ALCEmittersWidget(QWidget *parent) :
   ui->tree->header()->setSectionResizeMode(1, QHeaderView::Stretch);
 }
 
-ALCEmittersWidget::~ALCEmittersWidget() {
+ALCEmitterWidget::~ALCEmitterWidget() {
   delete ui;
 }
 
-void ALCEmittersWidget::addPlainColorItem() {
+void ALCEmitterWidget::addPlainColorItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
   if (!input.isEmpty())
-    ALCEmitterManager::instance()->addPlainColorEmitter(input);
+    ALCEmitterManager::instance()->addALCALCEmitter(input);
 }
 
-void ALCEmittersWidget::addAnimationItem() {
+void ALCEmitterWidget::addAnimationItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
   if (!input.isEmpty())
-    ALCEmitterManager::instance()->addAnimationColorEmitter(input);
+    ALCEmitterManager::instance()->addALCAnimationEmitter(input);
 }
 
-void ALCEmittersWidget::addImageItem() {
+void ALCEmitterWidget::addImageItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
   if (!input.isEmpty())
-    ALCEmitterManager::instance()->addImageColorEmitter(input);
+    ALCEmitterManager::instance()->addALCImageEmitter(input);
 }
 
-void ALCEmittersWidget::prepare() {
+void ALCEmitterWidget::prepare() {
   setup();
 }
 
 
-void ALCEmittersWidget::setup() {
+void ALCEmitterWidget::setup() {
   ui->tree->clear();
-  QListIterator < ColorEmitter*> ii(ALCEmitterManager::instance()->allEmitters());
+  QListIterator < ALCEmitter*> ii(ALCEmitterManager::instance()->allEmitters());
 
-  ColorEmitter *emitter;
+  ALCEmitter *emitter;
   while (ii.hasNext()) {
 
     switch ((emitter = ii.next())->type()) {
-    case ColorEmitter::EMITTER_PLAIN_COLOR:
+    case ALCEmitter::EMITTER_PLAIN_COLOR:
       insertPlainColorItem(emitter);
       break;
-    case ColorEmitter::EMITTER_ANIMATION:
+    case ALCEmitter::EMITTER_ANIMATION:
       insertAnimationItem(emitter);
       break;
-    case ColorEmitter::EMITTER_IMAGE:
+    case ALCEmitter::EMITTER_IMAGE:
       insertImageItem(emitter);
       break;
     default:
@@ -82,8 +101,8 @@ void ALCEmittersWidget::setup() {
   }
 }
 
-void ALCEmittersWidget::insertPlainColorItem(ColorEmitter *ptr) {
-  PlainColorEmitter *emitter = dynamic_cast < PlainColorEmitter*> ( ptr);
+void ALCEmitterWidget::insertPlainColorItem(ALCEmitter *ptr) {
+  ALCALCEmitter *emitter = dynamic_cast < ALCALCEmitter*> ( ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
@@ -104,8 +123,8 @@ void ALCEmittersWidget::insertPlainColorItem(ColorEmitter *ptr) {
   prepareColorItem(item, emitter->color());
 }
 
-void ALCEmittersWidget::insertAnimationItem(ColorEmitter *ptr) {
-  AnimationColorEmitter *emitter = dynamic_cast < AnimationColorEmitter*> ( ptr);
+void ALCEmitterWidget::insertAnimationItem(ALCEmitter *ptr) {
+  ALCAnimationEmitter *emitter = dynamic_cast < ALCAnimationEmitter*> ( ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
 
@@ -125,8 +144,8 @@ void ALCEmittersWidget::insertAnimationItem(ColorEmitter *ptr) {
   ui->tree->setItemWidget(item, 2, workspace);
 }
 
-void ALCEmittersWidget::insertImageItem(ColorEmitter *ptr) {
-  ImageColorEmitter *emitter = dynamic_cast < ImageColorEmitter*> ( ptr);
+void ALCEmitterWidget::insertImageItem(ALCEmitter *ptr) {
+  ALCImageEmitter *emitter = dynamic_cast < ALCImageEmitter*> ( ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   item->setText(1, emitter->file());
@@ -148,7 +167,7 @@ void ALCEmittersWidget::insertImageItem(ColorEmitter *ptr) {
 
 }
 
-void ALCEmittersWidget::insertDefaultButtons(ColorEmitter *emitter, QBoxLayout *layout) {
+void ALCEmitterWidget::insertDefaultButtons(ALCEmitter *emitter, QBoxLayout *layout) {
   QPushButtonEx *configure = new QPushButtonEx;
   QPushButtonEx *rename = new QPushButtonEx;
   QPushButtonEx *remove = new QPushButtonEx;
@@ -166,31 +185,31 @@ void ALCEmittersWidget::insertDefaultButtons(ColorEmitter *emitter, QBoxLayout *
   remove->setEmitter(emitter);
 
 
-  connect(configure, &QPushButtonEx::clicked, this, &ALCEmittersWidget::reconfigure);
-  connect(remove, &QPushButtonEx::clicked, this, &ALCEmittersWidget::remove);
-  connect(rename, &QPushButtonEx::clicked, this, &ALCEmittersWidget::rename);
+  connect(configure, &QPushButtonEx::clicked, this, &ALCEmitterWidget::reconfigure);
+  connect(remove, &QPushButtonEx::clicked, this, &ALCEmitterWidget::remove);
+  connect(rename, &QPushButtonEx::clicked, this, &ALCEmitterWidget::rename);
 
   layout->addWidget(configure);
   layout->addWidget(rename);
   layout->addWidget(remove);
 }
 
-void ALCEmittersWidget::reconfigure() {
+void ALCEmitterWidget::reconfigure() {
   reinterpret_cast < QPushButtonEx*>( sender())->emitter()->configure();
   setup();
 }
 
-void ALCEmittersWidget::rename() {
+void ALCEmitterWidget::rename() {
   reinterpret_cast < QPushButtonEx*>( sender())->emitter()->rename();
   setup();
 }
 
-void ALCEmittersWidget::remove() {
+void ALCEmitterWidget::remove() {
   reinterpret_cast < QPushButtonEx*>( sender())->emitter()->remove();
   setup();
 }
 
-void ALCEmittersWidget::prepareColorItem(QTreeWidgetItem *item, QColor color) {
+void ALCEmitterWidget::prepareColorItem(QTreeWidgetItem *item, QColor color) {
   item->setTextColor(1, Qt::darkGray);
   item->setText(1, QString("  RGB (%1; %2; %3)").arg(
                    QString::number(color.red()),

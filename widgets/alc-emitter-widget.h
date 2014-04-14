@@ -17,30 +17,69 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "mainwindow.h"
-#include <QApplication>
+#ifndef ALCEMITTERWIDGET_H
+#define ALCEMITTERWIDGET_H
 
-#include "managers/alc-emitter-manager.h"
+#include <QMainWindow>
+#include <QPushButton>
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
+class ALCEmitter;
 
-int main(int argc, char *argv[])
-{
-  QApplication application(argc, argv);
-  application.setApplicationName("AmbientLedDriver");
-  application.setApplicationVersion(QString("v%1.%2.%3").arg(
-                                      QString::number(applicationMajorVersion),
-                                      QString::number(applicationMinorVersion),
-                                      QString::number(applicationPatchVersion)));
-  application.setApplicationDisplayName(QString("%1 %2").arg(
-                                          application.applicationName(),
-                                          application.applicationVersion()));
+class QPushButtonEx :public QPushButton {
+private:
+  ALCEmitter *m_emitter;
 
-  ALCEmitterManager::instance();
-  MainWindow window;
-  window.show();
+public:
+  explicit QPushButtonEx(QWidget *parent = 0) :
+    QPushButton(parent),
+    m_emitter(0) {}
 
-  return application.exec();
-}
+  void setEmitter(ALCEmitter *emitter) {
+    m_emitter = emitter;
+  }
+
+  ALCEmitter *emitter() {
+    return m_emitter;
+  }
+};
+
+
+class QTreeWidgetItem;
+class QBoxLayout;
+
+namespace Ui { class ALCEmitterWidget; }
+
+class ALCEmitterWidget : public QMainWindow {
+  Q_OBJECT
+private:
+  Ui::ALCEmitterWidget *ui;
+
+public:
+  explicit ALCEmitterWidget(QWidget *parent = 0);
+  ~ALCEmitterWidget();
+
+  void addPlainColorItem();
+  void addAnimationItem();
+  void addImageItem();
+
+  void prepare();
+  void setup();
+
+private:
+  void insertPlainColorItem(ALCEmitter *);
+  void insertAnimationItem(ALCEmitter *);
+  void insertImageItem(ALCEmitter *);
+
+  void insertDefaultButtons(ALCEmitter *, QBoxLayout*);
+
+  void reconfigure();
+  void rename();
+  void remove();
+
+
+  void prepareColorItem(QTreeWidgetItem *, QColor);
+
+
+};
+
+#endif // ALCEMITTERSWIDGET_H

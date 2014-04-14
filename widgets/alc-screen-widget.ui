@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ALCScreensWidget</class>
- <widget class="QMainWindow" name="ALCScreensWidget">
+ <class>ALCScreenWidget</class>
+ <widget class="QMainWindow" name="ALCScreenWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>792</width>
-    <height>592</height>
+    <width>790</width>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">

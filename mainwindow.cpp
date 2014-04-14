@@ -1,3 +1,22 @@
+/**********************************************************************************
+ * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
+ * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
+ * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
+ *                                                                                *
+ * This program is free software; you can redistribute it and/or                  *
+ * modify it under the terms of the GNU Lesser General Public                     *
+ * License as published by the Free Software Foundation; either                   *
+ * version 2.1 of the License, or (at your option) any later version.             *
+ *                                                                                *
+ * This program is distributed in the hope that it will be useful,                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU              *
+ * Lesser General Public License for more details.                                *
+ *                                                                                *
+ * You should have received a copy of the GNU Lesser General Public               *
+ * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
+ **********************************************************************************/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -9,7 +28,7 @@
 #include "dialogs/alc-about-dialog.h"
 #include "connector/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
-#include "emitters/plain-color-emitter.h"
+#include "emitters/alc-color-emitter.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -53,11 +72,11 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actionColor_correction, &QAction::toggled, this, &MainWindow::showColorCorrection);
   connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
   connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
-  connect(ui->actionAddAnimation, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addAnimationItem);
-  connect(ui->actionAddPlainColor, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addPlainColorItem);
-  connect(ui->actionAddImageSamples, &QAction::triggered, ui->emitters, &ALCEmittersWidget::addImageItem);
-  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->emitters, &ALCEmittersWidget::setup, Qt::QueuedConnection);
-  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreensWidget::setup, Qt::QueuedConnection);
+  connect(ui->actionAddAnimation, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addAnimationItem);
+  connect(ui->actionAddPlainColor, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addPlainColorItem);
+  connect(ui->actionAddImageSamples, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addImageItem);
+  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->emitters, &ALCEmitterWidget::setup, Qt::QueuedConnection);
+  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreenWidget::setup, Qt::QueuedConnection);
 }
 
 void MainWindow::about() {

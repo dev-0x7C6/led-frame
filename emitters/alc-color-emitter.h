@@ -17,30 +17,35 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "mainwindow.h"
-#include <QApplication>
+#ifndef ALCCOLOREMITTER_H
+#define ALCCOLOREMITTER_H
 
-#include "managers/alc-emitter-manager.h"
+#include <QColor>
+#include <QObject>
+#include "emitters/alc-emitter.h"
+#include "classes/alc-color-samples.h"
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
+class QTimer;
 
-int main(int argc, char *argv[])
-{
-  QApplication application(argc, argv);
-  application.setApplicationName("AmbientLedDriver");
-  application.setApplicationVersion(QString("v%1.%2.%3").arg(
-                                      QString::number(applicationMajorVersion),
-                                      QString::number(applicationMinorVersion),
-                                      QString::number(applicationPatchVersion)));
-  application.setApplicationDisplayName(QString("%1 %2").arg(
-                                          application.applicationName(),
-                                          application.applicationVersion()));
+class ALCALCEmitter: public QObject, public ALCEmitter {
+  Q_OBJECT
+private:
+  QColor m_color;
+  QTimer *m_timer;
+  ALCColorSamples m_samples;
 
-  ALCEmitterManager::instance();
-  MainWindow window;
-  window.show();
+public:
+  explicit ALCALCEmitter();
+  virtual ~ALCALCEmitter();
 
-  return application.exec();
-}
+  void setColor(QColor);
+  QColor color();
+
+  void pushState();
+
+  QColor open();
+
+  virtual bool configure();
+};
+
+#endif // ALCCOLOREMITTER_H
