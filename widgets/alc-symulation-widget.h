@@ -39,6 +39,7 @@ private:
   ALCEmitter *m_emitter;
   QQuickItem *m_root;
 
+  QObject *m_objs[4][8];
   QQuickItem *m_items[4][8];
   QQuickItem *m_monitor;
   QQuickView *m_view;
@@ -59,7 +60,7 @@ public:
   void resetQmlObjects();
 
 private:
-  void createQmlObject(int ii, int i, QQuickItem *item, int size);
+  void createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size);
 
 protected:
   void timerEvent(QTimerEvent *);

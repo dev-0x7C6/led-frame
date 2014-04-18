@@ -22,6 +22,7 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QSystemTrayIcon>
 
 #include "connector/alc-device-manager.h"
 #include "emitters/alc-animation-emitter.h"
@@ -46,6 +47,7 @@ private:
   Ui::MainWindow *ui;
   QList < ALCDeviceTreeWidget*> m_devices;
   ALCEmitterManager *m_screenManager;
+  QSystemTrayIcon m_tray;
   QString m_title;
 
 #ifdef Q_OS_UNIX

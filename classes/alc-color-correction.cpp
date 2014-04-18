@@ -32,6 +32,10 @@ ALCColorCorrection::ALCColorCorrection() :
   m_brightness = 1.0d;
 }
 
+ALCColorCorrection::~ALCColorCorrection() {
+  delete m_mutex;
+}
+
 void ALCColorCorrection::setBrightness(double value) {
   QMutexLocker locker(m_mutex);
   m_brightness = value;

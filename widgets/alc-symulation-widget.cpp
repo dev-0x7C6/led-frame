@@ -87,6 +87,7 @@ void ALCSymulationWidget::createQmlObjects(int size) {
   QRect draw(80, 80, 500 - 160, 380 - 160);
 
   QQmlComponent led(m_view->engine(), QUrl("qrc:/qml/LedAmbient.qml"));
+  QObject *obj;
   QQuickItem *item;
   m_root = qobject_cast< QQuickItem * >(m_view->rootObject());
 
@@ -94,36 +95,40 @@ void ALCSymulationWidget::createQmlObjects(int size) {
     switch (ii) {
     case 2:
       for (register int i = 0; i < 8; ++i) {
-        item = qobject_cast<QQuickItem*>(led.create());
+        obj = led.create();
+        item = qobject_cast<QQuickItem*>(obj);
         item->setX(draw.x() + (draw.width() / 7 * i) - size/2);
         item->setY(draw.y() - size / 2);
       //  item->setVisible(false);
-        createQmlObject(ii, i, item, size);
+        createQmlObject(ii, i, item, obj, size);
       }
       break;
     case 0:
       for (register int i = 0; i < 8; ++i) {
-        item = qobject_cast<QQuickItem*>(led.create());
+        obj = led.create();
+        item = qobject_cast<QQuickItem*>(obj);
         item->setX(draw.x() + (draw.width() / 7 * (7 - i)) - size/2 );
         item->setY(draw.y() + draw.height() - size / 2);
      //   item->setVisible(false);
-        createQmlObject(ii, i, item, size);
+        createQmlObject(ii, i, item, obj, size);
       }
       break;
     case 1:
       for (register int i = 0; i < 4; ++i) {
-        item = qobject_cast<QQuickItem*>(led.create());
+        obj = led.create();
+        item = qobject_cast<QQuickItem*>(obj);
         item->setX(draw.x() - size / 2);
         item->setY(draw.y() + ((draw.height() - size /2) / 4 * (3 - i)) - size/4);
-        createQmlObject(ii, i, item, size);
+        createQmlObject(ii, i, item, obj, size);
       }
     break;
     case 3:
       for (register int i = 0; i < 4; ++i) {
-        item = qobject_cast<QQuickItem*>(led.create());
+        obj = led.create();
+        item = qobject_cast<QQuickItem*>(obj);
         item->setX(draw.x() + draw.width() - size / 2);
         item->setY(draw.y() + ((draw.height() - size /2) / 4 * i) - size/4);
-        createQmlObject(ii, i, item, size);
+        createQmlObject(ii, i, item, obj, size);
       }
     break;
     }
@@ -136,12 +141,12 @@ void ALCSymulationWidget::freeQmlObjects() {
     case 0:
     case 2:
       for (register int i = 0; i < 8; ++i)
-        delete m_items[ii][i];
+        delete m_objs[ii][i];
       break;
     case 1:
     case 3:
       for (register int i = 0; i < 4; ++i)
-        delete m_items[ii][i];
+        delete m_objs[ii][i];
       break;
     }
 }
@@ -174,8 +179,9 @@ void ALCSymulationWidget::resetQmlObjects() {
     }
 }
 
-void ALCSymulationWidget::createQmlObject(int ii, int i, QQuickItem *item, int size) {
+void ALCSymulationWidget::createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size) {
   m_items[ii][i] = item;
+  m_objs[ii][i] = obj;
   item->setAntialiasing(false);
   item->setHeight(size);
   item->setSmooth(false);

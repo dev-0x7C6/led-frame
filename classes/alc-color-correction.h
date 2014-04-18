@@ -46,6 +46,7 @@ protected:
 
 public:
   explicit ALCColorCorrection();
+  ~ALCColorCorrection();
 
   void setColorFormat(Format format);
   void setBrightness(double value);

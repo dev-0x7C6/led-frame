@@ -109,10 +109,15 @@ void ALCDeviceWidget::deviceDisconnected(ALCDeviceThread *thread) {
 
 void ALCDeviceWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *thread) {
   QTreeWidgetItem *child = new QTreeWidgetItem(item);
-  QWidget *workspace = new QWidget(0);
-  QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
   QPalette p = palette();
   p.setColor(QPalette::Background, QColor(226, 237, 253) );
+  QWidget *color = new QWidget(0);
+  color->setPalette(p);
+  color->setBackgroundRole(QPalette::Background);
+  color->setAutoFillBackground(true);
+
+  QWidget *workspace = new QWidget(0);
+  QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
   workspace->setPalette(p);
   workspace->setBackgroundRole(QPalette::Background);
   workspace->setLayout(layout);
@@ -153,6 +158,7 @@ void ALCDeviceWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *t
   layout->addWidget(linkEmitter);
   layout->addWidget(linkLedStrip);
   ui->tree->setItemWidget(child, 1, workspace);
+  ui->tree->setItemWidget(child, 0, color);
 }
 
 void ALCDeviceWidget::populate() {
@@ -206,11 +212,12 @@ void ALCDeviceWidget::setEmitter(ALCDeviceThread *device, ALCEmitter *emitter) {
 
 void ALCDeviceWidget::configureEmitter() {
   DeviceLinkButton *link = dynamic_cast < DeviceLinkButton*>( sender());
-  if (link->deviceThread()) {
+  ALCEmitter *emitter;
+  if (link->deviceThread())
+    emitter = link->deviceThread()->connectedEmitter(); else
+    emitter = m_symulation->connectedEmitter();
 
-    ALCEmitter *emitter = link->deviceThread()->connectedEmitter();
-    if (emitter)
-      emitter->configure(); else
-      QMessageBox::information(this, "Information", "Emitter is not defined.", QMessageBox::Ok);
-  }
+  if (emitter)
+    emitter->configure(); else
+    QMessageBox::information(this, "Information", "Emitter is not defined.", QMessageBox::Ok);
 }

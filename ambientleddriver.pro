@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui widgets serialport opengl qml quick
+QT += core gui widgets serialport opengl qml quick x11extras
 
 QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native -mfpmath=sse -Ofast -march=native -funroll-loops
 QMAKE_CXXFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb

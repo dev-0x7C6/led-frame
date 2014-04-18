@@ -32,8 +32,10 @@ ALCImageEmitter::ALCImageEmitter(QObject *parent) :
   connect(m_timer, &QTimer::timeout, this, &ALCImageEmitter::pushState);
   m_timer->setInterval(20);
   m_timer->start();
+}
 
-
+ALCImageEmitter::ALCImageEmitter() {
+  delete m_timer;
 }
 
 QString ALCImageEmitter::file() {

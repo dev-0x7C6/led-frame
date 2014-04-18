@@ -63,6 +63,7 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
 
 ALCDeviceThread::~ALCDeviceThread() {
   delete m_samples;
+  delete m_config;
 }
 
 void ALCDeviceThread::run() {
@@ -117,6 +118,7 @@ void ALCDeviceThread::run() {
         for (register int i = size - 1; i >= 0; --i)
           push(data, ptr, format, (*colors)[i], rgbc, brightness_t * s);
       }
+      delete colors;
 
     }
 

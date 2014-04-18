@@ -32,16 +32,17 @@
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
-
   m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
   ui(new Ui::MainWindow),
-  m_screenManager(ALCEmitterManager::instance())
+  m_screenManager(ALCEmitterManager::instance()),
+  m_tray(QIcon(":/22x22/leds.png"), this)
   #ifdef Q_OS_UNIX
   ,
     m_wiimotedevEvents(new WiimotedevDeviceEvents),
     m_buttons(0)
   #endif
 {
+  qDebug() << QSystemTrayIcon::isSystemTrayAvailable();
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
 
