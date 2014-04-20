@@ -56,12 +56,12 @@ void ALCEmitter::done() {
 
 void ALCEmitter::setState(ALCColorSamples &samples) {
   QMutexLocker locker(&m_mutex);
-  m_samples.copy(samples);
+  m_safeSamples.copy(samples);
 }
 
 void ALCEmitter::state(ALCColorSamples &samples) {
   QMutexLocker locker(&m_mutex);
-  samples.copy(m_samples);
+  samples.copy(m_safeSamples);
 }
 
 void ALCEmitter::setTreeItem(QTreeWidgetItem *item) {

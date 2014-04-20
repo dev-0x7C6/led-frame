@@ -45,7 +45,7 @@ public:
 
 private:
   QString m_emitterName;
-  ALCColorSamples m_samples;
+  ALCColorSamples m_safeSamples;
   QTreeWidgetItem *m_treeItem;
 
 protected:

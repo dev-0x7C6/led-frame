@@ -1,5 +1,3 @@
-#ifndef ALCSETTINGS_H
-#define ALCSETTINGS_H
 /**********************************************************************************
  * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
  * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
@@ -18,6 +16,8 @@
  * You should have received a copy of the GNU Lesser General Public               *
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
+#ifndef ALCSETTINGS_H
+#define ALCSETTINGS_H
 
 #include <QObject>
 

@@ -40,7 +40,6 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
   :QThread(parent),
     m_device(device),
     m_emitter(0),
-    m_samples(new ALCColorSamples),
     m_details(details),
     m_continue(true)
 {
@@ -62,18 +61,21 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
 }
 
 ALCDeviceThread::~ALCDeviceThread() {
-  delete m_samples;
   delete m_config;
 }
 
 void ALCDeviceThread::run() {
+//  m_device->setFlowControl(QSerialPort::SoftwareControl);
+//  m_device->setParity(QSerialPort::NoParity);
+//  m_device->setDataBits(QSerialPort::Data8);
+//  m_device->setStopBits(QSerialPort::TwoStop);
   unsigned char data[2048];
   memset((char*)data, 0, sizeof(data));
   QElapsedTimer timer;
   QElapsedTimer counter;
 
   int fps = 0;
-  int framerateLimit = 90;
+  int framerateLimit = 30;
   double latency[2];
 
   counter.start();
@@ -83,11 +85,13 @@ void ALCDeviceThread::run() {
   double brightness_t;
   double rgbc[3];
 
+ // m_device->setError(QSerialPort::NoError);
+
   quint16 ptr = 0;
   do {
     timer.start();
     if (m_emitter)
-      m_emitter->state(*m_samples);
+      m_emitter->state(m_samples);
     brightness_t = brightness(true);
     rgbc[Red] = redCorrection(true);
     rgbc[Green] = greenCorrection(true);
@@ -106,7 +110,7 @@ void ALCDeviceThread::run() {
 
     for (register int ii = 0; ii < strips.count(); ++ii) {
       ALCLedStrip *strip = strips[ii];
-      colors = m_samples->scaled((ALCColorSamples::Position)strip->source(), strip->count());
+      colors = m_samples.scaled((ALCColorSamples::Position)strip->source(), strip->count());
       const Format format = strip->colorFormat();
       const double s = strip->brightness();
       const int size = colors->size();
@@ -119,12 +123,15 @@ void ALCDeviceThread::run() {
           push(data, ptr, format, (*colors)[i], rgbc, brightness_t * s);
       }
       delete colors;
-
     }
 
-    m_device->write((char*)data, ptr);
-    m_device->flush();
+//    int s = 0;
+//    for (register int i = 0; i < ptr; ++i)
+//      s += data[i];
+//    qDebug() << s;
 
+    m_device->write((char*)data, ptr);
+    m_device->waitForBytesWritten(100);
 
     latency[0] = timer.nsecsElapsed();
     latency[1] += latency[0];

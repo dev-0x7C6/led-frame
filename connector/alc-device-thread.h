@@ -25,6 +25,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 
 #include "classes/alc-color-correction.h"
+#include "classes/alc-color-samples.h"
 
 class ALCEmitter;
 class ALCColorSamples;
@@ -36,7 +37,7 @@ private:
   ALCStripConfiguration *m_config;
   QSerialPort *m_device;
   ALCEmitter *m_emitter;
-  ALCColorSamples *m_samples;
+  ALCColorSamples m_samples;
   QSerialPortInfo m_details;
   bool m_continue;
 

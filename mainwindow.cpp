@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_buttons(0)
   #endif
 {
+  m_tray.setVisible(true);
+  m_tray.show();
   qDebug() << QSystemTrayIcon::isSystemTrayAvailable();
   qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
   ui->setupUi(this);
