@@ -22,7 +22,7 @@
 #include <QTimer>
 #include <QTime>
 
-ALCALCEmitter::ALCALCEmitter() :
+ALCColorEmitter::ALCColorEmitter() :
   QObject(),
   ALCEmitter(),
   m_color(Qt::white),
@@ -31,18 +31,18 @@ ALCALCEmitter::ALCALCEmitter() :
   srand(QTime::currentTime().msecsSinceStartOfDay());
   m_type = EMITTER_PLAIN_COLOR;
 
-  connect(m_timer, &QTimer::timeout, this, &ALCALCEmitter::pushState);
+  connect(m_timer, &QTimer::timeout, this, &ALCColorEmitter::pushState);
   m_timer->setInterval(1000/15);
   m_timer->start();
 }
 
-ALCALCEmitter::~ALCALCEmitter() {}
+ALCColorEmitter::~ALCColorEmitter() {}
 
-void ALCALCEmitter::setColor(QColor color) {
+void ALCColorEmitter::setColor(QColor color) {
   m_color = color;
 }
 
-QColor ALCALCEmitter::color() {
+QColor ALCColorEmitter::color() {
   return m_color;
 }
 
@@ -52,7 +52,7 @@ double max(double value) {
   return value;
 }
 
-void ALCALCEmitter::pushState() {
+void ALCColorEmitter::pushState() {
   QVector < int> samples(SAMPLE_RESOLUTION);
 
   int rgb = qRgb(max(m_color.red() * m_brightness),
@@ -73,13 +73,13 @@ void ALCALCEmitter::pushState() {
 
 #include <QColorDialog>
 
-QColor ALCALCEmitter::open() {
+QColor ALCColorEmitter::open() {
   QColor color = QColorDialog::getColor(m_color);
   if (color.isValid())
     return (m_color = color); else
     return (m_color);
 }
 
-bool ALCALCEmitter::configure() {
+bool ALCColorEmitter::configure() {
   return open().isValid();
 }

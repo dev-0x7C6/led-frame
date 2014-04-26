@@ -22,6 +22,7 @@
 
 #include "emitters/alc-emitter.h"
 #include "classes/alc-color-samples.h"
+#include "connector/alc-receiver.h"
 
 
 #include <QWidget>
@@ -32,11 +33,10 @@
 class QQuickView;
 class QQuickItem;
 
-class ALCSymulationWidget :public QWidget {
+class ALCSymulationWidget :public QWidget, public ALCReceiver {
   Q_OBJECT
 private:
   ALCColorSamples m_samples;
-  ALCEmitter *m_emitter;
   QQuickItem *m_root;
 
   QObject *m_objs[4][8];
@@ -50,9 +50,6 @@ public:
 
   void onShow();
 
-  ALCEmitter *connectedEmitter() const;
-  void connectEmitter(ALCEmitter *emitter);
-
   void createQmlMonitor();
   void freeQmlMonitor();
   void createQmlObjects(int size = 300);
@@ -61,10 +58,10 @@ public:
 
 private:
   void createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size);
+  QString name();
 
 protected:
   void timerEvent(QTimerEvent *);
-  void showEvent(QShowEvent *);
 };
 
 #endif // AMBIENTLIGHTSYMULATION_H

@@ -27,7 +27,7 @@
 
 class QTimer;
 
-class ALCALCEmitter: public QObject, public ALCEmitter {
+class ALCColorEmitter: public QObject, public ALCEmitter {
   Q_OBJECT
 private:
   QColor m_color;
@@ -35,8 +35,8 @@ private:
   ALCColorSamples m_samples;
 
 public:
-  explicit ALCALCEmitter();
-  virtual ~ALCALCEmitter();
+  explicit ALCColorEmitter();
+  virtual ~ALCColorEmitter();
 
   void setColor(QColor);
   QColor color();

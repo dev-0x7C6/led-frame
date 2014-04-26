@@ -121,7 +121,7 @@ void ALCScreenWidget::configure() {
 #include <QPushButton>
 
 //void ALCScreenWidget::insertPlainColorItem(ALCEmitter *ptr) {
-//  ALCALCEmitter *emitter = dynamic_cast < ALCALCEmitter*> ( ptr);
+//  ALCColorEmitter *emitter = dynamic_cast < ALCColorEmitter*> ( ptr);
 //  QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
 //  item->setText(0, emitter->emitterName());
 //  emitter->setTreeItem(item);

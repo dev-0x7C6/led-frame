@@ -25,7 +25,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    connector/alc-device-manager.cpp \
     connector/alc-device-thread.cpp \
     classes/alc-settings.cpp \
     classes/alc-color-correction.cpp \
@@ -45,10 +44,11 @@ SOURCES += main.cpp\
     widgets/alc-device-widget.cpp \
     widgets/alc-emitter-widget.cpp \
     widgets/alc-screen-widget.cpp \
-    classes/alc-strip-configuration.cpp
+    classes/alc-strip-configuration.cpp \
+    connector/alc-receiver.cpp \
+    managers/alc-device-manager.cpp
 
 HEADERS += mainwindow.h \
-    connector/alc-device-manager.h \
     connector/alc-device-thread.h \
     classes/alc-settings.h \
     classes/alc-color-correction.h \
@@ -68,7 +68,9 @@ HEADERS += mainwindow.h \
     widgets/alc-device-widget.h \
     widgets/alc-emitter-widget.h \
     widgets/alc-screen-widget.h \
-    classes/alc-strip-configuration.h
+    classes/alc-strip-configuration.h \
+    connector/alc-receiver.h \
+    managers/alc-device-manager.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

@@ -17,31 +17,54 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-
 #include "alc-device-widget.h"
 #include "ui_alc-device-widget.h"
 
+#include "classes/alc-settings.h"
+#include "managers/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
-#include "managers/alc-emitter-manager.h"
-#include "connector/alc-device-manager.h"
 #include "emitters/alc-emitter.h"
+#include "emitters/alc-emitter.h"
+#include "managers/alc-emitter-manager.h"
+#include "widgets/alc-symulation-widget.h"
 
 #include <QCommandLinkButton>
+#include <QMessageBox>
+#include <QSettings>
 
 ALCDeviceWidget::ALCDeviceWidget(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::ALCDeviceWidget),
-  m_manager(ALCDeviceManager::instance())
+  m_manager(ALCDeviceManager::instance()),
+  m_settings(ALCSettings::instance()->settings())
 {
   ui->setupUi(this);
   connect(m_manager, &ALCDeviceManager::deviceConnected, this, &ALCDeviceWidget::deviceConnected, Qt::DirectConnection);
   connect(m_manager, &ALCDeviceManager::deviceDisconnected, this, &ALCDeviceWidget::deviceDisconnected, Qt::DirectConnection);
 
-  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, this, &ALCDeviceWidget::populate);
+  connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, this, &ALCDeviceWidget::reconfigure);
 }
 
-ALCDeviceWidget::~ALCDeviceWidget()
-{
+
+ALCDeviceWidget::~ALCDeviceWidget() {
+  m_settings->beginGroup("defaults");
+
+  ALCReceiver *receiver;
+  ALCEmitter *emitter;
+
+  for (register int i = 0; i < m_devices.count(); ++i) {
+    receiver = m_devices[i]->receiver();
+    if (!receiver)
+      continue;
+
+    emitter = receiver->connectedEmitter();
+
+    if (emitter)
+      m_settings->setValue(receiver->name(), emitter->emitterName()); else
+      m_settings->setValue(receiver->name(), QString());
+
+  }
+  m_settings->endGroup();
   delete ui;
 }
 
@@ -62,26 +85,22 @@ void ComboBoxItem::changeItem(int index)
 void ALCDeviceTreeWidget::currentIndexChanged(int idx) {
   Q_UNUSED(idx)
   ComboBoxItem *cmb = dynamic_cast < ComboBoxItem*> ( sender());
-  emit setEmitter(m_device, reinterpret_cast< ALCEmitter*> (qvariant_cast < void*> (cmb->currentData())));
+  emit setEmitter(m_receiver, reinterpret_cast< ALCEmitter*> (qvariant_cast < void*> (cmb->currentData())));
 }
-
-
-#include "widgets/alc-symulation-widget.h"
 
 void ALCDeviceWidget::addSymulation(ALCSymulationWidget *symulation) {
   m_symulation = symulation;
 
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, 0);
+  item->setReceiver(m_symulation);
   connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDeviceWidget::setEmitter);
   item->setText(0, "Symulation");
   item->setIcon(0, QIcon(":/22x22/leds.png"));
   addWorkspace(item, 0);
   m_devices << item;
   ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
-  populate();
+  populate(m_settings->value("symulation").toString());
 }
-
-
 
 void ALCDeviceWidget::deviceConnected(ALCDeviceThread *thread) {
   ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, thread);
@@ -94,12 +113,13 @@ void ALCDeviceWidget::deviceConnected(ALCDeviceThread *thread) {
   ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
   m_devices << item;
 
-  populate();
+
+  populate(m_settings->value(thread->details().systemLocation()).toString());
 }
 
 void ALCDeviceWidget::deviceDisconnected(ALCDeviceThread *thread) {
   for (register int i = 0; i < m_devices.count(); ++i) {
-    if (thread == m_devices[i]->device()) {
+    if (thread == dynamic_cast< ALCDeviceThread *> (m_devices[i]->receiver())) {
       delete m_devices[i];
       m_devices.removeAt(i);
       return;
@@ -161,7 +181,7 @@ void ALCDeviceWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *t
   ui->tree->setItemWidget(child, 0, color);
 }
 
-void ALCDeviceWidget::populate() {
+void ALCDeviceWidget::populate(QString use) {
   const QString prefix = "Emitter: ";
   for (register int i = 0; i < m_devices.count(); ++i) {
     ui->tree->removeItemWidget(m_devices[i], 1);
@@ -172,6 +192,8 @@ void ALCDeviceWidget::populate() {
     QList < ALCEmitter*> emitters = ALCEmitterManager::instance()->allEmitters();
     QListIterator < ALCEmitter*> ii(emitters);
     ALCEmitter *emitter;
+    ALCEmitter *defaultEmitter = 0;
+
     while (ii.hasNext()) {
       switch ((emitter = ii.next())->type()) {
       case ALCEmitter::EMITTER_SCREEN_CAPTURE:
@@ -193,22 +215,40 @@ void ALCDeviceWidget::populate() {
       default:
         break;
       }
+
+      ALCEmitter *connected = m_devices[i]->receiver()->connectedEmitter();
+      m_settings->beginGroup("defaults");
+      use = m_settings->value(m_devices[i]->receiver()->name()).toString();
+      m_settings->endGroup();
+
+      if (connected && (connected == emitter))
+        cmb->setCurrentIndex(cmb->count() - 1);
+
+      if (!use.isEmpty() && (emitter->emitterName() == use)) {
+        defaultEmitter = emitter;
+        cmb->setCurrentIndex(cmb->count() - 1);
+      }
     }
+
+    m_devices[i]->receiver()->connectEmitter(defaultEmitter);
+
 
     connect(cmb, static_cast < void( QComboBox::*)( int)>(&QComboBox::currentIndexChanged),
             m_devices[i], &ALCDeviceTreeWidget::currentIndexChanged, Qt::DirectConnection);
 
     ui->tree->setItemWidget(m_devices[i], 1, cmb);
   }
+
 }
 
-void ALCDeviceWidget::setEmitter(ALCDeviceThread *device, ALCEmitter *emitter) {
-  if (device)
-    device->connectEmitter(emitter); else
-    m_symulation->connectEmitter(emitter);
+void ALCDeviceWidget::reconfigure() {
+  populate("");
 }
 
-#include <QMessageBox>
+void ALCDeviceWidget::setEmitter(ALCReceiver *receiver, ALCEmitter *emitter) {
+  receiver->connectEmitter(emitter);
+}
+
 
 void ALCDeviceWidget::configureEmitter() {
   DeviceLinkButton *link = dynamic_cast < DeviceLinkButton*>( sender());

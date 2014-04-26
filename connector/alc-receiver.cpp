@@ -17,56 +17,25 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#ifndef ALCEmitterManager_H
-#define ALCEmitterManager_H
+#include "connector/alc-receiver.h"
 
-#include <QObject>
+ALCReceiver::ALCReceiver() : ALCColorCorrection(), m_emitter(0) {
+}
 
-#include "emitters/alc-emitter.h"
+QString ALCReceiver::name() {
+  return QString("default");
+}
 
-class ALCSymulationWidget;
-class ALCAnimationEmitter;
-class ALCEmitter;
-class ALCImageEmitter;
-class ALCColorEmitter;
-class QSettings;
-class ALCScreenEmitter;
+void ALCReceiver::connectEmitter(ALCEmitter *emitter) {
+  QMutexLocker locker(m_mutex);
+  if (m_emitter)
+    m_emitter->done();
 
-class ALCEmitterManager : public QObject {
-  Q_OBJECT
-private:
-  QList < ALCEmitter *> m_emitters[ALCEmitter::EMITTER_END_ARRAY];
-  ALCSymulationWidget *m_symulation;
+  if ((m_emitter = emitter))
+    m_emitter->init();
+}
 
-public:
-  explicit ALCEmitterManager(QObject *parent = 0);
-  virtual ~ALCEmitterManager();
-
-  void add(ALCEmitter *, ALCEmitter::EmitterType type);
-  ALCImageEmitter *addALCImageEmitter(const QString &name);
-  ALCColorEmitter *addALCColorEmitter(const QString &name);
-  ALCAnimationEmitter *addALCAnimationEmitter(const QString &name);
-  ALCScreenEmitter *addScreenCaptureEmitter(const QString &name);
-
-  void remove(ALCEmitter *);
-
-  static ALCEmitterManager* instance() {
-    static ALCEmitterManager object;
-    return &object;
-  }
-
-  void addSymulation(ALCSymulationWidget *);
-
-  QList < ALCEmitter *> *emitters(ALCEmitter::EmitterType type);
-  QList < ALCEmitter *> allEmitters();
-
-private:
-  void readColorCorrection(QSettings*, ALCColorCorrection *);
-  void writeColorCorrection(QSettings*, ALCColorCorrection *);
-
-signals:
-  void emitterListChanged();
-
-};
-
-#endif // ALCEmitterManager_H
+ALCEmitter *ALCReceiver::connectedEmitter() {
+  QMutexLocker locker(m_mutex);
+  return m_emitter;
+}

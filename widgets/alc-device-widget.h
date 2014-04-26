@@ -25,6 +25,8 @@
 #include <QObject>
 #include <QComboBox>
 
+#include "connector/alc-receiver.h"
+
 namespace Ui { class ALCDeviceWidget; }
 
 class ALCDeviceThread;
@@ -48,23 +50,23 @@ public slots:
 class ALCDeviceTreeWidget :public QObject, public QTreeWidgetItem {
   Q_OBJECT
 private:
-  ALCDeviceThread *m_device;
+  ALCReceiver *m_receiver;
 
 public:
-  ALCDeviceTreeWidget(QTreeWidget *tree, ALCDeviceThread *device)
+  ALCDeviceTreeWidget(QTreeWidget *tree, ALCReceiver *receiver)
     :QObject(0),
      QTreeWidgetItem(tree)
   {
-    m_device = device;
+    m_receiver = receiver;
   }
 
-  ALCDeviceThread * device() { return m_device; }
-  void setDevice(ALCDeviceThread *device) { m_device = device; }
+  ALCReceiver *receiver() { return m_receiver; }
+  void setReceiver(ALCReceiver *receiver) { m_receiver = receiver; }
   void currentIndexChanged(int);
 
 signals:
   void setCustomEmitter(ALCDeviceThread*, int);
-  void setEmitter(ALCDeviceThread*, ALCEmitter*);
+  void setEmitter(ALCReceiver*, ALCEmitter*);
 };
 
 #include <QCommandLinkButton>
@@ -85,6 +87,7 @@ public:
 
 
 class ALCSymulationWidget;
+class QSettings;
 
 class ALCDeviceWidget : public QMainWindow {
   Q_OBJECT
@@ -93,6 +96,7 @@ private:
   QList < ALCDeviceTreeWidget*> m_devices;
   ALCDeviceManager *m_manager;
   ALCSymulationWidget *m_symulation;
+  QSettings *m_settings;
 
 public:
   explicit ALCDeviceWidget(QWidget *parent = 0);
@@ -104,8 +108,9 @@ private:
   void deviceConnected(ALCDeviceThread *);
   void deviceDisconnected(ALCDeviceThread *);
   void addWorkspace(ALCDeviceTreeWidget *, ALCDeviceThread *);
-  void populate();
-  void setEmitter(ALCDeviceThread *device, ALCEmitter *emitter);
+  void populate(QString use);
+  void reconfigure();
+  void setEmitter(ALCReceiver *device, ALCEmitter *emitter);
 
   void configureEmitter();
 

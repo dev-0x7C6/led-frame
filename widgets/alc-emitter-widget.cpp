@@ -58,7 +58,7 @@ ALCEmitterWidget::~ALCEmitterWidget() {
 void ALCEmitterWidget::addPlainColorItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
   if (!input.isEmpty())
-    ALCEmitterManager::instance()->addALCALCEmitter(input);
+    ALCEmitterManager::instance()->addALCColorEmitter(input);
 }
 
 void ALCEmitterWidget::addAnimationItem() {
@@ -102,7 +102,7 @@ void ALCEmitterWidget::setup() {
 }
 
 void ALCEmitterWidget::insertPlainColorItem(ALCEmitter *ptr) {
-  ALCALCEmitter *emitter = dynamic_cast < ALCALCEmitter*> ( ptr);
+  ALCColorEmitter *emitter = dynamic_cast < ALCColorEmitter*> ( ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);

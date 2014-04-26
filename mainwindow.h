@@ -24,7 +24,7 @@
 #include <QSettings>
 #include <QSystemTrayIcon>
 
-#include "connector/alc-device-manager.h"
+#include "managers/alc-device-manager.h"
 #include "emitters/alc-animation-emitter.h"
 #include "emitters/alc-image-emitter.h"
 #include "emitters/alc-screen-emitter.h"

@@ -21,7 +21,7 @@
 
 #include "classes/alc-color-correction.h"
 #include "classes/alc-settings.h"
-#include "connector/alc-device-manager.h"
+#include "managers/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
 #include "emitters/alc-animation-emitter.h"
 #include "emitters/alc-color-emitter.h"
@@ -107,7 +107,7 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     QStringList list = settings->childGroups();
     for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
-      ALCALCEmitter *emitter = addALCALCEmitter(settings->value("name", QString()).toString());
+      ALCColorEmitter *emitter = addALCColorEmitter(settings->value("name", QString()).toString());
       int r = settings->value("red", 0).toInt();
       int g = settings->value("green", 0).toInt();
       int b = settings->value("blue", 0).toInt();
@@ -117,7 +117,7 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     settings->endGroup();
   } else {
     for (register int i = 0; i < 3; ++i)
-      addALCALCEmitter("Plain color #" + QString::number(i+1));
+      addALCColorEmitter("Plain color #" + QString::number(i+1));
   }
 
   if (settings->childGroups().contains("images")) {
@@ -162,7 +162,7 @@ ALCEmitterManager::~ALCEmitterManager() {
 
   ALCAnimationEmitter *animation;
   ALCImageEmitter *image;
-  ALCALCEmitter *plain;
+  ALCColorEmitter *plain;
   ALCScreenEmitter *screen;
 
   for (register int i = 0; i < all.count(); ++i) {
@@ -191,7 +191,7 @@ ALCEmitterManager::~ALCEmitterManager() {
       settings->endGroup();
       break;
     case ALCEmitter::EMITTER_PLAIN_COLOR:
-      plain = dynamic_cast < ALCALCEmitter*> ( all[i]);
+      plain = dynamic_cast < ALCColorEmitter*> ( all[i]);
       settings->beginGroup("colors");
       settings->beginGroup(QString::number(i));
       settings->setValue("name", plain->emitterName());
@@ -233,8 +233,8 @@ ALCImageEmitter *ALCEmitterManager::addALCImageEmitter(const QString &name) {
   return emitter;
 }
 
-ALCALCEmitter *ALCEmitterManager::addALCALCEmitter(const QString &name) {
-  ALCALCEmitter *emitter = new ALCALCEmitter();
+ALCColorEmitter *ALCEmitterManager::addALCColorEmitter(const QString &name) {
+  ALCColorEmitter *emitter = new ALCColorEmitter();
   emitter->setEmitterName(name);
   add(emitter, ALCEmitter::EMITTER_PLAIN_COLOR);
   return emitter;

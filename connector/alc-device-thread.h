@@ -24,19 +24,18 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
-#include "classes/alc-color-correction.h"
 #include "classes/alc-color-samples.h"
+#include "connector/alc-receiver.h"
 
 class ALCEmitter;
 class ALCColorSamples;
 class ALCStripConfiguration;
 
-class ALCDeviceThread : public QThread, public ALCColorCorrection {
+class ALCDeviceThread : public QThread, public ALCReceiver {
   Q_OBJECT
 private:
   ALCStripConfiguration *m_config;
   QSerialPort *m_device;
-  ALCEmitter *m_emitter;
   ALCColorSamples m_samples;
   QSerialPortInfo m_details;
   bool m_continue;
@@ -44,6 +43,8 @@ private:
 public:
   explicit ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
   virtual ~ALCDeviceThread();
+
+  QString name();
 
   QSerialPortInfo details();
   void setContinueValue(bool value);
@@ -54,10 +55,6 @@ private:
 
 protected:
   void run();
-
-public slots:
-  void connectEmitter(ALCEmitter *emitter);
-  ALCEmitter *connectedEmitter();
 };
 
 #endif // ACLDEVICETHREAD_H

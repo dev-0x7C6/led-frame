@@ -38,8 +38,8 @@ unsigned char max(int value) {
 
 ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent)
   :QThread(parent),
+    ALCReceiver(),
     m_device(device),
-    m_emitter(0),
     m_details(details),
     m_continue(true)
 {
@@ -62,6 +62,11 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
 
 ALCDeviceThread::~ALCDeviceThread() {
   delete m_config;
+}
+
+QString ALCDeviceThread::name() {
+  QMutexLocker locker(m_mutex);
+  return m_details.systemLocation();
 }
 
 void ALCDeviceThread::run() {
@@ -159,20 +164,6 @@ void ALCDeviceThread::run() {
 
   if (m_emitter)
     m_emitter->done();
-}
-
-void ALCDeviceThread::connectEmitter(ALCEmitter *emitter) {
-  QMutexLocker locker(m_mutex);
-  if (m_emitter)
-    m_emitter->done();
-
-  if ((m_emitter = emitter))
-    m_emitter->init();
-}
-
-ALCEmitter *ALCDeviceThread::connectedEmitter() {
-  QMutexLocker locker(m_mutex);
-  return m_emitter;
 }
 
 

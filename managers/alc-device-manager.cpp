@@ -17,7 +17,7 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "connector/alc-device-manager.h"
+#include "managers/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
 
 

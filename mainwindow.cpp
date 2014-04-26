@@ -26,7 +26,7 @@
 #include <QScreen>
 
 #include "dialogs/alc-about-dialog.h"
-#include "connector/alc-device-manager.h"
+#include "managers/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
 #include "emitters/alc-color-emitter.h"
 

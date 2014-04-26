@@ -36,7 +36,7 @@
 
 ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
   QWidget(parent),
-  m_emitter(0),
+  ALCReceiver(),
   m_view(new QQuickView())
 {
   QPalette p = palette();
@@ -44,6 +44,19 @@ ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
   setPalette(p);
   setAutoFillBackground(true);
   startTimer(1000/24);
+
+  QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
+  QWidget *container = QWidget::createWindowContainer(m_view, this);
+  container->setMinimumSize(500, 380);
+  container->setMaximumSize(500, 380);
+  container->setFocusPolicy(Qt::TabFocus);
+  layout->addWidget(container);
+  setLayout(layout);
+
+  m_view->setSource(QUrl("qrc:/qml/Scene.qml"));
+
+  createQmlMonitor();
+  createQmlObjects();
 }
 
 ALCSymulationWidget::~ALCSymulationWidget() {
@@ -53,20 +66,6 @@ ALCSymulationWidget::~ALCSymulationWidget() {
   freeQmlMonitor();
   freeQmlObjects();
   delete m_view;
-}
-
-ALCEmitter *ALCSymulationWidget::connectedEmitter() const {
-  return m_emitter;
-}
-
-
-void ALCSymulationWidget::connectEmitter(ALCEmitter *emitter) {
-  if (m_emitter)
-    m_emitter->done();
-  m_emitter = emitter;
-  if (m_emitter)
-    m_emitter->init(); else
-    resetQmlObjects();
 }
 
 void ALCSymulationWidget::createQmlMonitor() {
@@ -190,6 +189,10 @@ void ALCSymulationWidget::createQmlObject(int ii, int i, QQuickItem *item, QObje
   item->setParentItem(m_root);
 }
 
+QString ALCSymulationWidget::name() {
+  return QString("symulation");
+}
+
 void ALCSymulationWidget::timerEvent(QTimerEvent *) {
   if (m_emitter) {
     m_emitter->state(m_samples);
@@ -228,17 +231,3 @@ void ALCSymulationWidget::timerEvent(QTimerEvent *) {
   }
 }
 
-void ALCSymulationWidget::showEvent(QShowEvent *) {
-  QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
-  QWidget *container = QWidget::createWindowContainer(m_view, this);
-  container->setMinimumSize(500, 380);
-  container->setMaximumSize(500, 380);
-  container->setFocusPolicy(Qt::TabFocus);
-  layout->addWidget(container);
-  setLayout(layout);
-
-  m_view->setSource(QUrl("qrc:/qml/Scene.qml"));
-
-  createQmlMonitor();
-  createQmlObjects();
-}
