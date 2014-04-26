@@ -25,20 +25,16 @@
 ALCColorCorrectionWidget::ALCColorCorrectionWidget(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::ALCColorCorrectionWidget),
-  m_correction(ALCColorCorrection::instance())
-{
+  m_correction(ALCColorCorrection::instance()) {
   ui->setupUi(this);
-
   connect(ui->brightnessSlider, &QSlider::valueChanged, this, &ALCColorCorrectionWidget::brightnessSliderChanged);
   connect(ui->blueSlider, &QSlider::valueChanged, this, &ALCColorCorrectionWidget::blueSliderChanged);
   connect(ui->greenSlider, &QSlider::valueChanged, this, &ALCColorCorrectionWidget::greenSliderChanged);
   connect(ui->redSlider, &QSlider::valueChanged, this, &ALCColorCorrectionWidget::redSliderChanged);
-
   connect(ui->restoreBrightness, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultBrightness);
   connect(ui->restoreRed, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultRed);
   connect(ui->restoreGreen, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultGreen);
   connect(ui->restoreBlue, &QPushButton::clicked, this, &ALCColorCorrectionWidget::setDefaultBlue);
-
   reload();
 }
 
@@ -56,7 +52,6 @@ void ALCColorCorrectionWidget::restore() {
   ui->blueSlider->setValue(100.0d);
   ui->greenSlider->setValue(100.0d);
   ui->redSlider->setValue(100.0d);
-
   m_correction->setBrightness(1);
   m_correction->setRedCorrection(1);
   m_correction->setGreenCorrection(1);

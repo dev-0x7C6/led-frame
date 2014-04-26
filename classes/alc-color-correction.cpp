@@ -64,29 +64,29 @@ Format ALCColorCorrection::colorFormat() {
 double ALCColorCorrection::brightness(bool global) {
   QMutexLocker locker(m_mutex);
   return (global) ?
-    m_brightness * ALCColorCorrection::instance()->brightness() :
-    m_brightness;
+         m_brightness * ALCColorCorrection::instance()->brightness() :
+         m_brightness;
 }
 
 double ALCColorCorrection::blueCorrection(bool global) {
   QMutexLocker locker(m_mutex);
   return (global) ?
-    m_colorCorrection[Blue] * ALCColorCorrection::instance()->blueCorrection() :
-    m_colorCorrection[Blue];
+         m_colorCorrection[Blue] * ALCColorCorrection::instance()->blueCorrection() :
+         m_colorCorrection[Blue];
 }
 
 double ALCColorCorrection::greenCorrection(bool global) {
   QMutexLocker locker(m_mutex);
   return (global) ?
-    m_colorCorrection[Green] * ALCColorCorrection::instance()->greenCorrection() :
-    m_colorCorrection[Green];
+         m_colorCorrection[Green] * ALCColorCorrection::instance()->greenCorrection() :
+         m_colorCorrection[Green];
 }
 
 double ALCColorCorrection::redCorrection(bool global) {
   QMutexLocker locker(m_mutex);
   return (global) ?
-    m_colorCorrection[Red] * ALCColorCorrection::instance()->redCorrection() :
-    m_colorCorrection[Red];
+         m_colorCorrection[Red] * ALCColorCorrection::instance()->redCorrection() :
+         m_colorCorrection[Red];
 }
 
 ALCColorCorrection *ALCColorCorrection::instance() {

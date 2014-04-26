@@ -22,7 +22,9 @@
 
 #include <QWidget>
 
-namespace Ui { class ALCColorCorrectionWidget; }
+namespace Ui {
+class ALCColorCorrectionWidget;
+}
 
 class ALCColorCorrection;
 

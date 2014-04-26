@@ -35,7 +35,9 @@
 #include "wiimotedev/deviceevents.h"
 #endif
 
-namespace Ui { class MainWindow; }
+namespace Ui {
+class MainWindow;
+}
 
 class ALCDeviceThread;
 class ALCScreenEmitter;

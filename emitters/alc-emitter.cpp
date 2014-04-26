@@ -22,9 +22,8 @@
 #include <QTreeWidgetItem>
 
 ALCEmitter::ALCEmitter()
-  :m_treeItem(0),
-   m_type(EMITTER_NOT_DEFINED)
-{
+  : m_treeItem(0),
+    m_type(EMITTER_NOT_DEFINED) {
   m_connectedCount = 0;
 }
 
@@ -40,12 +39,14 @@ QString ALCEmitter::emitterName() const {
   return m_emitterName;
 }
 
-ALCEmitter::EmitterType ALCEmitter::type() const { return m_type; }
+ALCEmitter::EmitterType ALCEmitter::type() const {
+  return m_type;
+}
 
 void ALCEmitter::init() {
   QMutexLocker locker(&m_mutex);
   m_connectedCount++;
- // qDebug() << this << " device connected, count: " << m_connectedCount;
+// qDebug() << this << " device connected, count: " << m_connectedCount;
 }
 
 void ALCEmitter::done() {
@@ -81,7 +82,8 @@ bool ALCEmitter::configure() {
 
 bool ALCEmitter::rename() {
   QString text = QInputDialog::getText(0, "Rename", "Set name:", QLineEdit::Normal, emitterName());
-  if (!text.isEmpty()) {
+
+  if(!text.isEmpty()) {
     setEmitterName(text);
   }
 
@@ -93,8 +95,8 @@ bool ALCEmitter::rename() {
 #include "managers/alc-emitter-manager.h"
 
 bool ALCEmitter::remove() {
-  if (QMessageBox::question(0, "Question", "Do you realy want to delete this emitter.",
-                            QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
+  if(QMessageBox::question(0, "Question", "Do you realy want to delete this emitter.",
+                           QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
     return false;
 
   ALCEmitterManager::instance()->remove(this);

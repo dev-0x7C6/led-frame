@@ -38,13 +38,10 @@ ALCEmitterWidget::ALCEmitterWidget(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::ALCEmitterWidget) {
   QPalette p = palette();
-  p.setColor( QPalette::AlternateBase, QColor(226, 237, 253) );
+  p.setColor(QPalette::AlternateBase, QColor(226, 237, 253));
   setPalette(p);
-
   ui->setupUi(this);
   setup();
-
-
   ui->tree->setColumnCount(3);
   ui->tree->header()->setStretchLastSection(false);
   ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
@@ -57,19 +54,22 @@ ALCEmitterWidget::~ALCEmitterWidget() {
 
 void ALCEmitterWidget::addPlainColorItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
-  if (!input.isEmpty())
+
+  if(!input.isEmpty())
     ALCEmitterManager::instance()->addALCColorEmitter(input);
 }
 
 void ALCEmitterWidget::addAnimationItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
-  if (!input.isEmpty())
+
+  if(!input.isEmpty())
     ALCEmitterManager::instance()->addALCAnimationEmitter(input);
 }
 
 void ALCEmitterWidget::addImageItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
-  if (!input.isEmpty())
+
+  if(!input.isEmpty())
     ALCEmitterManager::instance()->addALCImageEmitter(input);
 }
 
@@ -81,141 +81,121 @@ void ALCEmitterWidget::prepare() {
 void ALCEmitterWidget::setup() {
   ui->tree->clear();
   QListIterator < ALCEmitter*> ii(ALCEmitterManager::instance()->allEmitters());
-
   ALCEmitter *emitter;
-  while (ii.hasNext()) {
 
-    switch ((emitter = ii.next())->type()) {
-    case ALCEmitter::EMITTER_PLAIN_COLOR:
-      insertPlainColorItem(emitter);
-      break;
-    case ALCEmitter::EMITTER_ANIMATION:
-      insertAnimationItem(emitter);
-      break;
-    case ALCEmitter::EMITTER_IMAGE:
-      insertImageItem(emitter);
-      break;
-    default:
-      break;
+  while(ii.hasNext()) {
+    switch((emitter = ii.next())->type()) {
+      case ALCEmitter::EMITTER_PLAIN_COLOR:
+        insertPlainColorItem(emitter);
+        break;
+
+      case ALCEmitter::EMITTER_ANIMATION:
+        insertAnimationItem(emitter);
+        break;
+
+      case ALCEmitter::EMITTER_IMAGE:
+        insertImageItem(emitter);
+        break;
+
+      default:
+        break;
     }
   }
 }
 
 void ALCEmitterWidget::insertPlainColorItem(ALCEmitter *ptr) {
-  ALCColorEmitter *emitter = dynamic_cast < ALCColorEmitter*> ( ptr);
+  ALCColorEmitter *emitter = dynamic_cast < ALCColorEmitter*>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/color.png"));
-
-
   QWidget *workspace = new QWidget();
   QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
   workspace->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   workspace->setLayout(layout);
   layout->setContentsMargins(0, 0, 0, 0);
   layout->setSpacing(0);
-
   insertDefaultButtons(emitter, layout);
-
-
   ui->tree->setItemWidget(item, 2, workspace);
   prepareColorItem(item, emitter->color());
 }
 
 void ALCEmitterWidget::insertAnimationItem(ALCEmitter *ptr) {
-  ALCAnimationEmitter *emitter = dynamic_cast < ALCAnimationEmitter*> ( ptr);
+  ALCAnimationEmitter *emitter = dynamic_cast < ALCAnimationEmitter*>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
-
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/animation.png"));
-
   QWidget *workspace = new QWidget();
   QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
   workspace->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   workspace->setLayout(layout);
   layout->setContentsMargins(0, 0, 0, 0);
   layout->setSpacing(0);
-
   insertDefaultButtons(emitter, layout);
-
-
   ui->tree->setItemWidget(item, 2, workspace);
 }
 
 void ALCEmitterWidget::insertImageItem(ALCEmitter *ptr) {
-  ALCImageEmitter *emitter = dynamic_cast < ALCImageEmitter*> ( ptr);
+  ALCImageEmitter *emitter = dynamic_cast < ALCImageEmitter*>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   item->setText(1, emitter->file());
   item->setTextColor(1, Qt::darkGray);
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/from-image.png"));
-
   QWidget *workspace = new QWidget();
   QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
   workspace->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   workspace->setLayout(layout);
   layout->setContentsMargins(0, 0, 0, 0);
   layout->setSpacing(0);
-
   insertDefaultButtons(emitter, layout);
-
-
   ui->tree->setItemWidget(item, 2, workspace);
-
 }
 
 void ALCEmitterWidget::insertDefaultButtons(ALCEmitter *emitter, QBoxLayout *layout) {
   QPushButtonEx *configure = new QPushButtonEx;
   QPushButtonEx *rename = new QPushButtonEx;
   QPushButtonEx *remove = new QPushButtonEx;
-
   configure->setIcon(QIcon(":/16x16/configure.png"));
   configure->setFlat(true);
   configure->setEmitter(emitter);
-
   rename->setIcon(QIcon(":/16x16/rename.png"));
   rename->setFlat(true);
   rename->setEmitter(emitter);
-
   remove->setIcon(QIcon(":/16x16/edit-delete.png"));
   remove->setFlat(true);
   remove->setEmitter(emitter);
-
-
   connect(configure, &QPushButtonEx::clicked, this, &ALCEmitterWidget::reconfigure);
   connect(remove, &QPushButtonEx::clicked, this, &ALCEmitterWidget::remove);
   connect(rename, &QPushButtonEx::clicked, this, &ALCEmitterWidget::rename);
-
   layout->addWidget(configure);
   layout->addWidget(rename);
   layout->addWidget(remove);
 }
 
 void ALCEmitterWidget::reconfigure() {
-  reinterpret_cast < QPushButtonEx*>( sender())->emitter()->configure();
+  reinterpret_cast < QPushButtonEx*>(sender())->emitter()->configure();
   setup();
 }
 
 void ALCEmitterWidget::rename() {
-  reinterpret_cast < QPushButtonEx*>( sender())->emitter()->rename();
+  reinterpret_cast < QPushButtonEx*>(sender())->emitter()->rename();
   setup();
 }
 
 void ALCEmitterWidget::remove() {
-  reinterpret_cast < QPushButtonEx*>( sender())->emitter()->remove();
+  reinterpret_cast < QPushButtonEx*>(sender())->emitter()->remove();
   setup();
 }
 
 void ALCEmitterWidget::prepareColorItem(QTreeWidgetItem *item, QColor color) {
   item->setTextColor(1, Qt::darkGray);
   item->setText(1, QString("  RGB (%1; %2; %3)").arg(
-                   QString::number(color.red()),
-                   QString::number(color.green()),
-                   QString::number(color.blue())));
-
+                  QString::number(color.red()),
+                  QString::number(color.green()),
+                  QString::number(color.blue())));
   QPixmap pixmap(QSize(16, 16));
   QPainter painter(&pixmap);
   painter.setBrush(color);

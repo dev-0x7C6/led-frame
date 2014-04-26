@@ -27,9 +27,7 @@
 #include "classes/alc-color-correction.h"
 #include "emitters/alc-emitter.h"
 
-
-
-class ALCReceiver :public ALCColorCorrection {
+class ALCReceiver : public ALCColorCorrection {
 protected:
   ALCEmitter *m_emitter;
 

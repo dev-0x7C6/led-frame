@@ -28,7 +28,7 @@
 
 #include "emitters/alc-emitter.h"
 
-class ALCAnimationEmitter :public QObject, public ALCEmitter {
+class ALCAnimationEmitter : public QObject, public ALCEmitter {
   Q_OBJECT
   Q_PROPERTY(QColor color READ color WRITE setColor)
 public:
@@ -42,7 +42,9 @@ private:
   QPropertyAnimation *m_animation;
   QColor m_color;
 
-  QColor color() { return m_color; }
+  QColor color() {
+    return m_color;
+  }
   void setColor(QColor value) {
     m_color = value;
   }
@@ -61,7 +63,7 @@ public:
 
 private:
   void rotatePalette();
-  void glow ();
+  void glow();
 
 protected:
   unsigned char max(int value);

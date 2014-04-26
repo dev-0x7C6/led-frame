@@ -25,7 +25,9 @@
 
 class ALCEmitter;
 
-namespace Ui { class ALCScreenWidget; }
+namespace Ui {
+class ALCScreenWidget;
+}
 
 class ALCScreenWidget : public QMainWindow {
   Q_OBJECT

@@ -20,12 +20,11 @@
 #include "alc-strip-configuration.h"
 
 ALCStripConfiguration::ALCStripConfiguration(QObject *parent) :
-  QObject(parent)
-{
+  QObject(parent) {
 }
 
 void ALCStripConfiguration::add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
-                                   int count, bool clockwise, Format color, double brightness) {
+                                int count, bool clockwise, Format color, double brightness) {
   ALCLedStrip *strip = new ALCLedStrip();
   strip->setSource(source);
   strip->setDestination(destination);
@@ -44,7 +43,7 @@ void ALCLedStrip::setClockwise(bool clockwise) {
   m_clockwise = clockwise;
 }
 
-bool ALCLedStrip::clockwise() const{
+bool ALCLedStrip::clockwise() const {
   return m_clockwise;
 }
 
@@ -76,7 +75,7 @@ void ALCLedStrip::setDestination(ALCLedStrip::Destination dest) {
   m_destination = dest;
 }
 
-ALCLedStrip::Destination ALCLedStrip::destination() const{
+ALCLedStrip::Destination ALCLedStrip::destination() const {
   return m_destination;
 }
 

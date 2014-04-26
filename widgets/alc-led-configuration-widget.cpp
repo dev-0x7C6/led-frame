@@ -22,12 +22,10 @@
 
 ALCLedConfigurationWidget::ALCLedConfigurationWidget(QWidget *parent) :
   QWidget(parent),
-  ui(new Ui::ALCLedConfigurationWidget)
-{
+  ui(new Ui::ALCLedConfigurationWidget) {
   ui->setupUi(this);
 }
 
-ALCLedConfigurationWidget::~ALCLedConfigurationWidget()
-{
+ALCLedConfigurationWidget::~ALCLedConfigurationWidget() {
   delete ui;
 }

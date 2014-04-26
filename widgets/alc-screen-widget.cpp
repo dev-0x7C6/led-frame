@@ -29,11 +29,9 @@
 ALCScreenWidget::ALCScreenWidget(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::ALCScreenWidget) {
-
   QPalette p = palette();
-  p.setColor( QPalette::AlternateBase, QColor(226, 237, 253) );
+  p.setColor(QPalette::AlternateBase, QColor(226, 237, 253));
   setPalette(p);
-
   ui->setupUi(this);
   setup();
   ui->tree->setAlternatingRowColors(true);
@@ -54,28 +52,26 @@ ALCScreenWidget::~ALCScreenWidget() {
 void ALCScreenWidget::setup() {
   ui->tree->clear();
   QListIterator < ALCEmitter*> ii(ALCEmitterManager::instance()->allEmitters());
-
   ALCEmitter *emitter;
-  while (ii.hasNext()) {
 
-    switch ((emitter = ii.next())->type()) {
-    case ALCEmitter::EMITTER_SCREEN_CAPTURE:
-      insertScreenCaptureItem(emitter);
-      break;
-    default:
-      break;
+  while(ii.hasNext()) {
+    switch((emitter = ii.next())->type()) {
+      case ALCEmitter::EMITTER_SCREEN_CAPTURE:
+        insertScreenCaptureItem(emitter);
+        break;
+
+      default:
+        break;
     }
   }
 }
 
 void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *ptr) {
-  ALCScreenEmitter *emitter = dynamic_cast < ALCScreenEmitter*> ( ptr);
+  ALCScreenEmitter *emitter = dynamic_cast < ALCScreenEmitter*>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
   item->setIcon(0, QIcon(":/22x22/screen.png"));
-
-
   QPushButtonEx *button = new QPushButtonEx();
   button->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   button->setEmitter(emitter);
@@ -83,9 +79,7 @@ void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *ptr) {
   button->setFlat(true);
   button->setToolTip(emitter->emitterName());
   connect(button, &QPushButtonEx::clicked, this, &ALCScreenWidget::configure);
-
   ui->tree->setItemWidget(item, 2, button);
-
   button = new QPushButtonEx();
   button->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   button->setEmitter(emitter);
@@ -95,7 +89,6 @@ void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *ptr) {
   button->setEnabled(false);
   connect(button, &QPushButtonEx::clicked, this, &ALCScreenWidget::configure);
   ui->tree->setItemWidget(item, 3, button);
-
 }
 
 #include "dialogs/alc-screen-configure-dialog.h"
@@ -105,7 +98,7 @@ void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *ptr) {
 void ALCScreenWidget::configure() {
   ALCScreenConfigureDialog dialog;
   dialog.setWindowTitle(reinterpret_cast< QPushButtonEx*>(sender())->toolTip());
-  dialog.setEmitter(dynamic_cast< ALCScreenEmitter*> (reinterpret_cast< QPushButtonEx*>(sender())->emitter()));
+  dialog.setEmitter(dynamic_cast< ALCScreenEmitter*>(reinterpret_cast< QPushButtonEx*>(sender())->emitter()));
   dialog.exec();
 }
 

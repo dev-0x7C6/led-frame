@@ -34,7 +34,6 @@ public:
 
   QList < ALCStripConfiguration*> configurations();
 
-
   static ALCLedStripManager* instance() {
     static ALCLedStripManager object;
     return &object;

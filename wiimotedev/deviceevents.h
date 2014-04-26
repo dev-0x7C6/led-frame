@@ -27,96 +27,91 @@
 #include <QDBusMetaType>
 
 #ifndef WIIMOTEDEV_MARSHALL
-  #include <QDBusArgument>
+#include <QDBusArgument>
 #endif
 
 #ifndef WIIMOTEDEV_META_TYPES
 #define WIIMOTEDEV_META_TYPES
 
-  Q_DECLARE_METATYPE(QList < irpoint>)
-  Q_DECLARE_METATYPE(QList < accdata>)
-  Q_DECLARE_METATYPE(QList < stickdata>)
-  Q_DECLARE_METATYPE(QList < uint>)
+Q_DECLARE_METATYPE(QList < irpoint>)
+Q_DECLARE_METATYPE(QList < accdata>)
+Q_DECLARE_METATYPE(QList < stickdata>)
+Q_DECLARE_METATYPE(QList < uint>)
 
-  Q_DECLARE_METATYPE(irpoint)
-  Q_DECLARE_METATYPE(accdata)
-  Q_DECLARE_METATYPE(stickdata)
+Q_DECLARE_METATYPE(irpoint)
+Q_DECLARE_METATYPE(accdata)
+Q_DECLARE_METATYPE(stickdata)
 
 #endif
 
 #ifndef WIIMOTEDEV_MARSHALL
 #define WIIMOTEDEV_MARSHALL
 
-  QDBusArgument& operator<<(QDBusArgument& argument, const irpoint& point);
-  const QDBusArgument& operator>>(const QDBusArgument& argument, irpoint& point);
-  QDBusArgument& operator<<(QDBusArgument& argument, const accdata& acc);
-  const QDBusArgument& operator>>(const QDBusArgument& argument, accdata& acc);
-  QDBusArgument& operator<<(QDBusArgument& argument, const stickdata& stick);
-  const QDBusArgument& operator>>(const QDBusArgument& argument, stickdata& stick);
+QDBusArgument& operator<<(QDBusArgument& argument, const irpoint& point);
+const QDBusArgument& operator>>(const QDBusArgument& argument, irpoint& point);
+QDBusArgument& operator<<(QDBusArgument& argument, const accdata& acc);
+const QDBusArgument& operator>>(const QDBusArgument& argument, accdata& acc);
+QDBusArgument& operator<<(QDBusArgument& argument, const stickdata& stick);
+const QDBusArgument& operator>>(const QDBusArgument& argument, stickdata& stick);
 
 
-  inline QDBusArgument& operator<<(QDBusArgument& argument, const irpoint& point)
-  {
-    argument.beginStructure();
-    argument << point.size << point.x << point.y;
-    argument.endStructure();
-    return argument;
-  }
+inline QDBusArgument& operator<<(QDBusArgument& argument, const irpoint& point) {
+  argument.beginStructure();
+  argument << point.size << point.x << point.y;
+  argument.endStructure();
+  return argument;
+}
 
-  inline const QDBusArgument& operator>>(const QDBusArgument& argument, irpoint& point)
-  {
-    argument.beginStructure();
-    argument >> point.size >> point.x >> point.y;
-    argument.endStructure();
-    return argument;
-  }
+inline const QDBusArgument& operator>>(const QDBusArgument& argument, irpoint& point) {
+  argument.beginStructure();
+  argument >> point.size >> point.x >> point.y;
+  argument.endStructure();
+  return argument;
+}
 
-  inline QDBusArgument& operator<<(QDBusArgument& argument, const accdata& acc)
-  {
-    argument.beginStructure();
-    argument << acc.x << acc.y << acc.z << acc.pitch << acc.roll;
-    argument.endStructure();
-    return argument;
-  }
+inline QDBusArgument& operator<<(QDBusArgument& argument, const accdata& acc) {
+  argument.beginStructure();
+  argument << acc.x << acc.y << acc.z << acc.pitch << acc.roll;
+  argument.endStructure();
+  return argument;
+}
 
-  inline const QDBusArgument& operator>>(const QDBusArgument& argument, accdata& acc)
-  {
-    argument.beginStructure();
-    argument >> acc.x >> acc.y >> acc.z >> acc.pitch >> acc.roll;
-    argument.endStructure();
-    return argument;
-  }
+inline const QDBusArgument& operator>>(const QDBusArgument& argument, accdata& acc) {
+  argument.beginStructure();
+  argument >> acc.x >> acc.y >> acc.z >> acc.pitch >> acc.roll;
+  argument.endStructure();
+  return argument;
+}
 
-  inline QDBusArgument& operator<<(QDBusArgument& argument, const stickdata& stick)
-  {
-    argument.beginStructure();
-    argument << stick.x << stick.y;
-    argument.endStructure();
-    return argument;
-  }
+inline QDBusArgument& operator<<(QDBusArgument& argument, const stickdata& stick) {
+  argument.beginStructure();
+  argument << stick.x << stick.y;
+  argument.endStructure();
+  return argument;
+}
 
-  inline const QDBusArgument& operator>>(const QDBusArgument& argument, stickdata& stick)
-  {
-    argument.beginStructure();
-    argument >> stick.x >> stick.y;
-    argument.endStructure();
-    return argument;
-  }
+inline const QDBusArgument& operator>>(const QDBusArgument& argument, stickdata& stick) {
+  argument.beginStructure();
+  argument >> stick.x >> stick.y;
+  argument.endStructure();
+  return argument;
+}
 
 #endif
 
-class WiimotedevDeviceEvents :public QDBusAbstractInterface
-{
+class WiimotedevDeviceEvents : public QDBusAbstractInterface {
   Q_OBJECT
 public:
-  static inline const char *staticInterfaceName() { return WIIMOTEDEV_DBUS_IFACE_EVENTS; }
+  static inline const char *staticInterfaceName() {
+    return WIIMOTEDEV_DBUS_IFACE_EVENTS;
+  }
 
 public:
   WiimotedevDeviceEvents(
-      const QString &service = WIIMOTEDEV_DBUS_SERVICE_NAME,
-      const QString &path = WIIMOTEDEV_DBUS_OBJECT_EVENTS,
-      const QDBusConnection &connection = QDBusConnection::systemBus(),
-      QObject *parent = 0);
+    const QString &service = WIIMOTEDEV_DBUS_SERVICE_NAME,
+    const QString &path = WIIMOTEDEV_DBUS_OBJECT_EVENTS,
+    const QDBusConnection &connection = QDBusConnection::systemBus(),
+    QObject *parent = 0);
 
 public Q_SLOTS:
   QDBusReply < QList <uint> > dbusGetWiimoteList();
@@ -166,9 +161,8 @@ Q_SIGNALS:
 };
 
 inline WiimotedevDeviceEvents::WiimotedevDeviceEvents(const QString &service, const QString &path,
-  const QDBusConnection &connection, QObject *parent)
-  :QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent)
-{
+    const QDBusConnection &connection, QObject *parent)
+  : QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent) {
   qRegisterMetaType< uint8> ("uint8");
   qRegisterMetaType< uint16> ("uint16");
   qRegisterMetaType< uint32> ("uint32");

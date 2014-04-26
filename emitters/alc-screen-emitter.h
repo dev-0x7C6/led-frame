@@ -84,7 +84,7 @@ protected:
 signals:
   void update(ALCColorSamples *samples);
   void updateStats(quint32 fps, double latency, double usage);
-  
+
 };
 
 #endif // ALCSCREENEMITTER_H

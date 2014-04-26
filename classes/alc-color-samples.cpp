@@ -29,8 +29,8 @@ ALCColorSamples::ALCColorSamples() {
 ALCColorSamples::~ALCColorSamples() { }
 
 void ALCColorSamples::set(ALCColorSamples::Position pos, QVector < int> &colors) {
-  memcpy(reinterpret_cast < void*> (m_samples[pos].data()),
-         reinterpret_cast < void*> ( colors.data()), colors.size() * sizeof(int));
+  memcpy(reinterpret_cast < void*>(m_samples[pos].data()),
+         reinterpret_cast < void*>(colors.data()), colors.size() * sizeof(int));
 }
 
 QVector < int> *ALCColorSamples::get(ALCColorSamples::Position pos) {
@@ -40,27 +40,25 @@ QVector < int> *ALCColorSamples::get(ALCColorSamples::Position pos) {
 QVector < int> *ALCColorSamples::scaled(ALCColorSamples::Position pos, int size) {
   register QVector < int> *result = new QVector < int> (size);
   register const QVector < int> &samples = m_samples[pos];
+  double step = samples.size() / static_cast < double>(size);
 
-  double step = samples.size() / static_cast < double>( size);
-  for (register int i = 0; i < size; ++i)
-    (*result)[i] = samples[i*step];
+  for(register int i = 0; i < size; ++i)
+    (*result)[i] = samples[i * step];
 
   (*result)[0] = samples.first();
   (*result)[size - 1] = samples.last();
-
   return result;
 }
 
 QVector < int> *ALCColorSamples::pscaled(ALCColorSamples::Position pos, int size) {
   register QVector < int> *result = new QVector < int> (size);
   register const QVector < int> &samples = m_samples[pos];
-
-  double step = samples.size() / static_cast < double>( size);
+  double step = samples.size() / static_cast < double>(size);
   Q_UNUSED(step);
   return result;
 }
 
 void ALCColorSamples::copy(ALCColorSamples &ref) {
-  for (register int i = 0; i < SAMPLE_ARRAY; ++i)
+  for(register int i = 0; i < SAMPLE_ARRAY; ++i)
     set(static_cast< Position>(i), ref.m_samples[i]);
 }

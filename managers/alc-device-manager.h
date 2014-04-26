@@ -30,20 +30,20 @@
 namespace AmbientLedConnector {
 
 #ifdef DEBUG_CONNECTOR
-  namespace IDs {
-    const QString Description = "FT232R USB UART";
-    const QString Manufacturer = "FTDI";
-  }
+namespace IDs {
+const QString Description = "FT232R USB UART";
+const QString Manufacturer = "FTDI";
+}
 #else
-  namespace IDs {
-    const QString Description = "Ambient Led Connector";
-    const QString Manufacturer = "ALC";
-  }
+namespace IDs {
+const QString Description = "Ambient Led Connector";
+const QString Manufacturer = "ALC";
+}
 #endif
 
-  namespace Transmision {
-    const quint32 BaudRate = 500000;
-  }
+namespace Transmision {
+const quint32 BaudRate = 500000;
+}
 
 }
 
@@ -73,7 +73,7 @@ protected:
 private slots:
   void deviceThreadStarted();
   void deviceThreadFinished();
-  
+
 signals:
   void deviceConnected(ALCDeviceThread *thread);
   void deviceDisconnected(ALCDeviceThread *thread);

@@ -33,7 +33,7 @@
 class QQuickView;
 class QQuickItem;
 
-class ALCSymulationWidget :public QWidget, public ALCReceiver {
+class ALCSymulationWidget : public QWidget, public ALCReceiver {
   Q_OBJECT
 private:
   ALCColorSamples m_samples;

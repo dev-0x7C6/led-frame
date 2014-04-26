@@ -47,7 +47,9 @@ public:
   QVector < int>* scaled(Position pos, int size);
   QVector < int>* pscaled(Position pos, int size);
 
-  quint16 scale() { return SAMPLE_RESOLUTION; }
+  quint16 scale() {
+    return SAMPLE_RESOLUTION;
+  }
 
   void copy(ALCColorSamples &ref);
 };

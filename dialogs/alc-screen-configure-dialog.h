@@ -27,7 +27,6 @@ namespace Ui {
 class ALCScreenConfigureDialog;
 }
 
-
 class ALCScreenEmitter;
 
 class ALCScreenConfigureDialog : public QDialog {

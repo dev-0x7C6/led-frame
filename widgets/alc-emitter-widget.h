@@ -25,7 +25,7 @@
 
 class ALCEmitter;
 
-class QPushButtonEx :public QPushButton {
+class QPushButtonEx : public QPushButton {
 private:
   ALCEmitter *m_emitter;
 
@@ -47,7 +47,9 @@ public:
 class QTreeWidgetItem;
 class QBoxLayout;
 
-namespace Ui { class ALCEmitterWidget; }
+namespace Ui {
+class ALCEmitterWidget;
+}
 
 class ALCEmitterWidget : public QMainWindow {
   Q_OBJECT

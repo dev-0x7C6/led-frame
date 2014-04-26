@@ -27,7 +27,9 @@
 
 #include "connector/alc-receiver.h"
 
-namespace Ui { class ALCDeviceWidget; }
+namespace Ui {
+class ALCDeviceWidget;
+}
 
 class ALCDeviceThread;
 class ALCEmitter;
@@ -47,21 +49,24 @@ public slots:
 };
 
 
-class ALCDeviceTreeWidget :public QObject, public QTreeWidgetItem {
+class ALCDeviceTreeWidget : public QObject, public QTreeWidgetItem {
   Q_OBJECT
 private:
   ALCReceiver *m_receiver;
 
 public:
   ALCDeviceTreeWidget(QTreeWidget *tree, ALCReceiver *receiver)
-    :QObject(0),
-     QTreeWidgetItem(tree)
-  {
+    : QObject(0),
+      QTreeWidgetItem(tree) {
     m_receiver = receiver;
   }
 
-  ALCReceiver *receiver() { return m_receiver; }
-  void setReceiver(ALCReceiver *receiver) { m_receiver = receiver; }
+  ALCReceiver *receiver() {
+    return m_receiver;
+  }
+  void setReceiver(ALCReceiver *receiver) {
+    m_receiver = receiver;
+  }
   void currentIndexChanged(int);
 
 signals:
@@ -71,7 +76,7 @@ signals:
 
 #include <QCommandLinkButton>
 
-class DeviceLinkButton :public QCommandLinkButton {
+class DeviceLinkButton : public QCommandLinkButton {
 private:
   ALCDeviceThread *m_device;
 

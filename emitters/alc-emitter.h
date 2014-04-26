@@ -33,7 +33,7 @@ class QTreeWidgetItem;
 
 class ALCEmitter : public ALCColorCorrection {
 public:
-  enum EmitterType: quint8 {
+  enum EmitterType : quint8 {
     EMITTER_NOT_DEFINED = 0x00,
     EMITTER_SCREEN_CAPTURE,
     EMITTER_BLACKHOLE,
@@ -62,7 +62,9 @@ public:
 
 
   EmitterType type() const;
-  void setType(const EmitterType type) { m_type = type; }
+  void setType(const EmitterType type) {
+    m_type = type;
+  }
 
   virtual void init();
   void done();

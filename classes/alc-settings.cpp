@@ -24,8 +24,7 @@
 
 ALCSettings::ALCSettings(QObject *parent) :
   QObject(parent),
-  m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver"))
-{
+  m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver")) {
   load();
 }
 

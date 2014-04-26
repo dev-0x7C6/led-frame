@@ -22,13 +22,12 @@
 
 
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
-  :QObject(parent)
-{
+  : QObject(parent) {
   startTimer(250);
 }
 
 ALCDeviceManager::~ALCDeviceManager() {
-  for (register int i = 0; i < m_threads.count(); ++i) {
+  for(register int i = 0; i < m_threads.count(); ++i) {
     m_threads[i]->connectEmitter(0);
     m_threads[i]->setContinueValue(false);
     m_threads[i]->wait();
@@ -39,7 +38,7 @@ ALCDeviceManager::~ALCDeviceManager() {
 }
 
 ALCDeviceThread *ALCDeviceManager::device(int idx) {
-  if (idx >= m_threads.count())
+  if(idx >= m_threads.count())
     return 0;
 
   return m_threads[idx];
@@ -52,12 +51,14 @@ int ALCDeviceManager::count() {
 void ALCDeviceManager::timerEvent(QTimerEvent *event) {
   Q_UNUSED(event);
   QList < QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
-  for (register int i = 0; i < ports.count(); ++i) {
-    if ((ports[i].manufacturer() != AmbientLedConnector::IDs::Manufacturer) ||
+
+  for(register int i = 0; i < ports.count(); ++i) {
+    if((ports[i].manufacturer() != AmbientLedConnector::IDs::Manufacturer) ||
         (ports[i].description() != AmbientLedConnector::IDs::Description)) continue;
 
     QSerialPort *device = new QSerialPort(ports[i].portName());
-    if (device->open(QIODevice::ReadWrite)) {
+
+    if(device->open(QIODevice::ReadWrite)) {
       device->setBaudRate(AmbientLedConnector::Transmision::BaudRate);
       ALCDeviceThread *thread = new ALCDeviceThread(device, ports[i]);
       connect(thread, &ALCDeviceThread::started, this, &ALCDeviceManager::deviceThreadStarted);
