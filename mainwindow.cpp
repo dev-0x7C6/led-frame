@@ -86,25 +86,25 @@ void MainWindow::showColorCorrection(bool visible) {
 
 #ifdef Q_OS_UNIX
 void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
-  if(int(id) != ui->wiimoteId->value())
+  if (int(id) != ui->wiimoteId->value())
     return;
 
-  if(ui->wiimoteBrightness->isChecked()) {
+  if (ui->wiimoteBrightness->isChecked()) {
 //    if ((buttons & WIIMOTE_BTN_PLUS) && !(m_buttons & WIIMOTE_BTN_PLUS))
 //     ui->brightnessSlider->setValue(ui->brightnessSlider->value() + 4);
     //  if ((buttons & WIIMOTE_BTN_MINUS) && !(m_buttons & WIIMOTE_BTN_MINUS))
     //    ui->brightnessSlider->setValue(ui->brightnessSlider->value() - 4);
   }
 
-  if(ui->wiimoteFramerate->isChecked()) {
+  if (ui->wiimoteFramerate->isChecked()) {
     //  if ((buttons & WIIMOTE_BTN_RIGHT) && !(m_buttons & WIIMOTE_BTN_RIGHT))
     //    ui->framerateLimit->setValue(ui->framerateLimit->value() + 2);
     //  if ((buttons & WIIMOTE_BTN_LEFT) && !(m_buttons & WIIMOTE_BTN_LEFT))
     //   ui->framerateLimit->setValue(ui->framerateLimit->value() - 2);
   }
 
-  if(ui->wiimoteScreen->isChecked()) {
-    if((buttons & WIIMOTE_BTN_UP) && !(m_buttons & WIIMOTE_BTN_UP)) {
+  if (ui->wiimoteScreen->isChecked()) {
+    if ((buttons & WIIMOTE_BTN_UP) && !(m_buttons & WIIMOTE_BTN_UP)) {
 //      int idx = ui->screenArea->currentIndex() - 1;
 //      if (idx == -1)
 //        idx = ui->screenArea->count() - 1;

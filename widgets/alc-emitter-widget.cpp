@@ -55,21 +55,21 @@ ALCEmitterWidget::~ALCEmitterWidget() {
 void ALCEmitterWidget::addPlainColorItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
 
-  if(!input.isEmpty())
+  if (!input.isEmpty())
     ALCEmitterManager::instance()->addALCColorEmitter(input);
 }
 
 void ALCEmitterWidget::addAnimationItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
 
-  if(!input.isEmpty())
+  if (!input.isEmpty())
     ALCEmitterManager::instance()->addALCAnimationEmitter(input);
 }
 
 void ALCEmitterWidget::addImageItem() {
   QString input = QInputDialog::getText(this, "Name", "Get name:");
 
-  if(!input.isEmpty())
+  if (!input.isEmpty())
     ALCEmitterManager::instance()->addALCImageEmitter(input);
 }
 
@@ -83,8 +83,8 @@ void ALCEmitterWidget::setup() {
   QListIterator < ALCEmitter*> ii(ALCEmitterManager::instance()->allEmitters());
   ALCEmitter *emitter;
 
-  while(ii.hasNext()) {
-    switch((emitter = ii.next())->type()) {
+  while (ii.hasNext()) {
+    switch ((emitter = ii.next())->type()) {
       case ALCEmitter::EMITTER_PLAIN_COLOR:
         insertPlainColorItem(emitter);
         break;

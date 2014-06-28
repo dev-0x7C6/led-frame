@@ -54,8 +54,8 @@ void ALCScreenWidget::setup() {
   QListIterator < ALCEmitter*> ii(ALCEmitterManager::instance()->allEmitters());
   ALCEmitter *emitter;
 
-  while(ii.hasNext()) {
-    switch((emitter = ii.next())->type()) {
+  while (ii.hasNext()) {
+    switch ((emitter = ii.next())->type()) {
       case ALCEmitter::EMITTER_SCREEN_CAPTURE:
         insertScreenCaptureItem(emitter);
         break;

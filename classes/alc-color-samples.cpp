@@ -42,7 +42,7 @@ QVector < int> *ALCColorSamples::scaled(ALCColorSamples::Position pos, int size)
   register const QVector < int> &samples = m_samples[pos];
   double step = samples.size() / static_cast < double>(size);
 
-  for(register int i = 0; i < size; ++i)
+  for (register int i = 0; i < size; ++i)
     (*result)[i] = samples[i * step];
 
   (*result)[0] = samples.first();
@@ -59,6 +59,6 @@ QVector < int> *ALCColorSamples::pscaled(ALCColorSamples::Position pos, int size
 }
 
 void ALCColorSamples::copy(ALCColorSamples &ref) {
-  for(register int i = 0; i < SAMPLE_ARRAY; ++i)
+  for (register int i = 0; i < SAMPLE_ARRAY; ++i)
     set(static_cast< Position>(i), ref.m_samples[i]);
 }

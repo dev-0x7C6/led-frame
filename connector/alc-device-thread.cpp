@@ -29,7 +29,7 @@
 #define qr(r) qRed(r)
 
 unsigned char max(int value) {
-  if(value > 255)
+  if (value > 255)
     return 255;
   else
     return value;
@@ -76,7 +76,7 @@ void ALCDeviceThread::run() {
   QElapsedTimer timer;
   QElapsedTimer counter;
   int fps = 0;
-  int framerateLimit = 30;
+  int framerateLimit = 80;
   double latency[2];
   counter.start();
   latency[0] = 0;
@@ -89,7 +89,7 @@ void ALCDeviceThread::run() {
   do {
     timer.start();
 
-    if(m_emitter)
+    if (m_emitter)
       m_emitter->state(m_samples);
 
     brightness_t = brightness(true);
@@ -97,7 +97,7 @@ void ALCDeviceThread::run() {
     rgbc[Green] = greenCorrection(true);
     rgbc[Blue] = blueCorrection(true);
 
-    if(!m_emitter) {
+    if (!m_emitter) {
       msleep(100);
       continue;
     }
@@ -106,18 +106,18 @@ void ALCDeviceThread::run() {
     ptr = 0;
     QList < ALCLedStrip *>  strips = m_config->list();
 
-    for(register int ii = 0; ii < strips.count(); ++ii) {
+    for (register int ii = 0; ii < strips.count(); ++ii) {
       ALCLedStrip *strip = strips[ii];
       colors = m_samples.scaled((ALCColorSamples::Position)strip->source(), strip->count());
       const Format format = strip->colorFormat();
       const double s = strip->brightness();
       const int size = colors->size();
 
-      if(strip->clockwise()) {
-        for(register int i = 0; i < size; ++i)
+      if (strip->clockwise()) {
+        for (register int i = 0; i < size; ++i)
           push(data, ptr, format, (*colors)[i], rgbc, brightness_t * s);
       } else {
-        for(register int i = size - 1; i >= 0; --i)
+        for (register int i = size - 1; i >= 0; --i)
           push(data, ptr, format, (*colors)[i], rgbc, brightness_t * s);
       }
 
@@ -134,26 +134,26 @@ void ALCDeviceThread::run() {
     latency[1] += latency[0];
     double delay = 1000000000.0 / double(framerateLimit) - latency[0];
 
-    if(delay < 0) {
+    if (delay < 0) {
       delay = 0.0;
     }
 
     fps++;
     usleep(delay / 1000.0);
 
-    if(counter.hasExpired(1000)) {
+    if (counter.hasExpired(1000)) {
       counter.restart();
       latency[1] = 0;
       fps = 0;
     }
-  } while(continueValue() && m_device->error() == 0);
+  } while (continueValue() && m_device->error() == 0);
 
-  if(m_device->isOpen() && m_device->isWritable())
+  if (m_device->isOpen() && m_device->isWritable())
     m_device->close();
 
   delete m_device;
 
-  if(m_emitter)
+  if (m_emitter)
     m_emitter->done();
 }
 
@@ -173,7 +173,7 @@ bool ALCDeviceThread::continueValue() {
 }
 
 void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[], double brightness) {
-  switch(format) {
+  switch (format) {
     case RGB:
       data[ptr++] = max(qr(color) * rgbc[Red] * brightness);
       data[ptr++] = max(qg(color) * rgbc[Green] * brightness);

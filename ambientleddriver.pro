@@ -4,11 +4,11 @@
 #
 #-------------------------------------------------
 
-QT += core gui widgets serialport opengl qml quick x11extras
+QT += core gui widgets serialport opengl qml quick
 
-QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native -mfpmath=sse -Ofast -march=native -funroll-loops
+QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native -march=native
 QMAKE_CXXFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
-QMAKE_LFLAGS_RELEASE += -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native -mfpmath=sse -Ofast -flto -march=native -funroll-loops
+QMAKE_LFLAGS_RELEASE += -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native -march=native
 QMAKE_LFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
 
 LIBS += -lX11
@@ -46,7 +46,8 @@ SOURCES += main.cpp\
     widgets/alc-screen-widget.cpp \
     classes/alc-strip-configuration.cpp \
     connector/alc-receiver.cpp \
-    managers/alc-device-manager.cpp
+    managers/alc-device-manager.cpp \
+    dialogs/alc-strip-configurator-dialog.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -70,7 +71,8 @@ HEADERS += mainwindow.h \
     widgets/alc-screen-widget.h \
     classes/alc-strip-configuration.h \
     connector/alc-receiver.h \
-    managers/alc-device-manager.h
+    managers/alc-device-manager.h \
+    dialogs/alc-strip-configurator-dialog.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \
@@ -79,7 +81,8 @@ FORMS += mainwindow.ui \
     dialogs/alc-about-dialog.ui \
     widgets/alc-device-widget.ui \
     widgets/alc-emitter-widget.ui \
-    widgets/alc-screen-widget.ui
+    widgets/alc-screen-widget.ui \
+    dialogs/alc-strip-configurator-dialog.ui
 
 RESOURCES += \
     resources/resource.qrc \

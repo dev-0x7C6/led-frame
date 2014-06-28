@@ -27,7 +27,7 @@
 ALCLedStripManager::ALCLedStripManager() {
   QSettings *settings = ALCSettings::instance()->settings();
 
-  if(settings->childGroups().contains("led-strips")) {
+  if (settings->childGroups().contains("led-strips")) {
     settings->beginGroup("led-strips");
     settings->endGroup();
   } else {

@@ -45,7 +45,6 @@ private:
   void fpsValueChanged(int);
   void clipValueChanged(int);
 
-
   void accepted(QAbstractButton *);
 };
 

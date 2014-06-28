@@ -45,7 +45,7 @@ QColor ALCColorEmitter::color() {
 }
 
 double max(double value) {
-  if(value > 255)
+  if (value > 255)
     return 255;
 
   return value;
@@ -57,7 +57,7 @@ void ALCColorEmitter::pushState() {
                  max(m_color.green() * m_brightness),
                  max(m_color.blue() * m_brightness));
 
-  for(register int i = 0; i < samples.size(); ++i)
+  for (register int i = 0; i < samples.size(); ++i)
     samples[i] = rgb;
 
   m_samples.set(ALCColorSamples::SAMPLE_TOP, samples);
@@ -72,7 +72,7 @@ void ALCColorEmitter::pushState() {
 QColor ALCColorEmitter::open() {
   QColor color = QColorDialog::getColor(m_color);
 
-  if(color.isValid())
+  if (color.isValid())
     return (m_color = color);
   else
     return (m_color);

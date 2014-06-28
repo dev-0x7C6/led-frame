@@ -49,15 +49,15 @@ ALCDeviceWidget::~ALCDeviceWidget() {
   ALCReceiver *receiver;
   ALCEmitter *emitter;
 
-  for(register int i = 0; i < m_devices.count(); ++i) {
+  for (register int i = 0; i < m_devices.count(); ++i) {
     receiver = m_devices[i]->receiver();
 
-    if(!receiver)
+    if (!receiver)
       continue;
 
     emitter = receiver->connectedEmitter();
 
-    if(emitter)
+    if (emitter)
       m_settings->setValue(receiver->name(), emitter->emitterName());
     else
       m_settings->setValue(receiver->name(), QString());
@@ -74,7 +74,7 @@ ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column) {
 }
 
 void ComboBoxItem::changeItem(int index) {
-  if(index >= 0) {
+  if (index >= 0) {
     item->setData(this->column, Qt::UserRole, itemText(index));
   }
 }
@@ -110,8 +110,8 @@ void ALCDeviceWidget::deviceConnected(ALCDeviceThread *thread) {
 }
 
 void ALCDeviceWidget::deviceDisconnected(ALCDeviceThread *thread) {
-  for(register int i = 0; i < m_devices.count(); ++i) {
-    if(thread == dynamic_cast< ALCDeviceThread *>(m_devices[i]->receiver())) {
+  for (register int i = 0; i < m_devices.count(); ++i) {
+    if (thread == dynamic_cast< ALCDeviceThread *>(m_devices[i]->receiver())) {
       delete m_devices[i];
       m_devices.removeAt(i);
       return;
@@ -168,7 +168,7 @@ void ALCDeviceWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *t
 void ALCDeviceWidget::populate(QString use) {
   const QString prefix = "Emitter: ";
 
-  for(register int i = 0; i < m_devices.count(); ++i) {
+  for (register int i = 0; i < m_devices.count(); ++i) {
     ui->tree->removeItemWidget(m_devices[i], 1);
     ComboBoxItem *cmb = new ComboBoxItem(m_devices[i], 1);
     cmb->setIconSize(QSize(22, 22));
@@ -178,8 +178,8 @@ void ALCDeviceWidget::populate(QString use) {
     ALCEmitter *emitter;
     ALCEmitter *defaultEmitter = 0;
 
-    while(ii.hasNext()) {
-      switch((emitter = ii.next())->type()) {
+    while (ii.hasNext()) {
+      switch ((emitter = ii.next())->type()) {
         case ALCEmitter::EMITTER_SCREEN_CAPTURE:
           cmb->addItem(QIcon(":/22x22/screen.png"), prefix + emitter->emitterName(),
                        qVariantFromValue((void*)emitter));
@@ -209,10 +209,10 @@ void ALCDeviceWidget::populate(QString use) {
       use = m_settings->value(m_devices[i]->receiver()->name()).toString();
       m_settings->endGroup();
 
-      if(connected && (connected == emitter))
+      if (connected && (connected == emitter))
         cmb->setCurrentIndex(cmb->count() - 1);
 
-      if(!use.isEmpty() && (emitter->emitterName() == use)) {
+      if (!use.isEmpty() && (emitter->emitterName() == use)) {
         defaultEmitter = emitter;
         cmb->setCurrentIndex(cmb->count() - 1);
       }
@@ -238,12 +238,12 @@ void ALCDeviceWidget::configureEmitter() {
   DeviceLinkButton *link = dynamic_cast < DeviceLinkButton*>(sender());
   ALCEmitter *emitter;
 
-  if(link->deviceThread())
+  if (link->deviceThread())
     emitter = link->deviceThread()->connectedEmitter();
   else
     emitter = m_symulation->connectedEmitter();
 
-  if(emitter)
+  if (emitter)
     emitter->configure();
   else
     QMessageBox::information(this, "Information", "Emitter is not defined.", QMessageBox::Ok);

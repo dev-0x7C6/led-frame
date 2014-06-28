@@ -168,7 +168,7 @@ void ALCScreenEmitter::run() {
     l_marginProcent = m_marginProcent;
     quit = m_quit;
 
-    if(!m_connectedCount) {
+    if (!m_connectedCount) {
       m_mutex.unlock();
       msleep(100);
       continue;
@@ -195,17 +195,17 @@ void ALCScreenEmitter::run() {
                          l_captureArea.y() + l_chunkSize, l_chunkSize,
                          l_captureArea.height() - l_chunkSize * 2, AllPlanes, ZPixmap);
 
-    for(int ii = 0; ii < 4; ++ii) {
+    for (int ii = 0; ii < 4; ++ii) {
       src = image[ii];
 
-      if(!src)
+      if (!src)
         continue;
 
       width = src->width;
       height = src->height;
 
-      for(int i = 0; i < chunks; ++i) {
-        switch(ii) {
+      for (int i = 0; i < chunks; ++i) {
+        switch (ii) {
           case Top:
             cx = width / chunks;
             cy = l_chunkSize;
@@ -238,7 +238,7 @@ void ALCScreenEmitter::run() {
         c = 0;
         register int rgb;
 
-        for(register int x = 0; x < cx; x += l_pixelSkip) for(register int y = 0; y < cy; y += l_pixelSkip) {
+        for (register int x = 0; x < cx; x += l_pixelSkip) for (register int y = 0; y < cy; y += l_pixelSkip) {
             rgb = XGetPixel(src, sx + x, sy + y);
             r += (rgb >> 0x10) & 0xFF;
             g += (rgb >> 0x08) & 0xFF;
@@ -253,11 +253,11 @@ void ALCScreenEmitter::run() {
         b /= c;
         b *= l_brightness * rgbc[Blue];
 
-        if(r > 255) r = 255;
+        if (r > 255) r = 255;
 
-        if(g > 255) g = 255;
+        if (g > 255) g = 255;
 
-        if(b > 255) b = 255;
+        if (b > 255) b = 255;
 
         (*colors)[ii][i] = qRgb(r, g, b);
       }
@@ -270,19 +270,19 @@ void ALCScreenEmitter::run() {
     latency_accu += latency_curr;
     framerate_delay = 1000000000.0 / static_cast< double>(l_framerateLimit) - latency_curr;
 
-    if(framerate_delay < 0)
+    if (framerate_delay < 0)
       framerate_delay = 0.0;
 
     fps++;
     usleep(framerate_delay / 1000.0);
 
-    if(counter.hasExpired(1000)) {
+    if (counter.hasExpired(1000)) {
       emit updateStats(fps, (latency_accu / double(fps) / 1000000.0), latency_accu / 10000000.0);
       counter.restart();
       latency_accu = 0;
       fps = 0;
     }
-  } while(!quit);
+  } while (!quit);
 
   XCloseDisplay(display);
 }

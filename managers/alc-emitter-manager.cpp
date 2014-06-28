@@ -41,11 +41,11 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
   settings->beginGroup("screens");
   QList < QScreen* > screens = QApplication::screens();
 
-  for(register int i = -1; i < QApplication::desktop()->screenCount(); ++i) {
+  for (register int i = -1; i < QApplication::desktop()->screenCount(); ++i) {
     ALCScreenEmitter *emitter = new ALCScreenEmitter(0);
     QRect rect;
 
-    switch(i) {
+    switch (i) {
       case -1:
         rect = QApplication::desktop()->geometry();
         emitter->setName("all");
@@ -82,11 +82,11 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
 
   settings->endGroup();
 
-  if(settings->childGroups().contains("animations")) {
+  if (settings->childGroups().contains("animations")) {
     settings->beginGroup("animations");
     QStringList list = settings->childGroups();
 
-    for(register int i = 0; i < list.count(); ++i) {
+    for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
       addALCAnimationEmitter(settings->value("name", QString()).toString());
       settings->endGroup();
@@ -94,16 +94,16 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
 
     settings->endGroup();
   } else {
-    for(register int i = 0; i < 3; ++i) {
+    for (register int i = 0; i < 3; ++i) {
       addALCAnimationEmitter("Animation #" + QString::number(i + 1));
     }
   }
 
-  if(settings->childGroups().contains("colors")) {
+  if (settings->childGroups().contains("colors")) {
     settings->beginGroup("colors");
     QStringList list = settings->childGroups();
 
-    for(register int i = 0; i < list.count(); ++i) {
+    for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
       ALCColorEmitter *emitter = addALCColorEmitter(settings->value("name", QString()).toString());
       int r = settings->value("red", 0).toInt();
@@ -115,15 +115,15 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
 
     settings->endGroup();
   } else {
-    for(register int i = 0; i < 3; ++i)
+    for (register int i = 0; i < 3; ++i)
       addALCColorEmitter("Plain color #" + QString::number(i + 1));
   }
 
-  if(settings->childGroups().contains("images")) {
+  if (settings->childGroups().contains("images")) {
     settings->beginGroup("images");
     QStringList list = settings->childGroups();
 
-    for(register int i = 0; i < list.count(); ++i) {
+    for (register int i = 0; i < list.count(); ++i) {
       settings->beginGroup(list[i]);
       ALCImageEmitter *emitter = addALCImageEmitter(settings->value("name", QString()).toString());
       emitter->fromFile(settings->value("file", QString()).toString());
@@ -132,7 +132,7 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
 
     settings->endGroup();
   } else {
-    for(register int i = 0; i < 3; ++i)
+    for (register int i = 0; i < 3; ++i)
       addALCImageEmitter("Image samples #" + QString::number(i + 1));
   }
 
@@ -144,8 +144,8 @@ ALCEmitterManager::~ALCEmitterManager() {
   settings->beginGroup("emitters");
   QList < ALCEmitter *> all = allEmitters();
 
-  for(register int i = 0; i < all.count(); ++i) {
-    switch(all[i]->type()) {
+  for (register int i = 0; i < all.count(); ++i) {
+    switch (all[i]->type()) {
       case ALCEmitter::EMITTER_SCREEN_CAPTURE:
         dynamic_cast < ALCScreenEmitter*>(all[i])->setQuitState(true);
         break;
@@ -163,8 +163,8 @@ ALCEmitterManager::~ALCEmitterManager() {
   ALCColorEmitter *plain;
   ALCScreenEmitter *screen;
 
-  for(register int i = 0; i < all.count(); ++i) {
-    switch(all[i]->type()) {
+  for (register int i = 0; i < all.count(); ++i) {
+    switch (all[i]->type()) {
       case ALCEmitter::EMITTER_SCREEN_CAPTURE:
         settings->beginGroup("screens");
         screen = dynamic_cast < ALCScreenEmitter*>(all[i]);
@@ -257,15 +257,15 @@ ALCScreenEmitter *ALCEmitterManager::addScreenCaptureEmitter(const QString &name
 }
 
 void ALCEmitterManager::remove(ALCEmitter *emitter) {
-  for(register int i = 0; i < ALCDeviceManager::instance()->count(); ++i) {
-    if(ALCDeviceManager::instance()->device(i)->connectedEmitter() == emitter)
+  for (register int i = 0; i < ALCDeviceManager::instance()->count(); ++i) {
+    if (ALCDeviceManager::instance()->device(i)->connectedEmitter() == emitter)
       ALCDeviceManager::instance()->device(i)->connectEmitter(0);
 
-    if(m_symulation->connectedEmitter() == emitter)
+    if (m_symulation->connectedEmitter() == emitter)
       m_symulation->connectEmitter(0);
   }
 
-  for(register int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
+  for (register int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
     m_emitters[static_cast< ALCEmitter::EmitterType>(i)].removeAll(emitter);
 
   delete emitter;
@@ -283,7 +283,7 @@ QList < ALCEmitter *> *ALCEmitterManager::emitters(ALCEmitter::EmitterType type)
 QList<ALCEmitter *> ALCEmitterManager::allEmitters() {
   QList < ALCEmitter *> result;
 
-  for(register int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
+  for (register int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
     result << m_emitters[static_cast< ALCEmitter::EmitterType>(i)];
 
   return result;

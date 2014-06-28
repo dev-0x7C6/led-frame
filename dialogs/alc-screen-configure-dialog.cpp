@@ -54,13 +54,13 @@ void ALCScreenConfigureDialog::setEmitter(ALCScreenEmitter *emitter) {
   icon[2] = new QIcon(":/custom/red.png");
   ui->sampleSize->clear();
 
-  for(register int i = 0; i < 12; ++i) {
+  for (register int i = 0; i < 12; ++i) {
     QIcon *qi;
     px = 32 + (32 * i);
 
-    if(px <= 160)
+    if (px <= 160)
       qi = icon[0];
-    else if(px <= 256)
+    else if (px <= 256)
       qi = icon[1];
     else
       qi = icon[2];
@@ -71,13 +71,13 @@ void ALCScreenConfigureDialog::setEmitter(ALCScreenEmitter *emitter) {
   ui->sampleSize->setCurrentIndex(emitter->chunk() / 32 - 1);
   ui->pixelSkip->clear();
 
-  for(register int i = 0; i < 9; ++i) {
+  for (register int i = 0; i < 9; ++i) {
     px = 4 * i;
     QIcon *qi;
 
-    if(px <= 4)
+    if (px <= 4)
       qi = icon[2];
-    else if(px <= 8)
+    else if (px <= 8)
       qi = icon[1];
     else
       qi = icon[0];
@@ -92,9 +92,9 @@ void ALCScreenConfigureDialog::setEmitter(ALCScreenEmitter *emitter) {
 void ALCScreenConfigureDialog::fpsValueChanged(int value) {
   ui->fpsLabel->setText(QString("%1 fps").arg(value));
 
-  if(value > 60)
+  if (value > 60)
     ui->fpsCpu->setPixmap(QPixmap(":/custom/red.png"));
-  else if(value > 25)
+  else if (value > 25)
     ui->fpsCpu->setPixmap(QPixmap(":/custom/blue.png"));
   else
     ui->fpsCpu->setPixmap(QPixmap(":/custom/green.png"));
@@ -108,14 +108,14 @@ void ALCScreenConfigureDialog::clipValueChanged(int value) {
 #include <QDesktopWidget>
 
 void ALCScreenConfigureDialog::accepted(QAbstractButton *button) {
-  if(!m_emitter)
+  if (!m_emitter)
     return;
 
   QRect area;
   QString str;
   QList < QScreen* > screens = QApplication::screens();
 
-  switch(ui->buttons->buttonRole(button)) {
+  switch (ui->buttons->buttonRole(button)) {
     case QDialogButtonBox::ApplyRole:
       area.setX(ui->areaX->value());
       area.setY(ui->areaY->value());
@@ -132,8 +132,8 @@ void ALCScreenConfigureDialog::accepted(QAbstractButton *button) {
     case QDialogButtonBox::ResetRole:
       str = m_emitter->name();
 
-      for(register int i = 0; i < screens.count(); ++i)
-        if(screens[i]->name() == str) {
+      for (register int i = 0; i < screens.count(); ++i)
+        if (screens[i]->name() == str) {
           area = screens[i]->geometry();
           break;
         }

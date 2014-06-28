@@ -29,10 +29,10 @@ QString ALCReceiver::name() {
 void ALCReceiver::connectEmitter(ALCEmitter *emitter) {
   QMutexLocker locker(m_mutex);
 
-  if(m_emitter)
+  if (m_emitter)
     m_emitter->done();
 
-  if((m_emitter = emitter))
+  if ((m_emitter = emitter))
     m_emitter->init();
 }
 

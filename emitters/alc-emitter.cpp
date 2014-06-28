@@ -83,7 +83,7 @@ bool ALCEmitter::configure() {
 bool ALCEmitter::rename() {
   QString text = QInputDialog::getText(0, "Rename", "Set name:", QLineEdit::Normal, emitterName());
 
-  if(!text.isEmpty()) {
+  if (!text.isEmpty()) {
     setEmitterName(text);
   }
 
@@ -95,8 +95,8 @@ bool ALCEmitter::rename() {
 #include "managers/alc-emitter-manager.h"
 
 bool ALCEmitter::remove() {
-  if(QMessageBox::question(0, "Question", "Do you realy want to delete this emitter.",
-                           QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
+  if (QMessageBox::question(0, "Question", "Do you realy want to delete this emitter.",
+                            QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
     return false;
 
   ALCEmitterManager::instance()->remove(this);
