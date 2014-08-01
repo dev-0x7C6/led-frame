@@ -24,7 +24,7 @@
 
 const int applicationMajorVersion = 0;
 const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 4;
+const int applicationPatchVersion = 5;
 
 int main(int argc, char *argv[]) {
   QApplication application(argc, argv);
