@@ -49,6 +49,8 @@ private:
   QMenu *m_menu;
   QString m_title;
 
+  QAction *m_visible;
+
 #ifdef Q_OS_UNIX
   WiimotedevDeviceEvents *m_wiimotedevEvents;
   uint64 m_buttons;
@@ -57,6 +59,10 @@ private:
 public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
+
+protected:
+  virtual void showEvent(QShowEvent *event);
+  virtual void hideEvent(QHideEvent *event);
 
 private:
   void about();

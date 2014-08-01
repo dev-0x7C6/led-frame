@@ -77,10 +77,9 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreenWidget::setup, Qt::QueuedConnection);
   m_tray.setContextMenu(m_menu);
   m_tray.show();
-  QAction *visible = m_menu->addAction("Visible");
-  visible->setCheckable(true);
-  visible->setChecked(true);
-  connect(visible, &QAction::triggered, this, &MainWindow::setVisible);
+  m_visible = m_menu->addAction("Visible");
+  m_visible->setCheckable(true);
+  connect(m_visible, &QAction::triggered, this, &MainWindow::setVisible);
   m_menu->addSeparator();
   m_menu->insertAction(0, ui->actionAddAnimation);
   m_menu->insertAction(0, ui->actionAddImageSamples);
@@ -90,6 +89,21 @@ MainWindow::MainWindow(QWidget *parent) :
   m_menu->addSeparator();
   connect(m_menu->addAction("Quit"), &QAction::triggered, this, &MainWindow::close);
   connect(&m_tray, &QSystemTrayIcon::activated, this, &MainWindow::trayActivated);
+
+  m_settings->beginGroup("MainWindow");
+  m_visible->setChecked(m_settings->value("visible", true).toBool());
+  m_settings->endGroup();
+
+  if (!m_visible->isChecked())
+    QMetaObject::invokeMethod(this, "hide", Qt::QueuedConnection);
+}
+
+void MainWindow::showEvent(QShowEvent *event) {
+  m_visible->setChecked(isVisible());
+}
+
+void MainWindow::hideEvent(QHideEvent *event) {
+  m_visible->setChecked(isVisible());
 }
 
 void MainWindow::about() {
@@ -165,6 +179,10 @@ MainWindow::~MainWindow() {
   m_settings->setValue("brightnessControl", ui->wiimoteBrightness->isChecked());
   m_settings->setValue("framerateControl", ui->wiimoteFramerate->isChecked());
   m_settings->setValue("screenControl", ui->wiimoteScreen->isChecked());
+  m_settings->endGroup();
+
+  m_settings->beginGroup("MainWindow");
+  m_settings->setValue("visible", m_visible->isChecked());
   m_settings->endGroup();
   delete ui;
 }
