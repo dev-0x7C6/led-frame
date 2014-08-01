@@ -24,32 +24,29 @@
 #include <QSettings>
 #include <QSystemTrayIcon>
 
-#include "managers/alc-device-manager.h"
-#include "emitters/alc-animation-emitter.h"
-#include "emitters/alc-image-emitter.h"
-#include "emitters/alc-screen-emitter.h"
-#include "managers/alc-emitter-manager.h"
-#include "widgets/alc-device-widget.h"
-
 #ifdef Q_OS_UNIX
 #include "wiimotedev/deviceevents.h"
 #endif
 
 namespace Ui {
-class MainWindow;
+  class MainWindow;
 }
 
 class ALCDeviceThread;
 class ALCScreenEmitter;
+class ALCDeviceTreeWidget;
+class ALCEmitterManager;
+class QMenu;
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
 private:
   QSettings *m_settings;
   Ui::MainWindow *ui;
-  QList < ALCDeviceTreeWidget*> m_devices;
+  QList <ALCDeviceTreeWidget *> m_devices;
   ALCEmitterManager *m_screenManager;
   QSystemTrayIcon m_tray;
+  QMenu *m_menu;
   QString m_title;
 
 #ifdef Q_OS_UNIX
@@ -63,8 +60,9 @@ public:
 
 private:
   void about();
-
   void showColorCorrection(bool);
+
+  void trayActivated(QSystemTrayIcon::ActivationReason reason);
 
 #ifdef Q_OS_UNIX
   void dbusWiimotedevButtons(uint, uint64);

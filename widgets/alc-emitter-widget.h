@@ -48,7 +48,7 @@ class QTreeWidgetItem;
 class QBoxLayout;
 
 namespace Ui {
-class ALCEmitterWidget;
+  class ALCEmitterWidget;
 }
 
 class ALCEmitterWidget : public QMainWindow {
@@ -72,7 +72,7 @@ private:
   void insertAnimationItem(ALCEmitter *);
   void insertImageItem(ALCEmitter *);
 
-  void insertDefaultButtons(ALCEmitter *, QBoxLayout*);
+  void insertDefaultButtons(ALCEmitter *, QBoxLayout *);
 
   void reconfigure();
   void rename();

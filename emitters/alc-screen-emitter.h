@@ -56,7 +56,7 @@ private:
   bool m_quit;
   double m_marginProcent;
 
-  QVector < int> *colors[4];
+  QVector <int> *colors[4];
 
 public slots:
   void setName(QString name);

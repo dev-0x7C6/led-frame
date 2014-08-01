@@ -17,7 +17,8 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.2
+import QtQuick.Dialogs 1.1
 
 Rectangle {
     width: 500
@@ -25,3 +26,5 @@ Rectangle {
     z: -1
     color: "black"
 }
+
+

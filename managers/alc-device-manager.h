@@ -25,47 +25,42 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
-//#define DEBUG_CONNECTOR
+class ALCDeviceThread;
 
 namespace AmbientLedConnector {
 
+  namespace IDs {
 #ifdef DEBUG_CONNECTOR
-namespace IDs {
-const QString Description = "FT232R USB UART";
-const QString Manufacturer = "FTDI";
-}
+    const QString Description = "FT232R USB UART";
+    const QString Manufacturer = "FTDI";
 #else
-namespace IDs {
-const QString Description = "Ambient Led Connector";
-const QString Manufacturer = "ALC";
-}
+    const QString Description = "Ambient Led Connector";
+    const QString Manufacturer = "ALC";
 #endif
+  }
 
-namespace Transmision {
-const quint32 BaudRate = 500000;
+  namespace Transmision {
+    const quint32 BaudRate = 500000;
+  }
+
 }
-
-}
-
-class ALCDeviceThread;
 
 class ALCDeviceManager : public QObject {
   Q_OBJECT
 private:
-  QList < ALCDeviceThread*> m_threads;
+  QList <ALCDeviceThread *> m_threads;
   QSerialPortInfo m_info;
+
+  static const int scanAfter;
 
 public:
   explicit ALCDeviceManager(QObject *parent = 0);
   virtual ~ALCDeviceManager();
 
-  ALCDeviceThread* device(int idx);
-  int count();
+  ALCDeviceThread *device(int idx) const;
+  int count() const;
 
-  static ALCDeviceManager* instance() {
-    static ALCDeviceManager object;
-    return &object;
-  }
+  static ALCDeviceManager *instance();
 
 protected:
   void timerEvent(QTimerEvent *event);

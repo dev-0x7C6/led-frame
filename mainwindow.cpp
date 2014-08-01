@@ -22,30 +22,32 @@
 
 #include <QDesktopWidget>
 #include <QGuiApplication>
-//#include <QQuickView>
 #include <QScreen>
 
-#include "dialogs/alc-about-dialog.h"
-#include "managers/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
+#include "dialogs/alc-about-dialog.h"
+#include "emitters/alc-animation-emitter.h"
 #include "emitters/alc-color-emitter.h"
+#include "emitters/alc-image-emitter.h"
+#include "emitters/alc-screen-emitter.h"
+#include "managers/alc-device-manager.h"
+#include "managers/alc-emitter-manager.h"
+#include "widgets/alc-device-widget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
   ui(new Ui::MainWindow),
   m_screenManager(ALCEmitterManager::instance()),
-  m_tray(QIcon(":/22x22/leds.png"), this)
+  m_tray(QIcon(QPixmap(":/22x22/leds.png").scaled(32, 32)), this),
+  m_menu(new QMenu())
 #ifdef Q_OS_UNIX
   ,
   m_wiimotedevEvents(new WiimotedevDeviceEvents),
   m_buttons(0)
 #endif
 {
-  m_tray.setVisible(true);
-  m_tray.show();
-  qDebug() << QSystemTrayIcon::isSystemTrayAvailable();
-  qRegisterMetaType< QList<QRgb> >("QList< QRgb >");
+  qRegisterMetaType<QList<QRgb>>("QList< QRgb >");
   ui->setupUi(this);
   ALCEmitterManager::instance()->addSymulation(ui->qml);
   ui->devices->addSymulation(ui->qml);
@@ -73,6 +75,21 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actionAddImageSamples, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addImageItem);
   connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->emitters, &ALCEmitterWidget::setup, Qt::QueuedConnection);
   connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreenWidget::setup, Qt::QueuedConnection);
+  m_tray.setContextMenu(m_menu);
+  m_tray.show();
+  QAction *visible = m_menu->addAction("Visible");
+  visible->setCheckable(true);
+  visible->setChecked(true);
+  connect(visible, &QAction::triggered, this, &MainWindow::setVisible);
+  m_menu->addSeparator();
+  m_menu->insertAction(0, ui->actionAddAnimation);
+  m_menu->insertAction(0, ui->actionAddImageSamples);
+  m_menu->insertAction(0, ui->actionAddPlainColor);
+  m_menu->addSeparator();
+  m_menu->insertAction(0, ui->actionAddScreenArea);
+  m_menu->addSeparator();
+  connect(m_menu->addAction("Quit"), &QAction::triggered, this, &MainWindow::close);
+  connect(&m_tray, &QSystemTrayIcon::activated, this, &MainWindow::trayActivated);
 }
 
 void MainWindow::about() {
@@ -84,14 +101,25 @@ void MainWindow::showColorCorrection(bool visible) {
   ui->colorCorrection->setVisible(visible);
 }
 
+void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
+  switch (reason) {
+    case QSystemTrayIcon::DoubleClick:
+      setHidden(isVisible());
+      break;
+
+    default:
+      break;
+  }
+}
+
 #ifdef Q_OS_UNIX
 void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
   if (int(id) != ui->wiimoteId->value())
     return;
 
   if (ui->wiimoteBrightness->isChecked()) {
-//    if ((buttons & WIIMOTE_BTN_PLUS) && !(m_buttons & WIIMOTE_BTN_PLUS))
-//     ui->brightnessSlider->setValue(ui->brightnessSlider->value() + 4);
+    //    if ((buttons & WIIMOTE_BTN_PLUS) && !(m_buttons & WIIMOTE_BTN_PLUS))
+    //     ui->brightnessSlider->setValue(ui->brightnessSlider->value() + 4);
     //  if ((buttons & WIIMOTE_BTN_MINUS) && !(m_buttons & WIIMOTE_BTN_MINUS))
     //    ui->brightnessSlider->setValue(ui->brightnessSlider->value() - 4);
   }
@@ -105,18 +133,18 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 
   if (ui->wiimoteScreen->isChecked()) {
     if ((buttons & WIIMOTE_BTN_UP) && !(m_buttons & WIIMOTE_BTN_UP)) {
-//      int idx = ui->screenArea->currentIndex() - 1;
-//      if (idx == -1)
-//        idx = ui->screenArea->count() - 1;
-//      ui->screenArea->setCurrentIndex(idx);
+      //      int idx = ui->screenArea->currentIndex() - 1;
+      //      if (idx == -1)
+      //        idx = ui->screenArea->count() - 1;
+      //      ui->screenArea->setCurrentIndex(idx);
     }
 
-//    if ((buttons & WIIMOTE_BTN_DOWN) && !(m_buttons & WIIMOTE_BTN_DOWN)) {
-//      int idx = ui->screenArea->currentIndex() + 1;
-//      if (idx == ui->screenArea->count())
-//        idx = 0;
-//      ui->screenArea->setCurrentIndex(idx);
-//    }
+    //    if ((buttons & WIIMOTE_BTN_DOWN) && !(m_buttons & WIIMOTE_BTN_DOWN)) {
+    //      int idx = ui->screenArea->currentIndex() + 1;
+    //      if (idx == ui->screenArea->count())
+    //        idx = 0;
+    //      ui->screenArea->setCurrentIndex(idx);
+    //    }
   }
 
   m_buttons = buttons;
@@ -124,14 +152,14 @@ void MainWindow::dbusWiimotedevButtons(uint id, uint64 buttons) {
 #endif
 
 MainWindow::~MainWindow() {
-//  m_settings->beginGroup("GeneralSettings");
-//  m_settings->setValue("visible", ui->actionColor_correction->isVisible());
-//  m_settings->setValue("screenId", ui->screenArea->currentIndex());
-//  m_settings->endGroup();
-//  m_settings->beginGroup("LedPreviewSettings");
-//  m_settings->setValue("framerateLimit", ui->ledFramerateLimit->value());
-//  m_settings->setValue("ledGlowSize", ui->ledGlow->value());
-//  m_settings->endGroup();
+  //  m_settings->beginGroup("GeneralSettings");
+  //  m_settings->setValue("visible", ui->actionColor_correction->isVisible());
+  //  m_settings->setValue("screenId", ui->screenArea->currentIndex());
+  //  m_settings->endGroup();
+  //  m_settings->beginGroup("LedPreviewSettings");
+  //  m_settings->setValue("framerateLimit", ui->ledFramerateLimit->value());
+  //  m_settings->setValue("ledGlowSize", ui->ledGlow->value());
+  //  m_settings->endGroup();
   m_settings->beginGroup("WiimotedevSettings");
   m_settings->setValue("wiimoteId", ui->wiimoteId->value());
   m_settings->setValue("brightnessControl", ui->wiimoteBrightness->isChecked());

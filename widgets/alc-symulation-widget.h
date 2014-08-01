@@ -20,18 +20,16 @@
 #ifndef AMBIENTLIGHTSYMULATION_H
 #define AMBIENTLIGHTSYMULATION_H
 
-#include "emitters/alc-emitter.h"
 #include "classes/alc-color-samples.h"
 #include "connector/alc-receiver.h"
+#include "emitters/alc-emitter.h"
 
-
-#include <QWidget>
 #include <QRgb>
-
 #include <QVector>
+#include <QWidget>
 
-class QQuickView;
 class QQuickItem;
+class QQuickView;
 
 class ALCSymulationWidget : public QWidget, public ALCReceiver {
   Q_OBJECT
@@ -47,6 +45,8 @@ private:
 public:
   explicit ALCSymulationWidget(QWidget *parent = 0);
   virtual ~ALCSymulationWidget();
+
+  void connectEmitter(ALCEmitter *emitter);
 
   void onShow();
 

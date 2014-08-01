@@ -20,6 +20,8 @@
 #ifndef ALCCOLORCORRECTION_H
 #define ALCCOLORCORRECTION_H
 
+#include "classes/alc-safe-threading.h"
+
 enum Color : unsigned char {
   Red   = 0x00,
   Blue  = 0x01,
@@ -35,24 +37,21 @@ enum Format : unsigned char {
   BGR = 0x05
 };
 
-class QMutex;
-
-class ALCColorCorrection {
+class ALCColorCorrection : public ALCSafeThreading {
 protected:
   double m_colorCorrection[3];
   double m_brightness;
   Format m_format;
-  QMutex *m_mutex;
 
 public:
   explicit ALCColorCorrection();
   ~ALCColorCorrection();
 
-  void setColorFormat(Format format);
-  void setBrightness(double value);
-  void setBlueCorrection(double value);
-  void setGreenCorrection(double value);
-  void setRedCorrection(double value);
+  void setColorFormat(const Format format);
+  void setBrightness(const double value);
+  void setBlueCorrection(const double value);
+  void setGreenCorrection(const double value);
+  void setRedCorrection(const double value);
 
   Format colorFormat();
   double brightness(bool global = false);

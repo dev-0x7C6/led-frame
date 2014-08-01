@@ -21,9 +21,10 @@
 #include "ui_alc-screen-widget.h"
 
 #include "classes/alc-color-samples.h"
+#include "dialogs/alc-screen-configure-dialog.h"
+#include "emitters/alc-screen-emitter.h"
 #include "emitters/alc-screen-emitter.h"
 #include "managers/alc-emitter-manager.h"
-
 #include "widgets/alc-emitter-widget.h"
 
 ALCScreenWidget::ALCScreenWidget(QWidget *parent) :
@@ -45,13 +46,9 @@ ALCScreenWidget::~ALCScreenWidget() {
   delete ui;
 }
 
-//#include <QListIterator>
-
-#include <QDebug>
-
 void ALCScreenWidget::setup() {
   ui->tree->clear();
-  QListIterator < ALCEmitter*> ii(ALCEmitterManager::instance()->allEmitters());
+  QListIterator <ALCEmitter *> ii(ALCEmitterManager::instance()->allEmitters());
   ALCEmitter *emitter;
 
   while (ii.hasNext()) {
@@ -67,7 +64,7 @@ void ALCScreenWidget::setup() {
 }
 
 void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *ptr) {
-  ALCScreenEmitter *emitter = dynamic_cast < ALCScreenEmitter*>(ptr);
+  ALCScreenEmitter *emitter = dynamic_cast <ALCScreenEmitter *>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
@@ -91,39 +88,13 @@ void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *ptr) {
   ui->tree->setItemWidget(item, 3, button);
 }
 
-#include "dialogs/alc-screen-configure-dialog.h"
-
-#include "emitters/alc-screen-emitter.h"
-
 void ALCScreenWidget::configure() {
   ALCScreenConfigureDialog dialog;
-  dialog.setWindowTitle(reinterpret_cast< QPushButtonEx*>(sender())->toolTip());
-  dialog.setEmitter(dynamic_cast< ALCScreenEmitter*>(reinterpret_cast< QPushButtonEx*>(sender())->emitter()));
+  dialog.setWindowTitle(reinterpret_cast<QPushButtonEx *>(sender())->toolTip());
+  dialog.setEmitter(dynamic_cast<ALCScreenEmitter *>(reinterpret_cast<QPushButtonEx *>(sender())->emitter()));
   dialog.exec();
 }
 
-//void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *)
-//{
 
-//}
-
-#include "emitters/alc-color-emitter.h"
-#include "emitters/alc-animation-emitter.h"
-#include "emitters/alc-image-emitter.h"
-
-#include <QPushButton>
-
-//void ALCScreenWidget::insertPlainColorItem(ALCEmitter *ptr) {
-//  ALCColorEmitter *emitter = dynamic_cast < ALCColorEmitter*> ( ptr);
-//  QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
-//  item->setText(0, emitter->emitterName());
-//  emitter->setTreeItem(item);
-//  item->setIcon(0, QIcon(":/22x22/color.png"));
-//  QPushButtonEx *button = new QPushButtonEx();
-//  button->setEmitter(emitter);
-//  prepareColorButton(button, emitter->color());
-//  ui->tree->setItemWidget(item, 1, button);
-//  connect(button, &QPushButtonEx::clicked, this, &ALCScreenWidget::pickColor);
-//}
 
 

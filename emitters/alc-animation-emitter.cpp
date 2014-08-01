@@ -17,6 +17,7 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
+#include <QMessageBox>
 #include "emitters/alc-animation-emitter.h"
 
 ALCAnimationEmitter::ALCAnimationEmitter() :
@@ -27,7 +28,7 @@ ALCAnimationEmitter::ALCAnimationEmitter() :
   rotatePalette();
   startTimer(1000 / 60);
 
-  for (register int i = 0; i < 256; ++i)
+  for (int i = 0; i < 256; ++i)
     m_colorStream << qRgb(0, 0, 0);
 
   m_animationType = Rotation;
@@ -38,7 +39,13 @@ ALCAnimationEmitter::~ALCAnimationEmitter() {
     delete m_animation;
 }
 
-#include <QMessageBox>
+const QColor &ALCAnimationEmitter::color() {
+  return m_color;
+}
+
+void ALCAnimationEmitter::setColor(const QColor &color) {
+  m_color = color;
+}
 
 bool ALCAnimationEmitter::open() {
   QMessageBox::warning(0, "Warning", "To implement.", QMessageBox::Ok);
@@ -78,13 +85,6 @@ void ALCAnimationEmitter::glow() {
   m_animation->start();
 }
 
-unsigned char ALCAnimationEmitter::max(int value) {
-  if (value > 255)
-    return 255;
-  else
-    return value;
-}
-
 void ALCAnimationEmitter::timerEvent(QTimerEvent *) {
   if (!m_connectedCount)
     return;
@@ -97,15 +97,15 @@ void ALCAnimationEmitter::timerEvent(QTimerEvent *) {
       if (m_colorStream.count() == 256)
         m_colorStream.removeFirst();
 
-      m_colorStream << qRgb(max(qRed(m_color.rgb())),
-                            max(qGreen(m_color.rgb())),
-                            max(qBlue(m_color.rgb())));
-      QListIterator < QRgb> it(m_colorStream);
+      m_colorStream << qRgb(qMin(qRed(m_color.rgb()), 0xFF),
+                            qMin(qGreen(m_color.rgb()), 0xFF),
+                            qMin(qBlue(m_color.rgb()), 0xFF));
+      QListIterator <QRgb> it(m_colorStream);
 
-      for (register int p = 0; p < 4; ++p) {
-        QVector < int> *vec = m_samples.get(static_cast < ALCColorSamples::Position>(p));
+      for (int p = 0; p < 4; ++p) {
+        QVector <int> *vec = m_samples.get(static_cast <ALCColorSamples::Position>(p));
 
-        for (register int i = 0; i < SAMPLE_RESOLUTION; ++i)
+        for (int i = 0; i < ALCColorSamples::Resolution; ++i)
           (*vec)[i] = it.next();
       }
     }
@@ -113,17 +113,19 @@ void ALCAnimationEmitter::timerEvent(QTimerEvent *) {
 
     case Glow:
       if (m_blink < 2)
-        rgb = qRgb(max(qRed(m_color.rgb())), max(qGreen(m_color.rgb())), max(qBlue(m_color.rgb())));
+        rgb = qRgb(qMin(qRed(m_color.rgb()), 0xFF),
+                   qMin(qGreen(m_color.rgb()), 0xFF),
+                   qMin(qBlue(m_color.rgb()), 0xFF));
       else
         rgb = qRgb(0, 0, 0);
 
       if (m_blink > 3)
         m_blink = 0;
 
-      for (register int p = 0; p < 4; ++p) {
-        QVector < int> *vec = m_samples.get(static_cast < ALCColorSamples::Position>(p));
+      for (int p = 0; p < 4; ++p) {
+        QVector <int> *vec = m_samples.get(static_cast <ALCColorSamples::Position>(p));
 
-        for (register int i = 0; i < SAMPLE_RESOLUTION; ++i)
+        for (int i = 0; i < ALCColorSamples::Resolution; ++i)
           (*vec)[i] = rgb;
       }
 

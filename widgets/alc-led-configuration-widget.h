@@ -23,7 +23,7 @@
 #include <QWidget>
 
 namespace Ui {
-class ALCLedConfigurationWidget;
+  class ALCLedConfigurationWidget;
 }
 
 class ALCLedConfigurationWidget : public QWidget {

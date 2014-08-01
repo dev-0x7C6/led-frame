@@ -23,7 +23,7 @@
 #include <QWidget>
 
 namespace Ui {
-class ALCColorCorrectionWidget;
+  class ALCColorCorrectionWidget;
 }
 
 class ALCColorCorrection;
@@ -38,21 +38,20 @@ public:
   explicit ALCColorCorrectionWidget(QWidget *parent = 0);
   ~ALCColorCorrectionWidget();
 
-  void setColorCorrection(ALCColorCorrection *);
+  void setColorCorrection(ALCColorCorrection *correction);
   void reload();
   void restore();
 
 private:
-  void brightnessSliderChanged(int);
-  void blueSliderChanged(int);
-  void greenSliderChanged(int);
-  void redSliderChanged(int);
+  void brightnessSliderChanged(const int value);
+  void blueSliderChanged(const int value);
+  void greenSliderChanged(const int value);
+  void redSliderChanged(const int value);
 
-  void setDefaultBrightness();
-  void setDefaultRed();
-  void setDefaultGreen();
-  void setDefaultBlue();
-
+  void restoreBrightness();
+  void restoreRed();
+  void restoreGreen();
+  void restoreBlue();
 };
 
 #endif // ALCCOLORCORRECTIONWIDGET_H

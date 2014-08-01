@@ -80,7 +80,7 @@ void ALCEmitterWidget::prepare() {
 
 void ALCEmitterWidget::setup() {
   ui->tree->clear();
-  QListIterator < ALCEmitter*> ii(ALCEmitterManager::instance()->allEmitters());
+  QListIterator <ALCEmitter *> ii(ALCEmitterManager::instance()->allEmitters());
   ALCEmitter *emitter;
 
   while (ii.hasNext()) {
@@ -104,7 +104,7 @@ void ALCEmitterWidget::setup() {
 }
 
 void ALCEmitterWidget::insertPlainColorItem(ALCEmitter *ptr) {
-  ALCColorEmitter *emitter = dynamic_cast < ALCColorEmitter*>(ptr);
+  ALCColorEmitter *emitter = dynamic_cast <ALCColorEmitter *>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
@@ -121,7 +121,7 @@ void ALCEmitterWidget::insertPlainColorItem(ALCEmitter *ptr) {
 }
 
 void ALCEmitterWidget::insertAnimationItem(ALCEmitter *ptr) {
-  ALCAnimationEmitter *emitter = dynamic_cast < ALCAnimationEmitter*>(ptr);
+  ALCAnimationEmitter *emitter = dynamic_cast <ALCAnimationEmitter *>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
@@ -137,7 +137,7 @@ void ALCEmitterWidget::insertAnimationItem(ALCEmitter *ptr) {
 }
 
 void ALCEmitterWidget::insertImageItem(ALCEmitter *ptr) {
-  ALCImageEmitter *emitter = dynamic_cast < ALCImageEmitter*>(ptr);
+  ALCImageEmitter *emitter = dynamic_cast <ALCImageEmitter *>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   item->setText(1, emitter->file());
@@ -176,17 +176,17 @@ void ALCEmitterWidget::insertDefaultButtons(ALCEmitter *emitter, QBoxLayout *lay
 }
 
 void ALCEmitterWidget::reconfigure() {
-  reinterpret_cast < QPushButtonEx*>(sender())->emitter()->configure();
+  reinterpret_cast <QPushButtonEx *>(sender())->emitter()->configure();
   setup();
 }
 
 void ALCEmitterWidget::rename() {
-  reinterpret_cast < QPushButtonEx*>(sender())->emitter()->rename();
+  reinterpret_cast <QPushButtonEx *>(sender())->emitter()->rename();
   setup();
 }
 
 void ALCEmitterWidget::remove() {
-  reinterpret_cast < QPushButtonEx*>(sender())->emitter()->remove();
+  reinterpret_cast <QPushButtonEx *>(sender())->emitter()->remove();
   setup();
 }
 

@@ -24,7 +24,7 @@
 #include <QAbstractButton>
 
 namespace Ui {
-class ALCScreenConfigureDialog;
+  class ALCScreenConfigureDialog;
 }
 
 class ALCScreenEmitter;

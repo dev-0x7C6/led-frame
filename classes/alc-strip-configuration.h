@@ -74,7 +74,7 @@ public:
 class ALCStripConfiguration : public QObject {
   Q_OBJECT
 private:
-  QList < ALCLedStrip*> m_strips;
+  QList <ALCLedStrip *> m_strips;
 
 public:
   explicit ALCStripConfiguration(QObject *parent = 0);
@@ -83,7 +83,7 @@ public:
            int count, bool clockwise = true, Format color = RGB, double brightness = 1.0);
 
 
-  QList < ALCLedStrip *> list();
+  QList <ALCLedStrip *> list();
 
 };
 

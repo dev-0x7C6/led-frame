@@ -6,13 +6,12 @@
 
 QT += core gui widgets serialport opengl qml quick
 
-QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native -march=native
+QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native
 QMAKE_CXXFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
-QMAKE_LFLAGS_RELEASE += -std=c++11 -pipe -O2 -Wall -W -march=native -mtune=native -march=native
+QMAKE_LFLAGS_RELEASE += -std=c++11 -pipe -O2 -Wall -W -march=native
 QMAKE_LFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
 
 LIBS += -lX11
-
 
 unix {
   QT += dbus
@@ -47,7 +46,8 @@ SOURCES += main.cpp\
     classes/alc-strip-configuration.cpp \
     connector/alc-receiver.cpp \
     managers/alc-device-manager.cpp \
-    dialogs/alc-strip-configurator-dialog.cpp
+    dialogs/alc-strip-configurator-dialog.cpp \
+    classes/alc-safe-threading.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -72,7 +72,8 @@ HEADERS += mainwindow.h \
     classes/alc-strip-configuration.h \
     connector/alc-receiver.h \
     managers/alc-device-manager.h \
-    dialogs/alc-strip-configurator-dialog.h
+    dialogs/alc-strip-configurator-dialog.h \
+    classes/alc-safe-threading.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

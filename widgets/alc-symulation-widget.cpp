@@ -64,14 +64,21 @@ ALCSymulationWidget::~ALCSymulationWidget() {
   delete m_view;
 }
 
+void ALCSymulationWidget::connectEmitter(ALCEmitter *emitter) {
+  ALCReceiver::connectEmitter(emitter);
+
+  if (!emitter)
+    resetQmlObjects();
+}
+
 void ALCSymulationWidget::createQmlMonitor() {
   QQmlComponent monitor(m_view->engine(), QUrl("qrc:/qml/Monitor.qml"));
-  m_monitor = qobject_cast< QQuickItem* >(monitor.create());
+  m_monitor = qobject_cast<QQuickItem *>(monitor.create());
   m_monitor->setX(500 / 2 - 128);
   m_monitor->setY(380 / 2 - 106);
   m_monitor->setZ(1000);
   m_monitor->setParent(m_view->rootObject());
-  m_monitor->setParentItem(qobject_cast< QQuickItem * >(m_view->rootObject()));
+  m_monitor->setParentItem(qobject_cast<QQuickItem *>(m_view->rootObject()));
 }
 
 void ALCSymulationWidget::freeQmlMonitor() {
@@ -83,14 +90,14 @@ void ALCSymulationWidget::createQmlObjects(int size) {
   QQmlComponent led(m_view->engine(), QUrl("qrc:/qml/LedAmbient.qml"));
   QObject *obj;
   QQuickItem *item;
-  m_root = qobject_cast< QQuickItem * >(m_view->rootObject());
+  m_root = qobject_cast<QQuickItem *>(m_view->rootObject());
 
-  for (register int ii = 0; ii < 4; ++ii) {
+  for (int ii = 0; ii < 4; ++ii) {
     switch (ii) {
       case 2:
-        for (register int i = 0; i < 8; ++i) {
+        for (int i = 0; i < 8; ++i) {
           obj = led.create();
-          item = qobject_cast<QQuickItem*>(obj);
+          item = qobject_cast<QQuickItem *>(obj);
           item->setX(draw.x() + (draw.width() / 7 * i) - size / 2);
           item->setY(draw.y() - size / 2);
           //  item->setVisible(false);
@@ -100,9 +107,9 @@ void ALCSymulationWidget::createQmlObjects(int size) {
         break;
 
       case 0:
-        for (register int i = 0; i < 8; ++i) {
+        for (int i = 0; i < 8; ++i) {
           obj = led.create();
-          item = qobject_cast<QQuickItem*>(obj);
+          item = qobject_cast<QQuickItem *>(obj);
           item->setX(draw.x() + (draw.width() / 7 * (7 - i)) - size / 2);
           item->setY(draw.y() + draw.height() - size / 2);
           //   item->setVisible(false);
@@ -112,9 +119,9 @@ void ALCSymulationWidget::createQmlObjects(int size) {
         break;
 
       case 1:
-        for (register int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
           obj = led.create();
-          item = qobject_cast<QQuickItem*>(obj);
+          item = qobject_cast<QQuickItem *>(obj);
           item->setX(draw.x() - size / 2);
           item->setY(draw.y() + ((draw.height() - size / 2) / 4 * (3 - i)) - size / 4);
           createQmlObject(ii, i, item, obj, size);
@@ -123,9 +130,9 @@ void ALCSymulationWidget::createQmlObjects(int size) {
         break;
 
       case 3:
-        for (register int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
           obj = led.create();
-          item = qobject_cast<QQuickItem*>(obj);
+          item = qobject_cast<QQuickItem *>(obj);
           item->setX(draw.x() + draw.width() - size / 2);
           item->setY(draw.y() + ((draw.height() - size / 2) / 4 * i) - size / 4);
           createQmlObject(ii, i, item, obj, size);
@@ -137,18 +144,18 @@ void ALCSymulationWidget::createQmlObjects(int size) {
 }
 
 void ALCSymulationWidget::freeQmlObjects() {
-  for (register int ii = 0; ii < 4; ++ii)
+  for (int ii = 0; ii < 4; ++ii)
     switch (ii) {
       case 0:
       case 2:
-        for (register int i = 0; i < 8; ++i)
+        for (int i = 0; i < 8; ++i)
           delete m_objs[ii][i];
 
         break;
 
       case 1:
       case 3:
-        for (register int i = 0; i < 4; ++i)
+        for (int i = 0; i < 4; ++i)
           delete m_objs[ii][i];
 
         break;
@@ -156,11 +163,11 @@ void ALCSymulationWidget::freeQmlObjects() {
 }
 
 void ALCSymulationWidget::resetQmlObjects() {
-  for (register int ii = 0; ii < 4; ++ii)
+  for (int ii = 0; ii < 4; ++ii)
     switch (ii) {
       case 0:
       case 2:
-        for (register int i = 0; i < 8; ++i) {
+        for (int i = 0; i < 8; ++i) {
           QQuickItem *item = m_items[ii][i];
           item->setOpacity(0.0);
           item->setZ(0);
@@ -171,7 +178,7 @@ void ALCSymulationWidget::resetQmlObjects() {
 
       case 1:
       case 3:
-        for (register int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
           QQuickItem *item = m_items[ii][i];
           item->setOpacity(0.0);
           item->setZ(0);
@@ -181,7 +188,7 @@ void ALCSymulationWidget::resetQmlObjects() {
         break;
     }
 
-  for (register int i = 0; i < 8; ++i) {
+  for (int i = 0; i < 8; ++i) {
   }
 }
 
@@ -203,15 +210,15 @@ QString ALCSymulationWidget::name() {
 void ALCSymulationWidget::timerEvent(QTimerEvent *) {
   if (m_emitter) {
     m_emitter->state(m_samples);
-    QVector < int> *colors;
+    QVector <int> *colors;
 
-    for (register int ii = 0; ii < 4; ++ii)
+    for (int ii = 0; ii < 4; ++ii)
       switch (ii) {
         case 0:
         case 2:
           colors = m_samples.scaled(ALCColorSamples::Position(ii), 8);
 
-          for (register int i = 0; i < 8; ++i) {
+          for (int i = 0; i < 8; ++i) {
             QColor color((*colors)[i]);
             QQuickItem *item = m_items[ii][i];
 
@@ -228,7 +235,7 @@ void ALCSymulationWidget::timerEvent(QTimerEvent *) {
         case 3:
           colors = m_samples.scaled(ALCColorSamples::Position(ii), 4);
 
-          for (register int i = 0; i < 4; ++i) {
+          for (int i = 0; i < 4; ++i) {
             QColor color((*colors)[i]);
             QQuickItem *item = m_items[ii][i];
 

@@ -22,28 +22,29 @@
 
 #include <QColor>
 #include <QObject>
-#include "emitters/alc-emitter.h"
+
 #include "classes/alc-color-samples.h"
+#include "emitters/alc-emitter.h"
 
 class QTimer;
 
 class ALCColorEmitter: public QObject, public ALCEmitter {
   Q_OBJECT
 private:
+  ALCColorSamples m_samples;
   QColor m_color;
   QTimer *m_timer;
-  ALCColorSamples m_samples;
 
 public:
   explicit ALCColorEmitter();
   virtual ~ALCColorEmitter();
 
-  void setColor(QColor);
-  QColor color();
+  void setColor(const QColor &color);
+  const QColor &color();
 
   void pushState();
 
-  QColor open();
+  const QColor &open();
 
   virtual bool configure();
 };

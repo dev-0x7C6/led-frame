@@ -17,9 +17,13 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#include "alc-emitter.h"
-
+#include <QApplication>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QTreeWidgetItem>
+
+#include "emitters/alc-emitter.h"
+#include "managers/alc-emitter-manager.h"
 
 ALCEmitter::ALCEmitter()
   : m_treeItem(0),
@@ -46,22 +50,22 @@ ALCEmitter::EmitterType ALCEmitter::type() const {
 void ALCEmitter::init() {
   QMutexLocker locker(&m_mutex);
   m_connectedCount++;
-// qDebug() << this << " device connected, count: " << m_connectedCount;
+  // qDebug() << this << " device connected, count: " << m_connectedCount;
 }
 
 void ALCEmitter::done() {
   QMutexLocker locker(&m_mutex);
   m_connectedCount--;
-//  qDebug() << this << " device disconnected, count: " << m_connectedCount;
+  //  qDebug() << this << " device disconnected, count: " << m_connectedCount;
 }
 
-void ALCEmitter::setState(ALCColorSamples &samples) {
-  QMutexLocker locker(&m_mutex);
+void ALCEmitter::setState(const ALCColorSamples &samples) {
+  QWriteLocker locker(&m_readWriteLock);
   m_safeSamples.copy(samples);
 }
 
 void ALCEmitter::state(ALCColorSamples &samples) {
-  QMutexLocker locker(&m_mutex);
+  QReadLocker locker(&m_readWriteLock);
   samples.copy(m_safeSamples);
 }
 
@@ -77,22 +81,14 @@ bool ALCEmitter::configure() {
   return false;
 }
 
-#include <QInputDialog>
-#include <QApplication>
-
 bool ALCEmitter::rename() {
   QString text = QInputDialog::getText(0, "Rename", "Set name:", QLineEdit::Normal, emitterName());
 
-  if (!text.isEmpty()) {
+  if (!text.isEmpty())
     setEmitterName(text);
-  }
 
   return text.isEmpty();
 }
-
-#include <QMessageBox>
-
-#include "managers/alc-emitter-manager.h"
 
 bool ALCEmitter::remove() {
   if (QMessageBox::question(0, "Question", "Do you realy want to delete this emitter.",

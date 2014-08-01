@@ -23,7 +23,7 @@
 #include <QDialog>
 
 namespace Ui {
-class ALCAboutDialog;
+  class ALCAboutDialog;
 }
 
 class ALCAboutDialog : public QDialog {

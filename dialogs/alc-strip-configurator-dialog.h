@@ -4,7 +4,7 @@
 #include <QDialog>
 
 namespace Ui {
-class ALCStripConfiguratorDialog;
+  class ALCStripConfiguratorDialog;
 }
 
 class ALCStripConfiguratorDialog : public QDialog {

@@ -22,10 +22,10 @@
 
 #include <QVector>
 
-const int SAMPLE_RESOLUTION = 30;
-
 class ALCColorSamples {
 public:
+  static const int Resolution;
+
   enum Position : quint8 {
     SAMPLE_BOTTOM,
     SAMPLE_LEFT,
@@ -35,23 +35,21 @@ public:
   };
 
 private:
-  QVector < int> m_samples[SAMPLE_ARRAY];
+  QVector <int> m_samples[SAMPLE_ARRAY];
   quint16 m_sampleCount;
 
 public:
   explicit ALCColorSamples();
   virtual ~ALCColorSamples();
 
-  void set(Position pos, QVector < int> &colors);
-  QVector < int> *get(Position pos);
-  QVector < int>* scaled(Position pos, int size);
-  QVector < int>* pscaled(Position pos, int size);
+  void set(Position pos, const QVector <int> &colors);
+  QVector <int> *get(Position pos);
+  QVector <int> *scaled(Position pos, int size);
+  QVector <int> *pscaled(Position pos, int size);
 
-  quint16 scale() {
-    return SAMPLE_RESOLUTION;
-  }
+  quint16 scale();
 
-  void copy(ALCColorSamples &ref);
+  void copy(const ALCColorSamples &ref);
 };
 
 #endif // COLORSAMPLES_H

@@ -21,9 +21,6 @@
 #define ALCRECEIVER_H
 
 #include <QObject>
-#include <QMutex>
-#include <QMutexLocker>
-
 #include "classes/alc-color-correction.h"
 #include "emitters/alc-emitter.h"
 
@@ -36,7 +33,7 @@ public:
 
   virtual QString name();
 
-  void connectEmitter(ALCEmitter *emitter);
+  virtual void connectEmitter(ALCEmitter *emitter);
   ALCEmitter *connectedEmitter();
 };
 

@@ -20,14 +20,15 @@
 #include "managers/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
 
+const int ALCDeviceManager::scanAfter = 250; // ms
 
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
   : QObject(parent) {
-  startTimer(250);
+  startTimer(ALCDeviceManager::scanAfter);
 }
 
 ALCDeviceManager::~ALCDeviceManager() {
-  for (register int i = 0; i < m_threads.count(); ++i) {
+  for (int i = 0; i < m_threads.count(); ++i) {
     m_threads[i]->connectEmitter(0);
     m_threads[i]->setContinueValue(false);
     m_threads[i]->wait();
@@ -37,22 +38,27 @@ ALCDeviceManager::~ALCDeviceManager() {
   m_threads.clear();
 }
 
-ALCDeviceThread *ALCDeviceManager::device(int idx) {
+ALCDeviceThread *ALCDeviceManager::device(int idx) const {
   if (idx >= m_threads.count())
     return 0;
 
   return m_threads[idx];
 }
 
-int ALCDeviceManager::count() {
+int ALCDeviceManager::count() const {
   return m_threads.count();
+}
+
+ALCDeviceManager *ALCDeviceManager::instance() {
+  static ALCDeviceManager object;
+  return &object;
 }
 
 void ALCDeviceManager::timerEvent(QTimerEvent *event) {
   Q_UNUSED(event);
-  QList < QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+  QList <QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
-  for (register int i = 0; i < ports.count(); ++i) {
+  for (int i = 0; i < ports.count(); ++i) {
     if ((ports[i].manufacturer() != AmbientLedConnector::IDs::Manufacturer) ||
         (ports[i].description() != AmbientLedConnector::IDs::Description)) continue;
 
@@ -70,13 +76,13 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
 }
 
 void ALCDeviceManager::deviceThreadStarted() {
-  ALCDeviceThread *thread = dynamic_cast < ALCDeviceThread *>(sender());
+  ALCDeviceThread *thread = dynamic_cast <ALCDeviceThread *>(sender());
   m_threads << thread;
   emit deviceConnected(thread);
 }
 
 void ALCDeviceManager::deviceThreadFinished() {
-  ALCDeviceThread *thread = dynamic_cast < ALCDeviceThread *>(sender());
+  ALCDeviceThread *thread = dynamic_cast <ALCDeviceThread *>(sender());
   QSerialPortInfo details = thread->details();
   m_threads.removeAll(thread);
   emit deviceDisconnected(thread);

@@ -26,7 +26,7 @@
 class ALCEmitter;
 
 namespace Ui {
-class ALCScreenWidget;
+  class ALCScreenWidget;
 }
 
 class ALCScreenWidget : public QMainWindow {
@@ -42,8 +42,6 @@ public:
 private:
   void insertScreenCaptureItem(ALCEmitter *);
   void configure();
-
-//  void prepareColorButton(QPushButton *, QColor);
 
 };
 

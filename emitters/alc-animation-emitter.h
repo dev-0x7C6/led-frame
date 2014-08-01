@@ -42,14 +42,7 @@ private:
   QPropertyAnimation *m_animation;
   QColor m_color;
 
-  QColor color() {
-    return m_color;
-  }
-  void setColor(QColor value) {
-    m_color = value;
-  }
-
-  QList < QRgb> m_colorStream;
+  QList <QRgb> m_colorStream;
   ALCColorSamples m_samples;
   AnimationType m_animationType;
   quint64 m_blink;
@@ -62,14 +55,14 @@ public:
   virtual bool configure();
 
 private:
+  const QColor &color();
+  void setColor(const QColor &color);
+
   void rotatePalette();
   void glow();
 
 protected:
-  unsigned char max(int value);
-
   void timerEvent(QTimerEvent *);
-
 };
 
 #endif // ALCANIMATIONEMITTER_H

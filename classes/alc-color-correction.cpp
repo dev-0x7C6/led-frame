@@ -19,71 +19,66 @@
 
 #include "alc-color-correction.h"
 
-#include <QMutexLocker>
-#include <QMutex>
-
-ALCColorCorrection::ALCColorCorrection() :
-  m_mutex(new QMutex()) {
-  QMutexLocker locker(m_mutex);
-  m_colorCorrection[0] = 1.0d;
-  m_colorCorrection[1] = 1.0d;
-  m_colorCorrection[2] = 1.0d;
+ALCColorCorrection::ALCColorCorrection() {
+  QWriteLocker locker(&m_readWriteLock);
+  m_colorCorrection[0] = 1.0;
+  m_colorCorrection[1] = 1.0;
+  m_colorCorrection[2] = 1.0;
   m_format = GRB;
-  m_brightness = 1.0d;
+  m_brightness = 1.0;
 }
 
 ALCColorCorrection::~ALCColorCorrection() {
-  delete m_mutex;
 }
 
-void ALCColorCorrection::setBrightness(double value) {
-  QMutexLocker locker(m_mutex);
+void ALCColorCorrection::setBrightness(const double value) {
+  QWriteLocker locker(&m_readWriteLock);
   m_brightness = value;
 }
 
-void ALCColorCorrection::setBlueCorrection(double value) {
-  QMutexLocker locker(m_mutex);
+void ALCColorCorrection::setBlueCorrection(const double value) {
+  QWriteLocker locker(&m_readWriteLock);
   m_colorCorrection[Blue] = value;
 }
 
-void ALCColorCorrection::setGreenCorrection(double value) {
-  QMutexLocker locker(m_mutex);
+void ALCColorCorrection::setGreenCorrection(const double value) {
+  QWriteLocker locker(&m_readWriteLock);
   m_colorCorrection[Green] = value;
 }
 
-void ALCColorCorrection::setRedCorrection(double value) {
-  QMutexLocker locker(m_mutex);
+void ALCColorCorrection::setRedCorrection(const double value) {
+  QWriteLocker locker(&m_readWriteLock);
   m_colorCorrection[Red] = value;
 }
 
 Format ALCColorCorrection::colorFormat() {
-  QMutexLocker locker(m_mutex);
+  QReadLocker locker(&m_readWriteLock);
   return m_format;
 }
 
 double ALCColorCorrection::brightness(bool global) {
-  QMutexLocker locker(m_mutex);
+  QReadLocker locker(&m_readWriteLock);
   return (global) ?
          m_brightness * ALCColorCorrection::instance()->brightness() :
          m_brightness;
 }
 
 double ALCColorCorrection::blueCorrection(bool global) {
-  QMutexLocker locker(m_mutex);
+  QReadLocker locker(&m_readWriteLock);
   return (global) ?
          m_colorCorrection[Blue] * ALCColorCorrection::instance()->blueCorrection() :
          m_colorCorrection[Blue];
 }
 
 double ALCColorCorrection::greenCorrection(bool global) {
-  QMutexLocker locker(m_mutex);
+  QReadLocker locker(&m_readWriteLock);
   return (global) ?
          m_colorCorrection[Green] * ALCColorCorrection::instance()->greenCorrection() :
          m_colorCorrection[Green];
 }
 
 double ALCColorCorrection::redCorrection(bool global) {
-  QMutexLocker locker(m_mutex);
+  QReadLocker locker(&m_readWriteLock);
   return (global) ?
          m_colorCorrection[Red] * ALCColorCorrection::instance()->redCorrection() :
          m_colorCorrection[Red];

@@ -39,6 +39,11 @@ ALCLedStripManager::ALCLedStripManager() {
 ALCLedStripManager::~ALCLedStripManager() {
 }
 
-QList<ALCStripConfiguration *> ALCLedStripManager::configurations() {
+const QList<ALCStripConfiguration *> &ALCLedStripManager::configurations() {
   return m_configurations;
+}
+
+ALCLedStripManager *ALCLedStripManager::instance() {
+  static ALCLedStripManager object;
+  return &object;
 }

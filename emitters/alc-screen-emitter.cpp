@@ -124,10 +124,10 @@ bool ALCScreenEmitter::configure() {
 void ALCScreenEmitter::run() {
   Display *display = XOpenDisplay(NULL);
   Window root = DefaultRootWindow(display);
-  colors[static_cast< quint8>(ALCColorSamples::SAMPLE_BOTTOM)] = m_samples.get(ALCColorSamples::SAMPLE_BOTTOM);
-  colors[static_cast< quint8>(ALCColorSamples::SAMPLE_LEFT)] = m_samples.get(ALCColorSamples::SAMPLE_LEFT);
-  colors[static_cast< quint8>(ALCColorSamples::SAMPLE_TOP)] = m_samples.get(ALCColorSamples::SAMPLE_TOP);
-  colors[static_cast< quint8>(ALCColorSamples::SAMPLE_RIGHT)] = m_samples.get(ALCColorSamples::SAMPLE_RIGHT);
+  colors[static_cast<quint8>(ALCColorSamples::SAMPLE_BOTTOM)] = m_samples.get(ALCColorSamples::SAMPLE_BOTTOM);
+  colors[static_cast<quint8>(ALCColorSamples::SAMPLE_LEFT)] = m_samples.get(ALCColorSamples::SAMPLE_LEFT);
+  colors[static_cast<quint8>(ALCColorSamples::SAMPLE_TOP)] = m_samples.get(ALCColorSamples::SAMPLE_TOP);
+  colors[static_cast<quint8>(ALCColorSamples::SAMPLE_RIGHT)] = m_samples.get(ALCColorSamples::SAMPLE_RIGHT);
   QElapsedTimer timer;
   QElapsedTimer counter;
   int fps = 0;
@@ -236,9 +236,9 @@ void ALCScreenEmitter::run() {
         }
 
         c = 0;
-        register int rgb;
+        int rgb;
 
-        for (register int x = 0; x < cx; x += l_pixelSkip) for (register int y = 0; y < cy; y += l_pixelSkip) {
+        for (int x = 0; x < cx; x += l_pixelSkip) for (int y = 0; y < cy; y += l_pixelSkip) {
             rgb = XGetPixel(src, sx + x, sy + y);
             r += (rgb >> 0x10) & 0xFF;
             g += (rgb >> 0x08) & 0xFF;
@@ -268,7 +268,7 @@ void ALCScreenEmitter::run() {
     setState(m_samples);
     latency_curr = timer.nsecsElapsed();
     latency_accu += latency_curr;
-    framerate_delay = 1000000000.0 / static_cast< double>(l_framerateLimit) - latency_curr;
+    framerate_delay = 1000000000.0 / static_cast<double>(l_framerateLimit) - latency_curr;
 
     if (framerate_delay < 0)
       framerate_delay = 0.0;

@@ -27,7 +27,7 @@ QString ALCReceiver::name() {
 }
 
 void ALCReceiver::connectEmitter(ALCEmitter *emitter) {
-  QMutexLocker locker(m_mutex);
+  QMutexLocker locker(&m_mutex);
 
   if (m_emitter)
     m_emitter->done();
@@ -37,6 +37,6 @@ void ALCReceiver::connectEmitter(ALCEmitter *emitter) {
 }
 
 ALCEmitter *ALCReceiver::connectedEmitter() {
-  QMutexLocker locker(m_mutex);
+  QMutexLocker locker(&m_mutex);
   return m_emitter;
 }

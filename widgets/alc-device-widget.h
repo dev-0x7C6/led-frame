@@ -28,7 +28,7 @@
 #include "connector/alc-receiver.h"
 
 namespace Ui {
-class ALCDeviceWidget;
+  class ALCDeviceWidget;
 }
 
 class ALCDeviceThread;
@@ -42,7 +42,7 @@ private:
   int column;
 
 public:
-  ComboBoxItem(QTreeWidgetItem*, int);
+  ComboBoxItem(QTreeWidgetItem *, int);
 
 public slots:
   void changeItem(int);
@@ -70,8 +70,8 @@ public:
   void currentIndexChanged(int);
 
 signals:
-  void setCustomEmitter(ALCDeviceThread*, int);
-  void setEmitter(ALCReceiver*, ALCEmitter*);
+  void setCustomEmitter(ALCDeviceThread *, int);
+  void setEmitter(ALCReceiver *, ALCEmitter *);
 };
 
 #include <QCommandLinkButton>
@@ -98,7 +98,7 @@ class ALCDeviceWidget : public QMainWindow {
   Q_OBJECT
 private:
   Ui::ALCDeviceWidget *ui;
-  QList < ALCDeviceTreeWidget*> m_devices;
+  QList <ALCDeviceTreeWidget *> m_devices;
   ALCDeviceManager *m_manager;
   ALCSymulationWidget *m_symulation;
   QSettings *m_settings;

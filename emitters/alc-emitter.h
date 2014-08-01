@@ -68,8 +68,8 @@ public:
 
   virtual void init();
   void done();
-//  void setState(QList < QRgb> colors);
-  void setState(ALCColorSamples &samples);
+  //  void setState(QList < QRgb> colors);
+  void setState(const ALCColorSamples &samples);
   void state(ALCColorSamples &samples);
 
   void setTreeItem(QTreeWidgetItem *item);

@@ -54,7 +54,7 @@ void ALCScreenConfigureDialog::setEmitter(ALCScreenEmitter *emitter) {
   icon[2] = new QIcon(":/custom/red.png");
   ui->sampleSize->clear();
 
-  for (register int i = 0; i < 12; ++i) {
+  for (int i = 0; i < 12; ++i) {
     QIcon *qi;
     px = 32 + (32 * i);
 
@@ -71,7 +71,7 @@ void ALCScreenConfigureDialog::setEmitter(ALCScreenEmitter *emitter) {
   ui->sampleSize->setCurrentIndex(emitter->chunk() / 32 - 1);
   ui->pixelSkip->clear();
 
-  for (register int i = 0; i < 9; ++i) {
+  for (int i = 0; i < 9; ++i) {
     px = 4 * i;
     QIcon *qi;
 
@@ -113,7 +113,7 @@ void ALCScreenConfigureDialog::accepted(QAbstractButton *button) {
 
   QRect area;
   QString str;
-  QList < QScreen* > screens = QApplication::screens();
+  QList <QScreen *> screens = QApplication::screens();
 
   switch (ui->buttons->buttonRole(button)) {
     case QDialogButtonBox::ApplyRole:
@@ -132,7 +132,7 @@ void ALCScreenConfigureDialog::accepted(QAbstractButton *button) {
     case QDialogButtonBox::ResetRole:
       str = m_emitter->name();
 
-      for (register int i = 0; i < screens.count(); ++i)
+      for (int i = 0; i < screens.count(); ++i)
         if (screens[i]->name() == str) {
           area = screens[i]->geometry();
           break;

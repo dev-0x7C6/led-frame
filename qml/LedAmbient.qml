@@ -17,7 +17,7 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.2
 import QtGraphicalEffects 1.0
 
 RadialGradient {

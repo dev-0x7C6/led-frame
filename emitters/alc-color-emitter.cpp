@@ -19,8 +19,9 @@
 
 #include "alc-color-emitter.h"
 
-#include <QTimer>
+#include <QColorDialog>
 #include <QTime>
+#include <QTimer>
 
 ALCColorEmitter::ALCColorEmitter() :
   QObject(),
@@ -36,28 +37,21 @@ ALCColorEmitter::ALCColorEmitter() :
 
 ALCColorEmitter::~ALCColorEmitter() {}
 
-void ALCColorEmitter::setColor(QColor color) {
+void ALCColorEmitter::setColor(const QColor &color) {
   m_color = color;
 }
 
-QColor ALCColorEmitter::color() {
+const QColor &ALCColorEmitter::color() {
   return m_color;
 }
 
-double max(double value) {
-  if (value > 255)
-    return 255;
-
-  return value;
-}
-
 void ALCColorEmitter::pushState() {
-  QVector < int> samples(SAMPLE_RESOLUTION);
-  int rgb = qRgb(max(m_color.red() * m_brightness),
-                 max(m_color.green() * m_brightness),
-                 max(m_color.blue() * m_brightness));
+  QVector <int> samples(ALCColorSamples::Resolution);
+  int rgb = qRgb(qMin(m_color.red() * m_brightness, 255.0),
+                 qMin(m_color.green() * m_brightness, 255.0),
+                 qMin(m_color.blue() * m_brightness, 255.0));
 
-  for (register int i = 0; i < samples.size(); ++i)
+  for (int i = 0; i < samples.size(); ++i)
     samples[i] = rgb;
 
   m_samples.set(ALCColorSamples::SAMPLE_TOP, samples);
@@ -67,9 +61,7 @@ void ALCColorEmitter::pushState() {
   setState(m_samples);
 }
 
-#include <QColorDialog>
-
-QColor ALCColorEmitter::open() {
+const QColor &ALCColorEmitter::open() {
   QColor color = QColorDialog::getColor(m_color);
 
   if (color.isValid())
