@@ -54,6 +54,6 @@ void ALCWeatherColorCorrection::callCorrection(const QTime &current) {
 
   clock = qMin(clock, 3.0);
   setCorrection(ALCColorCorrection::Brightness, clock);
-  qDebug() << "Current time:" << current << ", global: "  << correction(ALCColorCorrection::Brightness, true) << "scalar: " << clock;
+  //qDebug() << "Current time:" << current << ", global: "  << correction(ALCColorCorrection::Brightness, true) << "scalar: " << clock;
 }
 
