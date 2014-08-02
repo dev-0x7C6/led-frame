@@ -33,22 +33,38 @@ ALCColorCorrection::~ALCColorCorrection() {
 
 void ALCColorCorrection::setBrightness(const double value) {
   QWriteLocker locker(&m_readWriteLock);
-  m_brightness = value;
+
+  if (m_brightness != value) {
+    m_brightness = value;
+    correctionChanged();
+  }
 }
 
 void ALCColorCorrection::setBlueCorrection(const double value) {
   QWriteLocker locker(&m_readWriteLock);
-  m_colorCorrection[Blue] = value;
+
+  if (m_colorCorrection[Blue] != value) {
+    m_colorCorrection[Blue] = value;
+    correctionChanged();
+  }
 }
 
 void ALCColorCorrection::setGreenCorrection(const double value) {
   QWriteLocker locker(&m_readWriteLock);
-  m_colorCorrection[Green] = value;
+
+  if (m_colorCorrection[Green] != value) {
+    m_colorCorrection[Green] = value;
+    correctionChanged();
+  }
 }
 
 void ALCColorCorrection::setRedCorrection(const double value) {
   QWriteLocker locker(&m_readWriteLock);
-  m_colorCorrection[Red] = value;
+
+  if (m_colorCorrection[Red] != value) {
+    m_colorCorrection[Red] = value;
+    correctionChanged();
+  }
 }
 
 Format ALCColorCorrection::colorFormat() {
@@ -87,4 +103,7 @@ double ALCColorCorrection::redCorrection(bool global) {
 ALCColorCorrection *ALCColorCorrection::instance() {
   static ALCColorCorrection reference;
   return &reference;
+}
+
+void ALCColorCorrection::correctionChanged() {
 }

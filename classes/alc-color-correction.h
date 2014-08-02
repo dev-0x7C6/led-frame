@@ -20,6 +20,7 @@
 #ifndef ALCCOLORCORRECTION_H
 #define ALCCOLORCORRECTION_H
 
+#include <QObject>
 #include "classes/alc-safe-threading.h"
 
 enum Color : unsigned char {
@@ -60,6 +61,10 @@ public:
   double redCorrection(bool global = false);
 
   static ALCColorCorrection *instance();
+
+protected:
+  virtual void correctionChanged();
+
 };
 
 #endif // ALCCOLORCORRECTION_H

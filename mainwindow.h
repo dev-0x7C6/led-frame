@@ -23,6 +23,7 @@
 #include <QMainWindow>
 #include <QSettings>
 #include <QSystemTrayIcon>
+#include <QTimer>
 
 #ifdef Q_OS_UNIX
 #include "wiimotedev/deviceevents.h"
@@ -50,6 +51,7 @@ private:
   QString m_title;
 
   QAction *m_visible;
+  QTimer m_showBrightnessTimer;
 
 #ifdef Q_OS_UNIX
   WiimotedevDeviceEvents *m_wiimotedevEvents;
@@ -63,12 +65,14 @@ public:
 protected:
   virtual void showEvent(QShowEvent *event);
   virtual void hideEvent(QHideEvent *event);
+  bool eventFilter(QObject *object, QEvent *event);
 
 private:
   void about();
   void showColorCorrection(bool);
 
   void trayActivated(QSystemTrayIcon::ActivationReason reason);
+  void trayShowBrightness();
 
 #ifdef Q_OS_UNIX
   void dbusWiimotedevButtons(uint, uint64);

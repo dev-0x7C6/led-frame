@@ -39,6 +39,7 @@ public:
   ~ALCColorCorrectionWidget();
 
   void setColorCorrection(ALCColorCorrection *correction);
+  ALCColorCorrection *colorCorrection();
   void reload();
   void restore();
 

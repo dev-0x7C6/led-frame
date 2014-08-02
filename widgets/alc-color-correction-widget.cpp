@@ -46,6 +46,10 @@ void ALCColorCorrectionWidget::setColorCorrection(ALCColorCorrection *correction
   reload();
 }
 
+ALCColorCorrection *ALCColorCorrectionWidget::colorCorrection() {
+  return m_correction;
+}
+
 void ALCColorCorrectionWidget::restore() {
   ui->brightnessSlider->setValue(100.0);
   ui->blueSlider->setValue(100.0);

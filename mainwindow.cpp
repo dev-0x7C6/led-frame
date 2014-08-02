@@ -23,6 +23,7 @@
 #include <QDesktopWidget>
 #include <QGuiApplication>
 #include <QScreen>
+#include <QWheelEvent>
 
 #include "connector/alc-device-thread.h"
 #include "dialogs/alc-about-dialog.h"
@@ -39,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
   ui(new Ui::MainWindow),
   m_screenManager(ALCEmitterManager::instance()),
-  m_tray(QIcon(QPixmap(":/22x22/leds.png").scaled(32, 32)), this),
+  m_tray(QIcon(":/22x22/leds.png"), this),
   m_menu(new QMenu())
 #ifdef Q_OS_UNIX
   ,
@@ -89,21 +90,47 @@ MainWindow::MainWindow(QWidget *parent) :
   m_menu->addSeparator();
   connect(m_menu->addAction("Quit"), &QAction::triggered, this, &MainWindow::close);
   connect(&m_tray, &QSystemTrayIcon::activated, this, &MainWindow::trayActivated);
-
   m_settings->beginGroup("MainWindow");
   m_visible->setChecked(m_settings->value("visible", true).toBool());
   m_settings->endGroup();
+  m_tray.installEventFilter(this);
 
   if (!m_visible->isChecked())
     QMetaObject::invokeMethod(this, "hide", Qt::QueuedConnection);
+
+  m_showBrightnessTimer.setInterval(250);
+  connect(&m_showBrightnessTimer, &QTimer::timeout, this, &MainWindow::trayShowBrightness);
 }
 
 void MainWindow::showEvent(QShowEvent *event) {
+  Q_UNUSED(event)
   m_visible->setChecked(isVisible());
 }
 
 void MainWindow::hideEvent(QHideEvent *event) {
+  Q_UNUSED(event)
   m_visible->setChecked(isVisible());
+}
+
+bool MainWindow::eventFilter(QObject *object, QEvent *event) {
+  switch (event->type()) {
+    case QEvent::Wheel: {
+      double brightness = ALCColorCorrection::instance()->brightness();
+      brightness += (static_cast<QWheelEvent *>(event)->delta() > 0) ? 0.01 : -0.01;
+      brightness = qMin(brightness, 2.0);
+      brightness = qMax(brightness, 0.0);
+      ALCColorCorrection::instance()->setBrightness(brightness);
+      ui->colorCorrection->reload();
+      m_showBrightnessTimer.start();
+      m_tray.showMessage(QString(), QString());
+      return true;
+    }
+
+    default:
+      break;
+  }
+
+  return QObject::eventFilter(object, event);
 }
 
 void MainWindow::about() {
@@ -124,6 +151,13 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
     default:
       break;
   }
+}
+
+void MainWindow::trayShowBrightness() {
+  m_showBrightnessTimer.stop();
+  double brightness = ALCColorCorrection::instance()->brightness();
+  m_tray.showMessage("Brightness", QString("Current brightness level: %1%").
+                     arg(QString::number(int(brightness * 100.0))), QSystemTrayIcon::Information, 1000);
 }
 
 #ifdef Q_OS_UNIX
@@ -180,7 +214,6 @@ MainWindow::~MainWindow() {
   m_settings->setValue("framerateControl", ui->wiimoteFramerate->isChecked());
   m_settings->setValue("screenControl", ui->wiimoteScreen->isChecked());
   m_settings->endGroup();
-
   m_settings->beginGroup("MainWindow");
   m_settings->setValue("visible", m_visible->isChecked());
   m_settings->endGroup();
