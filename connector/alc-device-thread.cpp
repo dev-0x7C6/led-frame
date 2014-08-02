@@ -85,10 +85,10 @@ void ALCDeviceThread::run() {
     if (m_emitter)
       m_emitter->state(m_samples);
 
-    brightness_t = brightness(true);
-    rgbc[Red] = redCorrection(true);
-    rgbc[Green] = greenCorrection(true);
-    rgbc[Blue] = blueCorrection(true);
+    brightness_t = correction(ALCColorCorrection::Brightness, true);
+    rgbc[Red] = correction(ALCColorCorrection::Red, true);
+    rgbc[Green] = correction(ALCColorCorrection::Green, true);
+    rgbc[Blue] = correction(ALCColorCorrection::Blue, true);
 
     if (!m_emitter) {
       msleep(100);

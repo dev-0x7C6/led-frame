@@ -55,36 +55,36 @@ void ALCColorCorrectionWidget::restore() {
   ui->blueSlider->setValue(100.0);
   ui->greenSlider->setValue(100.0);
   ui->redSlider->setValue(100.0);
-  m_correction->setBrightness(1);
-  m_correction->setRedCorrection(1);
-  m_correction->setGreenCorrection(1);
-  m_correction->setBlueCorrection(1);
+  m_correction->setCorrection(ALCColorCorrection::Brightness, 1.0);
+  m_correction->setCorrection(ALCColorCorrection::Red, 1.0);
+  m_correction->setCorrection(ALCColorCorrection::Green, 1.0);
+  m_correction->setCorrection(ALCColorCorrection::Blue, 1.0);
 }
 
 void ALCColorCorrectionWidget::reload() {
-  ui->brightnessSlider->setValue(m_correction->brightness() * 100.0);
-  ui->blueSlider->setValue(m_correction->blueCorrection() * 100.0);
-  ui->greenSlider->setValue(m_correction->greenCorrection() * 100.0);
-  ui->redSlider->setValue(m_correction->redCorrection() * 100.0);
+  ui->brightnessSlider->setValue(m_correction->correction(ALCColorCorrection::Brightness) * 100.0);
+  ui->blueSlider->setValue(m_correction->correction(ALCColorCorrection::Blue) * 100.0);
+  ui->greenSlider->setValue(m_correction->correction(ALCColorCorrection::Green) * 100.0);
+  ui->redSlider->setValue(m_correction->correction(ALCColorCorrection::Red) * 100.0);
 }
 
 void ALCColorCorrectionWidget::brightnessSliderChanged(const int value) {
-  m_correction->setBrightness(value / 100.0);
+  m_correction->setCorrection(ALCColorCorrection::Brightness, value / 100.0);
   ui->brightnessProcent->setText(QString::number(value) + "%");
 }
 
 void ALCColorCorrectionWidget::blueSliderChanged(const int value) {
-  m_correction->setBlueCorrection(value / 100.0);
+  m_correction->setCorrection(ALCColorCorrection::Blue, value / 100.0);
   ui->blueProcent->setText(QString::number(value) + "%");
 }
 
 void ALCColorCorrectionWidget::greenSliderChanged(const int value) {
-  m_correction->setGreenCorrection(value / 100.0);
+  m_correction->setCorrection(ALCColorCorrection::Green, value / 100.0);
   ui->greenProcent->setText(QString::number(value) + "%");
 }
 
 void ALCColorCorrectionWidget::redSliderChanged(const int value) {
-  m_correction->setRedCorrection(value / 100.0);
+  m_correction->setCorrection(ALCColorCorrection::Red, value / 100.0);
   ui->redProcent->setText(QString::number(value) + "%");
 }
 

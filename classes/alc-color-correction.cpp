@@ -18,91 +18,78 @@
  **********************************************************************************/
 
 #include "alc-color-correction.h"
+#include "classes/alc-weather-color-correction.h"
 
-ALCColorCorrection::ALCColorCorrection() {
+QList<ALCColorCorrection *> ALCColorCorrection::m_multipliers;
+
+ALCColorCorrection::ALCColorCorrection(ALCColorCorrection::Type type) {
   QWriteLocker locker(&m_readWriteLock);
   m_colorCorrection[0] = 1.0;
   m_colorCorrection[1] = 1.0;
   m_colorCorrection[2] = 1.0;
+  m_colorCorrection[3] = 1.0;
   m_format = GRB;
-  m_brightness = 1.0;
+  m_type = type;
+  m_enabled = true;
 }
 
 ALCColorCorrection::~ALCColorCorrection() {
+
 }
 
-void ALCColorCorrection::setBrightness(const double value) {
-  QWriteLocker locker(&m_readWriteLock);
-
-  if (m_brightness != value) {
-    m_brightness = value;
-    correctionChanged();
-  }
+bool ALCColorCorrection::enabled() {
+  return m_enabled;
 }
 
-void ALCColorCorrection::setBlueCorrection(const double value) {
-  QWriteLocker locker(&m_readWriteLock);
-
-  if (m_colorCorrection[Blue] != value) {
-    m_colorCorrection[Blue] = value;
-    correctionChanged();
-  }
+void ALCColorCorrection::setEnabled(bool enabled) {
+  m_enabled = enabled;
 }
 
-void ALCColorCorrection::setGreenCorrection(const double value) {
-  QWriteLocker locker(&m_readWriteLock);
-
-  if (m_colorCorrection[Green] != value) {
-    m_colorCorrection[Green] = value;
-    correctionChanged();
-  }
+ALCColorCorrection *ALCColorCorrection::weather() const {
+  return m_weather;
 }
 
-void ALCColorCorrection::setRedCorrection(const double value) {
-  QWriteLocker locker(&m_readWriteLock);
-
-  if (m_colorCorrection[Red] != value) {
-    m_colorCorrection[Red] = value;
-    correctionChanged();
-  }
+void ALCColorCorrection::setWeather(ALCColorCorrection *weather) {
+  m_weather = weather;
 }
 
 Format ALCColorCorrection::colorFormat() {
-  QReadLocker locker(&m_readWriteLock);
-  return m_format;
+  return static_cast<Format>(m_format);
 }
 
-double ALCColorCorrection::brightness(bool global) {
-  QReadLocker locker(&m_readWriteLock);
-  return (global) ?
-         m_brightness * ALCColorCorrection::instance()->brightness() :
-         m_brightness;
+void ALCColorCorrection::setCorrection(ALCColorCorrection::Color color, double value) {
+  m_colorCorrection[color] = value;
 }
 
-double ALCColorCorrection::blueCorrection(bool global) {
-  QReadLocker locker(&m_readWriteLock);
-  return (global) ?
-         m_colorCorrection[Blue] * ALCColorCorrection::instance()->blueCorrection() :
-         m_colorCorrection[Blue];
-}
+double ALCColorCorrection::correction(ALCColorCorrection::Color color, bool global) {
+  double correction = m_colorCorrection[color];
 
-double ALCColorCorrection::greenCorrection(bool global) {
-  QReadLocker locker(&m_readWriteLock);
-  return (global) ?
-         m_colorCorrection[Green] * ALCColorCorrection::instance()->greenCorrection() :
-         m_colorCorrection[Green];
-}
+  if (global)
+    for (int i = 0; i < m_multipliers.count(); ++i) {
+      if (m_multipliers[i] != this && m_multipliers[i]->enabled())
+        correction *= m_multipliers[i]->correction(color);
+    }
 
-double ALCColorCorrection::redCorrection(bool global) {
-  QReadLocker locker(&m_readWriteLock);
-  return (global) ?
-         m_colorCorrection[Red] * ALCColorCorrection::instance()->redCorrection() :
-         m_colorCorrection[Red];
+  return correction;
 }
 
 ALCColorCorrection *ALCColorCorrection::instance() {
-  static ALCColorCorrection reference;
-  return &reference;
+  static ALCColorCorrection global(ALCColorCorrection::GLOBAL);
+  static ALCColorCorrection weather(ALCColorCorrection::WEATHER);
+  global.setWeather(&weather);
+  return &global;
+}
+
+const QList<ALCColorCorrection *> &ALCColorCorrection::multipliers() {
+  return m_multipliers;
+}
+
+void ALCColorCorrection::registerMultiplier(ALCColorCorrection *correction) {
+  m_multipliers << correction;
+}
+
+void ALCColorCorrection::unregisterMultiplier(ALCColorCorrection *correction) {
+  m_multipliers.removeAll(correction);
 }
 
 void ALCColorCorrection::correctionChanged() {

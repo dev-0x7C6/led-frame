@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui widgets serialport opengl qml quick
+QT += core gui widgets serialport opengl qml quick xml
 
 QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native
 QMAKE_CXXFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
@@ -23,7 +23,7 @@ TARGET = ambientleddriver
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     connector/alc-device-thread.cpp \
     classes/alc-settings.cpp \
     classes/alc-color-correction.cpp \
@@ -47,7 +47,8 @@ SOURCES += main.cpp\
     connector/alc-receiver.cpp \
     managers/alc-device-manager.cpp \
     dialogs/alc-strip-configurator-dialog.cpp \
-    classes/alc-safe-threading.cpp
+    classes/alc-safe-threading.cpp \
+    classes/alc-weather-color-correction.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -73,7 +74,8 @@ HEADERS += mainwindow.h \
     connector/alc-receiver.h \
     managers/alc-device-manager.h \
     dialogs/alc-strip-configurator-dialog.h \
-    classes/alc-safe-threading.h
+    classes/alc-safe-threading.h \
+    classes/alc-weather-color-correction.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

@@ -20,6 +20,8 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+#include "classes/alc-color-correction.h"
+#include "classes/alc-weather-color-correction.h"
 #include "managers/alc-emitter-manager.h"
 
 const int applicationMajorVersion = 0;
@@ -37,6 +39,9 @@ int main(int argc, char *argv[]) {
                                           application.applicationName(),
                                           application.applicationVersion()));
   ALCEmitterManager::instance();
+  ALCColorCorrection::instance()->registerMultiplier(ALCColorCorrection::instance());
+  ALCColorCorrection::instance()->registerMultiplier(ALCWeatherColorCorrection::instance());
+
   MainWindow window;
   window.show();
   return application.exec();

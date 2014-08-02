@@ -21,6 +21,9 @@
 #define ALCCOLORCORRECTION_H
 
 #include <QObject>
+#include <QList>
+#include <QAtomicInt>
+
 #include "classes/alc-safe-threading.h"
 
 enum Color : unsigned char {
@@ -39,28 +42,51 @@ enum Format : unsigned char {
 };
 
 class ALCColorCorrection : public ALCSafeThreading {
+public:
+  enum Type : unsigned char {
+    GLOBAL = 0x00,
+    WEATHER = 0x01,
+    USER = 0x02
+  };
+
+  enum Color : unsigned char {
+    Brightness = 0x00,
+    Red = 0x01,
+    Green = 0x02,
+    Blue = 0x03
+  };
+
 protected:
-  double m_colorCorrection[3];
-  double m_brightness;
+  double m_colorCorrection[ALCColorCorrection::Blue + 1];
+  bool m_enabled;
   Format m_format;
+  Type m_type;
+
+
+  static QList<ALCColorCorrection *> m_multipliers;
+  ALCColorCorrection *m_weather;
 
 public:
-  explicit ALCColorCorrection();
+  explicit ALCColorCorrection(ALCColorCorrection::Type type = USER);
   ~ALCColorCorrection();
 
   void setColorFormat(const Format format);
-  void setBrightness(const double value);
-  void setBlueCorrection(const double value);
-  void setGreenCorrection(const double value);
-  void setRedCorrection(const double value);
-
   Format colorFormat();
-  double brightness(bool global = false);
-  double blueCorrection(bool global = false);
-  double greenCorrection(bool global = false);
-  double redCorrection(bool global = false);
+
+  void setCorrection(ALCColorCorrection::Color color, double value);
+  double correction(ALCColorCorrection::Color color, bool global = false);
+
 
   static ALCColorCorrection *instance();
+  static const QList<ALCColorCorrection *> &multipliers();
+  static void registerMultiplier(ALCColorCorrection *correction);
+  static void unregisterMultiplier(ALCColorCorrection *correction);
+
+  bool enabled();
+  void setEnabled(bool enabled);
+
+  ALCColorCorrection *weather() const;
+  void setWeather(ALCColorCorrection *weather);
 
 protected:
   virtual void correctionChanged();

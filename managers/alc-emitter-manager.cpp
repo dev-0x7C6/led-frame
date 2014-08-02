@@ -295,19 +295,19 @@ const QList<ALCEmitter *> ALCEmitterManager::allEmitters() {
 
 void ALCEmitterManager::readColorCorrection(QSettings *settings, ALCColorCorrection *correction) {
   settings->beginGroup("correction");
-  correction->setBrightness(settings->value("light").toDouble());
-  correction->setRedCorrection(settings->value("red").toDouble());
-  correction->setGreenCorrection(settings->value("green").toDouble());
-  correction->setBlueCorrection(settings->value("blue").toDouble());
+  correction->setCorrection(ALCColorCorrection::Brightness, settings->value("light").toDouble());
+  correction->setCorrection(ALCColorCorrection::Red, settings->value("red").toDouble());
+  correction->setCorrection(ALCColorCorrection::Green, settings->value("green").toDouble());
+  correction->setCorrection(ALCColorCorrection::Blue, settings->value("blue").toDouble());
   settings->endGroup();
 }
 
 void ALCEmitterManager::writeColorCorrection(QSettings *settings, ALCColorCorrection *correction) {
   settings->beginGroup("correction");
-  settings->setValue("light", correction->brightness());
-  settings->setValue("red", correction->redCorrection());
-  settings->setValue("green", correction->greenCorrection());
-  settings->setValue("blue", correction->blueCorrection());
+  settings->setValue("light", correction->correction(ALCColorCorrection::Brightness));
+  settings->setValue("red", correction->correction(ALCColorCorrection::Red));
+  settings->setValue("green", correction->correction(ALCColorCorrection::Green));
+  settings->setValue("blue", correction->correction(ALCColorCorrection::Blue));
   settings->endGroup();
 }
 

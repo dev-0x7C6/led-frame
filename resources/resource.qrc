@@ -41,5 +41,6 @@
         <file>256x256/display2.png</file>
         <file>16x16/configure.png</file>
         <file>16x16/rename.png</file>
+        <file>tray.png</file>
     </qresource>
 </RCC>

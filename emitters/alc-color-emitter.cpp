@@ -47,9 +47,9 @@ const QColor &ALCColorEmitter::color() {
 
 void ALCColorEmitter::pushState() {
   QVector <int> samples(ALCColorSamples::Resolution);
-  int rgb = qRgb(qMin(m_color.red() * m_brightness, 255.0),
-                 qMin(m_color.green() * m_brightness, 255.0),
-                 qMin(m_color.blue() * m_brightness, 255.0));
+  int rgb = qRgb(qMin(m_color.red() * correction(ALCColorCorrection::Red), 255.0),
+                 qMin(m_color.green() * correction(ALCColorCorrection::Green), 255.0),
+                 qMin(m_color.blue() * correction(ALCColorCorrection::Blue), 255.0));
 
   for (int i = 0; i < samples.size(); ++i)
     samples[i] = rgb;

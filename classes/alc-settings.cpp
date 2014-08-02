@@ -39,18 +39,18 @@ QSettings *ALCSettings::settings() {
 
 void ALCSettings::load() {
   m_settings->beginGroup("GlobalColorCorrection");
-  ALCColorCorrection::instance()->setBrightness(m_settings->value("Brightness", 1.0).toDouble());
-  ALCColorCorrection::instance()->setBlueCorrection(m_settings->value("Blue", 1.0).toDouble());
-  ALCColorCorrection::instance()->setGreenCorrection(m_settings->value("Green", 1.0).toDouble());
-  ALCColorCorrection::instance()->setRedCorrection(m_settings->value("Red", 1.0).toDouble());
+  ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Brightness, m_settings->value("Brightness", 1.0).toDouble());
+  ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Red, m_settings->value("Blue", 1.0).toDouble());
+  ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Green, m_settings->value("Green", 1.0).toDouble());
+  ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Blue, m_settings->value("Red", 1.0).toDouble());
   m_settings->endGroup();
 }
 
 void ALCSettings::save() {
   m_settings->beginGroup("GlobalColorCorrection");
-  m_settings->setValue("Brightness", ALCColorCorrection::instance()->brightness());
-  m_settings->setValue("Blue", ALCColorCorrection::instance()->blueCorrection());
-  m_settings->setValue("Green", ALCColorCorrection::instance()->greenCorrection());
-  m_settings->setValue("Red", ALCColorCorrection::instance()->redCorrection());
+  m_settings->setValue("Brightness", ALCColorCorrection::instance()->correction(ALCColorCorrection::Brightness));
+  m_settings->setValue("Blue", ALCColorCorrection::instance()->correction(ALCColorCorrection::Red));
+  m_settings->setValue("Green", ALCColorCorrection::instance()->correction(ALCColorCorrection::Green));
+  m_settings->setValue("Red", ALCColorCorrection::instance()->correction(ALCColorCorrection::Blue));
   m_settings->endGroup();
 }

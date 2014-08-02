@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
   ui(new Ui::MainWindow),
   m_screenManager(ALCEmitterManager::instance()),
-  m_tray(QIcon(":/22x22/leds.png"), this),
+  m_tray(QIcon(":/tray.png"), this),
   m_menu(new QMenu())
 #ifdef Q_OS_UNIX
   ,
@@ -115,11 +115,11 @@ void MainWindow::hideEvent(QHideEvent *event) {
 bool MainWindow::eventFilter(QObject *object, QEvent *event) {
   switch (event->type()) {
     case QEvent::Wheel: {
-      double brightness = ALCColorCorrection::instance()->brightness();
+      double brightness = ALCColorCorrection::instance()->correction(ALCColorCorrection::Brightness);
       brightness += (static_cast<QWheelEvent *>(event)->delta() > 0) ? 0.01 : -0.01;
       brightness = qMin(brightness, 2.0);
       brightness = qMax(brightness, 0.0);
-      ALCColorCorrection::instance()->setBrightness(brightness);
+      ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Brightness, brightness);
       ui->colorCorrection->reload();
       m_showBrightnessTimer.start();
       m_tray.showMessage(QString(), QString());
@@ -155,7 +155,7 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
 
 void MainWindow::trayShowBrightness() {
   m_showBrightnessTimer.stop();
-  double brightness = ALCColorCorrection::instance()->brightness();
+  double brightness = ALCColorCorrection::instance()->correction(ALCColorCorrection::Brightness, true);
   m_tray.showMessage("Brightness", QString("Current brightness level: %1%").
                      arg(QString::number(int(brightness * 100.0))), QSystemTrayIcon::Information, 1000);
 }
