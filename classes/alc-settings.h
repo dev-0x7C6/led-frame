@@ -23,12 +23,11 @@
 
 class QSettings;
 
-class ALCSettings : public QObject {
-  Q_OBJECT
+class ALCSettings {
 private:
   QSettings *m_settings;
 public:
-  explicit ALCSettings(QObject *parent = 0);
+  explicit ALCSettings();
   virtual ~ALCSettings();
 
   QSettings *settings();

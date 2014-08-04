@@ -19,8 +19,7 @@
 
 #include "alc-strip-configuration.h"
 
-ALCStripConfiguration::ALCStripConfiguration(QObject *parent) :
-  QObject(parent) {
+ALCStripConfiguration::ALCStripConfiguration() {
 }
 
 void ALCStripConfiguration::add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,

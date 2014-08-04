@@ -41,7 +41,6 @@ int main(int argc, char *argv[]) {
   ALCEmitterManager::instance();
   ALCColorCorrection::instance()->registerMultiplier(ALCColorCorrection::instance());
   ALCColorCorrection::instance()->registerMultiplier(ALCWeatherColorCorrection::instance());
-
   MainWindow window;
   window.show();
   return application.exec();

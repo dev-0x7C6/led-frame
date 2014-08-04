@@ -34,7 +34,6 @@ ALCColorCorrection::ALCColorCorrection(ALCColorCorrection::Type type) {
 }
 
 ALCColorCorrection::~ALCColorCorrection() {
-
 }
 
 bool ALCColorCorrection::enabled() {
