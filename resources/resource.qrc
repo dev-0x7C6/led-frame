@@ -42,5 +42,30 @@
         <file>16x16/configure.png</file>
         <file>16x16/rename.png</file>
         <file>tray.png</file>
+        <file>weather/weather-clear-night.png</file>
+        <file>weather/weather-clear.png</file>
+        <file>weather/weather-clouds-night.png</file>
+        <file>weather/weather-clouds.png</file>
+        <file>weather/weather-few-clouds-night.png</file>
+        <file>weather/weather-few-clouds.png</file>
+        <file>weather/weather-freezing-rain.png</file>
+        <file>weather/weather-hail.png</file>
+        <file>weather/weather-many-clouds.png</file>
+        <file>weather/weather-mist.png</file>
+        <file>weather/weather-none-available.png</file>
+        <file>weather/weather-showers-day.png</file>
+        <file>weather/weather-showers-night.png</file>
+        <file>weather/weather-showers-scattered-day.png</file>
+        <file>weather/weather-showers-scattered-night.png</file>
+        <file>weather/weather-showers-scattered.png</file>
+        <file>weather/weather-showers.png</file>
+        <file>weather/weather-snow-rain.png</file>
+        <file>weather/weather-snow-scattered-day.png</file>
+        <file>weather/weather-snow-scattered-night.png</file>
+        <file>weather/weather-snow-scattered.png</file>
+        <file>weather/weather-snow.png</file>
+        <file>weather/weather-storm-day.png</file>
+        <file>weather/weather-storm-night.png</file>
+        <file>weather/weather-storm.png</file>
     </qresource>
 </RCC>

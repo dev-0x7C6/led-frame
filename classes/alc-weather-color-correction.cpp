@@ -2,7 +2,6 @@
 
 #include <QDomDocument>
 #include <QTimerEvent>
-#include <QDebug>
 
 QString ALCWeatherColorCorrection::link = QString("http://weather.yahooapis.com/forecastrss?");
 
@@ -25,9 +24,11 @@ ALCWeatherColorCorrection *ALCWeatherColorCorrection::instance() {
   return &object;
 }
 
+static quint32 t = 0;
+
 void ALCWeatherColorCorrection::timerEvent(QTimerEvent *event) {
   Q_UNUSED(event)
-  fetchWeatherStatus();
+  callCorrection(QTime::currentTime());
 }
 
 void ALCWeatherColorCorrection::recieveReply(QNetworkReply *reply) {
