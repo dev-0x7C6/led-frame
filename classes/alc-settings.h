@@ -19,8 +19,6 @@
 #ifndef ALCSETTINGS_H
 #define ALCSETTINGS_H
 
-#include <QObject>
-
 class QSettings;
 
 class ALCSettings {
