@@ -10,8 +10,8 @@ ALCWeatherColorCorrection::ALCWeatherColorCorrection(QObject *parent) :
   ALCColorCorrection() {
   m_type = WEATHER;
   connect(&m_manager, &QNetworkAccessManager::finished, this, &ALCWeatherColorCorrection::recieveReply);
-  fetchWeatherStatus();
-  startTimer(30000);
+  //fetchWeatherStatus();
+  //startTimer(30000);
 }
 
 void ALCWeatherColorCorrection::fetchWeatherStatus() {

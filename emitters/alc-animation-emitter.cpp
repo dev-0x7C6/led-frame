@@ -19,6 +19,7 @@
 
 #include <QMessageBox>
 #include "emitters/alc-animation-emitter.h"
+#include "dialogs/alc-animation-configure-dialog.h"
 
 ALCAnimationEmitter::ALCAnimationEmitter() :
   QObject(),
@@ -53,16 +54,18 @@ bool ALCAnimationEmitter::open() {
 }
 
 bool ALCAnimationEmitter::configure() {
-  QMessageBox::information(0, "Information", "Animation configurator is under development.", QMessageBox::Ok);
+  ALCAnimationConfigureDialog dialog;
+  dialog.exec();
+  // QMessageBox::information(0, "Information", "Animation configurator is under development.", QMessageBox::Ok);
   return false;
 }
 
-void ALCAnimationEmitter::rotatePalette() {
+void ALCAnimationEmitter::rotatePalette(int msecs) {
   if (m_animation)
     delete m_animation;
 
   m_animation = new QPropertyAnimation(this, "color");
-  m_animation->setDuration(750);
+  m_animation->setDuration(msecs);
   m_animation->setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
   m_animation->setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
   m_animation->setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));

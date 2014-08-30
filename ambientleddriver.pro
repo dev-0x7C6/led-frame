@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     managers/alc-device-manager.cpp \
     dialogs/alc-strip-configurator-dialog.cpp \
     classes/alc-safe-threading.cpp \
-    classes/alc-weather-color-correction.cpp
+    classes/alc-weather-color-correction.cpp \
+    dialogs/alc-animation-configure-dialog.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -75,7 +76,8 @@ HEADERS += mainwindow.h \
     managers/alc-device-manager.h \
     dialogs/alc-strip-configurator-dialog.h \
     classes/alc-safe-threading.h \
-    classes/alc-weather-color-correction.h
+    classes/alc-weather-color-correction.h \
+    dialogs/alc-animation-configure-dialog.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \
@@ -85,7 +87,8 @@ FORMS += mainwindow.ui \
     widgets/alc-device-widget.ui \
     widgets/alc-emitter-widget.ui \
     widgets/alc-screen-widget.ui \
-    dialogs/alc-strip-configurator-dialog.ui
+    dialogs/alc-strip-configurator-dialog.ui \
+    dialogs/alc-animation-configure-dialog.ui
 
 RESOURCES += \
     resources/resource.qrc \

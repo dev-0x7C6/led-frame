@@ -25,7 +25,6 @@
 #include <QRgb>
 
 #include <QPropertyAnimation>
-
 #include "emitters/alc-emitter.h"
 
 class ALCAnimationEmitter : public QObject, public ALCEmitter {
@@ -54,11 +53,12 @@ public:
   bool open();
   virtual bool configure();
 
+  void rotatePalette(int msecs = 1000);
+
 private:
   const QColor &color();
   void setColor(const QColor &color);
 
-  void rotatePalette();
   void glow();
 
 protected:
