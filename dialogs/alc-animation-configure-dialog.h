@@ -30,7 +30,6 @@ private:
   void blinkChanged(int);
   void speedChanged(int);
 
-
 };
 
 #endif // ALCANIMATIONCONFIGUREDIALOG_H

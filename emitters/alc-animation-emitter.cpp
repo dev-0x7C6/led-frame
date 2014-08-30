@@ -95,14 +95,17 @@ void ALCAnimationEmitter::timerEvent(QTimerEvent *) {
   m_blink++;
   int rgb;
 
+  double l = correction(ALCColorCorrection::Brightness);
+  double r = qMin(m_color.redF() * correction(ALCColorCorrection::Red) * l, 1.0);
+  double g = qMin(m_color.greenF() * correction(ALCColorCorrection::Green) * l, 1.0);
+  double b = qMin(m_color.blueF() * correction(ALCColorCorrection::Blue) * l, 1.0);
+
   switch (m_animationType) {
     case Rotation: {
       if (m_colorStream.count() == 256)
         m_colorStream.removeFirst();
 
-      m_colorStream << qRgb(qMin(qRed(m_color.rgb()), 0xFF),
-                            qMin(qGreen(m_color.rgb()), 0xFF),
-                            qMin(qBlue(m_color.rgb()), 0xFF));
+      m_colorStream << QColor::fromRgbF(r, g, b).rgb();
       QListIterator <QRgb> it(m_colorStream);
 
       for (int p = 0; p < 4; ++p) {
@@ -116,9 +119,7 @@ void ALCAnimationEmitter::timerEvent(QTimerEvent *) {
 
     case Glow:
       if (m_blink < 2)
-        rgb = qRgb(qMin(qRed(m_color.rgb()), 0xFF),
-                   qMin(qGreen(m_color.rgb()), 0xFF),
-                   qMin(qBlue(m_color.rgb()), 0xFF));
+        rgb = QColor::fromRgbF(r, g, b).rgb();
       else
         rgb = qRgb(0, 0, 0);
 

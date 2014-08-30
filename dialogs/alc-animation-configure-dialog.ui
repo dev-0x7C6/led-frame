@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>875</width>
+    <width>1035</width>
     <height>412</height>
    </rect>
   </property>
@@ -130,6 +130,24 @@
       </widget>
      </item>
      <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>Color correction</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="ALCColorCorrectionWidget" name="colorCorrection" native="true"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -170,6 +188,12 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>ALCColorCorrectionWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/alc-color-correction-widget.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>ALCSymulationWidget</class>
    <extends>QWidget</extends>
