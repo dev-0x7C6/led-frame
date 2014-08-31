@@ -51,7 +51,7 @@ public:
   bool continueValue();
 
 private:
-  void push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[4]);
+  void push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[]);
 
 protected:
   void run();

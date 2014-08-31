@@ -26,21 +26,6 @@
 
 #include "classes/alc-safe-threading.h"
 
-enum Color : unsigned char {
-  Red   = 0x00,
-  Blue  = 0x01,
-  Green = 0x02
-};
-
-enum Format : unsigned char {
-  RGB = 0x00,
-  RBG = 0x01,
-  GRB = 0x02,
-  BRG = 0x03,
-  GBR = 0x04,
-  BGR = 0x05
-};
-
 class ALCColorCorrection : public ALCSafeThreading {
 public:
   enum Type : unsigned char {
@@ -54,6 +39,15 @@ public:
     Red = 0x01,
     Green = 0x02,
     Blue = 0x03
+  };
+
+  enum Format : unsigned char {
+    RGB = 0x00,
+    RBG = 0x01,
+    GRB = 0x02,
+    BRG = 0x03,
+    GBR = 0x04,
+    BGR = 0x05
   };
 
 protected:

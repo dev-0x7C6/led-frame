@@ -48,7 +48,7 @@ void ALCColorCorrection::setWeather(ALCColorCorrection *weather) {
   m_weather = weather;
 }
 
-Format ALCColorCorrection::colorFormat() {
+ALCColorCorrection::Format ALCColorCorrection::colorFormat() {
   return static_cast<Format>(m_format);
 }
 

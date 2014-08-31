@@ -155,7 +155,7 @@ void ALCScreenEmitter::run() {
   int chunks = m_samples.scale();
   int clipx = 0x00;
   int clipy = 0x00;
-  double rgbc[3];
+  double rgbc[4];
 
   do {
     timer.start();
@@ -164,7 +164,6 @@ void ALCScreenEmitter::run() {
     l_chunkSize = m_chunkSize;
     l_pixelSkip = m_pixelSkip + 1;
     l_framerateLimit = m_framerateLimit;
-    l_brightness = correction(ALCColorCorrection::Brightness);
     l_marginProcent = m_marginProcent;
     quit = m_quit;
 
@@ -181,10 +180,10 @@ void ALCScreenEmitter::run() {
     l_captureArea.setY(l_captureArea.y() + clipy);
     l_captureArea.setWidth(l_captureArea.width() - clipx);
     l_captureArea.setHeight(l_captureArea.height() - clipy);
-    l_brightness = correction(ALCColorCorrection::Brightness);
-    rgbc[Red] = correction(ALCColorCorrection::Red, true);
-    rgbc[Green] = correction(ALCColorCorrection::Blue, true);
-    rgbc[Blue] = correction(ALCColorCorrection::Green, true);
+    rgbc[Brightness] = correction(Brightness);
+    rgbc[Red] = correction(Red);
+    rgbc[Green] = correction(Green);
+    rgbc[Blue] = correction(Blue);
     image[2] = XGetImage(display, root, l_captureArea.x(), l_captureArea.y(),
                          l_captureArea.width(), l_chunkSize, AllPlanes, ZPixmap);
     image[0] = XGetImage(display, root, l_captureArea.x(), l_captureArea.y() +
@@ -247,11 +246,11 @@ void ALCScreenEmitter::run() {
           }
 
         r /= c;
-        r *= l_brightness * rgbc[Red];
+        r *= rgbc[Brightness] * rgbc[Red];
         g /= c;
-        g *= l_brightness * rgbc[Green];
+        g *= rgbc[Brightness] * rgbc[Green];
         b /= c;
-        b *= l_brightness * rgbc[Blue];
+        b *= rgbc[Brightness] * rgbc[Blue];
 
         if (r > 255) r = 255;
 

@@ -159,43 +159,43 @@ bool ALCDeviceThread::continueValue() {
   return m_continue;
 }
 
-void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[4]) {
+void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[]) {
   double brightness = rgbc[Brightness];
   switch (format) {
     case RGB:
-      data[ptr++] = qMin(qr(color) * rgbc[Red] * brightness, 255.0);
-      data[ptr++] = qMin(qg(color) * rgbc[Green] * brightness, 255.0);
-      data[ptr++] = qMin(qb(color) * rgbc[Blue] * brightness, 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
       break;
 
     case RBG:
-      data[ptr++] = qMin(qr(color) * rgbc[Red] * brightness, 255.0);
-      data[ptr++] = qMin(qb(color) * rgbc[Blue] * brightness, 255.0);
-      data[ptr++] = qMin(qg(color) * rgbc[Green] * brightness, 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
       break;
 
     case GRB:
-      data[ptr++] = qMin(qg(color) * rgbc[Green] * brightness, 255.0);
-      data[ptr++] = qMin(qr(color) * rgbc[Red] * brightness, 255.0);
-      data[ptr++] = qMin(qb(color) * rgbc[Blue] * brightness, 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
       break;
 
     case BRG:
-      data[ptr++] = qMin(qb(color) * rgbc[Blue] * brightness, 255.0);
-      data[ptr++] = qMin(qr(color) * rgbc[Red] * brightness, 255.0);
-      data[ptr++] = qMin(qg(color) * rgbc[Green] * brightness, 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
       break;
 
     case GBR:
-      data[ptr++] = qMin(qg(color) * rgbc[Green] * brightness, 255.0);
-      data[ptr++] = qMin(qb(color) * rgbc[Blue] * brightness, 255.0);
-      data[ptr++] = qMin(qr(color) * rgbc[Red] * brightness, 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
       break;
 
     case BGR:
-      data[ptr++] = qMin(qb(color) * rgbc[Blue] * brightness, 255.0);
-      data[ptr++] = qMin(qg(color) * rgbc[Green] * brightness, 255.0);
-      data[ptr++] = qMin(qr(color) * rgbc[Red] * brightness, 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
       break;
   }
 }

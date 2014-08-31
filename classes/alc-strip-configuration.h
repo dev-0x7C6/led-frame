@@ -46,7 +46,7 @@ private:
   bool m_clockwise;
   Source m_source;
   Destination m_destination;
-  Format m_colorFormat;
+  ALCColorCorrection::Format m_colorFormat;
   double m_brightness;
 
 public:
@@ -56,8 +56,8 @@ public:
   void setCount(int count);
   int count() const;
 
-  void setColorFormat(Format format);
-  Format colorFormat() const;
+  void setColorFormat(ALCColorCorrection::Format format);
+  ALCColorCorrection::Format colorFormat() const;
 
   void setSource(Source);
   Source source() const;
@@ -79,7 +79,7 @@ public:
   explicit ALCStripConfiguration();
 
   void add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
-           int count, bool clockwise = true, Format color = RGB, double brightness = 1.0);
+           int count, bool clockwise = true, ALCColorCorrection::Format color = ALCColorCorrection::RGB, double brightness = 1.0);
 
 
   QList <ALCLedStrip *> list();
