@@ -23,12 +23,8 @@
 QList<ALCColorCorrection *> ALCColorCorrection::m_multipliers;
 
 ALCColorCorrection::ALCColorCorrection(ALCColorCorrection::Type type) {
+  clear();
   QWriteLocker locker(&m_readWriteLock);
-  m_colorCorrection[0] = 1.0;
-  m_colorCorrection[1] = 1.0;
-  m_colorCorrection[2] = 1.0;
-  m_colorCorrection[3] = 1.0;
-  m_format = GRB;
   m_type = type;
   m_enabled = true;
 }
@@ -89,6 +85,15 @@ void ALCColorCorrection::registerMultiplier(ALCColorCorrection *correction) {
 
 void ALCColorCorrection::unregisterMultiplier(ALCColorCorrection *correction) {
   m_multipliers.removeAll(correction);
+}
+
+void ALCColorCorrection::clear() {
+  QWriteLocker locker(&m_readWriteLock);
+  m_colorCorrection[0] = 1.0;
+  m_colorCorrection[1] = 1.0;
+  m_colorCorrection[2] = 1.0;
+  m_colorCorrection[3] = 1.0;
+  m_format = RGB;
 }
 
 void ALCColorCorrection::correctionChanged() {

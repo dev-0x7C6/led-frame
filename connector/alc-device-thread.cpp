@@ -74,8 +74,7 @@ void ALCDeviceThread::run() {
   counter.start();
   latency[0] = 0;
   latency[1] = 0;
-  double brightness_t;
-  double rgbc[3];
+  double rgbc[4];
   // m_device->setError(QSerialPort::NoError);
   quint16 ptr = 0;
 
@@ -85,7 +84,7 @@ void ALCDeviceThread::run() {
     if (m_emitter)
       m_emitter->state(m_samples);
 
-    brightness_t = correction(ALCColorCorrection::Brightness, true);
+    rgbc[Brightness] = correction(ALCColorCorrection::Brightness, true);
     rgbc[Red] = correction(ALCColorCorrection::Red, true);
     rgbc[Green] = correction(ALCColorCorrection::Green, true);
     rgbc[Blue] = correction(ALCColorCorrection::Blue, true);
@@ -103,15 +102,16 @@ void ALCDeviceThread::run() {
       ALCLedStrip *strip = strips[ii];
       colors = m_samples.scaled((ALCColorSamples::Position)strip->source(), strip->count());
       const Format format = strip->colorFormat();
-      const double s = strip->brightness();
       const int size = colors->size();
+
+      rgbc[Brightness] *= strip->brightness();
 
       if (strip->clockwise()) {
         for (int i = 0; i < size; ++i)
-          push(data, ptr, format, (*colors)[i], rgbc, brightness_t *s);
+          push(data, ptr, format, (*colors)[i], rgbc);
       } else {
         for (int i = size - 1; i >= 0; --i)
-          push(data, ptr, format, (*colors)[i], rgbc, brightness_t *s);
+          push(data, ptr, format, (*colors)[i], rgbc);
       }
 
       delete colors;
@@ -145,7 +145,6 @@ void ALCDeviceThread::run() {
     m_emitter->done();
 }
 
-
 QSerialPortInfo ALCDeviceThread::details() {
   return m_details;
 }
@@ -160,12 +159,13 @@ bool ALCDeviceThread::continueValue() {
   return m_continue;
 }
 
-void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[], double brightness) {
+void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[4]) {
+  double brightness = rgbc[Brightness];
   switch (format) {
     case RGB:
       data[ptr++] = qMin(qr(color) * rgbc[Red] * brightness, 255.0);
-      data[ptr++] = qMin(qg(color) * rgbc[Red] * brightness, 255.0);
-      data[ptr++] = qMin(qb(color) * rgbc[Red] * brightness, 255.0);
+      data[ptr++] = qMin(qg(color) * rgbc[Green] * brightness, 255.0);
+      data[ptr++] = qMin(qb(color) * rgbc[Blue] * brightness, 255.0);
       break;
 
     case RBG:

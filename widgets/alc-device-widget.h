@@ -27,6 +27,9 @@
 
 #include "connector/alc-receiver.h"
 
+class ALCSymulationWidget;
+class QSettings;
+
 namespace Ui {
   class ALCDeviceWidget;
 }
@@ -89,10 +92,6 @@ public:
     return m_device;
   }
 };
-
-
-class ALCSymulationWidget;
-class QSettings;
 
 class ALCDeviceWidget : public QMainWindow {
   Q_OBJECT

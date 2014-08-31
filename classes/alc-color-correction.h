@@ -76,12 +76,12 @@ public:
   void setCorrection(ALCColorCorrection::Color color, double value);
   double correction(ALCColorCorrection::Color color, bool global = false);
 
-
   static ALCColorCorrection *instance();
   static const QList<ALCColorCorrection *> &multipliers();
   static void registerMultiplier(ALCColorCorrection *correction);
   static void unregisterMultiplier(ALCColorCorrection *correction);
 
+  void clear();
   bool enabled();
   void setEnabled(bool enabled);
 
