@@ -40,8 +40,9 @@ MainWindow::MainWindow(QWidget *parent) :
   m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
   ui(new Ui::MainWindow),
   m_screenManager(ALCEmitterManager::instance()),
-  m_tray(QIcon(":/tray.png"), this),
-  m_menu(new QMenu())
+  m_tray(QIcon(":/22x22/leds.png"), this),
+  m_menu(new QMenu()),
+  m_canClose(false)
 #ifdef Q_OS_UNIX
   ,
   m_wiimotedevEvents(new WiimotedevDeviceEvents),
@@ -69,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_wiimotedevEvents, &WiimotedevDeviceEvents::dbusWiimoteButtons, this, &MainWindow::dbusWiimotedevButtons);
 #endif
   connect(ui->actionColor_correction, &QAction::toggled, this, &MainWindow::showColorCorrection);
-  connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
+  connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::forceClose);
   connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
   connect(ui->actionAddAnimation, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addAnimationItem);
   connect(ui->actionAddPlainColor, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addPlainColorItem);
@@ -88,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_menu->addSeparator();
   m_menu->insertAction(0, ui->actionAddScreenArea);
   m_menu->addSeparator();
-  connect(m_menu->addAction("Quit"), &QAction::triggered, this, &MainWindow::close);
+  connect(m_menu->addAction("Quit"), &QAction::triggered, this, &MainWindow::forceClose);
   connect(&m_tray, &QSystemTrayIcon::activated, this, &MainWindow::trayActivated);
   m_settings->beginGroup("MainWindow");
   m_visible->setChecked(m_settings->value("visible", true).toBool());
@@ -104,12 +105,28 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::showEvent(QShowEvent *event) {
   Q_UNUSED(event)
+
+  if (isMinimized())
+    showNormal();
+
   m_visible->setChecked(isVisible());
 }
 
 void MainWindow::hideEvent(QHideEvent *event) {
   Q_UNUSED(event)
+
+  if (isMinimized())
+    hide();
+
   m_visible->setChecked(isVisible());
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+  if (!m_canClose) {
+    event->ignore();
+    hide();
+  } else
+    event->accept();
 }
 
 bool MainWindow::eventFilter(QObject *object, QEvent *event) {
@@ -131,6 +148,11 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
   }
 
   return QObject::eventFilter(object, event);
+}
+
+void MainWindow::forceClose() {
+  m_canClose = true;
+  close();
 }
 
 void MainWindow::about() {

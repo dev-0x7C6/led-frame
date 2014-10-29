@@ -58,6 +58,8 @@ private:
   uint64 m_buttons;
 #endif
 
+  bool m_canClose;
+
 public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
@@ -65,9 +67,11 @@ public:
 protected:
   virtual void showEvent(QShowEvent *event);
   virtual void hideEvent(QHideEvent *event);
+  virtual void closeEvent(QCloseEvent *event);
   bool eventFilter(QObject *object, QEvent *event);
 
 private:
+  void forceClose();
   void about();
   void showColorCorrection(bool);
 
