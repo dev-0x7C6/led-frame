@@ -93,6 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(&m_tray, &QSystemTrayIcon::activated, this, &MainWindow::trayActivated);
   m_settings->beginGroup("MainWindow");
   m_visible->setChecked(m_settings->value("visible", true).toBool());
+  showColorCorrection(m_settings->value("colorCorrectionVisiblity", true).toBool());
   m_settings->endGroup();
   m_tray.installEventFilter(this);
 
@@ -162,6 +163,7 @@ void MainWindow::about() {
 
 void MainWindow::showColorCorrection(bool visible) {
   ui->colorCorrection->setVisible(visible);
+  ui->actionColor_correction->setChecked(visible);
 }
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
@@ -238,6 +240,7 @@ MainWindow::~MainWindow() {
   m_settings->endGroup();
   m_settings->beginGroup("MainWindow");
   m_settings->setValue("visible", m_visible->isChecked());
+  m_settings->setValue("colorCorrectionVisiblity", ui->colorCorrection->isVisible());
   m_settings->endGroup();
   delete ui;
 }
