@@ -21,20 +21,21 @@
 #define ALCRECEIVER_H
 
 #include <QObject>
+
 #include "classes/alc-color-correction.h"
 #include "emitters/alc-emitter.h"
 
 class ALCReceiver : public ALCColorCorrection {
 protected:
-  ALCEmitter *m_emitter;
+    ALCEmitter *m_emitter;
 
 public:
-  ALCReceiver();
+    ALCReceiver();
 
-  virtual QString name();
+    virtual QString name();
 
-  virtual void connectEmitter(ALCEmitter *emitter);
-  ALCEmitter *connectedEmitter();
+    virtual void connectEmitter(ALCEmitter *emitter);
+    ALCEmitter *connectedEmitter();
 };
 
 #endif // ALCRECEIVER_H

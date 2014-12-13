@@ -23,17 +23,17 @@
 #include <QDialog>
 
 namespace Ui {
-  class ALCAboutDialog;
+class ALCAboutDialog;
 }
 
 class ALCAboutDialog : public QDialog {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ALCAboutDialog(QWidget *parent = 0);
-  ~ALCAboutDialog();
+    explicit ALCAboutDialog(QWidget *parent = 0);
+    ~ALCAboutDialog();
 
 private:
-  Ui::ALCAboutDialog *ui;
+    Ui::ALCAboutDialog *ui;
 };
 
 #endif // ALCABOUTDIALOG_H

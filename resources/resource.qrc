@@ -67,5 +67,6 @@
         <file>weather/weather-storm-day.png</file>
         <file>weather/weather-storm-night.png</file>
         <file>weather/weather-storm.png</file>
+        <file>16x16/leds.png</file>
     </qresource>
 </RCC>

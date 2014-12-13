@@ -23,68 +23,72 @@
 const int ALCDeviceManager::scanAfter = 250; // ms
 
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
-  : QObject(parent) {
-  startTimer(ALCDeviceManager::scanAfter);
+    : QObject(parent) {
+    startTimer(ALCDeviceManager::scanAfter);
 }
 
 ALCDeviceManager::~ALCDeviceManager() {
-  for (int i = 0; i < m_threads.count(); ++i) {
-    m_threads[i]->connectEmitter(0);
-    m_threads[i]->setContinueValue(false);
-    m_threads[i]->wait();
-    delete m_threads[i];
-  }
+    for (int i = 0; i < m_threads.count(); ++i) {
+        m_threads[i]->connectEmitter(0);
+        m_threads[i]->setContinueValue(false);
+        m_threads[i]->wait();
+        delete m_threads[i];
+    }
 
-  m_threads.clear();
+    m_threads.clear();
 }
 
 ALCDeviceThread *ALCDeviceManager::device(int idx) const {
-  if (idx >= m_threads.count())
-    return 0;
+    if (idx >= m_threads.count())
+        return 0;
 
-  return m_threads[idx];
+    return m_threads[idx];
 }
 
 int ALCDeviceManager::count() const {
-  return m_threads.count();
+    return m_threads.count();
 }
 
 ALCDeviceManager *ALCDeviceManager::instance() {
-  static ALCDeviceManager object;
-  return &object;
+    static ALCDeviceManager object;
+    return &object;
 }
 
 void ALCDeviceManager::timerEvent(QTimerEvent *event) {
-  Q_UNUSED(event);
-  QList <QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+    Q_UNUSED(event);
+    QList <QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
-  for (int i = 0; i < ports.count(); ++i) {
-    if ((ports[i].manufacturer() != AmbientLedConnector::IDs::Manufacturer) ||
-        (ports[i].description() != AmbientLedConnector::IDs::Description)) continue;
+    for (int i = 0; i < ports.count(); ++i) {
+        if ((ports[i].manufacturer() != AmbientLedConnector::IDs::Manufacturer) ||
+                (ports[i].description() != AmbientLedConnector::IDs::Description)) continue;
 
-    QSerialPort *device = new QSerialPort(ports[i].portName());
+        QSerialPort *device = new QSerialPort(ports[i].portName());
 
-    if (device->open(QIODevice::ReadWrite)) {
-      device->setBaudRate(AmbientLedConnector::Transmision::BaudRate);
-      ALCDeviceThread *thread = new ALCDeviceThread(device, ports[i]);
-      connect(thread, &ALCDeviceThread::started, this, &ALCDeviceManager::deviceThreadStarted);
-      connect(thread, &ALCDeviceThread::finished, this, &ALCDeviceManager::deviceThreadFinished);
-      thread->start(QThread::HighestPriority);
-    } else
-      delete device;
-  }
+        if (device->open(QIODevice::ReadWrite)) {
+            device->setBaudRate(AmbientLedConnector::Transmision::BaudRate);
+            device->setFlowControl(QSerialPort::NoFlowControl);
+            device->setParity(QSerialPort::NoParity);
+            device->setDataBits(QSerialPort::Data8);
+            device->setStopBits(QSerialPort::OneStop);
+            ALCDeviceThread *thread = new ALCDeviceThread(device, ports[i]);
+            connect(thread, &ALCDeviceThread::started, this, &ALCDeviceManager::deviceThreadStarted);
+            connect(thread, &ALCDeviceThread::finished, this, &ALCDeviceManager::deviceThreadFinished);
+            thread->start(QThread::HighestPriority);
+        } else
+            delete device;
+    }
 }
 
 void ALCDeviceManager::deviceThreadStarted() {
-  ALCDeviceThread *thread = dynamic_cast <ALCDeviceThread *>(sender());
-  m_threads << thread;
-  emit deviceConnected(thread);
+    ALCDeviceThread *thread = dynamic_cast <ALCDeviceThread *>(sender());
+    m_threads << thread;
+    emit deviceConnected(thread);
 }
 
 void ALCDeviceManager::deviceThreadFinished() {
-  ALCDeviceThread *thread = dynamic_cast <ALCDeviceThread *>(sender());
-  QSerialPortInfo details = thread->details();
-  m_threads.removeAll(thread);
-  emit deviceDisconnected(thread);
-  delete thread;
+    ALCDeviceThread *thread = dynamic_cast <ALCDeviceThread *>(sender());
+    QSerialPortInfo details = thread->details();
+    m_threads.removeAll(thread);
+    emit deviceDisconnected(thread);
+    delete thread;
 }

@@ -28,41 +28,41 @@
 #include "emitters/alc-emitter.h"
 
 class ALCAnimationEmitter : public QObject, public ALCEmitter {
-  Q_OBJECT
-  Q_PROPERTY(QColor color READ color WRITE setColor)
+    Q_OBJECT
+    Q_PROPERTY(QColor color READ color WRITE setColor)
 public:
-  enum AnimationType : quint8 {
-    Blink,
-    Glow,
-    Rotation
-  };
+    enum AnimationType : quint8 {
+        Blink,
+        Glow,
+        Rotation
+    };
 
 private:
-  QPropertyAnimation *m_animation;
-  QColor m_color;
+    QPropertyAnimation *m_animation;
+    QColor m_color;
 
-  QList <QRgb> m_colorStream;
-  ALCColorSamples m_samples;
-  AnimationType m_animationType;
-  quint64 m_blink;
+    QList <QRgb> m_colorStream;
+    ALCColorSamples m_samples;
+    AnimationType m_animationType;
+    quint64 m_blink;
 
 public:
-  explicit ALCAnimationEmitter();
-  virtual ~ALCAnimationEmitter();
+    explicit ALCAnimationEmitter();
+    virtual ~ALCAnimationEmitter();
 
-  bool open();
-  virtual bool configure();
+    bool open();
+    virtual bool configure();
 
-  void rotatePalette(int msecs = 1000);
+    void rotatePalette(int msecs = 1000);
 
 private:
-  const QColor &color();
-  void setColor(const QColor &color);
+    const QColor &color();
+    void setColor(const QColor &color);
 
-  void glow();
+    void glow();
 
 protected:
-  void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *);
 };
 
 #endif // ALCANIMATIONEMITTER_H

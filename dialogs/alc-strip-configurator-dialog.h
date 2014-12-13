@@ -4,18 +4,18 @@
 #include <QDialog>
 
 namespace Ui {
-  class ALCStripConfiguratorDialog;
+class ALCStripConfiguratorDialog;
 }
 
 class ALCStripConfiguratorDialog : public QDialog {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ALCStripConfiguratorDialog(QWidget *parent = 0);
-  ~ALCStripConfiguratorDialog();
+    explicit ALCStripConfiguratorDialog(QWidget *parent = 0);
+    ~ALCStripConfiguratorDialog();
 
 private:
-  Ui::ALCStripConfiguratorDialog *ui;
+    Ui::ALCStripConfiguratorDialog *ui;
 };
 
 #endif // ALCSTRIPCONFIGURATORDIALOG_H

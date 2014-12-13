@@ -32,34 +32,34 @@ class ALCSymulationWidget;
 class QSettings;
 
 class ALCEmitterManager : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 private:
-  QList <ALCEmitter *> m_emitters[ALCEmitter::EMITTER_END_ARRAY];
-  ALCSymulationWidget *m_symulation;
+    QList <ALCEmitter *> m_emitters[ALCEmitter::EMITTER_END_ARRAY];
+    ALCSymulationWidget *m_symulation;
 
 public:
-  explicit ALCEmitterManager(QObject *parent = 0);
-  virtual ~ALCEmitterManager();
+    explicit ALCEmitterManager(QObject *parent = 0);
+    virtual ~ALCEmitterManager();
 
-  void add(ALCEmitter *emitter, ALCEmitter::EmitterType type);
-  void remove(ALCEmitter *emitter);
+    void add(ALCEmitter *emitter, ALCEmitter::EmitterType type);
+    void remove(ALCEmitter *emitter);
 
-  ALCAnimationEmitter *addALCAnimationEmitter(const QString &name);
-  ALCColorEmitter *addALCColorEmitter(const QString &name);
-  ALCImageEmitter *addALCImageEmitter(const QString &name);
-  ALCScreenEmitter *addScreenCaptureEmitter(const QString &name);
-  void addSymulation(ALCSymulationWidget *widget);
+    ALCAnimationEmitter *addALCAnimationEmitter(const QString &name);
+    ALCColorEmitter *addALCColorEmitter(const QString &name);
+    ALCImageEmitter *addALCImageEmitter(const QString &name);
+    ALCScreenEmitter *addScreenCaptureEmitter(const QString &name);
+    void addSymulation(ALCSymulationWidget *widget);
 
-  static ALCEmitterManager *instance();
-  const QList <ALCEmitter *> *emitters(ALCEmitter::EmitterType type);
-  const QList <ALCEmitter *> allEmitters();
+    static ALCEmitterManager *instance();
+    const QList <ALCEmitter *> *emitters(ALCEmitter::EmitterType type);
+    const QList <ALCEmitter *> allEmitters();
 
 private:
-  void readColorCorrection(QSettings *settings, ALCColorCorrection *correction);
-  void writeColorCorrection(QSettings *settings, ALCColorCorrection *correction);
+    void readColorCorrection(QSettings *settings, ALCColorCorrection *correction);
+    void writeColorCorrection(QSettings *settings, ALCColorCorrection *correction);
 
 signals:
-  void emitterListChanged();
+    void emitterListChanged();
 
 };
 

@@ -35,279 +35,279 @@
 #include <QSettings>
 
 ALCEmitterManager::ALCEmitterManager(QObject *parent) :
-  QObject(parent) {
-  QSettings *settings = ALCSettings::instance()->settings();
-  settings->beginGroup("emitters");
-  settings->beginGroup("screens");
-  QList <QScreen *> screens = QApplication::screens();
+    QObject(parent) {
+    QSettings *settings = ALCSettings::instance()->settings();
+    settings->beginGroup("emitters");
+    settings->beginGroup("screens");
+    QList <QScreen *> screens = QApplication::screens();
 
-  for (int i = -1; i < QApplication::desktop()->screenCount(); ++i) {
-    ALCScreenEmitter *emitter = new ALCScreenEmitter(0);
-    QRect rect;
+    for (int i = -1; i < QApplication::desktop()->screenCount(); ++i) {
+        ALCScreenEmitter *emitter = new ALCScreenEmitter(0);
+        QRect rect;
 
-    switch (i) {
-      case -1:
-        rect = QApplication::desktop()->geometry();
-        emitter->setName("all");
-        emitter->setEmitterName(QString("Visible area (%1x%2) x: %3, y: %4").arg(
-                                  QString::number(rect.width()),
-                                  QString::number(rect.height()),
-                                  QString::number(rect.x()),
-                                  QString::number(rect.y())));
-        break;
+        switch (i) {
+        case -1:
+            rect = QApplication::desktop()->geometry();
+            emitter->setName("all");
+            emitter->setEmitterName(QString("Visible area (%1x%2) x: %3, y: %4").arg(
+                                        QString::number(rect.width()),
+                                        QString::number(rect.height()),
+                                        QString::number(rect.x()),
+                                        QString::number(rect.y())));
+            break;
 
-      default:
-        rect = screens[i]->geometry();
-        emitter->setEmitterName(QString("%1 (%2x%3) x: %4, y: %5").arg(
-                                  screens[i]->name(),
-                                  QString::number(rect.width()),
-                                  QString::number(rect.height()),
-                                  QString::number(rect.x()),
-                                  QString::number(rect.y())));
-        emitter->setName(screens[i]->name());
-        break;
-    }
+        default:
+            rect = screens[i]->geometry();
+            emitter->setEmitterName(QString("%1 (%2x%3) x: %4, y: %5").arg(
+                                        screens[i]->name(),
+                                        QString::number(rect.width()),
+                                        QString::number(rect.height()),
+                                        QString::number(rect.x()),
+                                        QString::number(rect.y())));
+            emitter->setName(screens[i]->name());
+            break;
+        }
 
-    settings->beginGroup(emitter->emitterName());
-    emitter->setCaptureArea(rect);
-    emitter->setPixelSkip(settings->value("pixelSkip", 4).toInt());
-    emitter->setChunkSize(settings->value("chunk", 250).toInt());
-    emitter->setFramerateLimit(settings->value("fps", 60).toInt());
-    emitter->setMarginProcent(settings->value("clip", 0).toDouble());
-    readColorCorrection(settings, dynamic_cast <ALCColorCorrection *>(emitter));
-    emitter->start();
-    settings->endGroup();
-    m_emitters[ALCEmitter::EMITTER_SCREEN_CAPTURE] << emitter;
-  }
-
-  settings->endGroup();
-
-  if (settings->childGroups().contains("animations")) {
-    settings->beginGroup("animations");
-    QStringList list = settings->childGroups();
-
-    for (int i = 0; i < list.count(); ++i) {
-      settings->beginGroup(list[i]);
-      addALCAnimationEmitter(settings->value("name", QString()).toString());
-      settings->endGroup();
+        settings->beginGroup(emitter->emitterName());
+        emitter->setCaptureArea(rect);
+        emitter->setPixelSkip(settings->value("pixelSkip", 4).toInt());
+        emitter->setChunkSize(settings->value("chunk", 250).toInt());
+        emitter->setFramerateLimit(settings->value("fps", 60).toInt());
+        emitter->setMarginProcent(settings->value("clip", 0).toDouble());
+        readColorCorrection(settings, dynamic_cast <ALCColorCorrection *>(emitter));
+        emitter->start();
+        settings->endGroup();
+        m_emitters[ALCEmitter::EMITTER_SCREEN_CAPTURE] << emitter;
     }
 
     settings->endGroup();
-  } else {
-    for (int i = 0; i < 3; ++i)
-      addALCAnimationEmitter("Animation #" + QString::number(i + 1));
-  }
 
-  if (settings->childGroups().contains("colors")) {
-    settings->beginGroup("colors");
-    QStringList list = settings->childGroups();
+    if (settings->childGroups().contains("animations")) {
+        settings->beginGroup("animations");
+        QStringList list = settings->childGroups();
 
-    for (int i = 0; i < list.count(); ++i) {
-      settings->beginGroup(list[i]);
-      ALCColorEmitter *emitter = addALCColorEmitter(settings->value("name", QString()).toString());
-      int r = settings->value("red", 0).toInt();
-      int g = settings->value("green", 0).toInt();
-      int b = settings->value("blue", 0).toInt();
-      emitter->setColor(QColor::fromRgb(r, g, b));
-      settings->endGroup();
+        for (int i = 0; i < list.count(); ++i) {
+            settings->beginGroup(list[i]);
+            addALCAnimationEmitter(settings->value("name", QString()).toString());
+            settings->endGroup();
+        }
+
+        settings->endGroup();
+    } else {
+        for (int i = 0; i < 3; ++i)
+            addALCAnimationEmitter("Animation #" + QString::number(i + 1));
+    }
+
+    if (settings->childGroups().contains("colors")) {
+        settings->beginGroup("colors");
+        QStringList list = settings->childGroups();
+
+        for (int i = 0; i < list.count(); ++i) {
+            settings->beginGroup(list[i]);
+            ALCColorEmitter *emitter = addALCColorEmitter(settings->value("name", QString()).toString());
+            int r = settings->value("red", 0).toInt();
+            int g = settings->value("green", 0).toInt();
+            int b = settings->value("blue", 0).toInt();
+            emitter->setColor(QColor::fromRgb(r, g, b));
+            settings->endGroup();
+        }
+
+        settings->endGroup();
+    } else {
+        for (int i = 0; i < 3; ++i)
+            addALCColorEmitter("Plain color #" + QString::number(i + 1));
+    }
+
+    if (settings->childGroups().contains("images")) {
+        settings->beginGroup("images");
+        QStringList list = settings->childGroups();
+
+        for (int i = 0; i < list.count(); ++i) {
+            settings->beginGroup(list[i]);
+            ALCImageEmitter *emitter = addALCImageEmitter(settings->value("name", QString()).toString());
+            emitter->fromFile(settings->value("file", QString()).toString());
+            settings->endGroup();
+        }
+
+        settings->endGroup();
+    } else {
+        for (int i = 0; i < 3; ++i)
+            addALCImageEmitter("Image samples #" + QString::number(i + 1));
     }
 
     settings->endGroup();
-  } else {
-    for (int i = 0; i < 3; ++i)
-      addALCColorEmitter("Plain color #" + QString::number(i + 1));
-  }
-
-  if (settings->childGroups().contains("images")) {
-    settings->beginGroup("images");
-    QStringList list = settings->childGroups();
-
-    for (int i = 0; i < list.count(); ++i) {
-      settings->beginGroup(list[i]);
-      ALCImageEmitter *emitter = addALCImageEmitter(settings->value("name", QString()).toString());
-      emitter->fromFile(settings->value("file", QString()).toString());
-      settings->endGroup();
-    }
-
-    settings->endGroup();
-  } else {
-    for (int i = 0; i < 3; ++i)
-      addALCImageEmitter("Image samples #" + QString::number(i + 1));
-  }
-
-  settings->endGroup();
 }
 
 ALCEmitterManager::~ALCEmitterManager() {
-  QSettings *settings = ALCSettings::instance()->settings();
-  settings->beginGroup("emitters");
-  QList <ALCEmitter *> all = allEmitters();
+    QSettings *settings = ALCSettings::instance()->settings();
+    settings->beginGroup("emitters");
+    QList <ALCEmitter *> all = allEmitters();
 
-  for (int i = 0; i < all.count(); ++i) {
-    switch (all[i]->type()) {
-      case ALCEmitter::EMITTER_SCREEN_CAPTURE:
-        dynamic_cast <ALCScreenEmitter *>(all[i])->setQuitState(true);
-        break;
+    for (int i = 0; i < all.count(); ++i) {
+        switch (all[i]->type()) {
+        case ALCEmitter::EMITTER_SCREEN_CAPTURE:
+            dynamic_cast <ALCScreenEmitter *>(all[i])->setQuitState(true);
+            break;
 
-      default:
-        break;
-    }
-  }
-
-  settings->remove("animations");
-  settings->remove("colors");
-  settings->remove("images");
-  ALCAnimationEmitter *animation;
-  ALCImageEmitter *image;
-  ALCColorEmitter *plain;
-  ALCScreenEmitter *screen;
-
-  for (int i = 0; i < all.count(); ++i) {
-    switch (all[i]->type()) {
-      case ALCEmitter::EMITTER_SCREEN_CAPTURE:
-        settings->beginGroup("screens");
-        screen = dynamic_cast <ALCScreenEmitter *>(all[i]);
-        screen->wait();
-        settings->beginGroup(screen->emitterName());
-        settings->setValue("name", screen->emitterName());
-        settings->setValue("pixelSkip", screen->pixelSkip());
-        settings->setValue("chunk", screen->chunk());
-        settings->setValue("fps", screen->framerateLimit());
-        settings->setValue("clip", screen->marginProcent());
-        writeColorCorrection(settings, dynamic_cast <ALCColorCorrection *>(screen));
-        settings->endGroup();
-        settings->endGroup();
-        break;
-
-      case ALCEmitter::EMITTER_ANIMATION:
-        animation = dynamic_cast <ALCAnimationEmitter *>(all[i]);
-        settings->beginGroup("animations");
-        settings->beginGroup(QString::number(i));
-        settings->setValue("name", animation->emitterName());
-        settings->setValue("remember", true);
-        settings->endGroup();
-        settings->endGroup();
-        break;
-
-      case ALCEmitter::EMITTER_PLAIN_COLOR:
-        plain = dynamic_cast <ALCColorEmitter *>(all[i]);
-        settings->beginGroup("colors");
-        settings->beginGroup(QString::number(i));
-        settings->setValue("name", plain->emitterName());
-        settings->setValue("red", plain->color().red());
-        settings->setValue("green", plain->color().green());
-        settings->setValue("blue", plain->color().blue());
-        settings->endGroup();
-        settings->endGroup();
-        break;
-
-      case ALCEmitter::EMITTER_IMAGE:
-        image = dynamic_cast <ALCImageEmitter *>(all[i]);
-        settings->beginGroup("images");
-        settings->beginGroup(QString::number(i));
-        settings->setValue("name", image->emitterName());
-        settings->setValue("remember", true);
-        settings->setValue("file", image->file());
-        settings->endGroup();
-        settings->endGroup();
-        break;
-
-      default:
-        break;
+        default:
+            break;
+        }
     }
 
-    delete all[i];
-  }
+    settings->remove("animations");
+    settings->remove("colors");
+    settings->remove("images");
+    ALCAnimationEmitter *animation;
+    ALCImageEmitter *image;
+    ALCColorEmitter *plain;
+    ALCScreenEmitter *screen;
 
-  settings->endGroup();
+    for (int i = 0; i < all.count(); ++i) {
+        switch (all[i]->type()) {
+        case ALCEmitter::EMITTER_SCREEN_CAPTURE:
+            settings->beginGroup("screens");
+            screen = dynamic_cast <ALCScreenEmitter *>(all[i]);
+            screen->wait();
+            settings->beginGroup(screen->emitterName());
+            settings->setValue("name", screen->emitterName());
+            settings->setValue("pixelSkip", screen->pixelSkip());
+            settings->setValue("chunk", screen->chunk());
+            settings->setValue("fps", screen->framerateLimit());
+            settings->setValue("clip", screen->marginProcent());
+            writeColorCorrection(settings, dynamic_cast <ALCColorCorrection *>(screen));
+            settings->endGroup();
+            settings->endGroup();
+            break;
+
+        case ALCEmitter::EMITTER_ANIMATION:
+            animation = dynamic_cast <ALCAnimationEmitter *>(all[i]);
+            settings->beginGroup("animations");
+            settings->beginGroup(QString::number(i));
+            settings->setValue("name", animation->emitterName());
+            settings->setValue("remember", true);
+            settings->endGroup();
+            settings->endGroup();
+            break;
+
+        case ALCEmitter::EMITTER_PLAIN_COLOR:
+            plain = dynamic_cast <ALCColorEmitter *>(all[i]);
+            settings->beginGroup("colors");
+            settings->beginGroup(QString::number(i));
+            settings->setValue("name", plain->emitterName());
+            settings->setValue("red", plain->color().red());
+            settings->setValue("green", plain->color().green());
+            settings->setValue("blue", plain->color().blue());
+            settings->endGroup();
+            settings->endGroup();
+            break;
+
+        case ALCEmitter::EMITTER_IMAGE:
+            image = dynamic_cast <ALCImageEmitter *>(all[i]);
+            settings->beginGroup("images");
+            settings->beginGroup(QString::number(i));
+            settings->setValue("name", image->emitterName());
+            settings->setValue("remember", true);
+            settings->setValue("file", image->file());
+            settings->endGroup();
+            settings->endGroup();
+            break;
+
+        default:
+            break;
+        }
+
+        delete all[i];
+    }
+
+    settings->endGroup();
 }
 
 void ALCEmitterManager::add(ALCEmitter *emitter, ALCEmitter::EmitterType type) {
-  m_emitters[type] << emitter;
-  emit emitterListChanged();
+    m_emitters[type] << emitter;
+    emit emitterListChanged();
 }
 
 ALCImageEmitter *ALCEmitterManager::addALCImageEmitter(const QString &name) {
-  ALCImageEmitter *emitter = new ALCImageEmitter(this);
-  emitter->setEmitterName(name);
-  add(emitter, ALCEmitter::EMITTER_IMAGE);
-  return emitter;
+    ALCImageEmitter *emitter = new ALCImageEmitter(this);
+    emitter->setEmitterName(name);
+    add(emitter, ALCEmitter::EMITTER_IMAGE);
+    return emitter;
 }
 
 ALCColorEmitter *ALCEmitterManager::addALCColorEmitter(const QString &name) {
-  ALCColorEmitter *emitter = new ALCColorEmitter();
-  emitter->setEmitterName(name);
-  add(emitter, ALCEmitter::EMITTER_PLAIN_COLOR);
-  return emitter;
+    ALCColorEmitter *emitter = new ALCColorEmitter();
+    emitter->setEmitterName(name);
+    add(emitter, ALCEmitter::EMITTER_PLAIN_COLOR);
+    return emitter;
 }
 
 ALCAnimationEmitter *ALCEmitterManager::addALCAnimationEmitter(const QString &name) {
-  ALCAnimationEmitter *emitter = new ALCAnimationEmitter();
-  emitter->setEmitterName(name);
-  add(emitter, ALCEmitter::EMITTER_ANIMATION);
-  return emitter;
+    ALCAnimationEmitter *emitter = new ALCAnimationEmitter();
+    emitter->setEmitterName(name);
+    add(emitter, ALCEmitter::EMITTER_ANIMATION);
+    return emitter;
 }
 
 ALCScreenEmitter *ALCEmitterManager::addScreenCaptureEmitter(const QString &name) {
-  ALCScreenEmitter *emitter = new ALCScreenEmitter(this);
-  emitter->setEmitterName(name);
-  add(emitter, ALCEmitter::EMITTER_SCREEN_CAPTURE);
-  return emitter;
+    ALCScreenEmitter *emitter = new ALCScreenEmitter(this);
+    emitter->setEmitterName(name);
+    add(emitter, ALCEmitter::EMITTER_SCREEN_CAPTURE);
+    return emitter;
 }
 
 void ALCEmitterManager::remove(ALCEmitter *emitter) {
-  for (int i = 0; i < ALCDeviceManager::instance()->count(); ++i) {
-    if (ALCDeviceManager::instance()->device(i)->connectedEmitter() == emitter)
-      ALCDeviceManager::instance()->device(i)->connectEmitter(0);
+    for (int i = 0; i < ALCDeviceManager::instance()->count(); ++i) {
+        if (ALCDeviceManager::instance()->device(i)->connectedEmitter() == emitter)
+            ALCDeviceManager::instance()->device(i)->connectEmitter(0);
 
-    if (m_symulation->connectedEmitter() == emitter)
-      m_symulation->connectEmitter(0);
-  }
+        if (m_symulation->connectedEmitter() == emitter)
+            m_symulation->connectEmitter(0);
+    }
 
-  for (int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
-    m_emitters[static_cast<ALCEmitter::EmitterType>(i)].removeAll(emitter);
+    for (int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
+        m_emitters[static_cast<ALCEmitter::EmitterType>(i)].removeAll(emitter);
 
-  delete emitter;
-  emit emitterListChanged();
+    delete emitter;
+    emit emitterListChanged();
 }
 
 ALCEmitterManager *ALCEmitterManager::instance() {
-  static ALCEmitterManager object;
-  return &object;
+    static ALCEmitterManager object;
+    return &object;
 }
 
 void ALCEmitterManager::addSymulation(ALCSymulationWidget *symulation) {
-  m_symulation = symulation;
+    m_symulation = symulation;
 }
 
 const QList <ALCEmitter *> *ALCEmitterManager::emitters(ALCEmitter::EmitterType type) {
-  return &m_emitters[type];
+    return &m_emitters[type];
 }
 
 const QList<ALCEmitter *> ALCEmitterManager::allEmitters() {
-  QList <ALCEmitter *> result;
+    QList <ALCEmitter *> result;
 
-  for (int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
-    result << m_emitters[static_cast<ALCEmitter::EmitterType>(i)];
+    for (int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
+        result << m_emitters[static_cast<ALCEmitter::EmitterType>(i)];
 
-  return result;
+    return result;
 }
 
 void ALCEmitterManager::readColorCorrection(QSettings *settings, ALCColorCorrection *correction) {
-  settings->beginGroup("correction");
-  correction->setCorrection(ALCColorCorrection::Brightness, settings->value("light").toDouble());
-  correction->setCorrection(ALCColorCorrection::Red, settings->value("red").toDouble());
-  correction->setCorrection(ALCColorCorrection::Green, settings->value("green").toDouble());
-  correction->setCorrection(ALCColorCorrection::Blue, settings->value("blue").toDouble());
-  settings->endGroup();
+    settings->beginGroup("correction");
+    correction->setCorrection(ALCColorCorrection::Brightness, settings->value("light").toDouble());
+    correction->setCorrection(ALCColorCorrection::Red, settings->value("red").toDouble());
+    correction->setCorrection(ALCColorCorrection::Green, settings->value("green").toDouble());
+    correction->setCorrection(ALCColorCorrection::Blue, settings->value("blue").toDouble());
+    settings->endGroup();
 }
 
 void ALCEmitterManager::writeColorCorrection(QSettings *settings, ALCColorCorrection *correction) {
-  settings->beginGroup("correction");
-  settings->setValue("light", correction->correction(ALCColorCorrection::Brightness));
-  settings->setValue("red", correction->correction(ALCColorCorrection::Red));
-  settings->setValue("green", correction->correction(ALCColorCorrection::Green));
-  settings->setValue("blue", correction->correction(ALCColorCorrection::Blue));
-  settings->endGroup();
+    settings->beginGroup("correction");
+    settings->setValue("light", correction->correction(ALCColorCorrection::Brightness));
+    settings->setValue("red", correction->correction(ALCColorCorrection::Red));
+    settings->setValue("green", correction->correction(ALCColorCorrection::Green));
+    settings->setValue("blue", correction->correction(ALCColorCorrection::Blue));
+    settings->endGroup();
 }
 

@@ -26,76 +26,74 @@
 #include "managers/alc-emitter-manager.h"
 
 ALCEmitter::ALCEmitter()
-  : m_treeItem(0),
-    m_type(EMITTER_NOT_DEFINED) {
-  m_connectedCount = 0;
+    : m_treeItem(0),
+      m_type(EMITTER_NOT_DEFINED) {
+    m_connectedCount = 0;
 }
 
 ALCEmitter::~ALCEmitter() {
-  //  delete m_treeItem;
+    //  delete m_treeItem;
 }
 
 void ALCEmitter::setEmitterName(const QString &name) {
-  m_emitterName = name;
+    m_emitterName = name;
 }
 
 QString ALCEmitter::emitterName() const {
-  return m_emitterName;
+    return m_emitterName;
 }
 
 ALCEmitter::EmitterType ALCEmitter::type() const {
-  return m_type;
+    return m_type;
 }
 
 void ALCEmitter::init() {
-  QMutexLocker locker(&m_mutex);
-  m_connectedCount++;
-  // qDebug() << this << " device connected, count: " << m_connectedCount;
+    m_connectedCount++;
+    // qDebug() << this << " device connected, count: " << m_connectedCount;
 }
 
 void ALCEmitter::done() {
-  QMutexLocker locker(&m_mutex);
-  m_connectedCount--;
-  //  qDebug() << this << " device disconnected, count: " << m_connectedCount;
+    m_connectedCount--;
+    //  qDebug() << this << " device disconnected, count: " << m_connectedCount;
 }
 
 void ALCEmitter::setState(const ALCColorSamples &samples) {
-  QWriteLocker locker(&m_readWriteLock);
-  m_safeSamples.copy(samples);
+    QMutexLocker locaker(&m_mutex);
+    m_safeSamples.copy(samples);
 }
 
 void ALCEmitter::state(ALCColorSamples &samples) {
-  QReadLocker locker(&m_readWriteLock);
-  samples.copy(m_safeSamples);
+    QMutexLocker locaker(&m_mutex);
+    samples.copy(m_safeSamples);
 }
 
 void ALCEmitter::setTreeItem(QTreeWidgetItem *item) {
-  m_treeItem = item;
+    m_treeItem = item;
 }
 
 QTreeWidgetItem *ALCEmitter::treeItem() {
-  return m_treeItem;
+    return m_treeItem;
 }
 
 bool ALCEmitter::configure() {
-  return false;
+    return false;
 }
 
 bool ALCEmitter::rename() {
-  QString text = QInputDialog::getText(0, "Rename", "Set name:", QLineEdit::Normal, emitterName());
+    QString text = QInputDialog::getText(0, "Rename", "Set name:", QLineEdit::Normal, emitterName());
 
-  if (!text.isEmpty())
-    setEmitterName(text);
+    if (!text.isEmpty())
+        setEmitterName(text);
 
-  return text.isEmpty();
+    return text.isEmpty();
 }
 
 bool ALCEmitter::remove() {
-  if (QMessageBox::question(0, "Question", "Do you realy want to delete this emitter.",
-                            QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
-    return false;
+    if (QMessageBox::question(0, "Question", "Do you realy want to delete this emitter.",
+                              QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
+        return false;
 
-  ALCEmitterManager::instance()->remove(this);
-  return true;
+    ALCEmitterManager::instance()->remove(this);
+    return true;
 }
 
