@@ -21,11 +21,11 @@
 #include "ui_alc-led-configuration-widget.h"
 
 ALCLedConfigurationWidget::ALCLedConfigurationWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ALCLedConfigurationWidget) {
-    ui->setupUi(this);
+  QWidget(parent),
+  ui(new Ui::ALCLedConfigurationWidget) {
+  ui->setupUi(this);
 }
 
 ALCLedConfigurationWidget::~ALCLedConfigurationWidget() {
-    delete ui;
+  delete ui;
 }

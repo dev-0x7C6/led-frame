@@ -34,30 +34,30 @@ class ALCColorSamples;
 class ALCStripConfiguration;
 
 class ALCDeviceThread : public QThread, public ALCReceiver {
-    Q_OBJECT
+  Q_OBJECT
 private:
-    ALCStripConfiguration *m_config;
-    QSerialPort *m_device;
-    ALCColorSamples m_samples;
-    QSerialPortInfo m_details;
-    std::atomic <bool> m_continue;
+  ALCStripConfiguration *m_config;
+  QSerialPort *m_device;
+  ALCColorSamples m_samples;
+  QSerialPortInfo m_details;
+  std::atomic <bool> m_continue;
 
 public:
-    explicit ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
-    virtual ~ALCDeviceThread();
+  explicit ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
+  virtual ~ALCDeviceThread();
 
-    QString name();
+  QString name();
 
-    QSerialPortInfo details();
+  QSerialPortInfo details();
 
-    void setContinueValue(bool value);
-    bool continueValue();
+  void setContinueValue(bool value);
+  bool continueValue();
 
 private:
-    void push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[]);
+  void push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[]);
 
 protected:
-    void run();
+  void run();
 };
 
 #endif // ACLDEVICETHREAD_H

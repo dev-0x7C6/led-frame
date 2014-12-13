@@ -23,33 +23,33 @@
 #include <QSettings>
 
 ALCSettings::ALCSettings() :
-    m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver")) {
-    load();
+  m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver")) {
+  load();
 }
 
 ALCSettings::~ALCSettings() {
-    save();
-    delete m_settings;
+  save();
+  delete m_settings;
 }
 
 QSettings *ALCSettings::settings() {
-    return m_settings;
+  return m_settings;
 }
 
 void ALCSettings::load() {
-    m_settings->beginGroup("GlobalColorCorrection");
-    ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Brightness, m_settings->value("Brightness", 1.0).toDouble());
-    ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Red, m_settings->value("Blue", 1.0).toDouble());
-    ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Green, m_settings->value("Green", 1.0).toDouble());
-    ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Blue, m_settings->value("Red", 1.0).toDouble());
-    m_settings->endGroup();
+  m_settings->beginGroup("GlobalColorCorrection");
+  ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Brightness, m_settings->value("Brightness", 1.0).toDouble());
+  ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Red, m_settings->value("Blue", 1.0).toDouble());
+  ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Green, m_settings->value("Green", 1.0).toDouble());
+  ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Blue, m_settings->value("Red", 1.0).toDouble());
+  m_settings->endGroup();
 }
 
 void ALCSettings::save() {
-    m_settings->beginGroup("GlobalColorCorrection");
-    m_settings->setValue("Brightness", ALCColorCorrection::instance()->correction(ALCColorCorrection::Brightness));
-    m_settings->setValue("Blue", ALCColorCorrection::instance()->correction(ALCColorCorrection::Red));
-    m_settings->setValue("Green", ALCColorCorrection::instance()->correction(ALCColorCorrection::Green));
-    m_settings->setValue("Red", ALCColorCorrection::instance()->correction(ALCColorCorrection::Blue));
-    m_settings->endGroup();
+  m_settings->beginGroup("GlobalColorCorrection");
+  m_settings->setValue("Brightness", ALCColorCorrection::instance()->correction(ALCColorCorrection::Brightness));
+  m_settings->setValue("Blue", ALCColorCorrection::instance()->correction(ALCColorCorrection::Red));
+  m_settings->setValue("Green", ALCColorCorrection::instance()->correction(ALCColorCorrection::Green));
+  m_settings->setValue("Red", ALCColorCorrection::instance()->correction(ALCColorCorrection::Blue));
+  m_settings->endGroup();
 }

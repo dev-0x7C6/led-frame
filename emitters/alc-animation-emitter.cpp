@@ -22,121 +22,121 @@
 #include "dialogs/alc-animation-configure-dialog.h"
 
 ALCAnimationEmitter::ALCAnimationEmitter() :
-    QObject(),
-    ALCEmitter(),
-    m_animation(0) {
-    m_type = EMITTER_ANIMATION;
-    rotatePalette();
-    startTimer(1000 / 60);
+  QObject(),
+  ALCEmitter(),
+  m_animation(0) {
+  m_type = EMITTER_ANIMATION;
+  rotatePalette();
+  startTimer(1000 / 60);
 
-    for (int i = 0; i < 256; ++i)
-        m_colorStream << qRgb(0, 0, 0);
+  for (int i = 0; i < 256; ++i)
+    m_colorStream << qRgb(0, 0, 0);
 
-    m_animationType = Rotation;
+  m_animationType = Rotation;
 }
 
 ALCAnimationEmitter::~ALCAnimationEmitter() {
-    if (m_animation)
-        delete m_animation;
+  if (m_animation)
+    delete m_animation;
 }
 
 const QColor &ALCAnimationEmitter::color() {
-    return m_color;
+  return m_color;
 }
 
 void ALCAnimationEmitter::setColor(const QColor &color) {
-    m_color = color;
+  m_color = color;
 }
 
 bool ALCAnimationEmitter::open() {
-    QMessageBox::warning(0, "Warning", "To implement.", QMessageBox::Ok);
-    return false;
+  QMessageBox::warning(0, "Warning", "To implement.", QMessageBox::Ok);
+  return false;
 }
 
 bool ALCAnimationEmitter::configure() {
-    ALCAnimationConfigureDialog dialog;
-    dialog.exec();
-    // QMessageBox::information(0, "Information", "Animation configurator is under development.", QMessageBox::Ok);
-    return false;
+  ALCAnimationConfigureDialog dialog;
+  dialog.exec();
+  // QMessageBox::information(0, "Information", "Animation configurator is under development.", QMessageBox::Ok);
+  return false;
 }
 
 void ALCAnimationEmitter::rotatePalette(int msecs) {
-    if (m_animation)
-        delete m_animation;
+  if (m_animation)
+    delete m_animation;
 
-    m_animation = new QPropertyAnimation(this, "color");
-    m_animation->setDuration(msecs);
-    m_animation->setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
-    m_animation->setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
-    m_animation->setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
-    m_animation->setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
-    m_animation->setLoopCount(-1);
-    m_animation->start();
-    ;
+  m_animation = new QPropertyAnimation(this, "color");
+  m_animation->setDuration(msecs);
+  m_animation->setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
+  m_animation->setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
+  m_animation->setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
+  m_animation->setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
+  m_animation->setLoopCount(-1);
+  m_animation->start();
+  ;
 }
 
 void ALCAnimationEmitter::glow() {
-    if (m_animation)
-        delete m_animation;
+  if (m_animation)
+    delete m_animation;
 
-    m_animation = new QPropertyAnimation(this, "color");
-    m_animation->setDuration(10000);
-    m_animation->setKeyValueAt(0.000, QColor::fromRgbF(0.0, 0.0, 0.0));
-    m_animation->setKeyValueAt(0.500, QColor::fromRgbF(0.5, 1, 0));
-    m_animation->setKeyValueAt(1.000, QColor::fromRgbF(0.0, 0.0, 0.0));
-    m_animation->setLoopCount(-1);
-    m_animation->start();
+  m_animation = new QPropertyAnimation(this, "color");
+  m_animation->setDuration(10000);
+  m_animation->setKeyValueAt(0.000, QColor::fromRgbF(0.0, 0.0, 0.0));
+  m_animation->setKeyValueAt(0.500, QColor::fromRgbF(0.5, 1, 0));
+  m_animation->setKeyValueAt(1.000, QColor::fromRgbF(0.0, 0.0, 0.0));
+  m_animation->setLoopCount(-1);
+  m_animation->start();
 }
 
 void ALCAnimationEmitter::timerEvent(QTimerEvent *) {
-    if (!m_connectedCount)
-        return;
+  if (!m_connectedCount)
+    return;
 
-    m_blink++;
-    int rgb;
-    double l = correction(ALCColorCorrection::Brightness);
-    double r = qMin(m_color.redF() * correction(ALCColorCorrection::Red) * l, 1.0);
-    double g = qMin(m_color.greenF() * correction(ALCColorCorrection::Green) * l, 1.0);
-    double b = qMin(m_color.blueF() * correction(ALCColorCorrection::Blue) * l, 1.0);
+  m_blink++;
+  int rgb;
+  double l = correction(ALCColorCorrection::Brightness);
+  double r = qMin(m_color.redF() * correction(ALCColorCorrection::Red) * l, 1.0);
+  double g = qMin(m_color.greenF() * correction(ALCColorCorrection::Green) * l, 1.0);
+  double b = qMin(m_color.blueF() * correction(ALCColorCorrection::Blue) * l, 1.0);
 
-    switch (m_animationType) {
+  switch (m_animationType) {
     case Rotation: {
-        if (m_colorStream.count() == 256)
-            m_colorStream.removeFirst();
+      if (m_colorStream.count() == 256)
+        m_colorStream.removeFirst();
 
-        m_colorStream << QColor::fromRgbF(r, g, b).rgb();
-        QListIterator <QRgb> it(m_colorStream);
+      m_colorStream << QColor::fromRgbF(r, g, b).rgb();
+      QListIterator <QRgb> it(m_colorStream);
 
-        for (int p = 0; p < 4; ++p) {
-            QVector <int> *vec = m_samples.get(static_cast <ALCColorSamples::Position>(p));
+      for (int p = 0; p < 4; ++p) {
+        QVector <int> *vec = m_samples.get(static_cast <ALCColorSamples::Position>(p));
 
-            for (int i = 0; i < ALCColorSamples::Resolution; ++i)
-                (*vec)[i] = it.next();
-        }
+        for (int i = 0; i < ALCColorSamples::Resolution; ++i)
+          (*vec)[i] = it.next();
+      }
     }
     break;
 
     case Glow:
-        if (m_blink < 2)
-            rgb = QColor::fromRgbF(r, g, b).rgb();
-        else
-            rgb = qRgb(0, 0, 0);
+      if (m_blink < 2)
+        rgb = QColor::fromRgbF(r, g, b).rgb();
+      else
+        rgb = qRgb(0, 0, 0);
 
-        if (m_blink > 3)
-            m_blink = 0;
+      if (m_blink > 3)
+        m_blink = 0;
 
-        for (int p = 0; p < 4; ++p) {
-            QVector <int> *vec = m_samples.get(static_cast <ALCColorSamples::Position>(p));
+      for (int p = 0; p < 4; ++p) {
+        QVector <int> *vec = m_samples.get(static_cast <ALCColorSamples::Position>(p));
 
-            for (int i = 0; i < ALCColorSamples::Resolution; ++i)
-                (*vec)[i] = rgb;
-        }
+        for (int i = 0; i < ALCColorSamples::Resolution; ++i)
+          (*vec)[i] = rgb;
+      }
 
-        break;
+      break;
 
     default:
-        break;
-    }
+      break;
+  }
 
-    setState(m_samples);
+  setState(m_samples);
 }

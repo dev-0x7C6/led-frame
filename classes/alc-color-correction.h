@@ -29,66 +29,66 @@
 
 class ALCColorCorrection : public ALCSafeThreading {
 public:
-    enum Type : unsigned char {
-        GLOBAL = 0x00,
-        WEATHER = 0x01,
-        USER = 0x02
-    };
+  enum Type : unsigned char {
+    GLOBAL = 0x00,
+    WEATHER = 0x01,
+    USER = 0x02
+  };
 
-    enum Color : unsigned char {
-        Brightness = 0x00,
-        Red = 0x01,
-        Green = 0x02,
-        Blue = 0x03
-    };
+  enum Color : unsigned char {
+    Brightness = 0x00,
+    Red = 0x01,
+    Green = 0x02,
+    Blue = 0x03
+  };
 
-    enum Format : unsigned char {
-        RGB = 0x00,
-        RBG = 0x01,
-        GRB = 0x02,
-        BRG = 0x03,
-        GBR = 0x04,
-        BGR = 0x05
-    };
+  enum Format : unsigned char {
+    RGB = 0x00,
+    RBG = 0x01,
+    GRB = 0x02,
+    BRG = 0x03,
+    GBR = 0x04,
+    BGR = 0x05
+  };
 
 protected:
-    double m_colorCorrection[ALCColorCorrection::Blue + 1];
+  double m_colorCorrection[ALCColorCorrection::Blue + 1];
 
-    std::atomic < double> m_r;
-    std::atomic < double> m_g;
-    std::atomic < double> m_b;
-    std::atomic < double> m_l;
-    std::atomic < bool> m_enabled;
-    std::atomic < Format> m_format;
-    std::atomic < Type> m_type;
+  std::atomic <double> m_r;
+  std::atomic <double> m_g;
+  std::atomic <double> m_b;
+  std::atomic <double> m_l;
+  std::atomic <bool> m_enabled;
+  std::atomic <Format> m_format;
+  std::atomic <Type> m_type;
 
-    static QList<ALCColorCorrection *> m_multipliers;
-    ALCColorCorrection *m_weather;
+  static QList<ALCColorCorrection *> m_multipliers;
+  ALCColorCorrection *m_weather;
 
 public:
-    explicit ALCColorCorrection(ALCColorCorrection::Type type = USER);
-    ~ALCColorCorrection();
+  explicit ALCColorCorrection(ALCColorCorrection::Type type = USER);
+  ~ALCColorCorrection();
 
-    void setColorFormat(const Format format);
-    Format colorFormat();
+  void setColorFormat(const Format format);
+  Format colorFormat();
 
-    void setCorrection(ALCColorCorrection::Color color, double value);
-    double correction(ALCColorCorrection::Color color, bool global = false);
+  void setCorrection(ALCColorCorrection::Color color, double value);
+  double correction(ALCColorCorrection::Color color, bool global = false);
 
-    static ALCColorCorrection *instance();
-    static const QList<ALCColorCorrection *> &multipliers();
-    static void registerMultiplier(ALCColorCorrection *correction);
-    static void unregisterMultiplier(ALCColorCorrection *correction);
+  static ALCColorCorrection *instance();
+  static const QList<ALCColorCorrection *> &multipliers();
+  static void registerMultiplier(ALCColorCorrection *correction);
+  static void unregisterMultiplier(ALCColorCorrection *correction);
 
-    void clear();
-    bool enabled();
-    void setEnabled(bool enabled);
+  void clear();
+  bool enabled();
+  void setEnabled(bool enabled);
 
-    ALCColorCorrection *weather() const;
-    void setWeather(ALCColorCorrection *weather);
+  ALCColorCorrection *weather() const;
+  void setWeather(ALCColorCorrection *weather);
 
 protected:
-    virtual void correctionChanged();
+  virtual void correctionChanged();
 
 };
 

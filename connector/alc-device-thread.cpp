@@ -31,165 +31,165 @@
 #include "classes/alc-strip-configuration.h"
 
 ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent)
-    : QThread(parent),
-      ALCReceiver(),
-      m_device(device),
-      m_details(details),
-      m_continue(true) {
-    m_device->moveToThread(this);
-    m_config = new ALCStripConfiguration();
-    m_config->add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, RGB, 1.00);
-    m_config->add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
-    m_config->add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
-    m_config->add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
-    /* //LEDY JARKA
-    config.add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 6, true, GRB, 2.0);
-    config.add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
-    config.add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
-    config.add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
-     */
+  : QThread(parent),
+    ALCReceiver(),
+    m_device(device),
+    m_details(details),
+    m_continue(true) {
+  m_device->moveToThread(this);
+  m_config = new ALCStripConfiguration();
+  m_config->add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, RGB, 1.00);
+  m_config->add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
+  m_config->add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
+  m_config->add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
+  /* //LEDY JARKA
+  config.add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 6, true, GRB, 2.0);
+  config.add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
+  config.add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
+  config.add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
+   */
 }
 
 ALCDeviceThread::~ALCDeviceThread() {
-    delete m_config;
+  delete m_config;
 }
 
 QString ALCDeviceThread::name() {
-    QMutexLocker locker(&m_mutex);
-    return m_details.systemLocation();
+  QMutexLocker locker(&m_mutex);
+  return m_details.systemLocation();
 }
 
 void ALCDeviceThread::run() {
-    unsigned char data[2048];
-    memset((char *)data, 0, sizeof(data));
-    QElapsedTimer timer;
-    QElapsedTimer counter;
-    int fps = 0;
-    int framerateLimit = 60;
-    double latency[2];
-    counter.start();
-    latency[0] = 0;
-    latency[1] = 0;
-    double rgbc[4];
-    quint16 ptr = 0;
+  unsigned char data[2048];
+  memset((char *)data, 0, sizeof(data));
+  QElapsedTimer timer;
+  QElapsedTimer counter;
+  int fps = 0;
+  int framerateLimit = 60;
+  double latency[2];
+  counter.start();
+  latency[0] = 0;
+  latency[1] = 0;
+  double rgbc[4];
+  quint16 ptr = 0;
 
-    do {
-        timer.start();
-
-        if (m_emitter)
-            m_emitter->state(m_samples);
-
-        rgbc[Brightness] = correction(ALCColorCorrection::Brightness, true);
-        rgbc[Red] = correction(ALCColorCorrection::Red, true);
-        rgbc[Green] = correction(ALCColorCorrection::Green, true);
-        rgbc[Blue] = correction(ALCColorCorrection::Blue, true);
-
-        if (!m_emitter) {
-            msleep(100);
-            continue;
-        }
-
-        QVector <int> *colors;
-        ptr = 0;
-        QList <ALCLedStrip *> strips = m_config->list();
-
-        for (int ii = 0; ii < strips.count(); ++ii) {
-            ALCLedStrip *strip = strips[ii];
-            colors = m_samples.scaled((ALCColorSamples::Position)strip->source(), strip->count());
-            const Format format = strip->colorFormat();
-            const int size = colors->size();
-            rgbc[Brightness] *= strip->brightness();
-
-            if (strip->clockwise()) {
-                for (int i = 0; i < size;)
-                    push(data, ptr, format, (*colors)[i++], rgbc);
-            } else {
-                for (int i = size - 1; i >= 0;)
-                    push(data, ptr, format, (*colors)[i--], rgbc);
-            }
-
-            delete colors;
-        }
-
-        m_device->write((char *)data, ptr);
-        m_device->waitForBytesWritten(500);
-        latency[0] = timer.nsecsElapsed();
-        latency[1] += latency[0];
-        double delay = 1000000000.0 / double(framerateLimit) - latency[0];
-
-        if (delay < 0)
-            delay = 0.0;
-
-        fps++;
-        usleep(delay / 1000.0);
-
-        if (counter.hasExpired(1000)) {
-            qDebug() << fps;
-            counter.restart();
-            latency[1] = 0;
-            fps = 0;
-        }
-    } while (m_continue && m_device->error() == 0);
-
-    if (m_device->isOpen() && m_device->isWritable())
-        m_device->close();
-
-    delete m_device;
+  do {
+    timer.start();
 
     if (m_emitter)
-        m_emitter->done();
+      m_emitter->state(m_samples);
+
+    rgbc[Brightness] = correction(ALCColorCorrection::Brightness, true);
+    rgbc[Red] = correction(ALCColorCorrection::Red, true);
+    rgbc[Green] = correction(ALCColorCorrection::Green, true);
+    rgbc[Blue] = correction(ALCColorCorrection::Blue, true);
+
+    if (!m_emitter) {
+      msleep(100);
+      continue;
+    }
+
+    QVector <int> *colors;
+    ptr = 0;
+    QList <ALCLedStrip *> strips = m_config->list();
+
+    for (int ii = 0; ii < strips.count(); ++ii) {
+      ALCLedStrip *strip = strips[ii];
+      colors = m_samples.scaled((ALCColorSamples::Position)strip->source(), strip->count());
+      const Format format = strip->colorFormat();
+      const int size = colors->size();
+      rgbc[Brightness] *= strip->brightness();
+
+      if (strip->clockwise()) {
+        for (int i = 0; i < size;)
+          push(data, ptr, format, (*colors)[i++], rgbc);
+      } else {
+        for (int i = size - 1; i >= 0;)
+          push(data, ptr, format, (*colors)[i--], rgbc);
+      }
+
+      delete colors;
+    }
+
+    m_device->write((char *)data, ptr);
+    m_device->waitForBytesWritten(500);
+    latency[0] = timer.nsecsElapsed();
+    latency[1] += latency[0];
+    double delay = 1000000000.0 / double(framerateLimit) - latency[0];
+
+    if (delay < 0)
+      delay = 0.0;
+
+    fps++;
+    usleep(delay / 1000.0);
+
+    if (counter.hasExpired(1000)) {
+      qDebug() << fps;
+      counter.restart();
+      latency[1] = 0;
+      fps = 0;
+    }
+  } while (m_continue && m_device->error() == 0);
+
+  if (m_device->isOpen() && m_device->isWritable())
+    m_device->close();
+
+  delete m_device;
+
+  if (m_emitter)
+    m_emitter->done();
 }
 
 QSerialPortInfo ALCDeviceThread::details() {
-    return m_details;
+  return m_details;
 }
 
 void ALCDeviceThread::setContinueValue(bool value) {
-    m_continue = value;
+  m_continue = value;
 }
 
 bool ALCDeviceThread::continueValue() {
-    return m_continue;
+  return m_continue;
 }
 
 void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[]) {
-    double brightness = rgbc[Brightness];
+  double brightness = rgbc[Brightness];
 
-    switch (format) {
+  switch (format) {
     case RGB:
-        data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
-        data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
-        data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
-        break;
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      break;
 
     case RBG:
-        data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
-        data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
-        data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
-        break;
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      break;
 
     case GRB:
-        data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
-        data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
-        data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
-        break;
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      break;
 
     case BRG:
-        data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
-        data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
-        data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
-        break;
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      break;
 
     case GBR:
-        data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
-        data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
-        data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
-        break;
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      break;
 
     case BGR:
-        data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
-        data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
-        data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
-        break;
-    }
+      data[ptr++] = qMin(qb(color) * (rgbc[Blue] * brightness), 255.0);
+      data[ptr++] = qMin(qg(color) * (rgbc[Green] * brightness), 255.0);
+      data[ptr++] = qMin(qr(color) * (rgbc[Red] * brightness), 255.0);
+      break;
+  }
 }

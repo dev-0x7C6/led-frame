@@ -23,20 +23,20 @@ ALCReceiver::ALCReceiver() : ALCColorCorrection(), m_emitter(0) {
 }
 
 QString ALCReceiver::name() {
-    return QString("default");
+  return QString("default");
 }
 
 void ALCReceiver::connectEmitter(ALCEmitter *emitter) {
-    QMutexLocker locker(&m_mutex);
+  QMutexLocker locker(&m_mutex);
 
-    if (m_emitter)
-        m_emitter->done();
+  if (m_emitter)
+    m_emitter->done();
 
-    if ((m_emitter = emitter))
-        m_emitter->init();
+  if ((m_emitter = emitter))
+    m_emitter->init();
 }
 
 ALCEmitter *ALCReceiver::connectedEmitter() {
-    QMutexLocker locker(&m_mutex);
-    return m_emitter;
+  QMutexLocker locker(&m_mutex);
+  return m_emitter;
 }

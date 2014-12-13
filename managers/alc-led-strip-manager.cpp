@@ -25,25 +25,25 @@
 #include <QSettings>
 
 ALCLedStripManager::ALCLedStripManager() {
-    QSettings *settings = ALCSettings::instance()->settings();
+  QSettings *settings = ALCSettings::instance()->settings();
 
-    if (settings->childGroups().contains("led-strips")) {
-        settings->beginGroup("led-strips");
-        settings->endGroup();
-    } else {
-        settings->beginGroup("led-strips");
-        settings->endGroup();
-    }
+  if (settings->childGroups().contains("led-strips")) {
+    settings->beginGroup("led-strips");
+    settings->endGroup();
+  } else {
+    settings->beginGroup("led-strips");
+    settings->endGroup();
+  }
 }
 
 ALCLedStripManager::~ALCLedStripManager() {
 }
 
 const QList<ALCStripConfiguration *> &ALCLedStripManager::configurations() {
-    return m_configurations;
+  return m_configurations;
 }
 
 ALCLedStripManager *ALCLedStripManager::instance() {
-    static ALCLedStripManager object;
-    return &object;
+  static ALCLedStripManager object;
+  return &object;
 }

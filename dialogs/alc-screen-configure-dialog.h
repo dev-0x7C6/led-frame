@@ -24,28 +24,28 @@
 #include <QAbstractButton>
 
 namespace Ui {
-class ALCScreenConfigureDialog;
+  class ALCScreenConfigureDialog;
 }
 
 class ALCScreenEmitter;
 
 class ALCScreenConfigureDialog : public QDialog {
-    Q_OBJECT
+  Q_OBJECT
 private:
-    Ui::ALCScreenConfigureDialog *ui;
-    ALCScreenEmitter *m_emitter;
+  Ui::ALCScreenConfigureDialog *ui;
+  ALCScreenEmitter *m_emitter;
 
 public:
-    explicit ALCScreenConfigureDialog(QWidget *parent = 0);
-    ~ALCScreenConfigureDialog();
+  explicit ALCScreenConfigureDialog(QWidget *parent = 0);
+  ~ALCScreenConfigureDialog();
 
-    void setEmitter(ALCScreenEmitter *);
+  void setEmitter(ALCScreenEmitter *);
 
 private:
-    void fpsValueChanged(int);
-    void clipValueChanged(int);
+  void fpsValueChanged(int);
+  void clipValueChanged(int);
 
-    void accepted(QAbstractButton *);
+  void accepted(QAbstractButton *);
 };
 
 #endif // ALCSCREENCONFIGUREDIALOG_H

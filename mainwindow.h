@@ -30,7 +30,7 @@
 #endif
 
 namespace Ui {
-class MainWindow;
+  class MainWindow;
 }
 
 class ALCDeviceThread;
@@ -40,47 +40,47 @@ class ALCEmitterManager;
 class QMenu;
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+  Q_OBJECT
 private:
-    QSettings *m_settings;
-    Ui::MainWindow *ui;
-    QList <ALCDeviceTreeWidget *> m_devices;
-    ALCEmitterManager *m_screenManager;
-    QSystemTrayIcon m_tray;
-    QMenu *m_menu;
-    QString m_title;
+  QSettings *m_settings;
+  Ui::MainWindow *ui;
+  QList <ALCDeviceTreeWidget *> m_devices;
+  ALCEmitterManager *m_screenManager;
+  QSystemTrayIcon m_tray;
+  QMenu *m_menu;
+  QString m_title;
 
-    QAction *m_visible;
-    QTimer m_showBrightnessTimer;
+  QAction *m_visible;
+  QTimer m_showBrightnessTimer;
 
 #ifdef Q_OS_UNIX
-    WiimotedevDeviceEvents *m_wiimotedevEvents;
-    uint64 m_buttons;
+  WiimotedevDeviceEvents *m_wiimotedevEvents;
+  uint64 m_buttons;
 #endif
 
-    bool m_canClose;
+  bool m_canClose;
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+  explicit MainWindow(QWidget *parent = 0);
+  ~MainWindow();
 
 protected:
-    virtual void showEvent(QShowEvent *event);
-    virtual void hideEvent(QHideEvent *event);
-    virtual void closeEvent(QCloseEvent *event);
-    bool eventFilter(QObject *object, QEvent *event);
+  virtual void showEvent(QShowEvent *event);
+  virtual void hideEvent(QHideEvent *event);
+  virtual void closeEvent(QCloseEvent *event);
+  bool eventFilter(QObject *object, QEvent *event);
 
 private:
-    void forceClose();
-    void about();
-    void showColorCorrection(bool);
+  void forceClose();
+  void about();
+  void showColorCorrection(bool);
 
-    void trayActivated(QSystemTrayIcon::ActivationReason reason);
-    void trayShowBrightness();
-    void trayDrawIcon(double brightness);
+  void trayActivated(QSystemTrayIcon::ActivationReason reason);
+  void trayShowBrightness();
+  void trayDrawIcon(double brightness);
 
 #ifdef Q_OS_UNIX
-    void dbusWiimotedevButtons(uint, uint64);
+  void dbusWiimotedevButtons(uint, uint64);
 #endif
 };
 

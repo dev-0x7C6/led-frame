@@ -27,62 +27,62 @@
 
 class ALCLedStrip {
 public:
-    enum Source {
-        SourceBottom,
-        SourceLeft,
-        SourceTop,
-        SourceRight
-    };
+  enum Source {
+    SourceBottom,
+    SourceLeft,
+    SourceTop,
+    SourceRight
+  };
 
-    enum Destination {
-        DestinationBottom,
-        DestinationLeft,
-        DestinationTop,
-        DestinationRight
-    };
+  enum Destination {
+    DestinationBottom,
+    DestinationLeft,
+    DestinationTop,
+    DestinationRight
+  };
 
 private:
-    int m_count;
-    bool m_clockwise;
-    Source m_source;
-    Destination m_destination;
-    ALCColorCorrection::Format m_colorFormat;
-    double m_brightness;
+  int m_count;
+  bool m_clockwise;
+  Source m_source;
+  Destination m_destination;
+  ALCColorCorrection::Format m_colorFormat;
+  double m_brightness;
 
 public:
-    void setClockwise(bool);
-    bool clockwise() const;
+  void setClockwise(bool);
+  bool clockwise() const;
 
-    void setCount(int count);
-    int count() const;
+  void setCount(int count);
+  int count() const;
 
-    void setColorFormat(ALCColorCorrection::Format format);
-    ALCColorCorrection::Format colorFormat() const;
+  void setColorFormat(ALCColorCorrection::Format format);
+  ALCColorCorrection::Format colorFormat() const;
 
-    void setSource(Source);
-    Source source() const;
+  void setSource(Source);
+  Source source() const;
 
-    void setDestination(Destination);
-    Destination destination() const;
+  void setDestination(Destination);
+  Destination destination() const;
 
 
-    void setBrightness(double value);
-    double brightness();
+  void setBrightness(double value);
+  double brightness();
 
 };
 
 class ALCStripConfiguration {
 private:
-    QList <ALCLedStrip *> m_strips;
+  QList <ALCLedStrip *> m_strips;
 
 public:
-    explicit ALCStripConfiguration();
+  explicit ALCStripConfiguration();
 
-    void add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
-             int count, bool clockwise = true, ALCColorCorrection::Format color = ALCColorCorrection::RGB, double brightness = 1.0);
+  void add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
+           int count, bool clockwise = true, ALCColorCorrection::Format color = ALCColorCorrection::RGB, double brightness = 1.0);
 
 
-    QList <ALCLedStrip *> list();
+  QList <ALCLedStrip *> list();
 
 };
 

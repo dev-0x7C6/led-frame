@@ -27,27 +27,27 @@
 #include "emitters/alc-emitter.h"
 
 class ALCImageEmitter : public QObject, public ALCEmitter {
-    Q_OBJECT
+  Q_OBJECT
 private:
-    ALCColorSamples m_samples;
-    QImage m_image;
-    QString m_file;
-    bool m_loaded;
-    QTimer *m_timer;
+  ALCColorSamples m_samples;
+  QImage m_image;
+  QString m_file;
+  bool m_loaded;
+  QTimer *m_timer;
 
 public:
-    explicit ALCImageEmitter(QObject *parent = 0);
-    ALCImageEmitter();
+  explicit ALCImageEmitter(QObject *parent = 0);
+  ALCImageEmitter();
 
-    void fromFile(QString file);
-    QString file();
-    QString open();
+  void fromFile(QString file);
+  QString file();
+  QString open();
 
-    bool isLoaded();
+  bool isLoaded();
 
-    void pushState();
-    void init();
-    bool configure();
+  void pushState();
+  void init();
+  bool configure();
 };
 
 #endif // ALCIMAGEEMITTER_H
