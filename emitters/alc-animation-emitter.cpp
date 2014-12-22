@@ -18,34 +18,28 @@
  **********************************************************************************/
 
 #include <QMessageBox>
+#include <QVariantAnimation>
+#include <QDebug>
+
 #include "emitters/alc-animation-emitter.h"
 #include "dialogs/alc-animation-configure-dialog.h"
 
 ALCAnimationEmitter::ALCAnimationEmitter() :
-  QObject(),
-  ALCEmitter(),
-  m_animation(0) {
-  m_type = EMITTER_ANIMATION;
-  rotatePalette();
-  startTimer(1000 / 60);
-
-  for (int i = 0; i < 256; ++i)
-    m_colorStream << qRgb(0, 0, 0);
-
-  m_animationType = Rotation;
+  QThread(),
+  ALCEmitter(ALCEmitter::Type::Animation),
+  m_animation(Animation::Glow),
+  m_effect(Effect::Flicker),
+  m_rgb(0),
+  m_flicker(1),
+  m_quit(false),
+  m_variantAnimation(this) {
+  connect(&m_variantAnimation, &QVariantAnimation::valueChanged, this, &ALCAnimationEmitter::process);
+  setup(m_animation, m_effect, 10000);
 }
 
 ALCAnimationEmitter::~ALCAnimationEmitter() {
-  if (m_animation)
-    delete m_animation;
-}
-
-const QColor &ALCAnimationEmitter::color() {
-  return m_color;
-}
-
-void ALCAnimationEmitter::setColor(const QColor &color) {
-  m_color = color;
+  m_quit = true;
+  wait();
 }
 
 bool ALCAnimationEmitter::open() {
@@ -56,87 +50,141 @@ bool ALCAnimationEmitter::open() {
 bool ALCAnimationEmitter::configure() {
   ALCAnimationConfigureDialog dialog;
   dialog.exec();
-  // QMessageBox::information(0, "Information", "Animation configurator is under development.", QMessageBox::Ok);
   return false;
 }
 
-void ALCAnimationEmitter::rotatePalette(int msecs) {
-  if (m_animation)
-    delete m_animation;
+void ALCAnimationEmitter::setup(Animation animation, Effect effect, int cycle) {
+  if (m_variantAnimation.state() == QVariantAnimation::Running)
+    m_variantAnimation.stop();
 
-  m_animation = new QPropertyAnimation(this, "color");
-  m_animation->setDuration(msecs);
-  m_animation->setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
-  m_animation->setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
-  m_animation->setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
-  m_animation->setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
-  m_animation->setLoopCount(-1);
-  m_animation->start();
-  ;
-}
+  m_variantAnimation.setKeyValues(QVariantAnimation::KeyValues());
+  m_variantAnimation.setDuration(cycle);
 
-void ALCAnimationEmitter::glow() {
-  if (m_animation)
-    delete m_animation;
-
-  m_animation = new QPropertyAnimation(this, "color");
-  m_animation->setDuration(10000);
-  m_animation->setKeyValueAt(0.000, QColor::fromRgbF(0.0, 0.0, 0.0));
-  m_animation->setKeyValueAt(0.500, QColor::fromRgbF(0.5, 1, 0));
-  m_animation->setKeyValueAt(1.000, QColor::fromRgbF(0.0, 0.0, 0.0));
-  m_animation->setLoopCount(-1);
-  m_animation->start();
-}
-
-void ALCAnimationEmitter::timerEvent(QTimerEvent *) {
-  if (!m_connectedCount)
-    return;
-
-  m_blink++;
-  int rgb;
-  double l = correction(ALCColorCorrection::Brightness);
-  double r = qMin(m_color.redF() * correction(ALCColorCorrection::Red) * l, 1.0);
-  double g = qMin(m_color.greenF() * correction(ALCColorCorrection::Green) * l, 1.0);
-  double b = qMin(m_color.blueF() * correction(ALCColorCorrection::Blue) * l, 1.0);
-
-  switch (m_animationType) {
-    case Rotation: {
-      if (m_colorStream.count() == 256)
-        m_colorStream.removeFirst();
-
-      m_colorStream << QColor::fromRgbF(r, g, b).rgb();
-      QListIterator <QRgb> it(m_colorStream);
-
-      for (int p = 0; p < 4; ++p) {
-        QVector <int> *vec = m_samples.get(static_cast <ALCColorSamples::Position>(p));
-
-        for (int i = 0; i < ALCColorSamples::Resolution; ++i)
-          (*vec)[i] = it.next();
-      }
-    }
-    break;
-
-    case Glow:
-      if (m_blink < 2)
-        rgb = QColor::fromRgbF(r, g, b).rgb();
-      else
-        rgb = qRgb(0, 0, 0);
-
-      if (m_blink > 3)
-        m_blink = 0;
-
-      for (int p = 0; p < 4; ++p) {
-        QVector <int> *vec = m_samples.get(static_cast <ALCColorSamples::Position>(p));
-
-        for (int i = 0; i < ALCColorSamples::Resolution; ++i)
-          (*vec)[i] = rgb;
-      }
-
+  switch (m_animation = animation) {
+    case Animation::None:
       break;
 
-    default:
+    case Animation::Shift:
+      m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
+      m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
+      m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
+      m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
+      break;
+
+    case Animation::Glow:
+      m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
+      m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
+      m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
+      m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
+      break;
+
+    case Animation::Rotate:
+      m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
+      m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
+      m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
+      m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
       break;
   }
 
-  setState(m_samples);
+  switch (m_effect = effect) {
+    case Effect::None:
+      break;
+
+    case Effect::Flicker:
+      break;
+  }
+
+  m_variantAnimation.setLoopCount(-1);
+}
+
+void ALCAnimationEmitter::setFlickerValue(int flicker) {
+  m_flicker = flicker;
+}
+
+int ALCAnimationEmitter::flickerValue() {
+  return m_flicker;
+}
+
+void ALCAnimationEmitter::run() {
+  ALCColorSamples samples;
+  ALCRuntimeSync sync;
+  quint64 counter = 0;
+  quint64 loop = 0;
+  QVector <QRgb> data;
+  data.resize(ALCColorSamples::Resolution * 4);
+  quint32 ptr = 0;
+
+  while (!m_quit) {
+    counter++;
+    int rgb = m_rgb;
+    double l = correction(ALCColorCorrection::Brightness);
+    double r = qMin((qRed(rgb) / 255.0) * correction(ALCColorCorrection::Red) * l, 1.0);
+    double g = qMin((qGreen(rgb) / 255.0) * correction(ALCColorCorrection::Green) * l, 1.0);
+    double b = qMin((qBlue(rgb) / 255.0) * correction(ALCColorCorrection::Blue) * l, 1.0);
+    rgb = QColor::fromRgbF(r, g, b).rgb();
+
+    switch (m_effect)  {
+      case Effect::None:
+        break;
+
+      case Effect::Flicker:
+        if (!m_flicker)
+          break;
+
+        if (counter % m_flicker < (m_flicker >> 1))
+          rgb = 0;
+
+        break;
+    }
+
+    switch (m_animation) {
+      case Animation::None:
+        break;
+
+      case Animation::Rotate:
+        data[ptr-- % data.count()] = rgb;
+        break;
+
+      case Animation::Shift:
+        for (int i = 1; i < data.count(); ++i)
+          data[i - 1] = data[i];
+
+        data[data.count() - 1] = rgb;
+        break;
+
+      case Animation::Glow:
+        data.fill(rgb);
+        break;
+    }
+
+    for (int i = 0; i < 4; ++i)
+      memcpy(samples.get(static_cast<ALCColorSamples::Position>(i))->data(),
+             data.data() + (data.size() / 4  * i), data.size());
+
+    setState(samples);
+
+    if (loop != sync.wait(100))
+      loop = sync.loopCount();
+  }
+}
+
+void ALCAnimationEmitter::init() {
+  ALCEmitter::init();
+  m_variantAnimation.start();
+  m_quit = false;
+  start();
+}
+
+void ALCAnimationEmitter::done() {
+  ALCEmitter::done();
+
+  if (m_variantAnimation.state() == QVariantAnimation::Running)
+    m_variantAnimation.stop();
+
+  m_quit = true;
+  wait();
+}
+
+void ALCAnimationEmitter::process(const QVariant &value) {
+  m_rgb = (qvariant_cast<QColor>(value)).rgb();
 }

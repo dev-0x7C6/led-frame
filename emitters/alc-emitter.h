@@ -35,14 +35,14 @@ class QTreeWidgetItem;
 
 class ALCEmitter : public ALCColorCorrection {
 public:
-  enum EmitterType : quint8 {
-    EMITTER_NOT_DEFINED = 0x00,
-    EMITTER_SCREEN_CAPTURE,
-    EMITTER_BLACKHOLE,
-    EMITTER_ANIMATION,
-    EMITTER_PLAIN_COLOR,
-    EMITTER_IMAGE,
-    EMITTER_END_ARRAY
+  enum class Type : quint32 {
+    None,
+    ScreenCapture,
+    Blackhole,
+    Animation,
+    PlainColor,
+    Image,
+    Last
   };
 
 private:
@@ -51,27 +51,24 @@ private:
   QTreeWidgetItem *m_treeItem;
 
 protected:
-  EmitterType m_type;
+  Type m_type;
   QMutex m_mutex;
 
-  std::atomic<int> m_connectedCount;
+  std::atomic <int> m_connectedCount;
 
 public:
-  explicit ALCEmitter();
+  explicit ALCEmitter(ALCEmitter::Type type);
   virtual ~ALCEmitter();
 
   void setEmitterName(const QString &name);
   QString emitterName() const;
 
-
-  EmitterType type() const;
-  void setType(const EmitterType type) {
-    m_type = type;
-  }
+  ALCEmitter::Type type() const;
+  void setType(const ALCEmitter::Type type);
 
   virtual void init();
-  void done();
-  //  void setState(QList < QRgb> colors);
+  virtual void done();
+
   void setState(const ALCColorSamples &samples);
   void state(ALCColorSamples &samples);
 

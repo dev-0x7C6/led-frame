@@ -6,6 +6,8 @@
 
 QT += core gui widgets serialport opengl qml quick xml
 
+CONFIG += console
+
 QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native
 QMAKE_CXXFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
 QMAKE_LFLAGS_RELEASE += -std=c++11 -pipe -O2 -Wall -W -march=native
@@ -49,7 +51,8 @@ SOURCES += main.cpp\
     dialogs/alc-strip-configurator-dialog.cpp \
     classes/alc-safe-threading.cpp \
     classes/alc-weather-color-correction.cpp \
-    dialogs/alc-animation-configure-dialog.cpp
+    dialogs/alc-animation-configure-dialog.cpp \
+    classes/alc-runtime-sync.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -77,7 +80,8 @@ HEADERS += mainwindow.h \
     dialogs/alc-strip-configurator-dialog.h \
     classes/alc-safe-threading.h \
     classes/alc-weather-color-correction.h \
-    dialogs/alc-animation-configure-dialog.h
+    dialogs/alc-animation-configure-dialog.h \
+    classes/alc-runtime-sync.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

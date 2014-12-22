@@ -37,7 +37,7 @@ private:
 
 public:
   explicit ALCImageEmitter(QObject *parent = 0);
-  ALCImageEmitter();
+  ~ALCImageEmitter();
 
   void fromFile(QString file);
   QString file();

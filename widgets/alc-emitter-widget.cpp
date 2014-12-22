@@ -85,15 +85,15 @@ void ALCEmitterWidget::setup() {
 
   while (ii.hasNext()) {
     switch ((emitter = ii.next())->type()) {
-      case ALCEmitter::EMITTER_PLAIN_COLOR:
+      case ALCEmitter::Type::PlainColor:
         insertPlainColorItem(emitter);
         break;
 
-      case ALCEmitter::EMITTER_ANIMATION:
+      case ALCEmitter::Type::Animation:
         insertAnimationItem(emitter);
         break;
 
-      case ALCEmitter::EMITTER_IMAGE:
+      case ALCEmitter::Type::Image:
         insertImageItem(emitter);
         break;
 

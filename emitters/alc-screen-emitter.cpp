@@ -29,19 +29,24 @@
 #include <QPixmap>
 #include <QScreen>
 
+#include "classes/alc-runtime-sync.h"
+
 ALCScreenEmitter::ALCScreenEmitter(QObject *parent) :
   QThread(parent),
-  ALCEmitter(),
+  ALCEmitter(ALCEmitter::Type::ScreenCapture),
   m_chunkSize(32),
   m_pixelSkip(8),
   m_framerateLimit(30),
-  m_quit(false),
-  m_marginProcent(0) {
-  m_type = EMITTER_SCREEN_CAPTURE;
+  m_marginProcent(0),
+  m_quit(false) {
   moveToThread(this);
   m_screen = QGuiApplication::primaryScreen();
 }
 
+ALCScreenEmitter::~ALCScreenEmitter() {
+  m_quit = true;
+  wait();
+}
 
 void ALCScreenEmitter::setCaptureArea(QRect capture) {
   QMutexLocker locker(&m_mutex);
@@ -64,7 +69,6 @@ void ALCScreenEmitter::setFramerateLimit(int value) {
 }
 
 void ALCScreenEmitter::setQuitState(bool value) {
-  QMutexLocker locker(&m_mutex);
   m_quit = value;
 }
 
@@ -124,18 +128,10 @@ bool ALCScreenEmitter::configure() {
 void ALCScreenEmitter::run() {
   Display *display = XOpenDisplay(NULL);
   Window root = DefaultRootWindow(display);
-  colors[static_cast<quint8>(ALCColorSamples::SAMPLE_BOTTOM)] = m_samples.get(ALCColorSamples::SAMPLE_BOTTOM);
-  colors[static_cast<quint8>(ALCColorSamples::SAMPLE_LEFT)] = m_samples.get(ALCColorSamples::SAMPLE_LEFT);
-  colors[static_cast<quint8>(ALCColorSamples::SAMPLE_TOP)] = m_samples.get(ALCColorSamples::SAMPLE_TOP);
-  colors[static_cast<quint8>(ALCColorSamples::SAMPLE_RIGHT)] = m_samples.get(ALCColorSamples::SAMPLE_RIGHT);
-  QElapsedTimer timer;
-  QElapsedTimer counter;
-  int fps = 0;
-  bool quit;
-  counter.start();
-  double latency_curr = 0x00;
-  double latency_accu = 0x00;
-  double framerate_delay = 0x00;
+  colors[static_cast<quint8>(ALCColorSamples::Position::Bottom)] = m_samples.get(ALCColorSamples::Position::Bottom);
+  colors[static_cast<quint8>(ALCColorSamples::Position::Left)] = m_samples.get(ALCColorSamples::Position::Left);
+  colors[static_cast<quint8>(ALCColorSamples::Position::Top)] = m_samples.get(ALCColorSamples::Position::Top);
+  colors[static_cast<quint8>(ALCColorSamples::Position::Right)] = m_samples.get(ALCColorSamples::Position::Right);
   QRect l_captureArea;
   int l_chunkSize;
   int l_pixelSkip;
@@ -155,30 +151,22 @@ void ALCScreenEmitter::run() {
   int clipx = 0x00;
   int clipy = 0x00;
   double rgbc[4];
+  ALCRuntimeSync sync;
 
   do {
-    timer.start();
     m_mutex.lock();
     l_captureArea = m_captureArea;
     l_chunkSize = m_chunkSize;
     l_pixelSkip = m_pixelSkip + 1;
     l_framerateLimit = m_framerateLimit;
     l_marginProcent = m_marginProcent;
-    quit = m_quit;
-
-    if (!m_connectedCount) {
-      m_mutex.unlock();
-      msleep(100);
-      continue;
-    } else
-      m_mutex.unlock();
-
     clipx = l_captureArea.width() * l_marginProcent;
     clipy = l_captureArea.height() * l_marginProcent;
     l_captureArea.setX(l_captureArea.x() + clipx);
     l_captureArea.setY(l_captureArea.y() + clipy);
     l_captureArea.setWidth(l_captureArea.width() - clipx);
     l_captureArea.setHeight(l_captureArea.height() - clipy);
+    m_mutex.unlock();
     rgbc[Brightness] = correction(Brightness);
     rgbc[Red] = correction(Red);
     rgbc[Green] = correction(Green);
@@ -264,25 +252,22 @@ void ALCScreenEmitter::run() {
     }
 
     setState(m_samples);
-    latency_curr = timer.nsecsElapsed();
-    latency_accu += latency_curr;
-    framerate_delay = 1000000000.0 / static_cast<double>(l_framerateLimit) - latency_curr;
-
-    if (framerate_delay < 0)
-      framerate_delay = 0.0;
-
-    fps++;
-    usleep(framerate_delay / 1000.0);
-
-    if (counter.hasExpired(1000)) {
-      emit updateStats(fps, (latency_accu / double(fps) / 1000000.0), latency_accu / 10000000.0);
-      counter.restart();
-      latency_accu = 0;
-      fps = 0;
-    }
-  } while (!quit);
+    sync.wait(l_framerateLimit);
+  } while (!m_quit);
 
   XCloseDisplay(display);
+}
+
+void ALCScreenEmitter::init() {
+  ALCEmitter::init();
+  m_quit = false;
+  start();
+}
+
+void ALCScreenEmitter::done() {
+  ALCEmitter::done();
+  m_quit = true;
+  wait();
 }
 
 

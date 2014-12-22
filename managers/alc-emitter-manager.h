@@ -34,14 +34,14 @@ class QSettings;
 class ALCEmitterManager : public QObject {
   Q_OBJECT
 private:
-  QList <ALCEmitter *> m_emitters[ALCEmitter::EMITTER_END_ARRAY];
+  QList <ALCEmitter *> m_emitters[static_cast<int>(ALCEmitter::Type::Last)];
   ALCSymulationWidget *m_symulation;
 
 public:
   explicit ALCEmitterManager(QObject *parent = 0);
   virtual ~ALCEmitterManager();
 
-  void add(ALCEmitter *emitter, ALCEmitter::EmitterType type);
+  void add(ALCEmitter *emitter, ALCEmitter::Type type);
   void remove(ALCEmitter *emitter);
 
   ALCAnimationEmitter *addALCAnimationEmitter(const QString &name);
@@ -51,7 +51,7 @@ public:
   void addSymulation(ALCSymulationWidget *widget);
 
   static ALCEmitterManager *instance();
-  const QList <ALCEmitter *> *emitters(ALCEmitter::EmitterType type);
+  const QList <ALCEmitter *> *emitters(ALCEmitter::Type type);
   const QList <ALCEmitter *> allEmitters();
 
 private:

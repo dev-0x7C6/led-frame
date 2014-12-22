@@ -26,16 +26,16 @@ class ALCColorSamples {
 public:
   static const int Resolution;
 
-  enum Position : quint8 {
-    SAMPLE_BOTTOM,
-    SAMPLE_LEFT,
-    SAMPLE_TOP,
-    SAMPLE_RIGHT,
-    SAMPLE_ARRAY
+  enum class Position {
+    Bottom,
+    Left,
+    Top,
+    Right,
+    Last
   };
 
 private:
-  QVector <int> m_samples[SAMPLE_ARRAY];
+  QVector <int> m_samples[4];
   quint16 m_sampleCount;
 
 public:

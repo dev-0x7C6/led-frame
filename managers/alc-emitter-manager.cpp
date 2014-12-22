@@ -75,9 +75,8 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
     emitter->setFramerateLimit(settings->value("fps", 60).toInt());
     emitter->setMarginProcent(settings->value("clip", 0).toDouble());
     readColorCorrection(settings, dynamic_cast <ALCColorCorrection *>(emitter));
-    emitter->start();
     settings->endGroup();
-    m_emitters[ALCEmitter::EMITTER_SCREEN_CAPTURE] << emitter;
+    m_emitters[static_cast<int>(ALCEmitter::Type::ScreenCapture)] << emitter;
   }
 
   settings->endGroup();
@@ -145,7 +144,7 @@ ALCEmitterManager::~ALCEmitterManager() {
 
   for (int i = 0; i < all.count(); ++i) {
     switch (all[i]->type()) {
-      case ALCEmitter::EMITTER_SCREEN_CAPTURE:
+      case ALCEmitter::Type::ScreenCapture:
         dynamic_cast <ALCScreenEmitter *>(all[i])->setQuitState(true);
         break;
 
@@ -164,7 +163,7 @@ ALCEmitterManager::~ALCEmitterManager() {
 
   for (int i = 0; i < all.count(); ++i) {
     switch (all[i]->type()) {
-      case ALCEmitter::EMITTER_SCREEN_CAPTURE:
+      case ALCEmitter::Type::ScreenCapture:
         settings->beginGroup("screens");
         screen = dynamic_cast <ALCScreenEmitter *>(all[i]);
         screen->wait();
@@ -179,7 +178,7 @@ ALCEmitterManager::~ALCEmitterManager() {
         settings->endGroup();
         break;
 
-      case ALCEmitter::EMITTER_ANIMATION:
+      case ALCEmitter::Type::Animation:
         animation = dynamic_cast <ALCAnimationEmitter *>(all[i]);
         settings->beginGroup("animations");
         settings->beginGroup(QString::number(i));
@@ -189,7 +188,7 @@ ALCEmitterManager::~ALCEmitterManager() {
         settings->endGroup();
         break;
 
-      case ALCEmitter::EMITTER_PLAIN_COLOR:
+      case ALCEmitter::Type::PlainColor:
         plain = dynamic_cast <ALCColorEmitter *>(all[i]);
         settings->beginGroup("colors");
         settings->beginGroup(QString::number(i));
@@ -201,7 +200,7 @@ ALCEmitterManager::~ALCEmitterManager() {
         settings->endGroup();
         break;
 
-      case ALCEmitter::EMITTER_IMAGE:
+      case ALCEmitter::Type::Image:
         image = dynamic_cast <ALCImageEmitter *>(all[i]);
         settings->beginGroup("images");
         settings->beginGroup(QString::number(i));
@@ -222,36 +221,36 @@ ALCEmitterManager::~ALCEmitterManager() {
   settings->endGroup();
 }
 
-void ALCEmitterManager::add(ALCEmitter *emitter, ALCEmitter::EmitterType type) {
-  m_emitters[type] << emitter;
+void ALCEmitterManager::add(ALCEmitter *emitter, ALCEmitter::Type type) {
+  m_emitters[static_cast<int>(type)] << emitter;
   emit emitterListChanged();
 }
 
 ALCImageEmitter *ALCEmitterManager::addALCImageEmitter(const QString &name) {
   ALCImageEmitter *emitter = new ALCImageEmitter(this);
   emitter->setEmitterName(name);
-  add(emitter, ALCEmitter::EMITTER_IMAGE);
+  add(emitter, ALCEmitter::Type::Image);
   return emitter;
 }
 
 ALCColorEmitter *ALCEmitterManager::addALCColorEmitter(const QString &name) {
   ALCColorEmitter *emitter = new ALCColorEmitter();
   emitter->setEmitterName(name);
-  add(emitter, ALCEmitter::EMITTER_PLAIN_COLOR);
+  add(emitter, ALCEmitter::Type::PlainColor);
   return emitter;
 }
 
 ALCAnimationEmitter *ALCEmitterManager::addALCAnimationEmitter(const QString &name) {
   ALCAnimationEmitter *emitter = new ALCAnimationEmitter();
   emitter->setEmitterName(name);
-  add(emitter, ALCEmitter::EMITTER_ANIMATION);
+  add(emitter, ALCEmitter::Type::Animation);
   return emitter;
 }
 
 ALCScreenEmitter *ALCEmitterManager::addScreenCaptureEmitter(const QString &name) {
   ALCScreenEmitter *emitter = new ALCScreenEmitter(this);
   emitter->setEmitterName(name);
-  add(emitter, ALCEmitter::EMITTER_SCREEN_CAPTURE);
+  add(emitter, ALCEmitter::Type::ScreenCapture);
   return emitter;
 }
 
@@ -264,8 +263,8 @@ void ALCEmitterManager::remove(ALCEmitter *emitter) {
       m_symulation->connectEmitter(0);
   }
 
-  for (int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
-    m_emitters[static_cast<ALCEmitter::EmitterType>(i)].removeAll(emitter);
+  for (int i = 0; i < static_cast<int>(ALCEmitter::Type::Last); ++i)
+    m_emitters[i].removeAll(emitter);
 
   delete emitter;
   emit emitterListChanged();
@@ -280,15 +279,15 @@ void ALCEmitterManager::addSymulation(ALCSymulationWidget *symulation) {
   m_symulation = symulation;
 }
 
-const QList <ALCEmitter *> *ALCEmitterManager::emitters(ALCEmitter::EmitterType type) {
-  return &m_emitters[type];
+const QList <ALCEmitter *> *ALCEmitterManager::emitters(ALCEmitter::Type type) {
+  return &m_emitters[static_cast<int>(type)];
 }
 
 const QList<ALCEmitter *> ALCEmitterManager::allEmitters() {
   QList <ALCEmitter *> result;
 
-  for (int i = 0; i < ALCEmitter::EMITTER_END_ARRAY; ++i)
-    result << m_emitters[static_cast<ALCEmitter::EmitterType>(i)];
+  for (int i = 0; i < static_cast<int>(ALCEmitter::Type::Last); ++i)
+    result << m_emitters[i];
 
   return result;
 }

@@ -24,16 +24,15 @@
 
 ALCImageEmitter::ALCImageEmitter(QObject *parent) :
   QObject(parent),
-  ALCEmitter(),
+  ALCEmitter(ALCEmitter::Type::Image),
   m_image(0),
   m_timer(new QTimer()) {
-  m_type = EMITTER_IMAGE;
   connect(m_timer, &QTimer::timeout, this, &ALCImageEmitter::pushState);
   m_timer->setInterval(20);
   m_timer->start();
 }
 
-ALCImageEmitter::ALCImageEmitter() {
+ALCImageEmitter::~ALCImageEmitter() {
   delete m_timer;
 }
 

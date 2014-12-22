@@ -25,11 +25,10 @@
 
 ALCColorEmitter::ALCColorEmitter() :
   QObject(),
-  ALCEmitter(),
+  ALCEmitter(ALCEmitter::Type::PlainColor),
   m_color(Qt::white),
   m_timer(new QTimer(this)) {
   srand(QTime::currentTime().msecsSinceStartOfDay());
-  m_type = EMITTER_PLAIN_COLOR;
   connect(m_timer, &QTimer::timeout, this, &ALCColorEmitter::pushState);
   m_timer->setInterval(1000 / 15);
   m_timer->start();
@@ -54,10 +53,10 @@ void ALCColorEmitter::pushState() {
   for (int i = 0; i < samples.size(); ++i)
     samples[i] = rgb;
 
-  m_samples.set(ALCColorSamples::SAMPLE_TOP, samples);
-  m_samples.set(ALCColorSamples::SAMPLE_LEFT, samples);
-  m_samples.set(ALCColorSamples::SAMPLE_RIGHT, samples);
-  m_samples.set(ALCColorSamples::SAMPLE_BOTTOM, samples);
+  m_samples.set(ALCColorSamples::Position::Bottom, samples);
+  m_samples.set(ALCColorSamples::Position::Left, samples);
+  m_samples.set(ALCColorSamples::Position::Top, samples);
+  m_samples.set(ALCColorSamples::Position::Right, samples);
   setState(m_samples);
 }
 

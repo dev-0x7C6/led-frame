@@ -19,7 +19,8 @@
 
 #include "alc-color-correction.h"
 #include "classes/alc-weather-color-correction.h"
-#include <QDebug>
+
+
 QList<ALCColorCorrection *> ALCColorCorrection::m_multipliers;
 
 ALCColorCorrection::ALCColorCorrection(ALCColorCorrection::Type type) {

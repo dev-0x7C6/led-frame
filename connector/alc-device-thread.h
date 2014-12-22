@@ -29,6 +29,8 @@
 #include "classes/alc-color-samples.h"
 #include "connector/alc-receiver.h"
 
+#include "classes/alc-runtime-sync.h"
+
 class ALCEmitter;
 class ALCColorSamples;
 class ALCStripConfiguration;
@@ -40,7 +42,7 @@ private:
   QSerialPort *m_device;
   ALCColorSamples m_samples;
   QSerialPortInfo m_details;
-  std::atomic <bool> m_continue;
+  std::atomic<bool> m_continue;
 
 public:
   explicit ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
@@ -52,6 +54,9 @@ public:
 
   void setContinueValue(bool value);
   bool continueValue();
+
+  static int getPull();
+  static void setPull(int value);
 
 private:
   void push(unsigned char *data, quint16 &ptr, Format format, quint32 color, double rgbc[]);

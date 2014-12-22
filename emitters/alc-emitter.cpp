@@ -25,14 +25,13 @@
 #include "emitters/alc-emitter.h"
 #include "managers/alc-emitter-manager.h"
 
-ALCEmitter::ALCEmitter()
+ALCEmitter::ALCEmitter(ALCEmitter::Type type)
   : m_treeItem(0),
-    m_type(EMITTER_NOT_DEFINED) {
+    m_type(type) {
   m_connectedCount = 0;
 }
 
 ALCEmitter::~ALCEmitter() {
-  //  delete m_treeItem;
 }
 
 void ALCEmitter::setEmitterName(const QString &name) {
@@ -43,18 +42,22 @@ QString ALCEmitter::emitterName() const {
   return m_emitterName;
 }
 
-ALCEmitter::EmitterType ALCEmitter::type() const {
+void ALCEmitter::setType(const ALCEmitter::Type type) {
+  m_type = type;
+}
+
+ALCEmitter::Type ALCEmitter::type() const {
   return m_type;
 }
 
 void ALCEmitter::init() {
   m_connectedCount++;
-  // qDebug() << this << " device connected, count: " << m_connectedCount;
+  qDebug() << this << " device connected, count: " << m_connectedCount;
 }
 
 void ALCEmitter::done() {
   m_connectedCount--;
-  //  qDebug() << this << " device disconnected, count: " << m_connectedCount;
+  qDebug() << this << " device disconnected, count: " << m_connectedCount;
 }
 
 void ALCEmitter::setState(const ALCColorSamples &samples) {

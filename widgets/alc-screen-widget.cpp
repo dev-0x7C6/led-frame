@@ -53,7 +53,7 @@ void ALCScreenWidget::setup() {
 
   while (ii.hasNext()) {
     switch ((emitter = ii.next())->type()) {
-      case ALCEmitter::EMITTER_SCREEN_CAPTURE:
+      case ALCEmitter::Type::ScreenCapture:
         insertScreenCaptureItem(emitter);
         break;
 

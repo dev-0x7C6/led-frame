@@ -65,10 +65,8 @@ public:
   void setDestination(Destination);
   Destination destination() const;
 
-
   void setBrightness(double value);
   double brightness();
-
 };
 
 class ALCStripConfiguration {

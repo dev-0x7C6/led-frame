@@ -30,6 +30,8 @@
 #include <QRgb>
 #include <QThread>
 
+#include <atomic>
+
 class QScreen;
 
 enum ScreenFragments {
@@ -42,21 +44,24 @@ enum ScreenFragments {
 class ALCScreenEmitter : public QThread, public ALCEmitter {
   Q_OBJECT
 public:
-  ALCScreenEmitter(QObject *parent = 0);
+  explicit ALCScreenEmitter(QObject *parent = 0);
+  virtual ~ALCScreenEmitter();
 
 private:
   ALCColorSamples m_samples;
-  QScreen *m_screen;
-  QString m_name;
 
+  QScreen *m_screen;
+
+  QString m_name;
   QRect m_captureArea;
   int m_chunkSize;
   int m_pixelSkip;
   int m_framerateLimit;
-  bool m_quit;
   double m_marginProcent;
 
   QVector <int> *colors[4];
+
+  std::atomic <bool> m_quit;
 
 public slots:
   void setName(QString name);
@@ -80,10 +85,8 @@ public:
 
 protected:
   void run();
-
-signals:
-  void update(ALCColorSamples *samples);
-  void updateStats(quint32 fps, double latency, double usage);
+  void init();
+  void done();
 
 };
 

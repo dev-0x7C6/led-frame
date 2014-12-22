@@ -179,22 +179,22 @@ void ALCDeviceWidget::populate(QString use) {
 
     while (ii.hasNext()) {
       switch ((emitter = ii.next())->type()) {
-        case ALCEmitter::EMITTER_SCREEN_CAPTURE:
+        case ALCEmitter::Type::ScreenCapture:
           cmb->addItem(QIcon(":/22x22/screen.png"), prefix + emitter->emitterName(),
                        qVariantFromValue((void *)emitter));
           break;
 
-        case ALCEmitter::EMITTER_PLAIN_COLOR:
+        case ALCEmitter::Type::PlainColor:
           cmb->addItem(QIcon(":/22x22/color.png"),  prefix + emitter->emitterName(),
                        qVariantFromValue((void *)emitter));
           break;
 
-        case ALCEmitter::EMITTER_ANIMATION:
+        case ALCEmitter::Type::Animation:
           cmb->addItem(QIcon(":/22x22/animation.png"), prefix + emitter->emitterName(),
                        qVariantFromValue((void *)emitter));
           break;
 
-        case ALCEmitter::EMITTER_IMAGE:
+        case ALCEmitter::Type::Image:
           cmb->addItem(QIcon(":/22x22/from-image.png"), prefix + emitter->emitterName(),
                        qVariantFromValue((void *)emitter));
           break;

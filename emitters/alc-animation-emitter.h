@@ -21,48 +21,59 @@
 #define ALCANIMATIONEMITTER_H
 
 #include <QObject>
+#include <QThread>
 #include <QColor>
 #include <QRgb>
 
-#include <QPropertyAnimation>
+#include <atomic>
+
 #include "emitters/alc-emitter.h"
 
-class ALCAnimationEmitter : public QObject, public ALCEmitter {
+#include <QVariantAnimation>
+
+#include "classes/alc-runtime-sync.h"
+
+class ALCAnimationEmitter : public QThread, public ALCEmitter {
   Q_OBJECT
-  Q_PROPERTY(QColor color READ color WRITE setColor)
 public:
-  enum AnimationType : quint8 {
-    Blink,
+  enum class Animation {
+    None,
     Glow,
-    Rotation
+    Rotate,
+    Shift
   };
 
-private:
-  QPropertyAnimation *m_animation;
-  QColor m_color;
+  enum class Effect {
+    None,
+    Flicker
+  };
 
-  QList <QRgb> m_colorStream;
-  ALCColorSamples m_samples;
-  AnimationType m_animationType;
-  quint64 m_blink;
-
-public:
   explicit ALCAnimationEmitter();
   virtual ~ALCAnimationEmitter();
 
   bool open();
-  virtual bool configure();
+  bool configure();
 
-  void rotatePalette(int msecs = 1000);
+  void setup(Animation animation, Effect effect, int cycle = 10000);
 
-private:
-  const QColor &color();
-  void setColor(const QColor &color);
-
-  void glow();
+  void setFlickerValue(int flicker = 0);
+  int flickerValue();
 
 protected:
-  void timerEvent(QTimerEvent *);
+  void run();
+  void init();
+  void done();
+
+private:
+  std::atomic <Animation> m_animation;
+  std::atomic <Effect> m_effect;
+  std::atomic <quint32> m_rgb;
+  std::atomic <quint64> m_flicker;
+  std::atomic <bool> m_quit;
+
+  QVariantAnimation m_variantAnimation;
+
+  void process(const QVariant &value);
 };
 
 #endif // ALCANIMATIONEMITTER_H

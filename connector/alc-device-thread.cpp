@@ -62,33 +62,21 @@ QString ALCDeviceThread::name() {
 void ALCDeviceThread::run() {
   unsigned char data[2048];
   memset((char *)data, 0, sizeof(data));
-  QElapsedTimer timer;
-  QElapsedTimer counter;
-  int fps = 0;
-  int framerateLimit = 60;
-  double latency[2];
-  counter.start();
-  latency[0] = 0;
-  latency[1] = 0;
   double rgbc[4];
   quint16 ptr = 0;
+  ALCRuntimeSync sync;
 
   do {
-    timer.start();
+    if (!m_emitter) {
+      sync.wait(10);
+      continue;
+    }
 
-    if (m_emitter)
-      m_emitter->state(m_samples);
-
+    m_emitter->state(m_samples);
     rgbc[Brightness] = correction(ALCColorCorrection::Brightness, true);
     rgbc[Red] = correction(ALCColorCorrection::Red, true);
     rgbc[Green] = correction(ALCColorCorrection::Green, true);
     rgbc[Blue] = correction(ALCColorCorrection::Blue, true);
-
-    if (!m_emitter) {
-      msleep(100);
-      continue;
-    }
-
     QVector <int> *colors;
     ptr = 0;
     QList <ALCLedStrip *> strips = m_config->list();
@@ -112,23 +100,9 @@ void ALCDeviceThread::run() {
     }
 
     m_device->write((char *)data, ptr);
-    m_device->waitForBytesWritten(500);
-    latency[0] = timer.nsecsElapsed();
-    latency[1] += latency[0];
-    double delay = 1000000000.0 / double(framerateLimit) - latency[0];
-
-    if (delay < 0)
-      delay = 0.0;
-
-    fps++;
-    usleep(delay / 1000.0);
-
-    if (counter.hasExpired(1000)) {
-      qDebug() << fps;
-      counter.restart();
-      latency[1] = 0;
-      fps = 0;
-    }
+    m_device->waitForBytesWritten(10);
+    m_device->clear();
+    sync.wait(100);
   } while (m_continue && m_device->error() == 0);
 
   if (m_device->isOpen() && m_device->isWritable())

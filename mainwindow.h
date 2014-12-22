@@ -52,13 +52,12 @@ private:
 
   QAction *m_visible;
   QTimer m_showBrightnessTimer;
+  bool m_canClose;
 
 #ifdef Q_OS_UNIX
   WiimotedevDeviceEvents *m_wiimotedevEvents;
   uint64 m_buttons;
 #endif
-
-  bool m_canClose;
 
 public:
   explicit MainWindow(QWidget *parent = 0);
