@@ -36,7 +36,7 @@
 
 ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
   QWidget(parent),
-  ALCReceiver(),
+  ALCReceiver(Correctors::ALCColorCorrection::Type::Device),
   m_view(new QQuickView()) {
   QPalette p = palette();
   p.setBrush(QPalette::Window, QColor::fromRgb(20, 20, 20));
@@ -64,7 +64,7 @@ ALCSymulationWidget::~ALCSymulationWidget() {
   delete m_view;
 }
 
-void ALCSymulationWidget::connectEmitter(ALCEmitter *emitter) {
+void ALCSymulationWidget::connectEmitter(Emitters::ALCEmitter *emitter) {
   ALCReceiver::connectEmitter(emitter);
 
   if (!emitter)

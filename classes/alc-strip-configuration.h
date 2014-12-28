@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QList>
 
-#include "classes/alc-color-correction.h"
+#include "correctors/alc-color-correction.h"
 
 class ALCLedStrip {
 public:
@@ -46,7 +46,7 @@ private:
   bool m_clockwise;
   Source m_source;
   Destination m_destination;
-  ALCColorCorrection::Format m_colorFormat;
+  Correctors::ALCColorCorrection::Format m_colorFormat;
   double m_brightness;
 
 public:
@@ -56,8 +56,8 @@ public:
   void setCount(int count);
   int count() const;
 
-  void setColorFormat(ALCColorCorrection::Format format);
-  ALCColorCorrection::Format colorFormat() const;
+  void setColorFormat(Correctors::ALCColorCorrection::Format format);
+  Correctors::ALCColorCorrection::Format colorFormat() const;
 
   void setSource(Source);
   Source source() const;
@@ -77,7 +77,7 @@ public:
   explicit ALCStripConfiguration();
 
   void add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
-           int count, bool clockwise = true, ALCColorCorrection::Format color = ALCColorCorrection::RGB, double brightness = 1.0);
+           int count, bool clockwise = true, Correctors::ALCColorCorrection::Format color = Correctors::ALCColorCorrection::Format::RGB, double brightness = 1.0);
 
 
   QList <ALCLedStrip *> list();

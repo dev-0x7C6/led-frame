@@ -4,7 +4,9 @@
 #include <QDialog>
 
 class QShowEvent;
-class ALCAnimationEmitter;
+namespace Emitters {
+  class ALCAnimationEmitter;
+}
 
 namespace Ui {
   class ALCAnimationConfigureDialog;
@@ -14,7 +16,7 @@ class ALCAnimationConfigureDialog : public QDialog {
   Q_OBJECT
 private:
   Ui::ALCAnimationConfigureDialog *ui;
-  ALCAnimationEmitter *m_emitter;
+  Emitters::ALCAnimationEmitter *m_emitter;
 
 public:
   explicit ALCAnimationConfigureDialog(QWidget *parent = 0);

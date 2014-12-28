@@ -23,7 +23,9 @@
 #include <QMainWindow>
 #include <QPushButton>
 
-class ALCEmitter;
+namespace Emitters {
+  class ALCEmitter;
+}
 
 namespace Ui {
   class ALCScreenWidget;
@@ -40,7 +42,7 @@ public:
   void setup();
 
 private:
-  void insertScreenCaptureItem(ALCEmitter *);
+  void insertScreenCaptureItem(Emitters::ALCEmitter *);
   void configure();
 
 };

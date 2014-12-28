@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui widgets serialport opengl qml quick xml
+QT += core gui widgets serialport opengl qml quick xml multimedia
 
 CONFIG += console
 
@@ -28,7 +28,6 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     connector/alc-device-thread.cpp \
     classes/alc-settings.cpp \
-    classes/alc-color-correction.cpp \
     widgets/alc-color-correction-widget.cpp \
     widgets/alc-led-configuration-widget.cpp \
     managers/alc-emitter-manager.cpp \
@@ -50,14 +49,18 @@ SOURCES += main.cpp\
     managers/alc-device-manager.cpp \
     dialogs/alc-strip-configurator-dialog.cpp \
     classes/alc-safe-threading.cpp \
-    classes/alc-weather-color-correction.cpp \
     dialogs/alc-animation-configure-dialog.cpp \
-    classes/alc-runtime-sync.cpp
+    classes/alc-runtime-sync.cpp \
+    effects/audioinput.cpp \
+    correctors/alc-color-correction-manager.cpp \
+    correctors/alc-global-color-correction.cpp \
+    correctors/alc-audio-color-correction.cpp \
+    correctors/alc-color-correction.cpp \
+    correctors/alc-weather-color-correction.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
     classes/alc-settings.h \
-    classes/alc-color-correction.h \
     widgets/alc-color-correction-widget.h \
     widgets/alc-led-configuration-widget.h \
     managers/alc-emitter-manager.h \
@@ -79,9 +82,15 @@ HEADERS += mainwindow.h \
     managers/alc-device-manager.h \
     dialogs/alc-strip-configurator-dialog.h \
     classes/alc-safe-threading.h \
-    classes/alc-weather-color-correction.h \
     dialogs/alc-animation-configure-dialog.h \
-    classes/alc-runtime-sync.h
+    classes/alc-runtime-sync.h \
+    effects/audioinput.h \
+    correctors/alc-color-correction-manager.h \
+    correctors/alc-color-correction-values.h \
+    correctors/alc-global-color-correction.h \
+    correctors/alc-audio-color-correction.h \
+    correctors/alc-weather-color-correction.h \
+    correctors/alc-color-correction.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

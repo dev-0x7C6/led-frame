@@ -17,51 +17,42 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#ifndef AMBIENTLIGHTSYMULATION_H
-#define AMBIENTLIGHTSYMULATION_H
+#ifndef ALCCOLORCORRECTIONMANAGER_H
+#define ALCCOLORCORRECTIONMANAGER_H
 
-#include "classes/alc-color-samples.h"
-#include "connector/alc-receiver.h"
-#include "emitters/alc-emitter.h"
+#include <QList>
 
-#include <QRgb>
-#include <QVector>
-#include <QWidget>
+#include "correctors/alc-color-correction.h"
 
-class QQuickItem;
-class QQuickView;
+struct ALCColorCorrectionValues;
 
-class ALCSymulationWidget : public QWidget, public ALCReceiver {
-  Q_OBJECT
-private:
-  ALCColorSamples m_samples;
-  QQuickItem *m_root;
+namespace Correctors {
 
-  QObject *m_objs[4][8];
-  QQuickItem *m_items[4][8];
-  QQuickItem *m_monitor;
-  QQuickView *m_view;
+  class ALCColorCorrection;
+  struct ALCColorCorrectionValues;
 
-public:
-  explicit ALCSymulationWidget(QWidget *parent = 0);
-  virtual ~ALCSymulationWidget();
+  class  ALCColorCorrectionManager {
+  private:
+    static const QList <ALCColorCorrection *> list;
 
-  void connectEmitter(Emitters::ALCEmitter *emitter);
+  public:
+    ALCColorCorrectionManager();
+    ~ALCColorCorrectionManager();
 
-  void onShow();
+    static ALCColorCorrectionManager *instance();
 
-  void createQmlMonitor();
-  void freeQmlMonitor();
-  void createQmlObjects(int size = 300);
-  void freeQmlObjects();
-  void resetQmlObjects();
+    ALCColorCorrectionValues correction();
+    double correction(ALCColorCorrection::Color color);
 
-private:
-  void createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size);
-  QString name();
+    void init();
+    void done();
 
-protected:
-  void timerEvent(QTimerEvent *);
-};
+  private:
+    void save(ALCColorCorrection *correction, QString name);
+    void load(ALCColorCorrection *correction, QString name);
 
-#endif // AMBIENTLIGHTSYMULATION_H
+  };
+
+}
+
+#endif // ALCCOLORCORRECTIONMANAGER_H

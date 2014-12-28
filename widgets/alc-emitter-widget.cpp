@@ -80,20 +80,20 @@ void ALCEmitterWidget::prepare() {
 
 void ALCEmitterWidget::setup() {
   ui->tree->clear();
-  QListIterator <ALCEmitter *> ii(ALCEmitterManager::instance()->allEmitters());
-  ALCEmitter *emitter;
+  QListIterator <Emitters::ALCEmitter *> ii(ALCEmitterManager::instance()->allEmitters());
+  Emitters::ALCEmitter *emitter;
 
   while (ii.hasNext()) {
     switch ((emitter = ii.next())->type()) {
-      case ALCEmitter::Type::PlainColor:
+      case Emitters::ALCEmitter::Type::PlainColor:
         insertPlainColorItem(emitter);
         break;
 
-      case ALCEmitter::Type::Animation:
+      case Emitters::ALCEmitter::Type::Animation:
         insertAnimationItem(emitter);
         break;
 
-      case ALCEmitter::Type::Image:
+      case Emitters::ALCEmitter::Type::Image:
         insertImageItem(emitter);
         break;
 
@@ -103,8 +103,8 @@ void ALCEmitterWidget::setup() {
   }
 }
 
-void ALCEmitterWidget::insertPlainColorItem(ALCEmitter *ptr) {
-  ALCColorEmitter *emitter = dynamic_cast <ALCColorEmitter *>(ptr);
+void ALCEmitterWidget::insertPlainColorItem(Emitters::ALCEmitter *ptr) {
+  Emitters::ALCColorEmitter *emitter = dynamic_cast <Emitters::ALCColorEmitter *>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
@@ -120,8 +120,8 @@ void ALCEmitterWidget::insertPlainColorItem(ALCEmitter *ptr) {
   prepareColorItem(item, emitter->color());
 }
 
-void ALCEmitterWidget::insertAnimationItem(ALCEmitter *ptr) {
-  ALCAnimationEmitter *emitter = dynamic_cast <ALCAnimationEmitter *>(ptr);
+void ALCEmitterWidget::insertAnimationItem(Emitters::ALCEmitter *ptr) {
+  Emitters::ALCAnimationEmitter *emitter = dynamic_cast <Emitters::ALCAnimationEmitter *>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
@@ -136,8 +136,8 @@ void ALCEmitterWidget::insertAnimationItem(ALCEmitter *ptr) {
   ui->tree->setItemWidget(item, 2, workspace);
 }
 
-void ALCEmitterWidget::insertImageItem(ALCEmitter *ptr) {
-  ALCImageEmitter *emitter = dynamic_cast <ALCImageEmitter *>(ptr);
+void ALCEmitterWidget::insertImageItem(Emitters::ALCEmitter *ptr) {
+  Emitters::ALCImageEmitter *emitter = dynamic_cast <Emitters::ALCImageEmitter *>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   item->setText(1, emitter->file());
@@ -154,7 +154,7 @@ void ALCEmitterWidget::insertImageItem(ALCEmitter *ptr) {
   ui->tree->setItemWidget(item, 2, workspace);
 }
 
-void ALCEmitterWidget::insertDefaultButtons(ALCEmitter *emitter, QBoxLayout *layout) {
+void ALCEmitterWidget::insertDefaultButtons(Emitters::ALCEmitter *emitter, QBoxLayout *layout) {
   QPushButtonEx *configure = new QPushButtonEx;
   QPushButtonEx *rename = new QPushButtonEx;
   QPushButtonEx *remove = new QPushButtonEx;

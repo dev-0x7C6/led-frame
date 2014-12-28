@@ -48,12 +48,12 @@ ALCScreenWidget::~ALCScreenWidget() {
 
 void ALCScreenWidget::setup() {
   ui->tree->clear();
-  QListIterator <ALCEmitter *> ii(ALCEmitterManager::instance()->allEmitters());
-  ALCEmitter *emitter;
+  QListIterator <Emitters::ALCEmitter *> ii(ALCEmitterManager::instance()->allEmitters());
+  Emitters::ALCEmitter *emitter;
 
   while (ii.hasNext()) {
     switch ((emitter = ii.next())->type()) {
-      case ALCEmitter::Type::ScreenCapture:
+      case Emitters::ALCEmitter::Type::ScreenCapture:
         insertScreenCaptureItem(emitter);
         break;
 
@@ -63,8 +63,8 @@ void ALCScreenWidget::setup() {
   }
 }
 
-void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *ptr) {
-  ALCScreenEmitter *emitter = dynamic_cast <ALCScreenEmitter *>(ptr);
+void ALCScreenWidget::insertScreenCaptureItem(Emitters::ALCEmitter *ptr) {
+  Emitters::ALCScreenEmitter *emitter = dynamic_cast <Emitters::ALCScreenEmitter *>(ptr);
   QTreeWidgetItem *item = new QTreeWidgetItem(ui->tree);
   item->setText(0, emitter->emitterName());
   emitter->setTreeItem(item);
@@ -91,7 +91,7 @@ void ALCScreenWidget::insertScreenCaptureItem(ALCEmitter *ptr) {
 void ALCScreenWidget::configure() {
   ALCScreenConfigureDialog dialog;
   dialog.setWindowTitle(reinterpret_cast<QPushButtonEx *>(sender())->toolTip());
-  dialog.setEmitter(dynamic_cast<ALCScreenEmitter *>(reinterpret_cast<QPushButtonEx *>(sender())->emitter()));
+  dialog.setEmitter(dynamic_cast<Emitters::ALCScreenEmitter *>(reinterpret_cast<QPushButtonEx *>(sender())->emitter()));
   dialog.exec();
 }
 

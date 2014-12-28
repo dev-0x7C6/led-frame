@@ -8,7 +8,7 @@
 ALCAnimationConfigureDialog::ALCAnimationConfigureDialog(QWidget *parent) :
   QDialog(parent),
   ui(new Ui::ALCAnimationConfigureDialog),
-  m_emitter(new ALCAnimationEmitter()) {
+  m_emitter(new Emitters::ALCAnimationEmitter()) {
   ui->setupUi(this);
   connect(ui->buttons, &QDialogButtonBox::accepted, this, &ALCAnimationConfigureDialog::accept);
   connect(ui->buttons, &QDialogButtonBox::rejected, this, &ALCAnimationConfigureDialog::cancel);
@@ -47,5 +47,6 @@ void ALCAnimationConfigureDialog::blinkChanged(int value) {
 }
 
 void ALCAnimationConfigureDialog::speedChanged(int speed) {
+  Q_UNUSED(speed)
   //m_emitter->rotatePalette(speed * 10);
 }

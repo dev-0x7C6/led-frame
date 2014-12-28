@@ -36,6 +36,11 @@
 #include "managers/alc-device-manager.h"
 #include "managers/alc-emitter-manager.h"
 #include "widgets/alc-device-widget.h"
+#include "correctors/alc-color-correction-manager.h"
+
+#include "effects/audioinput.h"
+
+#include "correctors/alc-global-color-correction.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -97,9 +102,11 @@ MainWindow::MainWindow(QWidget *parent) :
   if (!m_visible->isChecked())
     QMetaObject::invokeMethod(this, "hide", Qt::QueuedConnection);
 
-  trayDrawIcon(ALCColorCorrection::instance()->correction(ALCColorCorrection::Brightness));
+  trayDrawIcon(Correctors::ALCGlobalColorCorrection::instance()->correction(Correctors::ALCColorCorrection::Color::Brightness));
   m_showBrightnessTimer.setInterval(250);
   connect(&m_showBrightnessTimer, &QTimer::timeout, this, &MainWindow::trayShowBrightness);
+//  InputTest *input = new InputTest;
+//  input->show();
 }
 
 void MainWindow::showEvent(QShowEvent *event) {
@@ -131,11 +138,11 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 bool MainWindow::eventFilter(QObject *object, QEvent *event) {
   switch (event->type()) {
     case QEvent::Wheel: {
-      double brightness = ALCColorCorrection::instance()->correction(ALCColorCorrection::Brightness);
+      double brightness = Correctors::ALCGlobalColorCorrection::instance()->correction(Correctors::ALCColorCorrection::Color::Brightness);
       brightness += (static_cast<QWheelEvent *>(event)->delta() > 0) ? 0.01 : -0.01;
       brightness = qMin(brightness, 2.0);
       brightness = qMax(brightness, 0.0);
-      ALCColorCorrection::instance()->setCorrection(ALCColorCorrection::Brightness, brightness);
+      Correctors::ALCGlobalColorCorrection::instance()->setCorrection(Correctors::ALCColorCorrection::Color::Brightness, brightness);
       ui->colorCorrection->reload();
       m_showBrightnessTimer.start();
       m_tray.showMessage(QString(), QString());
@@ -178,7 +185,7 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
 
 void MainWindow::trayShowBrightness() {
   m_showBrightnessTimer.stop();
-  double brightness = ALCColorCorrection::instance()->correction(ALCColorCorrection::Brightness, true);
+  double brightness = Correctors::ALCGlobalColorCorrection::instance()->correction(Correctors::ALCColorCorrection::Color::Brightness, true);
   m_tray.showMessage("Brightness", QString("Current brightness level: %1%").
                      arg(QString::number(int(brightness * 100.0))), QSystemTrayIcon::Information, 1000);
 }

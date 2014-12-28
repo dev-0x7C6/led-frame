@@ -34,60 +34,64 @@
 
 class QScreen;
 
-enum ScreenFragments {
-  Bottom = 0,
-  Left,
-  Top,
-  Right
-};
+namespace Emitters {
 
-class ALCScreenEmitter : public QThread, public ALCEmitter {
-  Q_OBJECT
-public:
-  explicit ALCScreenEmitter(QObject *parent = 0);
-  virtual ~ALCScreenEmitter();
+  enum ScreenFragments {
+    Bottom = 0,
+    Left,
+    Top,
+    Right
+  };
 
-private:
-  ALCColorSamples m_samples;
+  class ALCScreenEmitter : public QThread, public ALCEmitter {
+    Q_OBJECT
+  public:
+    explicit ALCScreenEmitter(QObject *parent = 0);
+    virtual ~ALCScreenEmitter();
 
-  QScreen *m_screen;
+  private:
+    ALCColorSamples m_samples;
 
-  QString m_name;
-  QRect m_captureArea;
-  int m_chunkSize;
-  int m_pixelSkip;
-  int m_framerateLimit;
-  double m_marginProcent;
+    QScreen *m_screen;
 
-  QVector <int> *colors[4];
+    QString m_name;
+    QRect m_captureArea;
+    int m_chunkSize;
+    int m_pixelSkip;
+    int m_framerateLimit;
+    double m_marginProcent;
 
-  std::atomic <bool> m_quit;
+    QVector <int> *colors[4];
 
-public slots:
-  void setName(QString name);
-  void setCaptureArea(QRect);
-  void setChunkSize(int);
-  void setPixelSkip(int);
-  void setFramerateLimit(int);
-  void setQuitState(bool);
-  void setMarginProcent(double);
+    std::atomic <bool> m_quit;
 
-  QRect area();
-  int chunk();
-  int pixelSkip();
-  int framerateLimit();
-  double marginProcent();
+  public slots:
+    void setName(QString name);
+    void setCaptureArea(QRect);
+    void setChunkSize(int);
+    void setPixelSkip(int);
+    void setFramerateLimit(int);
+    void setQuitState(bool);
+    void setMarginProcent(double);
 
-  QString name();
+    QRect area();
+    int chunk();
+    int pixelSkip();
+    int framerateLimit();
+    double marginProcent();
 
-public:
-  bool configure();
+    QString name();
 
-protected:
-  void run();
-  void init();
-  void done();
+  public:
+    bool configure();
 
-};
+  protected:
+    void run();
+    void init();
+    void done();
+
+  };
+
+}
 
 #endif // ALCSCREENEMITTER_H

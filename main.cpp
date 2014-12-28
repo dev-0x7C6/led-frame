@@ -20,9 +20,13 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-#include "classes/alc-color-correction.h"
-#include "classes/alc-weather-color-correction.h"
+#include "correctors/alc-color-correction-manager.h"
+#include "correctors/alc-global-color-correction.h"
+#include "correctors/alc-audio-color-correction.h"
+#include "correctors/alc-color-correction.h"
+#include "correctors/alc-weather-color-correction.h"
 #include "managers/alc-emitter-manager.h"
+#include "managers/alc-device-manager.h"
 
 const int applicationMajorVersion = 0;
 const int applicationMinorVersion = 9;
@@ -38,10 +42,15 @@ int main(int argc, char *argv[]) {
   application.setApplicationDisplayName(QString("%1 %2").arg(
                                           application.applicationName(),
                                           application.applicationVersion()));
+
+  Correctors::ALCColorCorrectionManager::instance()->init();
   ALCEmitterManager::instance();
-  ALCColorCorrection::instance()->registerMultiplier(ALCColorCorrection::instance());
-  ALCColorCorrection::instance()->registerMultiplier(ALCWeatherColorCorrection::instance());
   MainWindow window;
   window.show();
-  return application.exec();
+  int result = application.exec();
+
+  Correctors::ALCColorCorrectionManager::instance()->done();
+  ALCEmitterManager::instance()->done();
+  ALCDeviceManager::instance()->done();
+  return result;
 }

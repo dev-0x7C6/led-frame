@@ -47,7 +47,7 @@ ALCDeviceWidget::ALCDeviceWidget(QWidget *parent) :
 ALCDeviceWidget::~ALCDeviceWidget() {
   m_settings->beginGroup("defaults");
   ALCReceiver *receiver;
-  ALCEmitter *emitter;
+  Emitters::ALCEmitter *emitter;
 
   for (int i = 0; i < m_devices.count(); ++i) {
     receiver = m_devices[i]->receiver();
@@ -81,7 +81,7 @@ void ComboBoxItem::changeItem(int index) {
 void ALCDeviceTreeWidget::currentIndexChanged(int idx) {
   Q_UNUSED(idx)
   ComboBoxItem *cmb = dynamic_cast <ComboBoxItem *>(sender());
-  emit setEmitter(m_receiver, reinterpret_cast<ALCEmitter *>(qvariant_cast <void *>(cmb->currentData())));
+  emit setEmitter(m_receiver, reinterpret_cast<Emitters::ALCEmitter *>(qvariant_cast <void *>(cmb->currentData())));
 }
 
 void ALCDeviceWidget::addSymulation(ALCSymulationWidget *symulation) {
@@ -172,29 +172,29 @@ void ALCDeviceWidget::populate(QString use) {
     ComboBoxItem *cmb = new ComboBoxItem(m_devices[i], 1);
     cmb->setIconSize(QSize(22, 22));
     cmb->addItem(QIcon(":/22x22/no-device.png"), QString("Not assigned"));
-    QList <ALCEmitter *> emitters = ALCEmitterManager::instance()->allEmitters();
-    QListIterator <ALCEmitter *> ii(emitters);
-    ALCEmitter *emitter;
-    ALCEmitter *defaultEmitter = 0;
+    QList <Emitters::ALCEmitter *> emitters = ALCEmitterManager::instance()->allEmitters();
+    QListIterator <Emitters::ALCEmitter *> ii(emitters);
+    Emitters::ALCEmitter *emitter;
+    Emitters::ALCEmitter *defaultEmitter = 0;
 
     while (ii.hasNext()) {
       switch ((emitter = ii.next())->type()) {
-        case ALCEmitter::Type::ScreenCapture:
+        case Emitters::ALCEmitter::Type::ScreenCapture:
           cmb->addItem(QIcon(":/22x22/screen.png"), prefix + emitter->emitterName(),
                        qVariantFromValue((void *)emitter));
           break;
 
-        case ALCEmitter::Type::PlainColor:
+        case Emitters::ALCEmitter::Type::PlainColor:
           cmb->addItem(QIcon(":/22x22/color.png"),  prefix + emitter->emitterName(),
                        qVariantFromValue((void *)emitter));
           break;
 
-        case ALCEmitter::Type::Animation:
+        case Emitters::ALCEmitter::Type::Animation:
           cmb->addItem(QIcon(":/22x22/animation.png"), prefix + emitter->emitterName(),
                        qVariantFromValue((void *)emitter));
           break;
 
-        case ALCEmitter::Type::Image:
+        case Emitters::ALCEmitter::Type::Image:
           cmb->addItem(QIcon(":/22x22/from-image.png"), prefix + emitter->emitterName(),
                        qVariantFromValue((void *)emitter));
           break;
@@ -203,7 +203,7 @@ void ALCDeviceWidget::populate(QString use) {
           break;
       }
 
-      ALCEmitter *connected = m_devices[i]->receiver()->connectedEmitter();
+      Emitters::ALCEmitter *connected = m_devices[i]->receiver()->connectedEmitter();
       m_settings->beginGroup("defaults");
       use = m_settings->value(m_devices[i]->receiver()->name()).toString();
       m_settings->endGroup();
@@ -228,14 +228,14 @@ void ALCDeviceWidget::reconfigure() {
   populate("");
 }
 
-void ALCDeviceWidget::setEmitter(ALCReceiver *receiver, ALCEmitter *emitter) {
+void ALCDeviceWidget::setEmitter(ALCReceiver *receiver, Emitters::ALCEmitter *emitter) {
   receiver->connectEmitter(emitter);
 }
 
 
 void ALCDeviceWidget::configureEmitter() {
   DeviceLinkButton *link = dynamic_cast <DeviceLinkButton *>(sender());
-  ALCEmitter *emitter;
+  Emitters::ALCEmitter *emitter;
 
   if (link->deviceThread())
     emitter = link->deviceThread()->connectedEmitter();

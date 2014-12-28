@@ -36,7 +36,7 @@ ALCScreenConfigureDialog::~ALCScreenConfigureDialog() {
 #include "emitters/alc-screen-emitter.h"
 
 
-void ALCScreenConfigureDialog::setEmitter(ALCScreenEmitter *emitter) {
+void ALCScreenConfigureDialog::setEmitter(Emitters::ALCScreenEmitter *emitter) {
   m_emitter = emitter;
   ui->areaX->setValue(emitter->area().x());
   ui->areaY->setValue(emitter->area().y());

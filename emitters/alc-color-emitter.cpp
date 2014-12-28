@@ -23,52 +23,56 @@
 #include <QTime>
 #include <QTimer>
 
-ALCColorEmitter::ALCColorEmitter() :
-  QObject(),
-  ALCEmitter(ALCEmitter::Type::PlainColor),
-  m_color(Qt::white),
-  m_timer(new QTimer(this)) {
-  srand(QTime::currentTime().msecsSinceStartOfDay());
-  connect(m_timer, &QTimer::timeout, this, &ALCColorEmitter::pushState);
-  m_timer->setInterval(1000 / 15);
-  m_timer->start();
-}
+namespace Emitters {
 
-ALCColorEmitter::~ALCColorEmitter() {}
+  ALCColorEmitter::ALCColorEmitter() :
+    QObject(),
+    ALCEmitter(ALCEmitter::Type::PlainColor),
+    m_color(Qt::white),
+    m_timer(new QTimer(this)) {
+    srand(QTime::currentTime().msecsSinceStartOfDay());
+    connect(m_timer, &QTimer::timeout, this, &ALCColorEmitter::pushState);
+    m_timer->setInterval(1000 / 15);
+    m_timer->start();
+  }
 
-void ALCColorEmitter::setColor(const QColor &color) {
-  m_color = color;
-}
+  ALCColorEmitter::~ALCColorEmitter() {}
 
-const QColor &ALCColorEmitter::color() {
-  return m_color;
-}
+  void ALCColorEmitter::setColor(const QColor &color) {
+    m_color = color;
+  }
 
-void ALCColorEmitter::pushState() {
-  QVector <int> samples(ALCColorSamples::Resolution);
-  int rgb = qRgb(qMin(m_color.red() * correction(ALCColorCorrection::Red), 255.0),
-                 qMin(m_color.green() * correction(ALCColorCorrection::Green), 255.0),
-                 qMin(m_color.blue() * correction(ALCColorCorrection::Blue), 255.0));
+  const QColor &ALCColorEmitter::color() {
+    return m_color;
+  }
 
-  for (int i = 0; i < samples.size(); ++i)
-    samples[i] = rgb;
+  void ALCColorEmitter::pushState() {
+    QVector <int> samples(ALCColorSamples::Resolution);
+    int rgb = qRgb(qMin(m_color.red() * correction(Correctors::ALCColorCorrection::Color::Red), 255.0),
+                   qMin(m_color.green() * correction(Correctors::ALCColorCorrection::Color::Green), 255.0),
+                   qMin(m_color.blue() * correction(Correctors::ALCColorCorrection::Color::Blue), 255.0));
 
-  m_samples.set(ALCColorSamples::Position::Bottom, samples);
-  m_samples.set(ALCColorSamples::Position::Left, samples);
-  m_samples.set(ALCColorSamples::Position::Top, samples);
-  m_samples.set(ALCColorSamples::Position::Right, samples);
-  setState(m_samples);
-}
+    for (int i = 0; i < samples.size(); ++i)
+      samples[i] = rgb;
 
-const QColor &ALCColorEmitter::open() {
-  QColor color = QColorDialog::getColor(m_color);
+    m_samples.set(ALCColorSamples::Position::Bottom, samples);
+    m_samples.set(ALCColorSamples::Position::Left, samples);
+    m_samples.set(ALCColorSamples::Position::Top, samples);
+    m_samples.set(ALCColorSamples::Position::Right, samples);
+    setState(m_samples);
+  }
 
-  if (color.isValid())
-    return (m_color = color);
-  else
-    return (m_color);
-}
+  const QColor &ALCColorEmitter::open() {
+    QColor color = QColorDialog::getColor(m_color);
 
-bool ALCColorEmitter::configure() {
-  return open().isValid();
+    if (color.isValid())
+      return (m_color = color);
+    else
+      return (m_color);
+  }
+
+  bool ALCColorEmitter::configure() {
+    return open().isValid();
+  }
+
 }

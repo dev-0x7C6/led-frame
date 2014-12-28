@@ -17,51 +17,43 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#ifndef AMBIENTLIGHTSYMULATION_H
-#define AMBIENTLIGHTSYMULATION_H
+#ifndef ALCWEATHERCOLORCORRECTION_H
+#define ALCWEATHERCOLORCORRECTION_H
 
-#include "classes/alc-color-samples.h"
-#include "connector/alc-receiver.h"
-#include "emitters/alc-emitter.h"
+#include "correctors/alc-color-correction.h"
 
-#include <QRgb>
-#include <QVector>
-#include <QWidget>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
+#include <QTimer>
 
-class QQuickItem;
-class QQuickView;
+namespace Correctors {
 
-class ALCSymulationWidget : public QWidget, public ALCReceiver {
-  Q_OBJECT
-private:
-  ALCColorSamples m_samples;
-  QQuickItem *m_root;
+  class ALCWeatherColorCorrection : public QObject, public Correctors::ALCColorCorrection {
+    Q_OBJECT
+  private:
+    static const quint32 fetchTimeout;
+    static QString link;
+    QNetworkAccessManager m_manager;
+    QTimer m_timer;
+    QTime m_sunrise;
+    QTime m_sunset;
+    QTime m_midday;
 
-  QObject *m_objs[4][8];
-  QQuickItem *m_items[4][8];
-  QQuickItem *m_monitor;
-  QQuickView *m_view;
+  public:
+    explicit ALCWeatherColorCorrection(QObject *parent = 0);
+    static ALCWeatherColorCorrection *instance();
 
-public:
-  explicit ALCSymulationWidget(QWidget *parent = 0);
-  virtual ~ALCSymulationWidget();
+  protected:
+    void fetchWeatherStatus();
+    void callCorrection(const QTime &current);
 
-  void connectEmitter(Emitters::ALCEmitter *emitter);
+  private:
+    void recieveReply(QNetworkReply *reply);
 
-  void onShow();
+  };
 
-  void createQmlMonitor();
-  void freeQmlMonitor();
-  void createQmlObjects(int size = 300);
-  void freeQmlObjects();
-  void resetQmlObjects();
+}
 
-private:
-  void createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size);
-  QString name();
-
-protected:
-  void timerEvent(QTimerEvent *);
-};
-
-#endif // AMBIENTLIGHTSYMULATION_H
+#endif // ALCWEATHERCOLORCORRECTION_H

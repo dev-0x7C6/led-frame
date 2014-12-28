@@ -23,14 +23,21 @@
 const int ALCDeviceManager::scanAfter = 250; // ms
 
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
-  : QObject(parent) {
-  startTimer(ALCDeviceManager::scanAfter);
+  : QObject(parent),
+    m_timerId(startTimer(ALCDeviceManager::scanAfter))
+{
 }
 
 ALCDeviceManager::~ALCDeviceManager() {
+}
+
+void ALCDeviceManager::done()
+{
+  killTimer(m_timerId);
+
   for (int i = 0; i < m_threads.count(); ++i) {
     m_threads[i]->connectEmitter(0);
-    m_threads[i]->setContinueValue(false);
+    m_threads[i]->setQuitState(true);
     m_threads[i]->wait();
     delete m_threads[i];
   }

@@ -23,22 +23,24 @@
 #include <QMainWindow>
 #include <QPushButton>
 
-class ALCEmitter;
+namespace Emitters {
+  class ALCEmitter;
+}
 
 class QPushButtonEx : public QPushButton {
 private:
-  ALCEmitter *m_emitter;
+  Emitters::ALCEmitter *m_emitter;
 
 public:
   explicit QPushButtonEx(QWidget *parent = 0) :
     QPushButton(parent),
     m_emitter(0) {}
 
-  void setEmitter(ALCEmitter *emitter) {
+  void setEmitter(Emitters::ALCEmitter *emitter) {
     m_emitter = emitter;
   }
 
-  ALCEmitter *emitter() {
+  Emitters::ALCEmitter *emitter() {
     return m_emitter;
   }
 };
@@ -68,11 +70,11 @@ public:
   void setup();
 
 private:
-  void insertPlainColorItem(ALCEmitter *);
-  void insertAnimationItem(ALCEmitter *);
-  void insertImageItem(ALCEmitter *);
+  void insertPlainColorItem(Emitters::ALCEmitter *);
+  void insertAnimationItem(Emitters::ALCEmitter *);
+  void insertImageItem(Emitters::ALCEmitter *);
 
-  void insertDefaultButtons(ALCEmitter *, QBoxLayout *);
+  void insertDefaultButtons(Emitters::ALCEmitter *, QBoxLayout *);
 
   void reconfigure();
   void rename();

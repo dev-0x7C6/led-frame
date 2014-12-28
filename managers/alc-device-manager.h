@@ -53,9 +53,13 @@ private:
 
   static const int scanAfter;
 
+  int m_timerId;
+
 public:
   explicit ALCDeviceManager(QObject *parent = 0);
   virtual ~ALCDeviceManager();
+
+  void done();
 
   ALCDeviceThread *device(int idx) const;
   int count() const;
@@ -65,7 +69,7 @@ public:
 protected:
   void timerEvent(QTimerEvent *event);
 
-private slots:
+private:
   void deviceThreadStarted();
   void deviceThreadFinished();
 

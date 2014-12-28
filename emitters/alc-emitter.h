@@ -29,58 +29,59 @@
 #include <atomic>
 
 #include "classes/alc-color-samples.h"
-#include "classes/alc-color-correction.h"
+#include "correctors/alc-color-correction.h"
 
 class QTreeWidgetItem;
 
-class ALCEmitter : public ALCColorCorrection {
-public:
-  enum class Type : quint32 {
-    None,
-    ScreenCapture,
-    Blackhole,
-    Animation,
-    PlainColor,
-    Image,
-    Last
+namespace Emitters {
+
+  class ALCEmitter : public Correctors::ALCColorCorrection {
+  public:
+    enum class Type {
+      None,
+      ScreenCapture,
+      Blackhole,
+      Animation,
+      PlainColor,
+      Image,
+      Last
+    };
+
+  private:
+    QString m_emitterName;
+    ALCColorSamples m_safeSamples;
+    QTreeWidgetItem *m_treeItem;
+
+  protected:
+    Type m_type;
+    QMutex m_mutex;
+
+    std::atomic <int> m_connectedCount;
+
+  public:
+    explicit ALCEmitter(ALCEmitter::Type type);
+    virtual ~ALCEmitter();
+
+    void setEmitterName(const QString &name);
+    QString emitterName() const;
+
+    ALCEmitter::Type type() const;
+    void setType(const ALCEmitter::Type type);
+
+    virtual void init();
+    virtual void done();
+
+    void setState(const ALCColorSamples &samples);
+    void state(ALCColorSamples &samples);
+
+    void setTreeItem(QTreeWidgetItem *item);
+    QTreeWidgetItem *treeItem();
+
+    virtual bool configure();
+    virtual bool rename();
+    virtual bool remove();
   };
 
-private:
-  QString m_emitterName;
-  ALCColorSamples m_safeSamples;
-  QTreeWidgetItem *m_treeItem;
-
-protected:
-  Type m_type;
-  QMutex m_mutex;
-
-  std::atomic <int> m_connectedCount;
-
-public:
-  explicit ALCEmitter(ALCEmitter::Type type);
-  virtual ~ALCEmitter();
-
-  void setEmitterName(const QString &name);
-  QString emitterName() const;
-
-  ALCEmitter::Type type() const;
-  void setType(const ALCEmitter::Type type);
-
-  virtual void init();
-  virtual void done();
-
-  void setState(const ALCColorSamples &samples);
-  void state(ALCColorSamples &samples);
-
-  void setTreeItem(QTreeWidgetItem *item);
-  QTreeWidgetItem *treeItem();
-
-  virtual bool configure();
-  virtual bool rename();
-  virtual bool remove();
-
-
-  //QList < QRgb> state();
-};
+}
 
 #endif // ALCEMITTER_H

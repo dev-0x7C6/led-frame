@@ -27,19 +27,19 @@ namespace Ui {
   class ALCScreenConfigureDialog;
 }
 
-class ALCScreenEmitter;
+#include "emitters/alc-screen-emitter.h"
 
 class ALCScreenConfigureDialog : public QDialog {
   Q_OBJECT
 private:
   Ui::ALCScreenConfigureDialog *ui;
-  ALCScreenEmitter *m_emitter;
+  Emitters::ALCScreenEmitter *m_emitter;
 
 public:
   explicit ALCScreenConfigureDialog(QWidget *parent = 0);
   ~ALCScreenConfigureDialog();
 
-  void setEmitter(ALCScreenEmitter *);
+  void setEmitter(Emitters::ALCScreenEmitter *);
 
 private:
   void fpsValueChanged(int);

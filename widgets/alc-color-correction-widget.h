@@ -26,20 +26,22 @@ namespace Ui {
   class ALCColorCorrectionWidget;
 }
 
-class ALCColorCorrection;
+namespace Correctors {
+  class ALCColorCorrection;
+}
 
 class ALCColorCorrectionWidget : public QWidget {
   Q_OBJECT
 private:
   Ui::ALCColorCorrectionWidget *ui;
-  ALCColorCorrection *m_correction;
+  Correctors::ALCColorCorrection *m_correction;
 
 public:
   explicit ALCColorCorrectionWidget(QWidget *parent = 0);
   ~ALCColorCorrectionWidget();
 
-  void setColorCorrection(ALCColorCorrection *correction);
-  ALCColorCorrection *colorCorrection();
+  void setColorCorrection(Correctors::ALCColorCorrection *correction);
+  Correctors::ALCColorCorrection *colorCorrection();
   void reload();
   void restore();
 

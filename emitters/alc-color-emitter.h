@@ -28,25 +28,29 @@
 
 class QTimer;
 
-class ALCColorEmitter: public QObject, public ALCEmitter {
-  Q_OBJECT
-private:
-  ALCColorSamples m_samples;
-  QColor m_color;
-  QTimer *m_timer;
+namespace Emitters {
 
-public:
-  explicit ALCColorEmitter();
-  virtual ~ALCColorEmitter();
+  class ALCColorEmitter: public QObject, public ALCEmitter {
+    Q_OBJECT
+  private:
+    ALCColorSamples m_samples;
+    QColor m_color;
+    QTimer *m_timer;
 
-  void setColor(const QColor &color);
-  const QColor &color();
+  public:
+    explicit ALCColorEmitter();
+    virtual ~ALCColorEmitter();
 
-  void pushState();
+    void setColor(const QColor &color);
+    const QColor &color();
 
-  const QColor &open();
+    void pushState();
 
-  virtual bool configure();
-};
+    const QColor &open();
+
+    virtual bool configure();
+  };
+
+}
 
 #endif // ALCCOLOREMITTER_H

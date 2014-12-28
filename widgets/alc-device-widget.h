@@ -35,8 +35,11 @@ namespace Ui {
 }
 
 class ALCDeviceThread;
-class ALCEmitter;
 class ALCDeviceManager;
+
+namespace Emitters {
+  class ALCEmitter;
+}
 
 class ComboBoxItem : public QComboBox {
   Q_OBJECT
@@ -74,7 +77,7 @@ public:
 
 signals:
   void setCustomEmitter(ALCDeviceThread *, int);
-  void setEmitter(ALCReceiver *, ALCEmitter *);
+  void setEmitter(ALCReceiver *, Emitters::ALCEmitter *);
 };
 
 #include <QCommandLinkButton>
@@ -114,7 +117,7 @@ private:
   void addWorkspace(ALCDeviceTreeWidget *, ALCDeviceThread *);
   void populate(QString use);
   void reconfigure();
-  void setEmitter(ALCReceiver *device, ALCEmitter *emitter);
+  void setEmitter(ALCReceiver *device, Emitters::ALCEmitter *emitter);
 
   void configureEmitter();
 

@@ -19,14 +19,16 @@
 
 #include "connector/alc-receiver.h"
 
-ALCReceiver::ALCReceiver() : ALCColorCorrection(), m_emitter(0) {
+ALCReceiver::ALCReceiver(Correctors::ALCColorCorrection::Type type)
+  : Correctors::ALCColorCorrection(type),
+    m_emitter(0) {
 }
 
 QString ALCReceiver::name() {
   return QString("default");
 }
 
-void ALCReceiver::connectEmitter(ALCEmitter *emitter) {
+void ALCReceiver::connectEmitter(Emitters::ALCEmitter *emitter) {
   QMutexLocker locker(&m_mutex);
 
   if (m_emitter)
@@ -36,7 +38,7 @@ void ALCReceiver::connectEmitter(ALCEmitter *emitter) {
     m_emitter->init();
 }
 
-ALCEmitter *ALCReceiver::connectedEmitter() {
+Emitters::ALCEmitter *ALCReceiver::connectedEmitter() {
   QMutexLocker locker(&m_mutex);
   return m_emitter;
 }
