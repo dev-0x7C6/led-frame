@@ -17,8 +17,7 @@ LIBS += -lX11
 
 unix {
   QT += dbus
-  HEADERS  += wiimotedev/deviceevents.h \
-    wiimotedev/consts.h
+  HEADERS  +=
 }
 
 TARGET = ambientleddriver
@@ -51,12 +50,18 @@ SOURCES += main.cpp\
     classes/alc-safe-threading.cpp \
     dialogs/alc-animation-configure-dialog.cpp \
     classes/alc-runtime-sync.cpp \
-    effects/audioinput.cpp \
     correctors/alc-color-correction-manager.cpp \
     correctors/alc-global-color-correction.cpp \
     correctors/alc-audio-color-correction.cpp \
     correctors/alc-color-correction.cpp \
-    correctors/alc-weather-color-correction.cpp
+    correctors/alc-weather-color-correction.cpp \
+    core/containers/abstract-container.cpp \
+    core/containers/color-correction-container.cpp \
+    core/containers/color-scanline-container.cpp \
+    core/enums/color-format-enum.cpp \
+    core/enums/color-type-enum.cpp \
+    core/enums/container-type-enum.cpp \
+    core/interfaces/icolor-corrector.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -84,13 +89,19 @@ HEADERS += mainwindow.h \
     classes/alc-safe-threading.h \
     dialogs/alc-animation-configure-dialog.h \
     classes/alc-runtime-sync.h \
-    effects/audioinput.h \
     correctors/alc-color-correction-manager.h \
     correctors/alc-color-correction-values.h \
     correctors/alc-global-color-correction.h \
     correctors/alc-audio-color-correction.h \
     correctors/alc-weather-color-correction.h \
-    correctors/alc-color-correction.h
+    correctors/alc-color-correction.h \
+    core/containers/abstract-container.h \
+    core/containers/color-correction-container.h \
+    core/containers/color-scanline-container.h \
+    core/enums/color-format-enum.h \
+    core/enums/color-type-enum.h \
+    core/enums/container-type-enum.h \
+    core/interfaces/icolor-corrector.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \
