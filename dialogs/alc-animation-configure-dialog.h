@@ -5,32 +5,32 @@
 
 class QShowEvent;
 namespace Emitters {
-  class ALCAnimationEmitter;
+	class ALCAnimationEmitter;
 }
 
 namespace Ui {
-  class ALCAnimationConfigureDialog;
+	class ALCAnimationConfigureDialog;
 }
 
 class ALCAnimationConfigureDialog : public QDialog {
-  Q_OBJECT
+	Q_OBJECT
 private:
-  Ui::ALCAnimationConfigureDialog *ui;
-  Emitters::ALCAnimationEmitter *m_emitter;
+	Ui::ALCAnimationConfigureDialog *ui;
+	Emitters::ALCAnimationEmitter *m_emitter;
 
 public:
-  explicit ALCAnimationConfigureDialog(QWidget *parent = 0);
-  ~ALCAnimationConfigureDialog();
+	explicit ALCAnimationConfigureDialog(QWidget *parent = 0);
+	~ALCAnimationConfigureDialog();
 
 protected:
-  void showEvent(QShowEvent *event);
+	void showEvent(QShowEvent *event);
 
 private:
-  void accept();
-  void cancel();
+	void accept();
+	void cancel();
 
-  void blinkChanged(int);
-  void speedChanged(int);
+	void blinkChanged(int);
+	void speedChanged(int);
 
 };
 

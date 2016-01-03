@@ -2,13 +2,13 @@
 
 namespace Correctors {
 
-  ALCGlobalColorCorrection::ALCGlobalColorCorrection()
-    : ALCColorCorrection(Type::Global) {
-  }
+	ALCGlobalColorCorrection::ALCGlobalColorCorrection()
+		: ALCColorCorrection(Type::Global) {
+	}
 
-  ALCGlobalColorCorrection *ALCGlobalColorCorrection::instance() {
-    static ALCGlobalColorCorrection instance;
-    return &instance;
-  }
+	ALCGlobalColorCorrection *ALCGlobalColorCorrection::instance() {
+		static ALCGlobalColorCorrection instance;
+		return &instance;
+	}
 
 }

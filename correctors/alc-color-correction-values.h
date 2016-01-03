@@ -22,12 +22,12 @@
 
 namespace Correctors {
 
-  struct ALCColorCorrectionValues {
-    double r;
-    double g;
-    double b;
-    double l;
-  };
+	struct ALCColorCorrectionValues {
+		double r;
+		double g;
+		double b;
+		double l;
+	};
 
 }
 

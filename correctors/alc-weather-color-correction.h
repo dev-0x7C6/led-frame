@@ -30,29 +30,29 @@
 
 namespace Correctors {
 
-  class ALCWeatherColorCorrection : public QObject, public Correctors::ALCColorCorrection {
-    Q_OBJECT
-  private:
-    static const quint32 fetchTimeout;
-    static QString link;
-    QNetworkAccessManager m_manager;
-    QTimer m_timer;
-    QTime m_sunrise;
-    QTime m_sunset;
-    QTime m_midday;
+	class ALCWeatherColorCorrection : public QObject, public Correctors::ALCColorCorrection {
+		Q_OBJECT
+	private:
+		static const quint32 fetchTimeout;
+		static QString link;
+		QNetworkAccessManager m_manager;
+		QTimer m_timer;
+		QTime m_sunrise;
+		QTime m_sunset;
+		QTime m_midday;
 
-  public:
-    explicit ALCWeatherColorCorrection(QObject *parent = 0);
-    static ALCWeatherColorCorrection *instance();
+	public:
+		explicit ALCWeatherColorCorrection(QObject *parent = 0);
+		static ALCWeatherColorCorrection *instance();
 
-  protected:
-    void fetchWeatherStatus();
-    void callCorrection(const QTime &current);
+	protected:
+		void fetchWeatherStatus();
+		void callCorrection(const QTime &current);
 
-  private:
-    void recieveReply(QNetworkReply *reply);
+	private:
+		void recieveReply(QNetworkReply *reply);
 
-  };
+	};
 
 }
 

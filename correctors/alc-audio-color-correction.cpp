@@ -2,13 +2,13 @@
 
 namespace Correctors {
 
-  ALCAudioColorCorrection::ALCAudioColorCorrection() :
-    Correctors::ALCColorCorrection(Type::Audio) {
-  }
+	ALCAudioColorCorrection::ALCAudioColorCorrection() :
+		Correctors::ALCColorCorrection(Type::Audio) {
+	}
 
-  ALCAudioColorCorrection *ALCAudioColorCorrection::instance() {
-    static ALCAudioColorCorrection instance;
-    return &instance;
-  }
+	ALCAudioColorCorrection *ALCAudioColorCorrection::instance() {
+		static ALCAudioColorCorrection instance;
+		return &instance;
+	}
 
 }

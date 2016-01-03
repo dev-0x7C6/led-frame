@@ -32,36 +32,36 @@
 #include "classes/alc-runtime-sync.h"
 
 namespace Emitters {
-  class ALCEmitter;
+	class ALCEmitter;
 }
 
 class ALCColorSamples;
 class ALCStripConfiguration;
 
 class ALCDeviceThread : public QThread, public ALCReceiver {
-  Q_OBJECT
+	Q_OBJECT
 private:
-  ALCStripConfiguration *m_config;
-  QSerialPort *m_device;
-  ALCColorSamples m_samples;
-  QSerialPortInfo m_details;
-  std::atomic<bool> m_quit;
+	ALCStripConfiguration *m_config;
+	QSerialPort *m_device;
+	ALCColorSamples m_samples;
+	QSerialPortInfo m_details;
+	std::atomic<bool> m_quit;
 
 public:
-  explicit ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
-  virtual ~ALCDeviceThread();
+	explicit ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent = 0);
+	virtual ~ALCDeviceThread();
 
-  QString name();
-  QSerialPortInfo details();
+	QString name();
+	QSerialPortInfo details();
 
-  void setQuitState(bool state = true);
+	void setQuitState(bool state = true);
 
 private:
-  void push(unsigned char *data, quint16 &ptr, Format format,
-            quint32 color, Correctors::ALCColorCorrectionValues &values);
+	void push(unsigned char *data, quint16 &ptr, Format format,
+	          quint32 color, Correctors::ALCColorCorrectionValues &values);
 
 protected:
-  void run();
+	void run();
 };
 
 #endif // ACLDEVICETHREAD_H

@@ -26,13 +26,13 @@
 
 namespace Correctors {
 
-  class ALCAudioColorCorrection : public ALCColorCorrection {
-  public:
-    explicit ALCAudioColorCorrection();
+	class ALCAudioColorCorrection : public ALCColorCorrection {
+	public:
+		explicit ALCAudioColorCorrection();
 
-    static ALCAudioColorCorrection *instance();
+		static ALCAudioColorCorrection *instance();
 
-  };
+	};
 
 }
 

@@ -27,66 +27,66 @@
 class QSettings;
 
 namespace Correctors {
-  struct ALCColorCorrectionValues;
+	struct ALCColorCorrectionValues;
 
-  class ALCColorCorrection {
-  public:
-    enum class Type {
-      Global,
-      Audio,
-      Weather,
-      Device,
-      User
-    };
+	class ALCColorCorrection {
+	public:
+		enum class Type {
+			Global,
+			Audio,
+			Weather,
+			Device,
+			User
+		};
 
-    enum class Color {
-      Brightness,
-      Red,
-      Green,
-      Blue,
-      Last
-    };
+		enum class Color {
+			Brightness,
+			Red,
+			Green,
+			Blue,
+			Last
+		};
 
-    enum class Format {
-      RGB,
-      RBG,
-      GRB,
-      BRG,
-      GBR,
-      BGR
-    };
+		enum class Format {
+			RGB,
+			RBG,
+			GRB,
+			BRG,
+			GBR,
+			BGR
+		};
 
-  public:
-    explicit ALCColorCorrection(ALCColorCorrection::Type type);
+	public:
+		explicit ALCColorCorrection(ALCColorCorrection::Type type);
 
-    void setFormat(const Format format);
-    Format format();
+		void setFormat(const Format format);
+		Format format();
 
-    void setCorrection(ALCColorCorrection::Color color, double value);
-    double correction(ALCColorCorrection::Color color, bool global = false);
+		void setCorrection(ALCColorCorrection::Color color, double value);
+		double correction(ALCColorCorrection::Color color, bool global = false);
 
-    void setCorrectionValues(const ALCColorCorrectionValues &values);
-    ALCColorCorrectionValues correctionValues(bool global = false);
+		void setCorrectionValues(const ALCColorCorrectionValues &values);
+		ALCColorCorrectionValues correctionValues(bool global = false);
 
-    void multiplyCorrectionValues(ALCColorCorrectionValues &values);
+		void multiplyCorrectionValues(ALCColorCorrectionValues &values);
 
-    void clear();
+		void clear();
 
-    bool enabled();
-    void setEnabled(bool enabled);
+		bool enabled();
+		void setEnabled(bool enabled);
 
-    void saveCorrection(QSettings *);
-    void loadCorrection(QSettings *);
+		void saveCorrection(QSettings *);
+		void loadCorrection(QSettings *);
 
-  protected:
-    std::atomic <double> m_r;
-    std::atomic <double> m_g;
-    std::atomic <double> m_b;
-    std::atomic <double> m_l;
-    std::atomic <bool> m_enabled;
-    std::atomic <Format> m_format;
-    std::atomic <Type> m_type;
-  };
+	protected:
+		std::atomic <double> m_r;
+		std::atomic <double> m_g;
+		std::atomic <double> m_b;
+		std::atomic <double> m_l;
+		std::atomic <bool> m_enabled;
+		std::atomic <Format> m_format;
+		std::atomic <Type> m_type;
+	};
 
 }
 

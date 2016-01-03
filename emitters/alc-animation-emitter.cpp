@@ -26,173 +26,176 @@
 
 namespace Emitters {
 
-  ALCAnimationEmitter::ALCAnimationEmitter() :
-    QThread(),
-    ALCEmitter(ALCEmitter::Type::Animation),
-    m_animation(Animation::Glow),
-    m_effect(Effect::Flicker),
-    m_rgb(0),
-    m_flicker(1),
-    m_quit(false),
-    m_variantAnimation(this) {
-    connect(&m_variantAnimation, &QVariantAnimation::valueChanged, this, &ALCAnimationEmitter::process);
-    setup(m_animation, m_effect, 10000);
-  }
+	ALCAnimationEmitter::ALCAnimationEmitter() :
+		QThread(),
+		ALCEmitter(ALCEmitter::Type::Animation),
+		m_animation(Animation::Glow),
+		m_effect(Effect::Flicker),
+		m_rgb(0),
+		m_flicker(1),
+		m_quit(false),
+		m_variantAnimation(this) {
+		connect(&m_variantAnimation, &QVariantAnimation::valueChanged, this, &ALCAnimationEmitter::process);
+		setup(m_animation, m_effect, 10000);
+	}
 
-  ALCAnimationEmitter::~ALCAnimationEmitter() {
-    m_quit = true;
-    wait();
-  }
+	ALCAnimationEmitter::~ALCAnimationEmitter() {
+		m_quit = true;
+		wait();
+	}
 
-  bool ALCAnimationEmitter::open() {
-    QMessageBox::warning(0, "Warning", "To implement.", QMessageBox::Ok);
-    return false;
-  }
+	bool ALCAnimationEmitter::open() {
+		QMessageBox::warning(0, "Warning", "To implement.", QMessageBox::Ok);
+		return false;
+	}
 
-  bool ALCAnimationEmitter::configure() {
-    ALCAnimationConfigureDialog dialog;
-    dialog.exec();
-    return false;
-  }
+	bool ALCAnimationEmitter::configure() {
+		ALCAnimationConfigureDialog dialog;
+		dialog.exec();
+		return false;
+	}
 
-  void ALCAnimationEmitter::setup(Animation animation, Effect effect, int cycle) {
-    if (m_variantAnimation.state() == QVariantAnimation::Running)
-      m_variantAnimation.stop();
+	void ALCAnimationEmitter::setup(Animation animation, Effect effect, int cycle) {
+		if (m_variantAnimation.state() == QVariantAnimation::Running)
+			m_variantAnimation.stop();
 
-    m_variantAnimation.setKeyValues(QVariantAnimation::KeyValues());
-    m_variantAnimation.setDuration(cycle);
+		m_variantAnimation.setKeyValues(QVariantAnimation::KeyValues());
+		m_variantAnimation.setDuration(cycle);
 
-    switch (m_animation = animation) {
-      case Animation::None:
-        break;
+		switch (m_animation = animation) {
+			case Animation::None:
+				break;
 
-      case Animation::Shift:
-        m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
-        m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
-        m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
-        m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
-        break;
+			case Animation::Shift:
+				m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
+				m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
+				m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
+				m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
+				break;
 
-      case Animation::Glow:
-        m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
-        m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
-        m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
-        m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
-        break;
+			case Animation::Glow:
+				m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
+				m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
+				m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
+				m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
+				break;
 
-      case Animation::Rotate:
-        m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
-        m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
-        m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
-        m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
-        break;
-    }
+			case Animation::Rotate:
+				m_variantAnimation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
+				m_variantAnimation.setKeyValueAt(0.333, QColor::fromRgbF(0, 1, 0));
+				m_variantAnimation.setKeyValueAt(0.666, QColor::fromRgbF(0, 0, 1));
+				m_variantAnimation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
+				break;
+		}
 
-    switch (m_effect = effect) {
-      case Effect::None:
-        break;
+		switch (m_effect = effect) {
+			case Effect::None:
+				break;
 
-      case Effect::Flicker:
-        break;
-    }
+			case Effect::Flicker:
+				break;
+		}
 
-    m_variantAnimation.setLoopCount(-1);
-  }
+		m_variantAnimation.setLoopCount(-1);
+	}
 
-  void ALCAnimationEmitter::setFlickerValue(int flicker) {
-    m_flicker = flicker;
-  }
+	void ALCAnimationEmitter::setFlickerValue(int flicker) {
+		m_flicker = flicker;
+	}
 
-  int ALCAnimationEmitter::flickerValue() {
-    return m_flicker;
-  }
+	int ALCAnimationEmitter::flickerValue() {
+		return m_flicker;
+	}
 
-  void ALCAnimationEmitter::setQuitState(bool state) {
-    m_quit = state;
-  }
+	void ALCAnimationEmitter::setQuitState(bool state) {
+		m_quit = state;
+	}
 
-  void ALCAnimationEmitter::run() {
-    ALCColorSamples samples;
-    ALCRuntimeSync sync;
-    quint64 counter = 0;
-    quint64 loop = 0;
-    QVector <QRgb> data;
-    data.resize(ALCColorSamples::Resolution * 4);
-    quint32 ptr = 0;
+	void ALCAnimationEmitter::run() {
+		ALCColorSamples samples;
+		ALCRuntimeSync sync;
+		quint64 counter = 0;
+		quint64 loop = 0;
+		QVector <QRgb> data;
+		data.resize(ALCColorSamples::Resolution * 4);
+		quint32 ptr = 0;
 
-    while (!m_quit) {
-      counter++;
-      int rgb = m_rgb;
-      double l = correction(Correctors::ALCColorCorrection::Color::Brightness);
-      double r = qMin((qRed(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Red) * l, 1.0);
-      double g = qMin((qGreen(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Green) * l, 1.0);
-      double b = qMin((qBlue(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Blue) * l, 1.0);
-      rgb = QColor::fromRgbF(r, g, b).rgb();
+		while (!m_quit) {
+			counter++;
+			int rgb = m_rgb;
+			double l = correction(Correctors::ALCColorCorrection::Color::Brightness);
+			double r = qMin((qRed(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Red) * l, 1.0);
+			double g = qMin((qGreen(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Green) * l, 1.0);
+			double b = qMin((qBlue(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Blue) * l, 1.0);
+			rgb = QColor::fromRgbF(r, g, b).rgb();
+			Effect effect = m_effect;
 
-      switch (m_effect)  {
-        case Effect::None:
-          break;
+			switch (effect)  {
+				case Effect::None:
+					break;
 
-        case Effect::Flicker:
-          if (!m_flicker)
-            break;
+				case Effect::Flicker:
+					if (!m_flicker)
+						break;
 
-          if (counter % m_flicker < (m_flicker >> 1))
-            rgb = 0;
+					if (counter % m_flicker < (m_flicker >> 1))
+						rgb = 0;
 
-          break;
-      }
+					break;
+			}
 
-      switch (m_animation) {
-        case Animation::None:
-          break;
+			Animation animation = m_animation;
 
-        case Animation::Rotate:
-          data[ptr-- % data.count()] = rgb;
-          break;
+			switch (animation) {
+				case Animation::None:
+					break;
 
-        case Animation::Shift:
-          for (int i = 1; i < data.count(); ++i)
-            data[i - 1] = data[i];
+				case Animation::Rotate:
+					data[ptr-- % data.count()] = rgb;
+					break;
 
-          data[data.count() - 1] = rgb;
-          break;
+				case Animation::Shift:
+					for (int i = 1; i < data.count(); ++i)
+						data[i - 1] = data[i];
 
-        case Animation::Glow:
-          data.fill(rgb);
-          break;
-      }
+					data[data.count() - 1] = rgb;
+					break;
 
-      for (int i = 0; i < 4; ++i)
-        memcpy(samples.get(static_cast<ALCColorSamples::Position>(i))->data(),
-               data.data() + (data.size() / 4  * i), data.size());
+				case Animation::Glow:
+					data.fill(rgb);
+					break;
+			}
 
-      setState(samples);
+			for (int i = 0; i < 4; ++i)
+				memcpy(samples.get(static_cast<ALCColorSamples::Position>(i))->data(),
+				       data.data() + (data.size() / 4  * i), data.size());
 
-      if (loop != sync.wait(100))
-        loop = sync.loopCount();
-    }
-  }
+			setState(samples);
 
-  void ALCAnimationEmitter::init() {
-    ALCEmitter::init();
-    m_variantAnimation.start();
-    m_quit = false;
-    start();
-  }
+			if (loop != sync.wait(100))
+				loop = sync.loopCount();
+		}
+	}
 
-  void ALCAnimationEmitter::done() {
-    ALCEmitter::done();
+	void ALCAnimationEmitter::init() {
+		ALCEmitter::init();
+		m_variantAnimation.start();
+		m_quit = false;
+		start();
+	}
 
-    if (m_variantAnimation.state() == QVariantAnimation::Running)
-      m_variantAnimation.stop();
+	void ALCAnimationEmitter::done() {
+		ALCEmitter::done();
 
-    m_quit = true;
-    wait();
-  }
+		if (m_variantAnimation.state() == QVariantAnimation::Running)
+			m_variantAnimation.stop();
 
-  void ALCAnimationEmitter::process(const QVariant &value) {
-    m_rgb = (qvariant_cast<QColor>(value)).rgb();
-  }
+		m_quit = true;
+		wait();
+	}
+
+	void ALCAnimationEmitter::process(const QVariant &value) {
+		m_rgb = (qvariant_cast<QColor>(value)).rgb();
+	}
 
 }

@@ -23,20 +23,20 @@ class QSettings;
 
 class ALCSettings {
 private:
-  QSettings *m_settings;
+	QSettings *m_settings;
 public:
-  explicit ALCSettings();
-  virtual ~ALCSettings();
+	explicit ALCSettings();
+	virtual ~ALCSettings();
 
-  QSettings *settings();
+	QSettings *settings();
 
-  void load();
-  void save();
+	void load();
+	void save();
 
-  static ALCSettings *instance() {
-    static ALCSettings settings;
-    return &settings;
-  }
+	static ALCSettings *instance() {
+		static ALCSettings settings;
+		return &settings;
+	}
 
 };
 

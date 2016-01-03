@@ -28,8 +28,8 @@
 
 class ALCSafeThreading {
 protected:
-  QReadWriteLock m_readWriteLock;
-  QMutex m_mutex;
+	QReadWriteLock m_readWriteLock;
+	QMutex m_mutex;
 };
 
 #endif // ALCSAFETHREADING_H

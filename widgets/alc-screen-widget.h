@@ -24,26 +24,26 @@
 #include <QPushButton>
 
 namespace Emitters {
-  class ALCEmitter;
+	class ALCEmitter;
 }
 
 namespace Ui {
-  class ALCScreenWidget;
+	class ALCScreenWidget;
 }
 
 class ALCScreenWidget : public QMainWindow {
-  Q_OBJECT
+	Q_OBJECT
 private:
-  Ui::ALCScreenWidget *ui;
+	Ui::ALCScreenWidget *ui;
 
 public:
-  explicit ALCScreenWidget(QWidget *parent = 0);
-  ~ALCScreenWidget();
-  void setup();
+	explicit ALCScreenWidget(QWidget *parent = 0);
+	~ALCScreenWidget();
+	void setup();
 
 private:
-  void insertScreenCaptureItem(Emitters::ALCEmitter *);
-  void configure();
+	void insertScreenCaptureItem(Emitters::ALCEmitter *);
+	void configure();
 
 };
 

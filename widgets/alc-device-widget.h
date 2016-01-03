@@ -31,95 +31,95 @@ class ALCSymulationWidget;
 class QSettings;
 
 namespace Ui {
-  class ALCDeviceWidget;
+	class ALCDeviceWidget;
 }
 
 class ALCDeviceThread;
 class ALCDeviceManager;
 
 namespace Emitters {
-  class ALCEmitter;
+	class ALCEmitter;
 }
 
 class ComboBoxItem : public QComboBox {
-  Q_OBJECT
+	Q_OBJECT
 private:
-  QTreeWidgetItem *item;
-  int column;
+	QTreeWidgetItem *item;
+	int column;
 
 public:
-  ComboBoxItem(QTreeWidgetItem *, int);
+	ComboBoxItem(QTreeWidgetItem *, int);
 
 public slots:
-  void changeItem(int);
+	void changeItem(int);
 };
 
 
 class ALCDeviceTreeWidget : public QObject, public QTreeWidgetItem {
-  Q_OBJECT
+	Q_OBJECT
 private:
-  ALCReceiver *m_receiver;
+	ALCReceiver *m_receiver;
 
 public:
-  ALCDeviceTreeWidget(QTreeWidget *tree, ALCReceiver *receiver)
-    : QObject(0),
-      QTreeWidgetItem(tree) {
-    m_receiver = receiver;
-  }
+	ALCDeviceTreeWidget(QTreeWidget *tree, ALCReceiver *receiver)
+		: QObject(0),
+		  QTreeWidgetItem(tree) {
+		m_receiver = receiver;
+	}
 
-  ALCReceiver *receiver() {
-    return m_receiver;
-  }
-  void setReceiver(ALCReceiver *receiver) {
-    m_receiver = receiver;
-  }
-  void currentIndexChanged(int);
+	ALCReceiver *receiver() {
+		return m_receiver;
+	}
+	void setReceiver(ALCReceiver *receiver) {
+		m_receiver = receiver;
+	}
+	void currentIndexChanged(int);
 
 signals:
-  void setCustomEmitter(ALCDeviceThread *, int);
-  void setEmitter(ALCReceiver *, Emitters::ALCEmitter *);
+	void setCustomEmitter(ALCDeviceThread *, int);
+	void setEmitter(ALCReceiver *, Emitters::ALCEmitter *);
 };
 
 #include <QCommandLinkButton>
 
 class DeviceLinkButton : public QCommandLinkButton {
 private:
-  ALCDeviceThread *m_device;
+	ALCDeviceThread *m_device;
 
 public:
-  void setDeviceThread(ALCDeviceThread *thread) {
-    m_device = thread;
-  }
+	void setDeviceThread(ALCDeviceThread *thread) {
+		m_device = thread;
+	}
 
-  ALCDeviceThread *deviceThread() {
-    return m_device;
-  }
+	ALCDeviceThread *deviceThread() {
+		return m_device;
+	}
 };
 
 class ALCDeviceWidget : public QMainWindow {
-  Q_OBJECT
+	Q_OBJECT
 private:
-  Ui::ALCDeviceWidget *ui;
-  QList <ALCDeviceTreeWidget *> m_devices;
-  ALCDeviceManager *m_manager;
-  ALCSymulationWidget *m_symulation;
-  QSettings *m_settings;
+	Ui::ALCDeviceWidget *ui;
+	QList <ALCDeviceTreeWidget *> m_devices;
+	ALCDeviceManager *m_manager;
+	ALCSymulationWidget *m_symulation;
+	QSettings *m_settings;
 
 public:
-  explicit ALCDeviceWidget(QWidget *parent = 0);
-  ~ALCDeviceWidget();
+	explicit ALCDeviceWidget(QWidget *parent = 0);
+	~ALCDeviceWidget();
 
-  void addSymulation(ALCSymulationWidget *);
+	void addSymulation(ALCSymulationWidget *);
 
 private:
-  void deviceConnected(ALCDeviceThread *);
-  void deviceDisconnected(ALCDeviceThread *);
-  void addWorkspace(ALCDeviceTreeWidget *, ALCDeviceThread *);
-  void populate(QString use);
-  void reconfigure();
-  void setEmitter(ALCReceiver *device, Emitters::ALCEmitter *emitter);
+	void deviceConnected(ALCDeviceThread *);
+	void deviceDisconnected(ALCDeviceThread *);
+	void addWorkspace(ALCDeviceTreeWidget *, ALCDeviceThread *);
+	void populate(QString use);
+	void reconfigure();
+	void setEmitter(ALCReceiver *device, Emitters::ALCEmitter *emitter);
 
-  void configureEmitter();
+	void configureEmitter();
 
 };
 

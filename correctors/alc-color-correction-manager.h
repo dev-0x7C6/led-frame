@@ -28,30 +28,30 @@ struct ALCColorCorrectionValues;
 
 namespace Correctors {
 
-  class ALCColorCorrection;
-  struct ALCColorCorrectionValues;
+	class ALCColorCorrection;
+	struct ALCColorCorrectionValues;
 
-  class  ALCColorCorrectionManager {
-  private:
-    static const QList <ALCColorCorrection *> list;
+	class  ALCColorCorrectionManager {
+	private:
+		static const QList <ALCColorCorrection *> list;
 
-  public:
-    ALCColorCorrectionManager();
-    ~ALCColorCorrectionManager();
+	public:
+		ALCColorCorrectionManager();
+		~ALCColorCorrectionManager();
 
-    static ALCColorCorrectionManager *instance();
+		static ALCColorCorrectionManager *instance();
 
-    ALCColorCorrectionValues correction();
-    double correction(ALCColorCorrection::Color color);
+		ALCColorCorrectionValues correction();
+		double correction(ALCColorCorrection::Color color);
 
-    void init();
-    void done();
+		void init();
+		void done();
 
-  private:
-    void save(ALCColorCorrection *correction, QString name);
-    void load(ALCColorCorrection *correction, QString name);
+	private:
+		void save(ALCColorCorrection *correction, QString name);
+		void load(ALCColorCorrection *correction, QString name);
 
-  };
+	};
 
 }
 

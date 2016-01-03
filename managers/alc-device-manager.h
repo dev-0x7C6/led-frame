@@ -29,53 +29,53 @@ class ALCDeviceThread;
 
 namespace AmbientLedConnector {
 
-  namespace IDs {
+	namespace IDs {
 #ifdef DEBUG_CONNECTOR
-    const QString Description = "FT232R USB UART";
-    const QString Manufacturer = "FTDI";
+		const QString Description = "FT232R USB UART";
+		const QString Manufacturer = "FTDI";
 #else
-    const QString Description = "Ambient Led Connector";
-    const QString Manufacturer = "ALC";
+		const QString Description = "Ambient Led Connector";
+		const QString Manufacturer = "ALC";
 #endif
-  }
+	}
 
-  namespace Transmision {
-    const quint32 BaudRate = 500000;
-  }
+	namespace Transmision {
+		const quint32 BaudRate = 500000;
+	}
 
 }
 
 class ALCDeviceManager : public QObject {
-  Q_OBJECT
+	Q_OBJECT
 private:
-  QList <ALCDeviceThread *> m_threads;
-  QSerialPortInfo m_info;
+	QList <ALCDeviceThread *> m_threads;
+	QSerialPortInfo m_info;
 
-  static const int scanAfter;
+	static const int scanAfter;
 
-  int m_timerId;
+	int m_timerId;
 
 public:
-  explicit ALCDeviceManager(QObject *parent = 0);
-  virtual ~ALCDeviceManager();
+	explicit ALCDeviceManager(QObject *parent = 0);
+	virtual ~ALCDeviceManager();
 
-  void done();
+	void done();
 
-  ALCDeviceThread *device(int idx) const;
-  int count() const;
+	ALCDeviceThread *device(int idx) const;
+	int count() const;
 
-  static ALCDeviceManager *instance();
+	static ALCDeviceManager *instance();
 
 protected:
-  void timerEvent(QTimerEvent *event);
+	void timerEvent(QTimerEvent *event);
 
 private:
-  void deviceThreadStarted();
-  void deviceThreadFinished();
+	void deviceThreadStarted();
+	void deviceThreadFinished();
 
 signals:
-  void deviceConnected(ALCDeviceThread *thread);
-  void deviceDisconnected(ALCDeviceThread *thread);
+	void deviceConnected(ALCDeviceThread *thread);
+	void deviceDisconnected(ALCDeviceThread *thread);
 
 };
 

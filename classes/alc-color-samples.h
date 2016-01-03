@@ -24,32 +24,31 @@
 
 class ALCColorSamples {
 public:
-  static const int Resolution;
+	static const int Resolution;
 
-  enum class Position {
-    Bottom,
-    Left,
-    Top,
-    Right,
-    Last
-  };
+	enum class Position {
+		Bottom,
+		Left,
+		Top,
+		Right,
+		Last
+	};
 
 private:
-  QVector <int> m_samples[4];
-  quint16 m_sampleCount;
+	QVector <int> m_samples[4];
 
 public:
-  explicit ALCColorSamples();
-  virtual ~ALCColorSamples();
+	explicit ALCColorSamples();
+	virtual ~ALCColorSamples();
 
-  void set(Position pos, const QVector <int> &colors);
-  QVector <int> *get(Position pos);
-  QVector <int> *scaled(Position pos, int size);
-  QVector <int> *pscaled(Position pos, int size);
+	void set(Position pos, const QVector <int> &colors);
+	QVector <int> *get(Position pos);
+	QVector <int> *scaled(Position pos, int size);
+	QVector <int> *pscaled(Position pos, int size);
 
-  quint16 scale();
+	quint16 scale();
 
-  void copy(const ALCColorSamples &ref);
+	void copy(const ALCColorSamples &ref);
 };
 
 #endif // COLORSAMPLES_H

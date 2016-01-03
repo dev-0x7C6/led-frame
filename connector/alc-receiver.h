@@ -28,16 +28,16 @@
 
 class ALCReceiver : public Correctors::ALCColorCorrection {
 protected:
-  Emitters::ALCEmitter *m_emitter;
-  QMutex m_mutex;
+	Emitters::ALCEmitter *m_emitter;
+	QMutex m_mutex;
 
 public:
-  ALCReceiver(Correctors::ALCColorCorrection::Type type);
+	ALCReceiver(Correctors::ALCColorCorrection::Type type);
 
-  virtual QString name();
+	virtual QString name();
 
-  virtual void connectEmitter(Emitters::ALCEmitter *emitter);
-  Emitters::ALCEmitter *connectedEmitter();
+	virtual void connectEmitter(Emitters::ALCEmitter *emitter);
+	Emitters::ALCEmitter *connectedEmitter();
 };
 
 #endif // ALCRECEIVER_H

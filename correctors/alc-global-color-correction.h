@@ -24,12 +24,12 @@
 
 namespace Correctors {
 
-  class ALCGlobalColorCorrection : public ALCColorCorrection {
-  public:
-    ALCGlobalColorCorrection();
+	class ALCGlobalColorCorrection : public ALCColorCorrection {
+	public:
+		ALCGlobalColorCorrection();
 
-    static ALCGlobalColorCorrection *instance();
-  };
+		static ALCGlobalColorCorrection *instance();
+	};
 
 }
 
