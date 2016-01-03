@@ -33,8 +33,6 @@ namespace Correctors {
 	public:
 		enum class Type {
 			Global,
-			Audio,
-			Weather,
 			Device,
 			User
 		};

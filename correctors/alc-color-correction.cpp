@@ -18,10 +18,7 @@
  **********************************************************************************/
 
 #include "alc-color-correction.h"
-#include "correctors/alc-audio-color-correction.h"
-#include "correctors/alc-weather-color-correction.h"
 #include "correctors/alc-color-correction-values.h"
-
 #include "correctors/alc-color-correction-manager.h"
 
 #include <QSettings>

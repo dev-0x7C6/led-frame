@@ -52,16 +52,17 @@ SOURCES += main.cpp\
     classes/alc-runtime-sync.cpp \
     correctors/alc-color-correction-manager.cpp \
     correctors/alc-global-color-correction.cpp \
-    correctors/alc-audio-color-correction.cpp \
     correctors/alc-color-correction.cpp \
-    correctors/alc-weather-color-correction.cpp \
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
     core/containers/color-scanline-container.cpp \
     core/enums/color-format-enum.cpp \
     core/enums/color-type-enum.cpp \
     core/enums/container-type-enum.cpp \
-    core/interfaces/icolor-corrector.cpp
+    core/interfaces/icolor-corrector.cpp \
+    core/interfaces/templates/ipopulate-template.cpp \
+    core/interfaces/templates/itemplate-attach.cpp \
+    core/interfaces/icolor-corrector-attach.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -92,8 +93,6 @@ HEADERS += mainwindow.h \
     correctors/alc-color-correction-manager.h \
     correctors/alc-color-correction-values.h \
     correctors/alc-global-color-correction.h \
-    correctors/alc-audio-color-correction.h \
-    correctors/alc-weather-color-correction.h \
     correctors/alc-color-correction.h \
     core/containers/abstract-container.h \
     core/containers/color-correction-container.h \
@@ -101,7 +100,10 @@ HEADERS += mainwindow.h \
     core/enums/color-format-enum.h \
     core/enums/color-type-enum.h \
     core/enums/container-type-enum.h \
-    core/interfaces/icolor-corrector.h
+    core/interfaces/icolor-corrector.h \
+    core/interfaces/templates/ipopulate-template.h \
+    core/interfaces/templates/itemplate-attach.h \
+    core/interfaces/icolor-corrector-attach.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

@@ -15,12 +15,12 @@ namespace Container {
 
 		virtual Enum::ContainerType type() const override;
 
-		void setColor(const double &value, const Enum::ClassType &type);
-		double color(const Enum::ClassType &type) const;
+		void setColor(const double &value, const Enum::ColorType &type);
+		double color(const Enum::ColorType &type) const;
 
 
 	private:
-		std::array<std::atomic<double>, static_cast<int>(Enum::ClassType::Last)> m_color;
+		std::array<std::atomic<double>, static_cast<int>(Enum::ColorType::Last)> m_color;
 
 	};
 

@@ -1,18 +1,14 @@
 #include "alc-color-correction-manager.h"
-#include "correctors/alc-audio-color-correction.h"
 #include "correctors/alc-color-correction.h"
 #include "correctors/alc-color-correction-values.h"
 #include "correctors/alc-global-color-correction.h"
-#include "correctors/alc-weather-color-correction.h"
 
 #include <QSettings>
 
 namespace Correctors {
 
 	const QList <ALCColorCorrection *> ALCColorCorrectionManager::list = {
-		ALCAudioColorCorrection::instance(),
-		ALCGlobalColorCorrection::instance(),
-		ALCWeatherColorCorrection::instance()
+		ALCGlobalColorCorrection::instance()
 	};
 
 	ALCColorCorrectionManager::ALCColorCorrectionManager() {

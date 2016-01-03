@@ -3,7 +3,7 @@
 
 namespace Enum {
 
-	enum class ClassType : unsigned char {
+	enum class ColorType : unsigned char {
 		Red,
 		Green,
 		Blue,

@@ -11,10 +11,10 @@ Enum::ContainerType ColorCorrectionContainer::type() const {
 	return Enum::ContainerType::ColorCorrector;
 }
 
-void ColorCorrectionContainer::setColor(const double &value, const Enum::ClassType &type) {
+void ColorCorrectionContainer::setColor(const double &value, const Enum::ColorType &type) {
 	m_color[static_cast<size_t>(type)] = value;
 }
 
-double ColorCorrectionContainer::color(const Enum::ClassType &type) const {
+double ColorCorrectionContainer::color(const Enum::ColorType &type) const {
 	return m_color.at(static_cast<size_t>(type));
 }

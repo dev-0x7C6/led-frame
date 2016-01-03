@@ -22,9 +22,7 @@
 
 #include "correctors/alc-color-correction-manager.h"
 #include "correctors/alc-global-color-correction.h"
-#include "correctors/alc-audio-color-correction.h"
 #include "correctors/alc-color-correction.h"
-#include "correctors/alc-weather-color-correction.h"
 #include "managers/alc-emitter-manager.h"
 #include "managers/alc-device-manager.h"
 
