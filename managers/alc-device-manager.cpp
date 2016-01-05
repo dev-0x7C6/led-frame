@@ -6,7 +6,7 @@
 
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
 	: QObject(parent),
-		m_timerId(startTimer(250)) {
+	  m_timerId(startTimer(250)) {
 }
 
 ALCDeviceManager::~ALCDeviceManager() {
@@ -20,7 +20,7 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
 
 	for (int i = 0; i < ports.count(); ++i) {
 		if ((ports[i].manufacturer() != deviceInfo.manufacturer()) ||
-				(ports[i].description() !=  deviceInfo.decription())) continue;
+		    (ports[i].description() !=  deviceInfo.decription())) continue;
 
 		auto device = std::make_unique<QSerialPort>(ports[i].portName());
 
@@ -32,9 +32,9 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
 		device->setParity(QSerialPort::NoParity);
 		device->setDataBits(QSerialPort::Data8);
 		device->setStopBits(QSerialPort::OneStop);
-		auto thread = std::make_unique<ALCDeviceThread>(std::move(device), ports[i]);
-		connect(thread.get(), &ALCDeviceThread::finished, [this] {
-			m_deviceThreads.remove_if([this](const std::unique_ptr<ALCDeviceThread> &thread) {
+		auto thread = std::make_unique<AmbientDeviceThread>(std::move(device), ports[i]);
+		connect(thread.get(), &AmbientDeviceThread::finished, [this] {
+			m_deviceThreads.remove_if([this](const std::unique_ptr<AmbientDeviceThread> &thread) {
 				return thread.get() == sender();
 			});
 		});

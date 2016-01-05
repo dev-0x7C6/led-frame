@@ -10,9 +10,10 @@ namespace Abstract {
 		virtual ~AbstractReceiver() = default;
 
 		virtual void connectEmitter(std::shared_ptr<Interface::IEmitter> &emitter) override;
+		virtual bool isEmitterConnected() override;
 
 	protected:
-		Container::ColorScanlineContainer& data();
+		Container::ColorScanlineContainer &data();
 
 	private:
 		Container::ColorScanlineContainer m_data;

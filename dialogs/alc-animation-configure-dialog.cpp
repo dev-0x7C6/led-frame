@@ -16,12 +16,12 @@ ALCAnimationConfigureDialog::ALCAnimationConfigureDialog(QWidget *parent) :
 	connect(ui->speedSlider, &QSlider::valueChanged, this, &ALCAnimationConfigureDialog::speedChanged);
 	ui->qml->connectEmitter(m_emitter);
 	ui->colorCorrection->setColorCorrection(m_emitter);
-//	ALCDeviceManager::instance()->device(0)->connectEmitter(m_emitter);
+	//  ALCDeviceManager::instance()->device(0)->connectEmitter(m_emitter);
 }
 
 ALCAnimationConfigureDialog::~ALCAnimationConfigureDialog() {
 	ui->qml->connectEmitter(0);
-//	ALCDeviceManager::instance()->device(0)->connectEmitter(0);
+	//  ALCDeviceManager::instance()->device(0)->connectEmitter(0);
 	delete ui;
 	delete m_emitter;
 }

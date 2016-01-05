@@ -1,21 +1,22 @@
-#ifndef ALCRUNTIMESYNC_H
-#define ALCRUNTIMESYNC_H
+#pragma once
 
 #include <QElapsedTimer>
 
-class ALCRuntimeSync {
-public:
-	ALCRuntimeSync();
+namespace Functional {
 
-	quint64 wait(int hz = 100);
-	quint64 loopCount();
+	class LoopSync {
+	public:
+		explicit LoopSync();
+		virtual ~LoopSync() = default;
 
-private:
-	QElapsedTimer m_elapsed;
-	quint64 m_runtime;
-	quint64 m_alltime;
-	quint64 m_loop;
-};
+		quint64 wait(int hz = 100);
+		quint64 loopCount();
 
+	private:
+		QElapsedTimer m_elapsed;
+		quint64 m_runtime;
+		quint64 m_alltime;
+		quint64 m_loop;
+	};
 
-#endif // ALCRUNTIMESYNC_H
+}

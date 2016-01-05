@@ -69,7 +69,9 @@ SOURCES += main.cpp\
     core/interfaces/iemitter.cpp \
     core/abstracts/abstract-emitter.cpp \
     core/enums/emitter-type-enum.cpp \
-    core/abstracts/abstract-receiver.cpp
+    core/abstracts/abstract-receiver.cpp \
+    core/enums/position-enum.cpp \
+		core/functionals/color-stream.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -117,7 +119,9 @@ HEADERS += mainwindow.h \
     core/interfaces/iemitter.h \
     core/abstracts/abstract-emitter.h \
     core/enums/emitter-type-enum.h \
-    core/abstracts/abstract-receiver.h
+    core/abstracts/abstract-receiver.h \
+    core/enums/position-enum.h \
+		core/functionals/color-stream.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

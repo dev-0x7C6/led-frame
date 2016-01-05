@@ -149,7 +149,7 @@ namespace Emitters {
 		int clipx = 0x00;
 		int clipy = 0x00;
 		Correctors::ALCColorCorrectionValues values;
-		ALCRuntimeSync sync;
+		Functional::LoopSync sync;
 
 		do {
 			m_mutex.lock();

@@ -23,7 +23,7 @@ ALCStripConfiguration::ALCStripConfiguration() {
 }
 
 void ALCStripConfiguration::add(ALCLedStrip::Source source, ALCLedStrip::Destination destination,
-                                int count, bool clockwise, Correctors::ALCColorCorrection::Format color, double brightness) {
+                                int count, bool clockwise, Enum::ColorFormat color, double brightness) {
 	ALCLedStrip *strip = new ALCLedStrip();
 	strip->setSource(source);
 	strip->setDestination(destination);
@@ -54,11 +54,11 @@ int ALCLedStrip::count() const {
 	return m_count;
 }
 
-void ALCLedStrip::setColorFormat(Correctors::ALCColorCorrection::Format format) {
+void ALCLedStrip::setColorFormat(Enum::ColorFormat format) {
 	m_colorFormat = format;
 }
 
-Correctors::ALCColorCorrection::Format ALCLedStrip::colorFormat() const {
+Enum::ColorFormat ALCLedStrip::colorFormat() const {
 	return m_colorFormat;
 }
 

@@ -96,20 +96,20 @@ void ALCDeviceWidget::addSymulation(ALCSymulationWidget *symulation) {
 	populate(m_settings->value("symulation").toString());
 }
 
-void ALCDeviceWidget::deviceConnected(ALCDeviceThread *thread) {
-	ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, thread);
-	connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDeviceWidget::setEmitter);
-	item->setText(0, thread->details().systemLocation() + '\t');
-	item->setIcon(0, QIcon(":/22x22/device.png"));
-	addWorkspace(item, thread);
-	ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
-	m_devices << item;
-	populate(m_settings->value(thread->details().systemLocation()).toString());
+void ALCDeviceWidget::deviceConnected(AmbientDeviceThread *thread) {
+	//  ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, thread);
+	//  connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDeviceWidget::setEmitter);
+	//  item->setText(0, thread->details().systemLocation() + '\t');
+	//  item->setIcon(0, QIcon(":/22x22/device.png"));
+	//  addWorkspace(item, thread);
+	//  ui->tree->header()->resizeSections(QHeaderView::ResizeToContents);
+	//  m_devices << item;
+	//  populate(m_settings->value(thread->details().systemLocation()).toString());
 }
 
-void ALCDeviceWidget::deviceDisconnected(ALCDeviceThread *thread) {
+void ALCDeviceWidget::deviceDisconnected(AmbientDeviceThread *thread) {
 	for (int i = 0; i < m_devices.count(); ++i) {
-		if (thread == dynamic_cast<ALCDeviceThread *>(m_devices[i]->receiver())) {
+		if (thread == dynamic_cast<AmbientDeviceThread *>(m_devices[i]->receiver())) {
 			delete m_devices[i];
 			m_devices.removeAt(i);
 			return;
@@ -117,7 +117,7 @@ void ALCDeviceWidget::deviceDisconnected(ALCDeviceThread *thread) {
 	}
 }
 
-void ALCDeviceWidget::addWorkspace(ALCDeviceTreeWidget *item, ALCDeviceThread *thread) {
+void ALCDeviceWidget::addWorkspace(ALCDeviceTreeWidget *item, AmbientDeviceThread *thread) {
 	QTreeWidgetItem *child = new QTreeWidgetItem(item);
 	QPalette p = palette();
 	p.setColor(QPalette::Background, QColor(226, 237, 253));
@@ -233,16 +233,14 @@ void ALCDeviceWidget::setEmitter(ALCReceiver *receiver, Emitters::ALCEmitter *em
 
 
 void ALCDeviceWidget::configureEmitter() {
-	DeviceLinkButton *link = dynamic_cast <DeviceLinkButton *>(sender());
-	Emitters::ALCEmitter *emitter;
-
-	if (link->deviceThread())
-		emitter = link->deviceThread()->connectedEmitter();
-	else
-		emitter = m_symulation->connectedEmitter();
-
-	if (emitter)
-		emitter->configure();
-	else
-		QMessageBox::information(this, "Information", "Emitter is not defined.", QMessageBox::Ok);
+	//  DeviceLinkButton *link = dynamic_cast <DeviceLinkButton *>(sender());
+	//  Emitters::ALCEmitter *emitter;
+	//  if (link->deviceThread())
+	//    emitter = link->deviceThread()->connectedEmitter();
+	//  else
+	//    emitter = m_symulation->connectedEmitter();
+	//  if (emitter)
+	//    emitter->configure();
+	//  else
+	//    QMessageBox::information(this, "Information", "Emitter is not defined.", QMessageBox::Ok);
 }

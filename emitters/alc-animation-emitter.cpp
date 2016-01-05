@@ -113,7 +113,7 @@ namespace Emitters {
 
 	void ALCAnimationEmitter::run() {
 		ALCColorSamples samples;
-		ALCRuntimeSync sync;
+		Functional::LoopSync sync;
 		quint64 counter = 0;
 		quint64 loop = 0;
 		QVector <QRgb> data;

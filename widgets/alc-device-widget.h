@@ -34,7 +34,7 @@ namespace Ui {
 	class ALCDeviceWidget;
 }
 
-class ALCDeviceThread;
+class AmbientDeviceThread;
 class ALCDeviceManager;
 
 namespace Emitters {
@@ -76,7 +76,7 @@ public:
 	void currentIndexChanged(int);
 
 signals:
-	void setCustomEmitter(ALCDeviceThread *, int);
+	void setCustomEmitter(AmbientDeviceThread *, int);
 	void setEmitter(ALCReceiver *, Emitters::ALCEmitter *);
 };
 
@@ -84,14 +84,14 @@ signals:
 
 class DeviceLinkButton : public QCommandLinkButton {
 private:
-	ALCDeviceThread *m_device;
+	AmbientDeviceThread *m_device;
 
 public:
-	void setDeviceThread(ALCDeviceThread *thread) {
+	void setDeviceThread(AmbientDeviceThread *thread) {
 		m_device = thread;
 	}
 
-	ALCDeviceThread *deviceThread() {
+	AmbientDeviceThread *deviceThread() {
 		return m_device;
 	}
 };
@@ -112,9 +112,9 @@ public:
 	void addSymulation(ALCSymulationWidget *);
 
 private:
-	void deviceConnected(ALCDeviceThread *);
-	void deviceDisconnected(ALCDeviceThread *);
-	void addWorkspace(ALCDeviceTreeWidget *, ALCDeviceThread *);
+	void deviceConnected(AmbientDeviceThread *);
+	void deviceDisconnected(AmbientDeviceThread *);
+	void addWorkspace(ALCDeviceTreeWidget *, AmbientDeviceThread *);
 	void populate(QString use);
 	void reconfigure();
 	void setEmitter(ALCReceiver *device, Emitters::ALCEmitter *emitter);

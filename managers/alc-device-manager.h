@@ -8,7 +8,7 @@
 #include <memory>
 #include <list>
 
-class ALCDeviceThread;
+class AmbientDeviceThread;
 
 class ALCDeviceManager : public QObject {
 public:
@@ -19,7 +19,7 @@ protected:
 	void timerEvent(QTimerEvent *event);
 
 private:
-	std::list<std::unique_ptr<ALCDeviceThread>> m_deviceThreads;
+	std::list<std::unique_ptr<AmbientDeviceThread>> m_deviceThreads;
 
 	int m_timerId;
 

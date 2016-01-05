@@ -1,5 +1,7 @@
 #pragma once
 
+#include <core/abstracts/abstract-receiver.h>
+#include <core/enums/color-format-enum.h>
 #include <classes/alc-color-samples.h>
 #include <classes/alc-runtime-sync.h>
 #include <connector/alc-receiver.h>
@@ -18,23 +20,22 @@ namespace Emitters {
 class ALCColorSamples;
 class ALCStripConfiguration;
 
-class ALCDeviceThread : public QThread, public ALCReceiver {
+class AmbientDeviceThread : public QThread, public Abstract::AbstractReceiver {
 	Q_OBJECT
 public:
-	explicit ALCDeviceThread(std::unique_ptr<QSerialPort> &&device, QSerialPortInfo details, QObject *parent = 0);
-	virtual ~ALCDeviceThread();
+	explicit AmbientDeviceThread(std::unique_ptr<QSerialPort> &&device, QSerialPortInfo details, QObject *parent = 0);
+	virtual ~AmbientDeviceThread();
 
-	QString name();
+	virtual QString name() const override;
+	virtual Enum::ReceiverType type() const override;
+
 	QSerialPortInfo details();
 
 	void interrupt();
 
 protected:
-	void run();
+	virtual void run() override;
 
-private:
-	void push(unsigned char *data, quint16 &ptr, Format format,
-						quint32 color, Correctors::ALCColorCorrectionValues &values);
 
 private:
 	std::unique_ptr<QSerialPort> m_device;
@@ -42,4 +43,6 @@ private:
 	ALCColorSamples m_samples;
 	QSerialPortInfo m_details;
 	std::atomic<bool> m_interrupt;
+
+
 };

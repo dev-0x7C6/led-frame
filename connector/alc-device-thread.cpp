@@ -17,90 +17,85 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
+#include <core/functionals/color-stream.h>
+
+
 #include "correctors/alc-color-correction.h"
 #include "classes/alc-color-samples.h"
 #include "connector/alc-device-thread.h"
 #include "emitters/alc-emitter.h"
 #include "correctors/alc-color-correction-values.h"
 #include "correctors/alc-color-correction-manager.h"
+#include "classes/alc-strip-configuration.h"
 
 #include <QElapsedTimer>
 
-#define qb(b) qBlue(b)
-#define qg(g) qGreen(g)
-#define qr(r) qRed(r)
 
-#include "classes/alc-strip-configuration.h"
 
-ALCDeviceThread::ALCDeviceThread(std::unique_ptr<QSerialPort> &&device, QSerialPortInfo details, QObject *parent)
+using namespace Enum;
+
+AmbientDeviceThread::AmbientDeviceThread(std::unique_ptr<QSerialPort> &&device, QSerialPortInfo details, QObject *parent)
 	: QThread(parent),
-	  ALCReceiver(Type::Device),
-		m_device(std::move(device)),
+	  m_device(std::move(device)),
 	  m_details(details),
-		m_interrupt(false) {
+	  m_interrupt(false) {
 	m_device->moveToThread(this);
 	m_config = new ALCStripConfiguration();
-	m_config->add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, Format::RGB, 1.0);
-	m_config->add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, Format::RGB, 1.0);
-	m_config->add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, Format::RGB, 1.0);
-	m_config->add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, Format::RGB, 1.0);
-	/* //LEDY JARKA
-	config.add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 6, true, GRB, 2.0);
-	config.add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, RGB, 1.0);
-	config.add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, RGB, 1.0);
-	config.add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, RGB, 1.0);
-	 */
+	m_config->add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, ColorFormat::RGB, 1.0);
+	m_config->add(ALCLedStrip::SourceLeft, ALCLedStrip::DestinationLeft, 15, true, ColorFormat::RGB, 1.0);
+	m_config->add(ALCLedStrip::SourceTop, ALCLedStrip::DestinationTop, 30, true, ColorFormat::RGB, 1.0);
+	m_config->add(ALCLedStrip::SourceRight, ALCLedStrip::DestinationRight, 15, true, ColorFormat::RGB, 1.0);
 }
 
-ALCDeviceThread::~ALCDeviceThread() {
+AmbientDeviceThread::~AmbientDeviceThread() {
 	delete m_config;
 	interrupt();
 	wait();
-	connectEmitter(nullptr);
 }
 
-QString ALCDeviceThread::name() {
+QString AmbientDeviceThread::name() const {
 	return m_details.systemLocation();
 }
 
-void ALCDeviceThread::run() {
-	unsigned char data[2048];
-	memset((char *)data, 0, sizeof(data));
-	quint16 ptr = 0;
-	ALCRuntimeSync sync;
+Enum::ReceiverType AmbientDeviceThread::type() const {
+	return Enum::ReceiverType::Device;
+}
+
+void AmbientDeviceThread::run() {
+	Functional::ColorStream stream;
+	Functional::LoopSync sync;
 	Correctors::ALCColorCorrectionValues values;
 
 	do {
-		if (!m_emitter) {
+		if (isEmitterConnected()) {
 			sync.wait(10);
 			continue;
 		}
 
-		m_emitter->state(m_samples);
-		values = correctionValues(true);
+		Container::ColorScanlineContainer source = data();
+		Container::ColorCorrectionContainer correction;
 		QVector <int> *colors;
-		ptr = 0;
 		QList <ALCLedStrip *> strips = m_config->list();
 
 		for (int ii = 0; ii < strips.count(); ++ii) {
 			ALCLedStrip *strip = strips[ii];
 			colors = m_samples.scaled((ALCColorSamples::Position)strip->source(), strip->count());
-			const Format format = strip->colorFormat();
+			const Enum::ColorFormat format = strip->colorFormat();
 			const int size = colors->size();
 			values.l *= strip->brightness();
 
 			if (strip->clockwise()) {
 				for (int i = 0; i < size;)
-					push(data, ptr, format, (*colors)[i++], values);
+					stream.insert(format, (*colors).at(i++));
 			} else {
 				for (int i = size - 1; i >= 0;)
-					push(data, ptr, format, (*colors)[i--], values);
+					stream.insert(format, (*colors).at(i--));
 			}
 
 			delete colors;
 		}
 
-		m_device->write((char *)data, ptr);
+		stream.write(*m_device);
 		m_device->waitForBytesWritten(10);
 		m_device->clear();
 		sync.wait(100);
@@ -108,55 +103,13 @@ void ALCDeviceThread::run() {
 
 	if (m_device->isOpen() && m_device->isWritable())
 		m_device->close();
-
-	if (m_emitter)
-		m_emitter->done();
 }
 
-QSerialPortInfo ALCDeviceThread::details() {
+QSerialPortInfo AmbientDeviceThread::details() {
 	return m_details;
 }
 
-void ALCDeviceThread::interrupt() {
+void AmbientDeviceThread::interrupt() {
 	m_interrupt = true;
 }
 
-void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, Correctors::ALCColorCorrectionValues &values) {
-	switch (format) {
-		case Format::RGB:
-			data[ptr++] = qMin(qr(color) * values.r * values.l, 255.0);
-			data[ptr++] = qMin(qg(color) * values.g * values.l, 255.0);
-			data[ptr++] = qMin(qb(color) * values.b * values.l, 255.0);
-			break;
-
-		case Format::RBG:
-			data[ptr++] = qMin(qr(color) * values.r * values.l, 255.0);
-			data[ptr++] = qMin(qb(color) * values.b * values.l, 255.0);
-			data[ptr++] = qMin(qg(color) * values.g * values.l, 255.0);
-			break;
-
-		case Format::GRB:
-			data[ptr++] = qMin(qg(color) * values.g * values.l, 255.0);
-			data[ptr++] = qMin(qr(color) * values.r * values.l, 255.0);
-			data[ptr++] = qMin(qb(color) * values.b * values.l, 255.0);
-			break;
-
-		case Format::BRG:
-			data[ptr++] = qMin(qb(color) * values.b * values.l, 255.0);
-			data[ptr++] = qMin(qr(color) * values.r * values.l, 255.0);
-			data[ptr++] = qMin(qg(color) * values.g * values.l, 255.0);
-			break;
-
-		case Format::GBR:
-			data[ptr++] = qMin(qg(color) * values.g * values.l, 255.0);
-			data[ptr++] = qMin(qb(color) * values.b * values.l, 255.0);
-			data[ptr++] = qMin(qr(color) * values.r * values.l, 255.0);
-			break;
-
-		case Format::BGR:
-			data[ptr++] = qMin(qb(color) * values.b * values.l, 255.0);
-			data[ptr++] = qMin(qg(color) * values.g * values.l, 255.0);
-			data[ptr++] = qMin(qr(color) * values.r * values.l, 255.0);
-			break;
-	}
-}

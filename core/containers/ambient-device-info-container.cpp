@@ -7,8 +7,8 @@ AmbientDeviceInfoContainer::AmbientDeviceInfoContainer()
 }
 
 AmbientDeviceInfoContainer::AmbientDeviceInfoContainer(const QString &description
-		, const QString &manufacturer
-		, int baudrate)
+    , const QString &manufacturer
+    , int baudrate)
 
 	: m_decription(description)
 	, m_manufacturer(manufacturer)

@@ -1,14 +1,16 @@
 #include "alc-runtime-sync.h"
 #include <unistd.h>
 
-ALCRuntimeSync::ALCRuntimeSync() :
+using namespace Functional;
+
+LoopSync::LoopSync() :
 	m_runtime(0),
 	m_alltime(0),
 	m_loop(0) {
 	m_elapsed.start();
 }
 
-quint64 ALCRuntimeSync::wait(int hz) {
+quint64 LoopSync::wait(int hz) {
 	m_runtime = m_elapsed.elapsed();
 	m_alltime += m_runtime;
 	m_elapsed.restart();
@@ -29,6 +31,6 @@ quint64 ALCRuntimeSync::wait(int hz) {
 	return m_loop;
 }
 
-quint64 ALCRuntimeSync::loopCount() {
+quint64 LoopSync::loopCount() {
 	return m_loop;
 }
