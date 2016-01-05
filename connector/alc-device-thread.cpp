@@ -32,12 +32,12 @@
 
 #include "classes/alc-strip-configuration.h"
 
-ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, QObject *parent)
+ALCDeviceThread::ALCDeviceThread(std::unique_ptr<QSerialPort> &&device, QSerialPortInfo details, QObject *parent)
 	: QThread(parent),
 	  ALCReceiver(Type::Device),
-	  m_device(device),
+		m_device(std::move(device)),
 	  m_details(details),
-	  m_quit(false) {
+		m_interrupt(false) {
 	m_device->moveToThread(this);
 	m_config = new ALCStripConfiguration();
 	m_config->add(ALCLedStrip::SourceBottom, ALCLedStrip::DestinationBottom, 30, true, Format::RGB, 1.0);
@@ -54,6 +54,9 @@ ALCDeviceThread::ALCDeviceThread(QSerialPort *device, QSerialPortInfo details, Q
 
 ALCDeviceThread::~ALCDeviceThread() {
 	delete m_config;
+	interrupt();
+	wait();
+	connectEmitter(nullptr);
 }
 
 QString ALCDeviceThread::name() {
@@ -101,12 +104,10 @@ void ALCDeviceThread::run() {
 		m_device->waitForBytesWritten(10);
 		m_device->clear();
 		sync.wait(100);
-	} while (!m_quit && m_device->error() == 0);
+	} while (!m_interrupt && m_device->error() == 0);
 
 	if (m_device->isOpen() && m_device->isWritable())
 		m_device->close();
-
-	delete m_device;
 
 	if (m_emitter)
 		m_emitter->done();
@@ -116,10 +117,9 @@ QSerialPortInfo ALCDeviceThread::details() {
 	return m_details;
 }
 
-void ALCDeviceThread::setQuitState(bool state) {
-	m_quit = state;
+void ALCDeviceThread::interrupt() {
+	m_interrupt = true;
 }
-
 
 void ALCDeviceThread::push(unsigned char *data, quint16 &ptr, Format format, quint32 color, Correctors::ALCColorCorrectionValues &values) {
 	switch (format) {

@@ -35,11 +35,10 @@
 ALCDeviceWidget::ALCDeviceWidget(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::ALCDeviceWidget),
-	m_manager(ALCDeviceManager::instance()),
 	m_settings(ALCSettings::instance()->settings()) {
 	ui->setupUi(this);
-	connect(m_manager, &ALCDeviceManager::deviceConnected, this, &ALCDeviceWidget::deviceConnected, Qt::DirectConnection);
-	connect(m_manager, &ALCDeviceManager::deviceDisconnected, this, &ALCDeviceWidget::deviceDisconnected, Qt::DirectConnection);
+	//connect(m_manager, &ALCDeviceManager::deviceConnected, this, &ALCDeviceWidget::deviceConnected, Qt::DirectConnection);
+	//connect(m_manager, &ALCDeviceManager::deviceDisconnected, this, &ALCDeviceWidget::deviceDisconnected, Qt::DirectConnection);
 	connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, this, &ALCDeviceWidget::reconfigure);
 }
 

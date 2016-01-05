@@ -47,6 +47,5 @@ int main(int argc, char *argv[]) {
 	int result = application.exec();
 	Correctors::ALCColorCorrectionManager::instance()->done();
 	ALCEmitterManager::instance()->done();
-	ALCDeviceManager::instance()->done();
 	return result;
 }

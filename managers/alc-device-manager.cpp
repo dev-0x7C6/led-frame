@@ -1,99 +1,44 @@
-/**********************************************************************************
- * AmbientLedDriver - https://gitorious.org/ambientleddriver -                    *
- * Copyright (C) 2014  Bartłomiej Burdukiewicz                                    *
- * Contact: bartlomiej.burdukiewicz@gmail.com                                     *
- *                                                                                *
- * This program is free software; you can redistribute it and/or                  *
- * modify it under the terms of the GNU Lesser General Public                     *
- * License as published by the Free Software Foundation; either                   *
- * version 2.1 of the License, or (at your option) any later version.             *
- *                                                                                *
- * This program is distributed in the hope that it will be useful,                *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of                 *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU              *
- * Lesser General Public License for more details.                                *
- *                                                                                *
- * You should have received a copy of the GNU Lesser General Public               *
- * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
- **********************************************************************************/
+#include <connector/alc-device-thread.h>
+#include <core/containers/ambient-device-info-container.h>
+#include <managers/alc-device-manager.h>
 
-#include "managers/alc-device-manager.h"
-#include "connector/alc-device-thread.h"
-
-const int ALCDeviceManager::scanAfter = 250; // ms
+#include <memory>
 
 ALCDeviceManager::ALCDeviceManager(QObject *parent)
 	: QObject(parent),
-	  m_timerId(startTimer(ALCDeviceManager::scanAfter)) {
+		m_timerId(startTimer(250)) {
 }
 
 ALCDeviceManager::~ALCDeviceManager() {
 }
 
-void ALCDeviceManager::done() {
-	killTimer(m_timerId);
-
-	for (int i = 0; i < m_threads.count(); ++i) {
-		m_threads[i]->connectEmitter(0);
-		m_threads[i]->setQuitState(true);
-		m_threads[i]->wait();
-		delete m_threads[i];
-	}
-
-	m_threads.clear();
-}
-
-ALCDeviceThread *ALCDeviceManager::device(int idx) const {
-	if (idx >= m_threads.count())
-		return 0;
-
-	return m_threads[idx];
-}
-
-int ALCDeviceManager::count() const {
-	return m_threads.count();
-}
-
-ALCDeviceManager *ALCDeviceManager::instance() {
-	static ALCDeviceManager object;
-	return &object;
-}
-
 void ALCDeviceManager::timerEvent(QTimerEvent *event) {
 	Q_UNUSED(event);
+	Container::AmbientDeviceInfoContainer deviceInfo
+	("Ambient Led Connector", "ALC", 500000);
 	QList <QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
 	for (int i = 0; i < ports.count(); ++i) {
-		if ((ports[i].manufacturer() != AmbientLedConnector::IDs::Manufacturer) ||
-		    (ports[i].description() != AmbientLedConnector::IDs::Description)) continue;
+		if ((ports[i].manufacturer() != deviceInfo.manufacturer()) ||
+				(ports[i].description() !=  deviceInfo.decription())) continue;
 
-		QSerialPort *device = new QSerialPort(ports[i].portName());
+		auto device = std::make_unique<QSerialPort>(ports[i].portName());
 
-		if (device->open(QIODevice::ReadWrite)) {
-			device->setBaudRate(AmbientLedConnector::Transmision::BaudRate);
-			device->setFlowControl(QSerialPort::NoFlowControl);
-			device->setParity(QSerialPort::NoParity);
-			device->setDataBits(QSerialPort::Data8);
-			device->setStopBits(QSerialPort::OneStop);
-			ALCDeviceThread *thread = new ALCDeviceThread(device, ports[i]);
-			connect(thread, &ALCDeviceThread::started, this, &ALCDeviceManager::deviceThreadStarted);
-			connect(thread, &ALCDeviceThread::finished, this, &ALCDeviceManager::deviceThreadFinished);
-			thread->start();
-		} else
-			delete device;
+		if (!device->open(QIODevice::ReadWrite))
+			return;
+
+		device->setBaudRate(deviceInfo.baudrate());
+		device->setFlowControl(QSerialPort::NoFlowControl);
+		device->setParity(QSerialPort::NoParity);
+		device->setDataBits(QSerialPort::Data8);
+		device->setStopBits(QSerialPort::OneStop);
+		auto thread = std::make_unique<ALCDeviceThread>(std::move(device), ports[i]);
+		connect(thread.get(), &ALCDeviceThread::finished, [this] {
+			m_deviceThreads.remove_if([this](const std::unique_ptr<ALCDeviceThread> &thread) {
+				return thread.get() == sender();
+			});
+		});
+		thread->start();
+		m_deviceThreads.push_back(std::move(thread));
 	}
-}
-
-void ALCDeviceManager::deviceThreadStarted() {
-	ALCDeviceThread *thread = dynamic_cast <ALCDeviceThread *>(sender());
-	m_threads << thread;
-	emit deviceConnected(thread);
-}
-
-void ALCDeviceManager::deviceThreadFinished() {
-	ALCDeviceThread *thread = dynamic_cast <ALCDeviceThread *>(sender());
-	QSerialPortInfo details = thread->details();
-	m_threads.removeAll(thread);
-	emit deviceDisconnected(thread);
-	delete thread;
 }

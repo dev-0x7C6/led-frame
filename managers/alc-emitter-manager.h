@@ -17,8 +17,7 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#ifndef ALCEmitterManager_H
-#define ALCEmitterManager_H
+#pragma once
 
 #include <QObject>
 #include "emitters/alc-emitter.h"
@@ -67,5 +66,3 @@ signals:
 	void emitterListChanged();
 
 };
-
-#endif // ALCEmitterManager_H

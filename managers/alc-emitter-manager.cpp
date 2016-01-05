@@ -263,19 +263,19 @@ Emitters::ALCScreenEmitter *ALCEmitterManager::addScreenCaptureEmitter(const QSt
 }
 
 void ALCEmitterManager::remove(Emitters::ALCEmitter *emitter) {
-	for (int i = 0; i < ALCDeviceManager::instance()->count(); ++i) {
-		if (ALCDeviceManager::instance()->device(i)->connectedEmitter() == emitter)
-			ALCDeviceManager::instance()->device(i)->connectEmitter(0);
+//	for (int i = 0; i < ALCDeviceManager::instance()->count(); ++i) {
+//		if (ALCDeviceManager::instance()->device(i)->connectedEmitter() == emitter)
+//			ALCDeviceManager::instance()->device(i)->connectEmitter(0);
 
-		if (m_symulation->connectedEmitter() == emitter)
-			m_symulation->connectEmitter(0);
-	}
+//		if (m_symulation->connectedEmitter() == emitter)
+//			m_symulation->connectEmitter(0);
+//	}
 
-	for (int i = 0; i < static_cast<int>(Emitters::ALCEmitter::Type::Last); ++i)
-		m_emitters[i].removeAll(emitter);
+//	for (int i = 0; i < static_cast<int>(Emitters::ALCEmitter::Type::Last); ++i)
+//		m_emitters[i].removeAll(emitter);
 
-	delete emitter;
-	emit emitterListChanged();
+//	delete emitter;
+//	emit emitterListChanged();
 }
 
 ALCEmitterManager *ALCEmitterManager::instance() {

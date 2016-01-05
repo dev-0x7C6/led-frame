@@ -17,8 +17,7 @@
  * License along with this program; if not, see <http://www.gnu.org/licences/>.   *
  **********************************************************************************/
 
-#ifndef ALCCOLOREMITTER_H
-#define ALCCOLOREMITTER_H
+#pragma once
 
 #include <QColor>
 #include <QObject>
@@ -32,10 +31,6 @@ namespace Emitters {
 
 	class ALCColorEmitter: public QObject, public ALCEmitter {
 		Q_OBJECT
-	private:
-		ALCColorSamples m_samples;
-		QColor m_color;
-		QTimer *m_timer;
 
 	public:
 		explicit ALCColorEmitter();
@@ -49,8 +44,12 @@ namespace Emitters {
 		const QColor &open();
 
 		virtual bool configure();
+
+	private:
+		ALCColorSamples m_samples;
+		QColor m_color;
+		QTimer *m_timer;
+
 	};
 
 }
-
-#endif // ALCCOLOREMITTER_H

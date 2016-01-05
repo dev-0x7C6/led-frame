@@ -8,13 +8,13 @@ namespace Container {
 
 	class ColorScanlineContainer final : public AbstractContainer {
 	public:
-		explicit ColorScanlineContainer();
-		virtual ~ColorScanlineContainer();
+		explicit ColorScanlineContainer() = default;
+		virtual ~ColorScanlineContainer() = default;
 
 		virtual Enum::ContainerType type() const override;
 
 	private:
-		std::array<int, 64> m_scanline;
+		std::array<unsigned int, 256> m_scanline;
 	};
 
 }

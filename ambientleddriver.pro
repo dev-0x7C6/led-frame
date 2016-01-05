@@ -8,10 +8,10 @@ QT += core gui widgets serialport opengl qml quick xml multimedia
 
 CONFIG += console
 
-QMAKE_CXXFLAGS_RELEASE = -std=c++11 -pipe -O2 -Wall -W -march=native
-QMAKE_CXXFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
-QMAKE_LFLAGS_RELEASE += -std=c++11 -pipe -O2 -Wall -W -march=native
-QMAKE_LFLAGS_DEBUG += -std=c++11 -pipe -g2 -Wall -W -ggdb
+QMAKE_CXXFLAGS_RELEASE = -std=c++14 -pipe -O2 -Wall -W -march=native
+QMAKE_CXXFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
+QMAKE_LFLAGS_RELEASE += -std=c++14 -pipe -O2 -Wall -W -march=native
+QMAKE_LFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
 
 LIBS += -lX11
 
@@ -62,7 +62,14 @@ SOURCES += main.cpp\
     core/interfaces/icolor-corrector.cpp \
     core/interfaces/templates/ipopulate-template.cpp \
     core/interfaces/templates/itemplate-attach.cpp \
-    core/interfaces/icolor-corrector-attach.cpp
+    core/interfaces/icolor-corrector-attach.cpp \
+    core/containers/ambient-device-info-container.cpp \
+    core/interfaces/ireceiver.cpp \
+    core/enums/receiver-type-enum.cpp \
+    core/interfaces/iemitter.cpp \
+    core/abstracts/abstract-emitter.cpp \
+    core/enums/emitter-type-enum.cpp \
+    core/abstracts/abstract-receiver.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -103,7 +110,14 @@ HEADERS += mainwindow.h \
     core/interfaces/icolor-corrector.h \
     core/interfaces/templates/ipopulate-template.h \
     core/interfaces/templates/itemplate-attach.h \
-    core/interfaces/icolor-corrector-attach.h
+    core/interfaces/icolor-corrector-attach.h \
+    core/containers/ambient-device-info-container.h \
+    core/interfaces/ireceiver.h \
+    core/enums/receiver-type-enum.h \
+    core/interfaces/iemitter.h \
+    core/abstracts/abstract-emitter.h \
+    core/enums/emitter-type-enum.h \
+    core/abstracts/abstract-receiver.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \
