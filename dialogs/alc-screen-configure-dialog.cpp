@@ -86,7 +86,7 @@ void ALCScreenConfigureDialog::setEmitter(Emitters::ALCScreenEmitter *emitter) {
 	}
 
 	ui->pixelSkip->setCurrentIndex(emitter->pixelSkip() / 4);
-	ui->correction->setColorCorrection(emitter);
+	//  ui->correction->setColorCorrection(emitter);
 }
 
 void ALCScreenConfigureDialog::fpsValueChanged(int value) {

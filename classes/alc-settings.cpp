@@ -18,7 +18,6 @@
  **********************************************************************************/
 
 #include "alc-settings.h"
-#include "correctors/alc-color-correction.h"
 
 #include <QSettings>
 

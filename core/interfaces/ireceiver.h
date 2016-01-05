@@ -19,7 +19,7 @@ namespace Interface {
 		virtual QString name() const = 0;
 		virtual Enum::ReceiverType type() const = 0;
 
-		virtual void connectEmitter(std::shared_ptr<IEmitter> &emitter) = 0;
+		virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) = 0;
 		virtual bool isEmitterConnected() = 0;
 
 	};

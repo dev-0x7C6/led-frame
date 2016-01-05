@@ -37,7 +37,7 @@ void ColorStream::insert(const Enum::ColorFormat &format, unsigned int color) {
 }
 
 void ColorStream::write(QIODevice &device) {
-	device.write(reinterpret_cast<const char *>(m_buffer.data()), static_cast<qint64>(m_seek));
+	device.write(reinterpret_cast<const char *>(m_buffer.data()), static_cast<int>(m_buffer.size()));
 	m_seek = 0;
 }
 

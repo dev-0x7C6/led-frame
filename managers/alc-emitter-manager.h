@@ -58,9 +58,9 @@ public:
 	const QList <Emitters::ALCEmitter *> *emitters(Emitters::ALCEmitter::Type type);
 	const QList <Emitters::ALCEmitter *> allEmitters();
 
-private:
-	void readColorCorrection(QSettings *settings, Correctors::ALCColorCorrection *correction);
-	void writeColorCorrection(QSettings *settings, Correctors::ALCColorCorrection *correction);
+	//private:
+	//  void readColorCorrection(QSettings *settings, Correctors::ALCColorCorrection *correction);
+	//  void writeColorCorrection(QSettings *, Correctors::ALCColorCorrection *correction);
 
 signals:
 	void emitterListChanged();

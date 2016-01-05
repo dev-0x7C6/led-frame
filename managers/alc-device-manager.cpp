@@ -1,6 +1,7 @@
 #include <connector/alc-device-thread.h>
 #include <core/containers/ambient-device-info-container.h>
 #include <managers/alc-device-manager.h>
+#include <core/factories/emitter-factory.h>
 
 #include <memory>
 
@@ -39,6 +40,7 @@ void ALCDeviceManager::timerEvent(QTimerEvent *event) {
 			});
 		});
 		thread->start();
+		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Animation));
 		m_deviceThreads.push_back(std::move(thread));
 	}
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace Enum {
 
 	enum class ColorType : unsigned char {

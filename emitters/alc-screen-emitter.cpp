@@ -31,8 +31,6 @@
 #include "classes/alc-runtime-sync.h"
 #include "dialogs/alc-screen-configure-dialog.h"
 
-#include "correctors/alc-color-correction-values.h"
-
 #include "X11/Xlib.h"
 #include "X11/Xutil.h"
 
@@ -148,7 +146,6 @@ namespace Emitters {
 		int chunks = m_samples.scale();
 		int clipx = 0x00;
 		int clipy = 0x00;
-		Correctors::ALCColorCorrectionValues values;
 		Functional::LoopSync sync;
 
 		do {
@@ -165,10 +162,10 @@ namespace Emitters {
 			l_captureArea.setWidth(l_captureArea.width() - clipx);
 			l_captureArea.setHeight(l_captureArea.height() - clipy);
 			m_mutex.unlock();
-			values = correctionValues(false);
-			values.r *= values.l;
-			values.g *= values.l;
-			values.b *= values.l;
+			//      values = correctionValues(false);
+			//      values.r *= values.l;
+			//      values.g *= values.l;
+			//      values.b *= values.l;
 			image[2] = XGetImage(display, root, l_captureArea.x(), l_captureArea.y(),
 			                     l_captureArea.width(), l_chunkSize, AllPlanes, ZPixmap);
 			image[0] = XGetImage(display, root, l_captureArea.x(), l_captureArea.y() +
@@ -230,9 +227,9 @@ namespace Emitters {
 						}
 					}
 
-					r = qMin((r / c) * values.r, 255.0);
-					g = qMin((g / c) * values.g, 255.0);
-					b = qMin((b / c) * values.b, 255.0);
+					r = (r / c);
+					g = (g / c);
+					b = (b / c);
 					(*colors)[ii][i] = qRgb(r, g, b);
 				}
 

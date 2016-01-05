@@ -50,9 +50,6 @@ SOURCES += main.cpp\
     classes/alc-safe-threading.cpp \
     dialogs/alc-animation-configure-dialog.cpp \
     classes/alc-runtime-sync.cpp \
-    correctors/alc-color-correction-manager.cpp \
-    correctors/alc-global-color-correction.cpp \
-    correctors/alc-color-correction.cpp \
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
     core/containers/color-scanline-container.cpp \
@@ -71,7 +68,11 @@ SOURCES += main.cpp\
     core/enums/emitter-type-enum.cpp \
     core/abstracts/abstract-receiver.cpp \
     core/enums/position-enum.cpp \
-		core/functionals/color-stream.cpp
+		core/functionals/color-stream.cpp \
+    core/containers/led-strip-info-container.cpp \
+    core/emitters/color-emitter.cpp \
+    core/factories/emitter-factory.cpp \
+    core/emitters/animation-emitter.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -99,10 +100,6 @@ HEADERS += mainwindow.h \
     classes/alc-safe-threading.h \
     dialogs/alc-animation-configure-dialog.h \
     classes/alc-runtime-sync.h \
-    correctors/alc-color-correction-manager.h \
-    correctors/alc-color-correction-values.h \
-    correctors/alc-global-color-correction.h \
-    correctors/alc-color-correction.h \
     core/containers/abstract-container.h \
     core/containers/color-correction-container.h \
     core/containers/color-scanline-container.h \
@@ -121,7 +118,11 @@ HEADERS += mainwindow.h \
     core/enums/emitter-type-enum.h \
     core/abstracts/abstract-receiver.h \
     core/enums/position-enum.h \
-		core/functionals/color-stream.h
+		core/functionals/color-stream.h \
+    core/containers/led-strip-info-container.h \
+    core/emitters/color-emitter.h \
+    core/factories/emitter-factory.h \
+    core/emitters/animation-emitter.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

@@ -3,7 +3,6 @@
 #include <QObject>
 #include <QList>
 
-#include "correctors/alc-color-correction.h"
 #include <core/enums/color-format-enum.h>
 
 class ALCLedStrip {

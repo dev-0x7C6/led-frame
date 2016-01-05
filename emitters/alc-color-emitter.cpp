@@ -48,9 +48,10 @@ namespace Emitters {
 
 	void ALCColorEmitter::pushState() {
 		QVector <int> samples(ALCColorSamples::Resolution);
-		int rgb = qRgb(qMin(m_color.red() * correction(Correctors::ALCColorCorrection::Color::Red), 255.0),
-		               qMin(m_color.green() * correction(Correctors::ALCColorCorrection::Color::Green), 255.0),
-		               qMin(m_color.blue() * correction(Correctors::ALCColorCorrection::Color::Blue), 255.0));
+		//    int rgb = qRgb(qMin(m_color.red(), 255.0),
+		//                   qMin(m_color.green(), 255.0),
+		//                   qMin(m_color.blue(), 255.0));
+		int rgb = 0;
 
 		for (int i = 0; i < samples.size(); ++i)
 			samples[i] = rgb;

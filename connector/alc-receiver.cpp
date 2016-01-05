@@ -19,9 +19,8 @@
 
 #include "connector/alc-receiver.h"
 
-ALCReceiver::ALCReceiver(Correctors::ALCColorCorrection::Type type)
-	: Correctors::ALCColorCorrection(type),
-	  m_emitter(0) {
+ALCReceiver::ALCReceiver()
+	: m_emitter(0) {
 }
 
 QString ALCReceiver::name() {

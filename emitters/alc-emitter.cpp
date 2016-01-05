@@ -28,8 +28,7 @@
 namespace Emitters {
 
 	ALCEmitter::ALCEmitter(ALCEmitter::Type type)
-		: Correctors::ALCColorCorrection(Correctors::ALCColorCorrection::Type::User),
-		  m_treeItem(0),
+		: m_treeItem(0),
 		  m_type(type) {
 		m_connectedCount = 0;
 	}

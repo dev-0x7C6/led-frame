@@ -29,13 +29,12 @@
 #include <atomic>
 
 #include "classes/alc-color-samples.h"
-#include "correctors/alc-color-correction.h"
 
 class QTreeWidgetItem;
 
 namespace Emitters {
 
-	class ALCEmitter : public Correctors::ALCColorCorrection {
+	class ALCEmitter {
 	public:
 		enum class Type {
 			None,

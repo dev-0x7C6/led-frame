@@ -18,17 +18,14 @@
  **********************************************************************************/
 
 #include <core/functionals/color-stream.h>
-
-
-#include "correctors/alc-color-correction.h"
 #include "classes/alc-color-samples.h"
 #include "connector/alc-device-thread.h"
 #include "emitters/alc-emitter.h"
-#include "correctors/alc-color-correction-values.h"
-#include "correctors/alc-color-correction-manager.h"
 #include "classes/alc-strip-configuration.h"
 
 #include <QElapsedTimer>
+
+#include <random>
 
 
 
@@ -64,37 +61,35 @@ Enum::ReceiverType AmbientDeviceThread::type() const {
 void AmbientDeviceThread::run() {
 	Functional::ColorStream stream;
 	Functional::LoopSync sync;
-	Correctors::ALCColorCorrectionValues values;
 
 	do {
-		if (isEmitterConnected()) {
+		if (!isEmitterConnected()) {
 			sync.wait(10);
 			continue;
 		}
 
 		Container::ColorScanlineContainer source = data();
-		Container::ColorCorrectionContainer correction;
-		QVector <int> *colors;
-		QList <ALCLedStrip *> strips = m_config->list();
-
-		for (int ii = 0; ii < strips.count(); ++ii) {
-			ALCLedStrip *strip = strips[ii];
-			colors = m_samples.scaled((ALCColorSamples::Position)strip->source(), strip->count());
-			const Enum::ColorFormat format = strip->colorFormat();
-			const int size = colors->size();
-			values.l *= strip->brightness();
-
-			if (strip->clockwise()) {
-				for (int i = 0; i < size;)
-					stream.insert(format, (*colors).at(i++));
-			} else {
-				for (int i = size - 1; i >= 0;)
-					stream.insert(format, (*colors).at(i--));
-			}
-
-			delete colors;
-		}
-
+		//    for (int i = 0; i < 60; ++i)
+		//      stream.insert(ColorFormat::GRB, source.data(Enum::Position::Bottom).at(i));
+		//
+		//    Container::ColorCorrectionContainer correction;
+		//    QVector <int> *colors;
+		//    QList <ALCLedStrip *> strips = m_config->list();
+		//    for (int ii = 0; ii < strips.count(); ++ii) {
+		//      ALCLedStrip *strip = strips[ii];
+		//      colors = m_samples.scaled((ALCColorSamples::Position)strip->source(), strip->count());
+		//      const Enum::ColorFormat format = strip->colorFormat();
+		//      const int size = colors->size();
+		//      values.l *= strip->brightness();
+		//      if (strip->clockwise()) {
+		//        for (int i = 0; i < size;)
+		//          stream.insert(format, (*colors).at(i++));
+		//      } else {
+		//        for (int i = size - 1; i >= 0;)
+		//          stream.insert(format, (*colors).at(i--));
+		//      }
+		//      delete colors;
+		//    }
 		stream.write(*m_device);
 		m_device->waitForBytesWritten(10);
 		m_device->clear();

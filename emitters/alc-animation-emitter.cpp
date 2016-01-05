@@ -122,12 +122,12 @@ namespace Emitters {
 
 		while (!m_quit) {
 			counter++;
-			int rgb = m_rgb;
-			double l = correction(Correctors::ALCColorCorrection::Color::Brightness);
-			double r = qMin((qRed(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Red) * l, 1.0);
-			double g = qMin((qGreen(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Green) * l, 1.0);
-			double b = qMin((qBlue(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Blue) * l, 1.0);
-			rgb = QColor::fromRgbF(r, g, b).rgb();
+			//      int rgb = m_rgb;
+			//      double l = correction(Correctors::ALCColorCorrection::Color::Brightness);
+			//      double r = qMin((qRed(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Red) * l, 1.0);
+			//      double g = qMin((qGreen(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Green) * l, 1.0);
+			//      double b = qMin((qBlue(rgb) / 255.0) * correction(Correctors::ALCColorCorrection::Color::Blue) * l, 1.0);
+			//      rgb = QColor::fromRgbF(r, g, b).rgb();
 			Effect effect = m_effect;
 
 			switch (effect)  {
@@ -138,9 +138,8 @@ namespace Emitters {
 					if (!m_flicker)
 						break;
 
-					if (counter % m_flicker < (m_flicker >> 1))
-						rgb = 0;
-
+					//          if (counter % m_flicker < (m_flicker >> 1))
+					//            rgb = 0;
 					break;
 			}
 
@@ -151,18 +150,18 @@ namespace Emitters {
 					break;
 
 				case Animation::Rotate:
-					data[ptr-- % data.count()] = rgb;
+					//          data[ptr-- % data.count()] = rgb;
 					break;
 
 				case Animation::Shift:
 					for (int i = 1; i < data.count(); ++i)
 						data[i - 1] = data[i];
 
-					data[data.count() - 1] = rgb;
+					//          data[data.count() - 1] = rgb;
 					break;
 
 				case Animation::Glow:
-					data.fill(rgb);
+					//          data.fill(rgb);
 					break;
 			}
 

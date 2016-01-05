@@ -23,16 +23,15 @@
 #include <QObject>
 #include <QMutex>
 
-#include "correctors/alc-color-correction.h"
 #include "emitters/alc-emitter.h"
 
-class ALCReceiver : public Correctors::ALCColorCorrection {
+class ALCReceiver {
 protected:
 	Emitters::ALCEmitter *m_emitter;
 	QMutex m_mutex;
 
 public:
-	ALCReceiver(Correctors::ALCColorCorrection::Type type);
+	ALCReceiver();
 
 	virtual QString name();
 

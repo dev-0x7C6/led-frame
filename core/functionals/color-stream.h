@@ -35,7 +35,7 @@ namespace Functional {
 
 	private:
 		Container::ColorCorrectionContainer m_correction;
-		std::array<unsigned char, 4096> m_buffer;
+		std::array<unsigned char, 270> m_buffer;
 		size_t m_seek;
 
 	};

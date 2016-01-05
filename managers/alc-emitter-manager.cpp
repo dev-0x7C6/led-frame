@@ -18,15 +18,13 @@
  **********************************************************************************/
 
 #include "alc-emitter-manager.h"
-
-#include "correctors/alc-color-correction.h"
 #include "classes/alc-settings.h"
-#include "managers/alc-device-manager.h"
 #include "connector/alc-device-thread.h"
 #include "emitters/alc-animation-emitter.h"
 #include "emitters/alc-color-emitter.h"
 #include "emitters/alc-image-emitter.h"
 #include "emitters/alc-screen-emitter.h"
+#include "managers/alc-device-manager.h"
 #include "widgets/alc-symulation-widget.h"
 
 #include <QApplication>
@@ -74,7 +72,6 @@ ALCEmitterManager::ALCEmitterManager(QObject *parent) :
 		emitter->setChunkSize(settings->value("chunk", 250).toInt());
 		emitter->setFramerateLimit(settings->value("fps", 60).toInt());
 		emitter->setMarginProcent(settings->value("clip", 0).toDouble());
-		readColorCorrection(settings, dynamic_cast <Correctors::ALCColorCorrection *>(emitter));
 		settings->endGroup();
 		m_emitters[static_cast<int>(Emitters::ALCEmitter::Type::ScreenCapture)] << emitter;
 	}
@@ -180,7 +177,6 @@ void ALCEmitterManager::done() {
 				settings->setValue("chunk", screen->chunk());
 				settings->setValue("fps", screen->framerateLimit());
 				settings->setValue("clip", screen->marginProcent());
-				writeColorCorrection(settings, dynamic_cast <Correctors::ALCColorCorrection *>(screen));
 				settings->endGroup();
 				settings->endGroup();
 				break;
@@ -297,21 +293,21 @@ const QList<Emitters::ALCEmitter *> ALCEmitterManager::allEmitters() {
 	return result;
 }
 
-void ALCEmitterManager::readColorCorrection(QSettings *settings, Correctors::ALCColorCorrection *correction) {
-	settings->beginGroup("correction");
-	correction->setCorrection(Correctors::ALCColorCorrection::Color::Brightness, settings->value("light").toDouble());
-	correction->setCorrection(Correctors::ALCColorCorrection::Color::Red, settings->value("red").toDouble());
-	correction->setCorrection(Correctors::ALCColorCorrection::Color::Green, settings->value("green").toDouble());
-	correction->setCorrection(Correctors::ALCColorCorrection::Color::Blue, settings->value("blue").toDouble());
-	settings->endGroup();
-}
+//void ALCEmitterManager::readColorCorrection(QSettings *, Correctors::ALCColorCorrection *) {
+////  settings->beginGroup("correction");
+////  correction->setCorrection(Correctors::ALCColorCorrection::Color::Brightness, settings->value("light").toDouble());
+////  correction->setCorrection(Correctors::ALCColorCorrection::Color::Red, settings->value("red").toDouble());
+////  correction->setCorrection(Correctors::ALCColorCorrection::Color::Green, settings->value("green").toDouble());
+////  correction->setCorrection(Correctors::ALCColorCorrection::Color::Blue, settings->value("blue").toDouble());
+////  settings->endGroup();
+//}
 
-void ALCEmitterManager::writeColorCorrection(QSettings *settings, Correctors::ALCColorCorrection *correction) {
-	settings->beginGroup("correction");
-	settings->setValue("light", correction->correction(Correctors::ALCColorCorrection::Color::Brightness));
-	settings->setValue("red", correction->correction(Correctors::ALCColorCorrection::Color::Red));
-	settings->setValue("green", correction->correction(Correctors::ALCColorCorrection::Color::Green));
-	settings->setValue("blue", correction->correction(Correctors::ALCColorCorrection::Color::Blue));
-	settings->endGroup();
-}
+//void ALCEmitterManager::writeColorCorrection(QSettings *, Correctors::ALCColorCorrection *) {
+////  settings->beginGroup("correction");
+////  settings->setValue("light", correction->correction(Correctors::ALCColorCorrection::Color::Brightness));
+////  settings->setValue("red", correction->correction(Correctors::ALCColorCorrection::Color::Red));
+////  settings->setValue("green", correction->correction(Correctors::ALCColorCorrection::Color::Green));
+////  settings->setValue("blue", correction->correction(Correctors::ALCColorCorrection::Color::Blue));
+////  settings->endGroup();
+//}
 

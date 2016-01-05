@@ -15,7 +15,7 @@ ALCAnimationConfigureDialog::ALCAnimationConfigureDialog(QWidget *parent) :
 	connect(ui->flickerSlider, &QSlider::valueChanged, this, &ALCAnimationConfigureDialog::blinkChanged);
 	connect(ui->speedSlider, &QSlider::valueChanged, this, &ALCAnimationConfigureDialog::speedChanged);
 	ui->qml->connectEmitter(m_emitter);
-	ui->colorCorrection->setColorCorrection(m_emitter);
+	//  ui->colorCorrection->setColorCorrection(m_emitter);
 	//  ALCDeviceManager::instance()->device(0)->connectEmitter(m_emitter);
 }
 

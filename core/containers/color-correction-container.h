@@ -18,7 +18,6 @@ namespace Container {
 		void setColor(const double &value, const Enum::ColorType &type);
 		double color(const Enum::ColorType &type) const;
 
-
 	private:
 		std::array<std::atomic<double>, static_cast<int>(Enum::ColorType::Last)> m_color;
 

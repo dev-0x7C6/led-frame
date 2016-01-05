@@ -20,9 +20,6 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-#include "correctors/alc-color-correction-manager.h"
-#include "correctors/alc-global-color-correction.h"
-#include "correctors/alc-color-correction.h"
 #include "managers/alc-emitter-manager.h"
 #include "managers/alc-device-manager.h"
 
@@ -40,12 +37,11 @@ int main(int argc, char *argv[]) {
 	application.setApplicationDisplayName(QString("%1 %2").arg(
 	                                        application.applicationName(),
 	                                        application.applicationVersion()));
-	Correctors::ALCColorCorrectionManager::instance()->init();
+	ALCDeviceManager manager;
 	ALCEmitterManager::instance();
 	MainWindow window;
 	window.show();
 	int result = application.exec();
-	Correctors::ALCColorCorrectionManager::instance()->done();
 	ALCEmitterManager::instance()->done();
 	return result;
 }

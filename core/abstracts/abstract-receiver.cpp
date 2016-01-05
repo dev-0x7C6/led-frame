@@ -3,7 +3,7 @@
 
 using namespace Abstract;
 
-void AbstractReceiver::connectEmitter(std::shared_ptr<Interface::IEmitter> &emitter) {
+void AbstractReceiver::connectEmitter(const std::shared_ptr<Interface::IEmitter> &emitter) {
 	m_emitter = emitter;
 }
 

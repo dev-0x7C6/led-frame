@@ -36,7 +36,6 @@ public:
 protected:
 	virtual void run() override;
 
-
 private:
 	std::unique_ptr<QSerialPort> m_device;
 	ALCStripConfiguration *m_config;

@@ -36,7 +36,7 @@
 
 ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
 	QWidget(parent),
-	ALCReceiver(Correctors::ALCColorCorrection::Type::Device),
+	ALCReceiver(),
 	m_view(new QQuickView()) {
 	QPalette p = palette();
 	p.setBrush(QPalette::Window, QColor::fromRgb(20, 20, 20));

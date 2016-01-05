@@ -16,6 +16,8 @@ namespace Container {
 
 		std::array<unsigned int, 64> &data(const Enum::Position &position);
 
+		void fill(unsigned int color);
+
 	private:
 		std::array<std::array<unsigned int, 64>, static_cast<size_t>(Enum::Position::Last)> m_data;
 	};

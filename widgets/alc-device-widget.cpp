@@ -96,7 +96,7 @@ void ALCDeviceWidget::addSymulation(ALCSymulationWidget *symulation) {
 	populate(m_settings->value("symulation").toString());
 }
 
-void ALCDeviceWidget::deviceConnected(AmbientDeviceThread *thread) {
+void ALCDeviceWidget::deviceConnected(AmbientDeviceThread *) {
 	//  ALCDeviceTreeWidget *item = new ALCDeviceTreeWidget(ui->tree, thread);
 	//  connect(item, &ALCDeviceTreeWidget::setEmitter, this, &ALCDeviceWidget::setEmitter);
 	//  item->setText(0, thread->details().systemLocation() + '\t');
