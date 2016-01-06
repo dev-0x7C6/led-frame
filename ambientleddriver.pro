@@ -47,7 +47,6 @@ SOURCES += main.cpp\
     connector/alc-receiver.cpp \
     managers/alc-device-manager.cpp \
     dialogs/alc-strip-configurator-dialog.cpp \
-    classes/alc-safe-threading.cpp \
     dialogs/alc-animation-configure-dialog.cpp \
     classes/alc-runtime-sync.cpp \
     core/containers/abstract-container.cpp \
@@ -97,7 +96,6 @@ HEADERS += mainwindow.h \
     connector/alc-receiver.h \
     managers/alc-device-manager.h \
     dialogs/alc-strip-configurator-dialog.h \
-    classes/alc-safe-threading.h \
     dialogs/alc-animation-configure-dialog.h \
     classes/alc-runtime-sync.h \
     core/containers/abstract-container.h \

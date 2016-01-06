@@ -69,8 +69,10 @@ void AmbientDeviceThread::run() {
 		}
 
 		Container::ColorScanlineContainer source = data();
-		//    for (int i = 0; i < 60; ++i)
-		//      stream.insert(ColorFormat::GRB, source.data(Enum::Position::Bottom).at(i));
+
+		for (int i = 0; i < 60; ++i)
+			stream.insert(ColorFormat::GRB, source.data(Enum::Position::Bottom).at(i));
+
 		//
 		//    Container::ColorCorrectionContainer correction;
 		//    QVector <int> *colors;
