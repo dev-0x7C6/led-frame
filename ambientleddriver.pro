@@ -1,9 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2013-05-03T14:36:38
-#
-#-------------------------------------------------
-
 QT += core gui widgets serialport opengl qml quick xml multimedia
 
 CONFIG += console
