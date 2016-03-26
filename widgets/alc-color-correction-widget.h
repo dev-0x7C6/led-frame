@@ -1,5 +1,4 @@
-#ifndef ALCCOLORCORRECTIONWIDGET_H
-#define ALCCOLORCORRECTIONWIDGET_H
+#pragma once
 
 #include <QWidget>
 
@@ -41,5 +40,3 @@ signals:
 	void brightnessChanged(double value);
 
 };
-
-#endif // ALCCOLORCORRECTIONWIDGET_H

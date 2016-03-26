@@ -1,5 +1,4 @@
-#ifndef AMBIENTLIGHTSYMULATION_H
-#define AMBIENTLIGHTSYMULATION_H
+#pragma once
 
 #include "classes/alc-color-samples.h"
 #include "connector/alc-receiver.h"
@@ -44,5 +43,3 @@ private:
 protected:
 	void timerEvent(QTimerEvent *);
 };
-
-#endif // AMBIENTLIGHTSYMULATION_H

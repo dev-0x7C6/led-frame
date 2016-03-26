@@ -1,5 +1,4 @@
-#ifndef ALCEMITTER_H
-#define ALCEMITTER_H
+#pragma once
 
 #include <QObject>
 #include <QMutex>
@@ -63,5 +62,3 @@ namespace Emitters {
 	};
 
 }
-
-#endif // ALCEMITTER_H

@@ -1,5 +1,4 @@
-#ifndef ALCSCREENWIDGET_H
-#define ALCSCREENWIDGET_H
+#pragma once
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -27,5 +26,3 @@ private:
 	void configure();
 
 };
-
-#endif // ALCSCREENWIDGET_H

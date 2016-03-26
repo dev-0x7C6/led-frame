@@ -1,5 +1,4 @@
-#ifndef COLORSAMPLES_H
-#define COLORSAMPLES_H
+#pragma once
 
 #include <QVector>
 
@@ -31,5 +30,3 @@ public:
 
 	void copy(const ALCColorSamples &ref);
 };
-
-#endif // COLORSAMPLES_H

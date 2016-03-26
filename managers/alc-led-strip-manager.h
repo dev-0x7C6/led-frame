@@ -1,5 +1,4 @@
-#ifndef ALCLEDSTRIPMANAGER_H
-#define ALCLEDSTRIPMANAGER_H
+#pragma once
 
 #include <QList>
 
@@ -18,5 +17,3 @@ public:
 	static ALCLedStripManager *instance();
 
 };
-
-#endif // ALCLEDSTRIPMANAGER_H

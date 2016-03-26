@@ -1,5 +1,4 @@
-#ifndef ALCABOUTDIALOG_H
-#define ALCABOUTDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -16,5 +15,3 @@ public:
 private:
 	Ui::ALCAboutDialog *ui;
 };
-
-#endif // ALCABOUTDIALOG_H

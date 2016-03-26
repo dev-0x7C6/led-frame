@@ -1,5 +1,4 @@
-#ifndef ALCLEDCONFIGURATIONWIDGET_H
-#define ALCLEDCONFIGURATIONWIDGET_H
+#pragma once
 
 #include <QWidget>
 
@@ -16,5 +15,3 @@ public:
 private:
 	Ui::ALCLedConfigurationWidget *ui;
 };
-
-#endif // ALCLEDCONFIGURATIONWIDGET_H

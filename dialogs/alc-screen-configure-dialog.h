@@ -1,5 +1,4 @@
-#ifndef ALCSCREENCONFIGUREDIALOG_H
-#define ALCSCREENCONFIGUREDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QAbstractButton>
@@ -29,4 +28,3 @@ private:
 	void accepted(QAbstractButton *);
 };
 
-#endif // ALCSCREENCONFIGUREDIALOG_H

@@ -1,5 +1,4 @@
-#ifndef ALCIMAGEEMITTER_H
-#define ALCIMAGEEMITTER_H
+#pragma once
 
 #include <QObject>
 #include <QImage>
@@ -34,5 +33,3 @@ namespace Emitters {
 	};
 
 }
-
-#endif // ALCIMAGEEMITTER_H

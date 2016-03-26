@@ -1,23 +1,16 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+#include <core/containers/application-info-container.h>
 #include "managers/alc-emitter-manager.h"
 #include "managers/alc-device-manager.h"
 
-const int applicationMajorVersion = 0;
-const int applicationMinorVersion = 9;
-const int applicationPatchVersion = 5;
-
 int main(int argc, char *argv[]) {
+    Container::ApplicationInfoContainer info;
 	QApplication application(argc, argv);
-	application.setApplicationName("AmbientLedDriver");
-	application.setApplicationVersion(QString("v%1.%2.%3").arg(
-	                                    QString::number(applicationMajorVersion),
-	                                    QString::number(applicationMinorVersion),
-	                                    QString::number(applicationPatchVersion)));
-	application.setApplicationDisplayName(QString("%1 %2").arg(
-	                                        application.applicationName(),
-	                                        application.applicationVersion()));
+    application.setApplicationName(info.applicationName());
+    application.setApplicationVersion(info.versionToString());
+    application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
 	ALCDeviceManager manager;
 	ALCEmitterManager::instance();
 	MainWindow window;

@@ -1,5 +1,4 @@
-#ifndef ALCSCREENEMITTER_H
-#define ALCSCREENEMITTER_H
+#pragma once
 
 #include "classes/alc-color-samples.h"
 #include "emitters/alc-emitter.h"
@@ -74,5 +73,3 @@ namespace Emitters {
 	};
 
 }
-
-#endif // ALCSCREENEMITTER_H

@@ -1,5 +1,4 @@
-#ifndef ALCSTRIPCONFIGURATORDIALOG_H
-#define ALCSTRIPCONFIGURATORDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -17,5 +16,3 @@ public:
 private:
 	Ui::ALCStripConfiguratorDialog *ui;
 };
-
-#endif // ALCSTRIPCONFIGURATORDIALOG_H

@@ -1,5 +1,4 @@
-#ifndef ALCRECEIVER_H
-#define ALCRECEIVER_H
+#pragma once
 
 #include <QObject>
 #include <QMutex>
@@ -19,5 +18,3 @@ public:
 	virtual void connectEmitter(Emitters::ALCEmitter *emitter);
 	Emitters::ALCEmitter *connectedEmitter();
 };
-
-#endif // ALCRECEIVER_H

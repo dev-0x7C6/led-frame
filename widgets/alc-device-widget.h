@@ -1,5 +1,4 @@
-#ifndef ALCDEVICEWIDGET_H
-#define ALCDEVICEWIDGET_H
+#pragma once
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>
@@ -103,5 +102,3 @@ private:
 	void configureEmitter();
 
 };
-
-#endif // ALCDEVICEWIDGET_H

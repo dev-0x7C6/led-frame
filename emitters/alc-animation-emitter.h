@@ -1,5 +1,4 @@
-#ifndef ALCANIMATIONEMITTER_H
-#define ALCANIMATIONEMITTER_H
+#pragma once
 
 #include <QColor>
 #include <QObject>
@@ -60,5 +59,3 @@ namespace Emitters {
 	};
 
 }
-
-#endif // ALCANIMATIONEMITTER_H

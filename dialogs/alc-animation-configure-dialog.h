@@ -1,5 +1,4 @@
-#ifndef ALCANIMATIONCONFIGUREDIALOG_H
-#define ALCANIMATIONCONFIGUREDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -33,5 +32,3 @@ private:
 	void speedChanged(int);
 
 };
-
-#endif // ALCANIMATIONCONFIGUREDIALOG_H

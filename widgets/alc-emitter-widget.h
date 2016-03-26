@@ -1,5 +1,4 @@
-#ifndef ALCEMITTERWIDGET_H
-#define ALCEMITTERWIDGET_H
+#pragma once
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -63,5 +62,3 @@ private:
 
 	void prepareColorItem(QTreeWidgetItem *, QColor);
 };
-
-#endif // ALCEMITTERSWIDGET_H

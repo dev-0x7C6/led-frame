@@ -1,5 +1,4 @@
-#ifndef ALCSETTINGS_H
-#define ALCSETTINGS_H
+#pragma once
 
 class QSettings;
 
@@ -21,5 +20,3 @@ public:
 	}
 
 };
-
-#endif // ALCSETTINGS_H

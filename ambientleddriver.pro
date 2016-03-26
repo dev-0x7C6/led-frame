@@ -65,7 +65,8 @@ SOURCES += main.cpp\
     core/containers/led-strip-info-container.cpp \
     core/emitters/color-emitter.cpp \
     core/factories/emitter-factory.cpp \
-    core/emitters/animation-emitter.cpp
+    core/emitters/animation-emitter.cpp \
+    core/containers/application-info-container.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -114,7 +115,8 @@ HEADERS += mainwindow.h \
     core/containers/led-strip-info-container.h \
     core/emitters/color-emitter.h \
     core/factories/emitter-factory.h \
-    core/emitters/animation-emitter.h
+    core/emitters/animation-emitter.h \
+    core/containers/application-info-container.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \
