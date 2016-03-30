@@ -1,6 +1,7 @@
 QT += core gui widgets serialport opengl qml quick xml multimedia
 
 CONFIG += console
+CONFIG += c++14
 
 QMAKE_CXXFLAGS_RELEASE = -std=c++14 -pipe -O2 -Wall -W -march=native
 QMAKE_CXXFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
