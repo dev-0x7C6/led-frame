@@ -3,10 +3,10 @@
 namespace Enum {
 
 	enum class Position : unsigned char {
-		Bottom,
-		Left,
 		Top,
 		Right,
+		Bottom,
+		Left,
 		Last
 	};
 

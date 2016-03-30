@@ -54,7 +54,6 @@ SOURCES += main.cpp\
     core/interfaces/templates/ipopulate-template.cpp \
     core/interfaces/templates/itemplate-attach.cpp \
     core/interfaces/icolor-corrector-attach.cpp \
-    core/containers/ambient-device-info-container.cpp \
     core/interfaces/ireceiver.cpp \
     core/enums/receiver-type-enum.cpp \
     core/interfaces/iemitter.cpp \
@@ -67,7 +66,10 @@ SOURCES += main.cpp\
     core/emitters/color-emitter.cpp \
     core/factories/emitter-factory.cpp \
     core/emitters/animation-emitter.cpp \
-    core/containers/application-info-container.cpp
+    core/containers/application-info-container.cpp \
+    core/containers/device-config-container.cpp \
+    core/devices/led-frame-device.cpp \
+    core/containers/device-info-container.cpp
 
 HEADERS += mainwindow.h \
     connector/alc-device-thread.h \
@@ -104,7 +106,6 @@ HEADERS += mainwindow.h \
     core/interfaces/templates/ipopulate-template.h \
     core/interfaces/templates/itemplate-attach.h \
     core/interfaces/icolor-corrector-attach.h \
-    core/containers/ambient-device-info-container.h \
     core/interfaces/ireceiver.h \
     core/enums/receiver-type-enum.h \
     core/interfaces/iemitter.h \
@@ -117,7 +118,10 @@ HEADERS += mainwindow.h \
     core/emitters/color-emitter.h \
     core/factories/emitter-factory.h \
     core/emitters/animation-emitter.h \
-    core/containers/application-info-container.h
+    core/containers/application-info-container.h \
+    core/containers/device-config-container.h \
+    core/devices/led-frame-device.h \
+    core/containers/device-info-container.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

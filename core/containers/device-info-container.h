@@ -6,11 +6,11 @@
 
 namespace Container {
 
-	class AmbientDeviceInfoContainer final : public AbstractContainer {
+	class DeviceInfoContainer final : public AbstractContainer {
 	public:
-		explicit AmbientDeviceInfoContainer();
-		explicit AmbientDeviceInfoContainer(const QString &description, const QString &manufacturer, int baudrate);
-		virtual ~AmbientDeviceInfoContainer() = default;
+		explicit DeviceInfoContainer();
+		explicit DeviceInfoContainer(const QString &description, const QString &manufacturer, int baudrate);
+		virtual ~DeviceInfoContainer() = default;
 
 		virtual Enum::ContainerType type() const override;
 

@@ -1,5 +1,5 @@
 #include <connector/alc-device-thread.h>
-#include <core/containers/ambient-device-info-container.h>
+#include <core/containers/device-info-container.h>
 #include <managers/alc-device-manager.h>
 #include <core/factories/emitter-factory.h>
 
@@ -15,13 +15,12 @@ ALCDeviceManager::~ALCDeviceManager() {
 
 void ALCDeviceManager::timerEvent(QTimerEvent *event) {
 	Q_UNUSED(event);
-	Container::AmbientDeviceInfoContainer deviceInfo
-	("Ambient Led Connector", "ALC", 500000);
+	Container::DeviceInfoContainer deviceInfo
+	("LedFrame", "LedFrame", 500000);
 	QList <QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
 	for (int i = 0; i < ports.count(); ++i) {
-		if ((ports[i].manufacturer() != deviceInfo.manufacturer()) ||
-		    (ports[i].description() !=  deviceInfo.decription())) continue;
+		if ((ports[i].manufacturer() != deviceInfo.manufacturer())) continue;
 
 		auto device = std::make_unique<QSerialPort>(ports[i].portName());
 
