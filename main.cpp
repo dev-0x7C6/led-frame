@@ -2,8 +2,10 @@
 #include <QApplication>
 
 #include <core/containers/application-info-container.h>
+#include <core/devices/device-manager.h>
+
 #include "managers/alc-emitter-manager.h"
-#include "managers/alc-device-manager.h"
+#include "core/devices/device-manager.h"
 
 int main(int argc, char *argv[]) {
 	Container::ApplicationInfoContainer info;
@@ -11,7 +13,7 @@ int main(int argc, char *argv[]) {
 	application.setApplicationName(info.applicationName());
 	application.setApplicationVersion(info.versionToString());
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
-	ALCDeviceManager manager;
+	Device::DeviceManager manager;
 	ALCEmitterManager::instance();
 	MainWindow window;
 	window.show();

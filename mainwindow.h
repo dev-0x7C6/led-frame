@@ -9,7 +9,7 @@ namespace Ui {
 	class MainWindow;
 }
 
-class AmbientDeviceThread;
+class DeviceThread;
 class ALCScreenEmitter;
 class ALCDeviceTreeWidget;
 class ALCEmitterManager;

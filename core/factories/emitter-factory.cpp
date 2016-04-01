@@ -1,5 +1,6 @@
 #include <core/emitters/animation-emitter.h>
 #include <core/emitters/color-emitter.h>
+#include <core/emitters/image-emitter.h>
 #include <core/factories/emitter-factory.h>
 
 using Enum::EmitterType;
@@ -12,6 +13,9 @@ std::shared_ptr<Interface::IEmitter> EmitterFactory::create(const Enum::EmitterT
 
 		case EmitterType::Animation:
 			return std::make_shared<Emitter::AnimationEmitter>();
+
+		case EmitterType::Image:
+			return std::make_shared<Emitter::ImageEmitter>();
 	}
 
 	return nullptr;

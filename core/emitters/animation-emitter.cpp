@@ -16,9 +16,10 @@ AnimationEmitter::AnimationEmitter(QObject *parent)
 	m_animation.setKeyValueAt(0.600, QColor::fromRgbF(0, 1, 0));
 	m_animation.setKeyValueAt(0.800, QColor::fromRgbF(1, 1, 0));
 	m_animation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
-	m_animation.setDuration(10000);
+	m_animation.setDuration(2000);
 	m_animation.setLoopCount(-1);
 	m_animation.start();
+	m_colors.fill(0);
 }
 
 QString AnimationEmitter::name() const {
@@ -30,6 +31,6 @@ Enum::EmitterType AnimationEmitter::type() const {
 }
 
 void AnimationEmitter::process(const QVariant &value) {
-	m_colors.fill((qvariant_cast<QColor>(value)).rgb());
+	m_colors.rotate((qvariant_cast<QColor>(value)).rgb());
 	commit(m_colors);
 }

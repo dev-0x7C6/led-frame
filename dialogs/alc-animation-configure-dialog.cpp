@@ -2,8 +2,8 @@
 #include "ui_alc-animation-configure-dialog.h"
 
 #include "emitters/alc-animation-emitter.h"
-#include "managers/alc-device-manager.h"
-#include "connector/alc-device-thread.h"
+#include "core/devices/device-manager.h"
+#include "core/devices/device-thread.h"
 
 ALCAnimationConfigureDialog::ALCAnimationConfigureDialog(QWidget *parent) :
 	QDialog(parent),

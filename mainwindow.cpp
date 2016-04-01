@@ -8,13 +8,13 @@
 #include <QScreen>
 #include <QWheelEvent>
 
-#include "connector/alc-device-thread.h"
+#include "core/devices/device-thread.h"
 #include "dialogs/alc-about-dialog.h"
 #include "emitters/alc-animation-emitter.h"
 #include "emitters/alc-color-emitter.h"
 #include "emitters/alc-image-emitter.h"
 #include "emitters/alc-screen-emitter.h"
-#include "managers/alc-device-manager.h"
+#include "core/devices/device-manager.h"
 #include "managers/alc-emitter-manager.h"
 #include "widgets/alc-device-widget.h"
 
@@ -28,17 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_canClose(false) {
 	qRegisterMetaType<QList<QRgb>>("QList< QRgb >");
 	ui->setupUi(this);
-	ALCEmitterManager::instance()->addSymulation(ui->qml);
-	ui->devices->addSymulation(ui->qml);
 	ui->leftWidget->setCurrentIndex(0);
 	m_settings->beginGroup("GeneralSettings");
 	ui->actionColor_correction->setChecked(m_settings->value("colorCorrectionVisiblity", true).toBool());;
-	m_settings->endGroup();
-	m_settings->beginGroup("WiimotedevSettings");
-	ui->wiimoteId->setValue(m_settings->value("wiimoteId", 1).toInt());
-	ui->wiimoteBrightness->setChecked(m_settings->value("brightnessControl", true).toBool());
-	ui->wiimoteFramerate->setChecked(m_settings->value("framerateControl", true).toBool());
-	ui->wiimoteScreen->setChecked(m_settings->value("screenControl", true).toBool());
 	m_settings->endGroup();
 	QRect rect;
 	rect = QGuiApplication::primaryScreen()->geometry();
@@ -51,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionAddImageSamples, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addImageItem);
 	connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->emitters, &ALCEmitterWidget::setup, Qt::QueuedConnection);
 	connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreenWidget::setup, Qt::QueuedConnection);
-	connect(ui->colorCorrection, &ALCColorCorrectionWidget::brightnessChanged, this, &MainWindow::trayDrawIcon);
 	m_tray.setContextMenu(m_menu);
 	m_tray.show();
 	m_visible = m_menu->addAction("Visible");
@@ -109,7 +100,6 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
 			brightness += (static_cast<QWheelEvent *>(event)->delta() > 0) ? 0.01 : -0.01;
 			brightness = qMin(brightness, 2.0);
 			brightness = qMax(brightness, 0.0);
-			ui->colorCorrection->reload();
 			m_showBrightnessTimer.start();
 			m_tray.showMessage(QString(), QString());
 			trayDrawIcon(brightness);
@@ -134,7 +124,6 @@ void MainWindow::about() {
 }
 
 void MainWindow::showColorCorrection(bool visible) {
-	ui->colorCorrection->setVisible(visible);
 	ui->actionColor_correction->setChecked(visible);
 }
 
@@ -181,13 +170,7 @@ MainWindow::~MainWindow() {
 	//  m_settings->beginGroup("LedPreviewSettings");
 	//  m_settings->setValue("framerateLimit", ui->ledFramerateLimit->value());
 	//  m_settings->setValue("ledGlowSize", ui->ledGlow->value());
-	//  m_settings->endGroup();
-	m_settings->beginGroup("WiimotedevSettings");
-	m_settings->setValue("wiimoteId", ui->wiimoteId->value());
-	m_settings->setValue("brightnessControl", ui->wiimoteBrightness->isChecked());
-	m_settings->setValue("framerateControl", ui->wiimoteFramerate->isChecked());
-	m_settings->setValue("screenControl", ui->wiimoteScreen->isChecked());
-	m_settings->endGroup();
+	//  m_settings->endGroup();;
 	m_settings->beginGroup("MainWindow");
 	m_settings->setValue("colorCorrectionVisiblity", ui->actionColor_correction->isChecked());
 	m_settings->endGroup();

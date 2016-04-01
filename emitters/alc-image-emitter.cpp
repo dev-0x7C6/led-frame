@@ -23,63 +23,7 @@ namespace Emitters {
 		return m_file;
 	}
 
-	void ALCImageEmitter::fromFile(QString file) {
-		m_image = QImage(file);
-		m_file = file;
-		m_loaded = !m_image.isNull();
-		QVector <QImage> fragments[4];
-		fragments[0].resize(64);
-		fragments[1].resize(64);
-		fragments[2].resize(64);
-		fragments[3].resize(64);
-
-		for (int i = 0; i < 64; ++i)
-			fragments[0][63 - i] = m_image.copy((m_image.width() / 64) * i, m_image.height() - 200, (m_image.width() / 64), 200);
-
-		for (int i = 0; i < 64; ++i)
-			fragments[1][63 - i] = m_image.copy(0, (m_image.height() / 64) * i, 200, (m_image.height() / 64));
-
-		for (int i = 0; i < 64; ++i)
-			fragments[2][i] = m_image.copy((m_image.width() / 64) * i, 0, (m_image.width() / 64), 200);
-
-		for (int i = 0; i < 64; ++i)
-			fragments[3][i] = m_image.copy(m_image.width() - 200, (m_image.height() / 64) * i, 200, (m_image.height() / 64));
-
-		int c = 0;
-		double r = 0;
-		double g = 0;
-		double b = 0;
-		int rgb = 0;
-
-		for (int k = 0; k < 4; ++k) {
-			QVector <int> *colors = m_samples.get(ALCColorSamples::Position(k));
-
-			for (int i = 0; i < ALCColorSamples::Resolution; ++i) {
-				r = g = b = 0;
-				c = 0;
-
-				for (int x = 0; x < fragments[k][i].width(); ++x)
-					for (int y = 0; y < fragments[k][i].height(); ++y) {
-						rgb = fragments[k][i].pixel(x, y);
-						r += qRed(rgb);
-						g += qGreen(rgb);
-						b += qBlue(rgb);
-						c++;
-					}
-
-				r /= c;
-				g /= c;
-				b /= c;
-
-				if (r > 255) r = 255;
-
-				if (g > 255) g = 255;
-
-				if (b > 255) b = 255;
-
-				(*colors)[i] = qRgb(r, g, b);
-			}
-		}
+	void ALCImageEmitter::fromFile(QString) {
 	}
 
 	void ALCImageEmitter::pushState() {

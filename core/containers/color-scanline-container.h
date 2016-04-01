@@ -4,8 +4,11 @@
 #include <core/enums/position-enum.h>
 
 #include <array>
+#include <cstdint>
 
 namespace Container {
+
+	constexpr int scanline_size = 256;
 
 	class ColorScanlineContainer final : public AbstractContainer {
 	public:
@@ -14,12 +17,18 @@ namespace Container {
 
 		virtual Enum::ContainerType type() const override;
 
-		std::array<unsigned int, 64> &data(const Enum::Position &position);
+		uint32_t *data(const Enum::Position &position);
+		uint32_t *data();
 
-		void fill(unsigned int color);
+		static Enum::Position fromIndexToPosition(const uint32_t &index);
+		static uint32_t linesize();
+		static uint32_t resolution();
+
+		void fill(const uint32_t &color);
+		void rotate(const uint32_t &color);
 
 	private:
-		std::array<std::array<unsigned int, 64>, static_cast<size_t>(Enum::Position::Last)> m_data;
+		std::array<uint32_t, scanline_size> m_data;
 	};
 
 }

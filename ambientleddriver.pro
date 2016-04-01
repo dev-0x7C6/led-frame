@@ -20,7 +20,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     mainwindow.cpp \
-    connector/alc-device-thread.cpp \
     classes/alc-settings.cpp \
     widgets/alc-color-correction-widget.cpp \
     widgets/alc-led-configuration-widget.cpp \
@@ -40,7 +39,6 @@ SOURCES += main.cpp\
     widgets/alc-screen-widget.cpp \
     classes/alc-strip-configuration.cpp \
     connector/alc-receiver.cpp \
-    managers/alc-device-manager.cpp \
     dialogs/alc-strip-configurator-dialog.cpp \
     dialogs/alc-animation-configure-dialog.cpp \
     classes/alc-runtime-sync.cpp \
@@ -68,11 +66,13 @@ SOURCES += main.cpp\
     core/emitters/animation-emitter.cpp \
     core/containers/application-info-container.cpp \
     core/containers/device-config-container.cpp \
-    core/devices/led-frame-device.cpp \
-    core/containers/device-info-container.cpp
+    core/containers/device-info-container.cpp \
+    core/devices/device-manager.cpp \
+    core/devices/device-port.cpp \
+    core/devices/device-thread.cpp \
+    core/emitters/image-emitter.cpp
 
 HEADERS += mainwindow.h \
-    connector/alc-device-thread.h \
     classes/alc-settings.h \
     widgets/alc-color-correction-widget.h \
     widgets/alc-led-configuration-widget.h \
@@ -92,7 +92,6 @@ HEADERS += mainwindow.h \
     widgets/alc-screen-widget.h \
     classes/alc-strip-configuration.h \
     connector/alc-receiver.h \
-    managers/alc-device-manager.h \
     dialogs/alc-strip-configurator-dialog.h \
     dialogs/alc-animation-configure-dialog.h \
     classes/alc-runtime-sync.h \
@@ -120,8 +119,11 @@ HEADERS += mainwindow.h \
     core/emitters/animation-emitter.h \
     core/containers/application-info-container.h \
     core/containers/device-config-container.h \
-    core/devices/led-frame-device.h \
-    core/containers/device-info-container.h
+    core/containers/device-info-container.h \
+    core/devices/device-manager.h \
+    core/devices/device-port.h \
+    core/devices/device-thread.h \
+    core/emitters/image-emitter.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

@@ -6,7 +6,7 @@ namespace Abstract {
 
 	class AbstractReceiver : public Interface::IReceiver {
 	public:
-		explicit AbstractReceiver() = default;
+		explicit AbstractReceiver();
 		virtual ~AbstractReceiver() = default;
 
 		virtual void connectEmitter(const std::shared_ptr<Interface::IEmitter> &emitter) override;

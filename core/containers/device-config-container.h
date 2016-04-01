@@ -1,24 +1,36 @@
 #pragma once
 
 #include <core/containers/abstract-container.h>
+#include <core/enums/color-format-enum.h>
+#include <core/enums/position-enum.h>
 
 #include <QString>
 
 namespace Container {
 
-	struct DeviceConfigStruct final {
-		uint8_t version : 4; // wersja
-		uint8_t clockwise : 4; // zwroty
-		uint8_t sequence; // kolejnosc montarzu
-		uint8_t led_bpp; // typ ledow
-		uint8_t led_cnt[4]; // ilosc ledow
-	} __attribute__((packed));
+	namespace Struct {
+		struct LedStripConfig final {
+			uint16_t direction : 1;
+			uint16_t position : 2;
+			uint16_t palette : 3;
+			uint16_t count : 8;
+		};
 
-	static_assert(sizeof(DeviceConfigStruct) == 7, "Struct size is different than expected.");
+		static_assert(sizeof(LedStripConfig) == 2, "Struct size is different than expected.");
+
+		struct DeviceConfigStruct final {
+			uint8_t version;
+			LedStripConfig strip[4];
+		} __attribute__((packed));
+
+		static_assert(sizeof(DeviceConfigStruct) == 9, "Struct size is different than expected.");
+	}
+
 
 	class DeviceConfigContainer final : public AbstractContainer {
 	public:
 		explicit DeviceConfigContainer();
+		explicit DeviceConfigContainer(const QString &base64);
 		virtual ~DeviceConfigContainer() = default;
 
 		virtual Enum::ContainerType type() const override;
@@ -26,10 +38,11 @@ namespace Container {
 		QString toBase64();
 		void fromBase64(const QString &base64);
 
-		DeviceConfigStruct &config();
+		uint8_t version() const;
+		Struct::LedStripConfig sequence(const uint8_t &index) const;
 
 	private:
-		DeviceConfigStruct m_config;
+		Struct::DeviceConfigStruct m_config;
 	};
 
 }

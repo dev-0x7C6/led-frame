@@ -3,6 +3,10 @@
 
 using namespace Abstract;
 
+AbstractReceiver::AbstractReceiver() {
+	m_data.fill(0);
+}
+
 void AbstractReceiver::connectEmitter(const std::shared_ptr<Interface::IEmitter> &emitter) {
 	m_emitter = emitter;
 }

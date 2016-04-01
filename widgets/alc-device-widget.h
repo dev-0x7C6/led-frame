@@ -13,27 +13,14 @@ class QSettings;
 namespace Ui {
 	class ALCDeviceWidget;
 }
-
-class AmbientDeviceThread;
+namespace Device {
+	class DeviceThread;
+}
 class ALCDeviceManager;
 
 namespace Emitters {
 	class ALCEmitter;
 }
-
-class ComboBoxItem : public QComboBox {
-	Q_OBJECT
-private:
-	QTreeWidgetItem *item;
-	int column;
-
-public:
-	ComboBoxItem(QTreeWidgetItem *, int);
-
-public slots:
-	void changeItem(int);
-};
-
 
 class ALCDeviceTreeWidget : public QObject, public QTreeWidgetItem {
 	Q_OBJECT
@@ -56,7 +43,7 @@ public:
 	void currentIndexChanged(int);
 
 signals:
-	void setCustomEmitter(AmbientDeviceThread *, int);
+	void setCustomEmitter(Device::DeviceThread *, int);
 	void setEmitter(ALCReceiver *, Emitters::ALCEmitter *);
 };
 
@@ -64,14 +51,14 @@ signals:
 
 class DeviceLinkButton : public QCommandLinkButton {
 private:
-	AmbientDeviceThread *m_device;
+	Device::DeviceThread *m_device;
 
 public:
-	void setDeviceThread(AmbientDeviceThread *thread) {
+	void setDeviceThread(Device::DeviceThread *thread) {
 		m_device = thread;
 	}
 
-	AmbientDeviceThread *deviceThread() {
+	Device::DeviceThread *deviceThread() {
 		return m_device;
 	}
 };
@@ -92,9 +79,9 @@ public:
 	void addSymulation(ALCSymulationWidget *);
 
 private:
-	void deviceConnected(AmbientDeviceThread *);
-	void deviceDisconnected(AmbientDeviceThread *);
-	void addWorkspace(ALCDeviceTreeWidget *, AmbientDeviceThread *);
+	void deviceConnected(Device::DeviceThread *);
+	void deviceDisconnected(Device::DeviceThread *);
+	void addWorkspace(ALCDeviceTreeWidget *, Device::DeviceThread *);
 	void populate(QString use);
 	void reconfigure();
 	void setEmitter(ALCReceiver *device, Emitters::ALCEmitter *emitter);

@@ -1,11 +1,11 @@
 #include "alc-emitter-manager.h"
 #include "classes/alc-settings.h"
-#include "connector/alc-device-thread.h"
+#include "core/devices/device-manager.h"
+#include "core/devices/device-thread.h"
 #include "emitters/alc-animation-emitter.h"
 #include "emitters/alc-color-emitter.h"
 #include "emitters/alc-image-emitter.h"
 #include "emitters/alc-screen-emitter.h"
-#include "managers/alc-device-manager.h"
 #include "widgets/alc-symulation-widget.h"
 
 #include <QApplication>

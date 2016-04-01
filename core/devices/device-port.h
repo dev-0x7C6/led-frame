@@ -6,16 +6,14 @@
 
 namespace Device {
 
-	class LedFrameDevice final : public QSerialPort {
+	class DevicePort final : public QSerialPort {
 	public:
-		explicit LedFrameDevice() = default;
-		virtual ~LedFrameDevice() = default;
+		explicit DevicePort(const QSerialPortInfo &info);
+		virtual ~DevicePort() = default;
 
-		QSerialPort &device();
 		const Container::DeviceConfigContainer &config() const;
 
 	private:
-		QSerialPort m_device;
 		Container::DeviceConfigContainer m_config;
 	};
 

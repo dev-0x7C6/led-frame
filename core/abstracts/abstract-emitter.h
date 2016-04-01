@@ -10,7 +10,7 @@ namespace Abstract {
 
 	class AbstractEmitter : public Interface::IEmitter {
 	public:
-		explicit AbstractEmitter() = default;
+		explicit AbstractEmitter();
 		virtual ~AbstractEmitter() = default;
 
 		virtual void commit(const Container::ColorScanlineContainer &scanline) override;
