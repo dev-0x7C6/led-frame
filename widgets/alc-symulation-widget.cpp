@@ -1,6 +1,5 @@
 #include "widgets/alc-symulation-widget.h"
 
-#include "classes/alc-color-samples.h"
 #include <QBoxLayout>
 #include <QElapsedTimer>
 #include <QGuiApplication>
@@ -17,7 +16,7 @@
 
 ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
 	QWidget(parent),
-	ALCReceiver(),
+	//ALCReceiver(),
 	m_view(new QQuickView()) {
 	QPalette p = palette();
 	p.setBrush(QPalette::Window, QColor::fromRgb(20, 20, 20));
@@ -37,20 +36,19 @@ ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
 }
 
 ALCSymulationWidget::~ALCSymulationWidget() {
-	if (m_emitter)
-		m_emitter->done();
-
+	//  if (m_emitter)
+	//    m_emitter->done();
 	freeQmlMonitor();
 	freeQmlObjects();
 	delete m_view;
 }
 
-void ALCSymulationWidget::connectEmitter(Emitters::ALCEmitter *emitter) {
-	ALCReceiver::connectEmitter(emitter);
+//void ALCSymulationWidget::connectEmitter(Emitters::ALCEmitter *emitter) {
+////  ALCReceiver::connectEmitter(emitter);
 
-	if (!emitter)
-		resetQmlObjects();
-}
+//  if (!emitter)
+//    resetQmlObjects();
+//}
 
 void ALCSymulationWidget::createQmlMonitor() {
 	QQmlComponent monitor(m_view->engine(), QUrl("qrc:/qml/Monitor.qml"));
@@ -189,46 +187,38 @@ QString ALCSymulationWidget::name() {
 }
 
 void ALCSymulationWidget::timerEvent(QTimerEvent *) {
-	if (m_emitter) {
-		m_emitter->state(m_samples);
-		QVector <int> *colors;
-
-		for (int ii = 0; ii < 4; ++ii)
-			switch (ii) {
-				case 0:
-				case 2:
-					colors = m_samples.scaled(ALCColorSamples::Position(ii), 8);
-
-					for (int i = 0; i < 8; ++i) {
-						QColor color((*colors)[i]);
-						QQuickItem *item = m_items[ii][i];
-
-						if (item->property("sample").toString() != color.name()) {
-							item->setOpacity((1.0 - color.blackF()) * 0.8);
-							item->setProperty("sample", QColor((*colors)[i]).name());
-						}
-					}
-
-					delete colors;
-					break;
-
-				case 1:
-				case 3:
-					colors = m_samples.scaled(ALCColorSamples::Position(ii), 4);
-
-					for (int i = 0; i < 4; ++i) {
-						QColor color((*colors)[i]);
-						QQuickItem *item = m_items[ii][i];
-
-						if (item->property("sample").toString() != color.name()) {
-							item->setOpacity((1.0 - color.blackF()) * 0.8);
-							item->setProperty("sample", QColor((*colors)[i]).name());
-						}
-					}
-
-					delete colors;
-					break;
-			}
-	}
+	//  if (m_emitter) {
+	//    m_emitter->state(m_samples);
+	//    QVector <int> *colors;
+	//    for (int ii = 0; ii < 4; ++ii)
+	//      switch (ii) {
+	//        case 0:
+	//        case 2:
+	//          colors = m_samples.scaled(ALCColorSamples::Position(ii), 8);
+	//          for (int i = 0; i < 8; ++i) {
+	//            QColor color((*colors)[i]);
+	//            QQuickItem *item = m_items[ii][i];
+	//            if (item->property("sample").toString() != color.name()) {
+	//              item->setOpacity((1.0 - color.blackF()) * 0.8);
+	//              item->setProperty("sample", QColor((*colors)[i]).name());
+	//            }
+	//          }
+	//          delete colors;
+	//          break;
+	//        case 1:
+	//        case 3:
+	//          colors = m_samples.scaled(ALCColorSamples::Position(ii), 4);
+	//          for (int i = 0; i < 4; ++i) {
+	//            QColor color((*colors)[i]);
+	//            QQuickItem *item = m_items[ii][i];
+	//            if (item->property("sample").toString() != color.name()) {
+	//              item->setOpacity((1.0 - color.blackF()) * 0.8);
+	//              item->setProperty("sample", QColor((*colors)[i]).name());
+	//            }
+	//          }
+	//          delete colors;
+	//          break;
+	//      }
+	//  }
 }
 

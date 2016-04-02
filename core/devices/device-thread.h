@@ -1,6 +1,5 @@
 #pragma once
 
-#include <connector/alc-receiver.h>
 #include <core/abstracts/abstract-receiver.h>
 #include <core/enums/color-format-enum.h>
 

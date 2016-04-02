@@ -20,23 +20,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     mainwindow.cpp \
-    classes/alc-settings.cpp \
     widgets/alc-color-correction-widget.cpp \
-    managers/alc-emitter-manager.cpp \
     dialogs/alc-screen-configure-dialog.cpp \
-    classes/alc-color-samples.cpp \
     widgets/alc-symulation-widget.cpp \
     dialogs/alc-about-dialog.cpp \
-    emitters/alc-animation-emitter.cpp \
-    emitters/alc-emitter.cpp \
-    emitters/alc-image-emitter.cpp \
-    emitters/alc-color-emitter.cpp \
-    emitters/alc-screen-emitter.cpp \
-    widgets/alc-device-widget.cpp \
-    widgets/alc-emitter-widget.cpp \
-    widgets/alc-screen-widget.cpp \
-    connector/alc-receiver.cpp \
-    dialogs/alc-animation-configure-dialog.cpp \
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
     core/containers/color-scanline-container.cpp \
@@ -55,7 +42,6 @@ SOURCES += main.cpp\
     core/abstracts/abstract-receiver.cpp \
     core/enums/position-enum.cpp \
 		core/functionals/color-stream.cpp \
-    core/containers/led-strip-info-container.cpp \
     core/emitters/color-emitter.cpp \
     core/factories/emitter-factory.cpp \
     core/emitters/animation-emitter.cpp \
@@ -70,23 +56,10 @@ SOURCES += main.cpp\
     core/functionals/loop-sync.cpp
 
 HEADERS += mainwindow.h \
-    classes/alc-settings.h \
     widgets/alc-color-correction-widget.h \
-    managers/alc-emitter-manager.h \
     dialogs/alc-screen-configure-dialog.h \
-    classes/alc-color-samples.h \
     widgets/alc-symulation-widget.h \
     dialogs/alc-about-dialog.h \
-    emitters/alc-animation-emitter.h \
-    emitters/alc-emitter.h \
-    emitters/alc-image-emitter.h \
-    emitters/alc-color-emitter.h \
-    emitters/alc-screen-emitter.h \
-    widgets/alc-device-widget.h \
-    widgets/alc-emitter-widget.h \
-    widgets/alc-screen-widget.h \
-    connector/alc-receiver.h \
-    dialogs/alc-animation-configure-dialog.h \
     core/containers/abstract-container.h \
     core/containers/color-correction-container.h \
     core/containers/color-scanline-container.h \
@@ -105,7 +78,6 @@ HEADERS += mainwindow.h \
     core/abstracts/abstract-receiver.h \
     core/enums/position-enum.h \
 		core/functionals/color-stream.h \
-    core/containers/led-strip-info-container.h \
     core/emitters/color-emitter.h \
     core/factories/emitter-factory.h \
     core/emitters/animation-emitter.h \
@@ -123,10 +95,7 @@ FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \
     dialogs/alc-screen-configure-dialog.ui \
     dialogs/alc-about-dialog.ui \
-    widgets/alc-device-widget.ui \
-    widgets/alc-emitter-widget.ui \
-    widgets/alc-screen-widget.ui \
-    dialogs/alc-animation-configure-dialog.ui
+    widgets/alc-emitter-widget.ui
 
 RESOURCES += \
     resources/resource.qrc \

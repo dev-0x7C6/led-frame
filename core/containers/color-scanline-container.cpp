@@ -24,10 +24,10 @@ void ColorScanlineContainer::fill(const uint32_t &color) {
 }
 
 void ColorScanlineContainer::rotate(const uint32_t &color) {
-	for (int i = 0; i < m_data.size() - 1; ++i)
+	for (size_t i = 0; i < m_data.size() - 1; ++i)
 		m_data[i] = m_data[i + 1];
 
-	m_data[255] = color;
+	m_data[resolution() - 1] = color;
 }
 
 uint32_t Container::ColorScanlineContainer::linesize() {

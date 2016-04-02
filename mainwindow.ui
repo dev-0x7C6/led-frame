@@ -24,54 +24,7 @@
     <normaloff>:/64x64/icon.png</normaloff>:/64x64/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QTabWidget" name="leftWidget">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="currentIndex">
-       <number>2</number>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>22</width>
-        <height>22</height>
-       </size>
-      </property>
-      <widget class="ALCDeviceWidget" name="devices">
-       <attribute name="icon">
-        <iconset resource="resources/resource.qrc">
-         <normaloff>:/22x22/device.png</normaloff>:/22x22/device.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Devices &amp;&amp; connections</string>
-       </attribute>
-      </widget>
-      <widget class="ALCEmitterWidget" name="emitters">
-       <attribute name="icon">
-        <iconset resource="resources/resource.qrc">
-         <normaloff>:/22x22/leds.png</normaloff>:/22x22/leds.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Emitters</string>
-       </attribute>
-      </widget>
-      <widget class="ALCScreenWidget" name="screens">
-       <attribute name="icon">
-        <iconset resource="resources/resource.qrc">
-         <normaloff>:/22x22/screen.png</normaloff>:/22x22/screen.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Screens</string>
-       </attribute>
-      </widget>
-     </widget>
-    </item>
-   </layout>
+   <layout class="QHBoxLayout" name="horizontalLayout"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -94,28 +47,7 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
-   <widget class="QMenu" name="menuEmitters">
-    <property name="title">
-     <string>Emitters</string>
-    </property>
-    <addaction name="actionAddScreenArea"/>
-    <addaction name="separator"/>
-    <addaction name="actionAddAnimation"/>
-    <addaction name="actionAddPlainColor"/>
-    <addaction name="actionAddImageSamples"/>
-    <addaction name="separator"/>
-    <addaction name="actionRemoveSelected"/>
-   </widget>
-   <widget class="QMenu" name="menuWindow">
-    <property name="title">
-     <string>Window</string>
-    </property>
-    <addaction name="actionColor_correction"/>
-    <addaction name="actionGlow_simulation"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEmitters"/>
-   <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
@@ -128,6 +60,19 @@
     <string>Quit</string>
    </property>
   </action>
+  <action name="actionAdvanced_settings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Advanced settings</string>
+   </property>
+  </action>
+  <action name="actionGlow_settings">
+   <property name="text">
+    <string>Glow settings</string>
+   </property>
+  </action>
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
@@ -137,110 +82,8 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionAdvanced_settings">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Advanced settings</string>
-   </property>
-  </action>
-  <action name="actionColor_correction">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources/resource.qrc">
-     <normaloff>:/custom/blue.png</normaloff>:/custom/blue.png</iconset>
-   </property>
-   <property name="text">
-    <string>Color correction</string>
-   </property>
-  </action>
-  <action name="actionAddAnimation">
-   <property name="icon">
-    <iconset resource="resources/resource.qrc">
-     <normaloff>:/22x22/animation.png</normaloff>:/22x22/animation.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add animation</string>
-   </property>
-  </action>
-  <action name="actionAddPlainColor">
-   <property name="icon">
-    <iconset resource="resources/resource.qrc">
-     <normaloff>:/22x22/color.png</normaloff>:/22x22/color.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add plain color</string>
-   </property>
-  </action>
-  <action name="actionAddImageSamples">
-   <property name="icon">
-    <iconset resource="resources/resource.qrc">
-     <normaloff>:/22x22/from-image.png</normaloff>:/22x22/from-image.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add image samples</string>
-   </property>
-  </action>
-  <action name="actionRemoveSelected">
-   <property name="icon">
-    <iconset resource="resources/resource.qrc">
-     <normaloff>:/16x16/edit-delete.png</normaloff>:/16x16/edit-delete.png</iconset>
-   </property>
-   <property name="text">
-    <string>Remove selected</string>
-   </property>
-  </action>
-  <action name="actionAddScreenArea">
-   <property name="icon">
-    <iconset resource="resources/resource.qrc">
-     <normaloff>:/22x22/selected-area.png</normaloff>:/22x22/selected-area.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add screen area</string>
-   </property>
-  </action>
-  <action name="actionGlow_simulation">
-   <property name="icon">
-    <iconset resource="resources/resource.qrc">
-     <normaloff>:/22x22/leds.png</normaloff>:/22x22/leds.png</iconset>
-   </property>
-   <property name="text">
-    <string>Glow simulation</string>
-   </property>
-  </action>
-  <action name="actionGlow_settings">
-   <property name="text">
-    <string>Glow settings</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>ALCEmitterWidget</class>
-   <extends>QWidget</extends>
-   <header>widgets/alc-emitter-widget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ALCScreenWidget</class>
-   <extends>QWidget</extends>
-   <header>widgets/alc-screen-widget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ALCDeviceWidget</class>
-   <extends>QWidget</extends>
-   <header>widgets/alc-device-widget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="resources/resource.qrc"/>
  </resources>

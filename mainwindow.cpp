@@ -10,39 +10,21 @@
 
 #include "core/devices/device-thread.h"
 #include "dialogs/alc-about-dialog.h"
-#include "emitters/alc-animation-emitter.h"
-#include "emitters/alc-color-emitter.h"
-#include "emitters/alc-image-emitter.h"
-#include "emitters/alc-screen-emitter.h"
 #include "core/devices/device-manager.h"
-#include "managers/alc-emitter-manager.h"
-#include "widgets/alc-device-widget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	m_settings(new QSettings("AmbientLedDriver", "AmbientLedDriver", this)),
 	ui(new Ui::MainWindow),
-	m_screenManager(ALCEmitterManager::instance()),
 	m_tray(this),
 	m_menu(new QMenu()),
 	m_canClose(false) {
-	qRegisterMetaType<QList<QRgb>>("QList< QRgb >");
 	ui->setupUi(this);
-	ui->leftWidget->setCurrentIndex(0);
-	m_settings->beginGroup("GeneralSettings");
-	ui->actionColor_correction->setChecked(m_settings->value("colorCorrectionVisiblity", true).toBool());;
-	m_settings->endGroup();
 	QRect rect;
 	rect = QGuiApplication::primaryScreen()->geometry();
 	move(rect.x() + ((rect.width() - width()) / 2), rect.y() + ((rect.height() - height()) / 2) - 50);
-	connect(ui->actionColor_correction, &QAction::toggled, this, &MainWindow::showColorCorrection);
 	connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::forceClose);
 	connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
-	connect(ui->actionAddAnimation, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addAnimationItem);
-	connect(ui->actionAddPlainColor, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addPlainColorItem);
-	connect(ui->actionAddImageSamples, &QAction::triggered, ui->emitters, &ALCEmitterWidget::addImageItem);
-	connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->emitters, &ALCEmitterWidget::setup, Qt::QueuedConnection);
-	connect(ALCEmitterManager::instance(), &ALCEmitterManager::emitterListChanged, ui->screens, &ALCScreenWidget::setup, Qt::QueuedConnection);
 	m_tray.setContextMenu(m_menu);
 	m_tray.show();
 	m_visible = m_menu->addAction("Visible");
@@ -53,7 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(&m_tray, &QSystemTrayIcon::activated, this, &MainWindow::trayActivated);
 	m_settings->beginGroup("MainWindow");
 	m_visible->setChecked(m_settings->value("visible", true).toBool());
-	showColorCorrection(m_settings->value("colorCorrectionVisiblity", true).toBool());
 	m_settings->endGroup();
 	m_tray.installEventFilter(this);
 
@@ -123,9 +104,6 @@ void MainWindow::about() {
 	form.exec();
 }
 
-void MainWindow::showColorCorrection(bool visible) {
-	ui->actionColor_correction->setChecked(visible);
-}
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
 	switch (reason) {
@@ -163,16 +141,5 @@ void MainWindow::trayDrawIcon(double brightness) {
 }
 
 MainWindow::~MainWindow() {
-	//  m_settings->beginGroup("GeneralSettings");
-	//  m_settings->setValue("visible", ui->actionColor_correction->isVisible());
-	//  m_settings->setValue("screenId", ui->screenArea->currentIndex());
-	//  m_settings->endGroup();
-	//  m_settings->beginGroup("LedPreviewSettings");
-	//  m_settings->setValue("framerateLimit", ui->ledFramerateLimit->value());
-	//  m_settings->setValue("ledGlowSize", ui->ledGlow->value());
-	//  m_settings->endGroup();;
-	m_settings->beginGroup("MainWindow");
-	m_settings->setValue("colorCorrectionVisiblity", ui->actionColor_correction->isChecked());
-	m_settings->endGroup();
 	delete ui;
 }

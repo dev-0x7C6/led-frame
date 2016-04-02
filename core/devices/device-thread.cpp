@@ -55,7 +55,7 @@ void DeviceThread::run() {
 			double step = 64.0 / static_cast<double>(config.count - 1);
 
 			for (int i = 0; i < config.count; ++i) {
-				const auto format = static_cast<Enum::ColorFormat>(config.palette);
+				//const auto format = static_cast<Enum::ColorFormat>(config.palette);
 				const auto position = static_cast<Enum::Position>(config.position);
 				stream.insert(ColorFormat::RGB, source.data(position)[static_cast<int>(i * step)]);
 			}

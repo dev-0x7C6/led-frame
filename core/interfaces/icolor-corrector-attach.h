@@ -6,7 +6,7 @@ namespace Interface {
 
 	class IColorCorrector;
 
-	class IColorCorrectorAttach final : public Template::IAttachTemplate<IColorCorrector> {
+	class IColorCorrectorAttach : public Template::IAttachTemplate<IColorCorrector> {
 	public:
 		explicit IColorCorrectorAttach() = default;
 		virtual ~IColorCorrectorAttach() = default;

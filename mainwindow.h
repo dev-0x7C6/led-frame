@@ -10,26 +10,10 @@ namespace Ui {
 }
 
 class DeviceThread;
-class ALCScreenEmitter;
-class ALCDeviceTreeWidget;
-class ALCEmitterManager;
 class QMenu;
 
 class MainWindow : public QMainWindow {
 	Q_OBJECT
-private:
-	QSettings *m_settings;
-	Ui::MainWindow *ui;
-	QList <ALCDeviceTreeWidget *> m_devices;
-	ALCEmitterManager *m_screenManager;
-	QSystemTrayIcon m_tray;
-	QMenu *m_menu;
-	QString m_title;
-
-	QAction *m_visible;
-	QTimer m_showBrightnessTimer;
-	bool m_canClose;
-
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
@@ -43,10 +27,21 @@ protected:
 private:
 	void forceClose();
 	void about();
-	void showColorCorrection(bool);
 
 	void trayActivated(QSystemTrayIcon::ActivationReason reason);
 	void trayShowBrightness();
 	void trayDrawIcon(double brightness);
+
+private:
+	QSettings *m_settings;
+	Ui::MainWindow *ui;
+	QSystemTrayIcon m_tray;
+	QMenu *m_menu;
+	QString m_title;
+
+	QAction *m_visible;
+	QTimer m_showBrightnessTimer;
+	bool m_canClose;
+
 
 };
