@@ -46,7 +46,15 @@ void DeviceManager::timerEvent(QTimerEvent *event) {
 			});
 		});
 		thread->start();
+
+		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get()))
+			continue;
+
 		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
 		m_threads.push_back(std::move(thread));
 	}
+}
+
+void DeviceManager::setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *)> &callback) {
+	m_registerDeviceCallback = callback;
 }

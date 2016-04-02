@@ -14,10 +14,7 @@ QT += xml
 CONFIG += c++14
 CONFIG += console
 
-QMAKE_CXXFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
-QMAKE_CXXFLAGS_RELEASE = -std=c++14 -pipe -O2 -Wall -W -march=native
-QMAKE_LFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
-QMAKE_LFLAGS_RELEASE += -std=c++14 -pipe -O2 -Wall -W -march=native
+include(cflags.pri)
 
 SOURCES += main.cpp\
 	gui/widgets/alc-color-correction-widget.cpp \
@@ -54,7 +51,10 @@ SOURCES += main.cpp\
     core/emitters/image-emitter.cpp \
     core/emitters/screen-emitter.cpp \
     core/functionals/loop-sync.cpp \
-    gui/tray/system-tray.cpp
+    gui/tray/system-tray.cpp \
+    gui/wizards/device-setup-wizard.cpp \
+    gui/wizards/device-setup-pick-name.cpp \
+    gui/wizards/device-setup-general-test.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -91,7 +91,10 @@ HEADERS += \
     core/emitters/image-emitter.h \
     core/emitters/screen-emitter.h \
     core/functionals/loop-sync.h \
-    gui/tray/system-tray.h
+    gui/tray/system-tray.h \
+    gui/wizards/device-setup-wizard.h \
+    gui/wizards/device-setup-pick-name.h \
+    gui/wizards/device-setup-general-test.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

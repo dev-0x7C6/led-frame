@@ -10,13 +10,6 @@
 #include <atomic>
 #include <memory>
 
-namespace Emitters {
-	class ALCEmitter;
-}
-
-class ALCColorSamples;
-class ALCStripConfiguration;
-
 namespace Device {
 
 	class DevicePort;
