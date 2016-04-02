@@ -10,7 +10,7 @@ namespace Container {
 		constexpr auto ApplicationName = "LedFrame";
 		constexpr auto ApplicationCodename = "";
 		constexpr int ApplicationVersionMajor = 0;
-		constexpr int ApplicationVersionMinor = 5;
+		constexpr int ApplicationVersionMinor = 6;
 		constexpr int ApplicationVersionPatch = 0;
 		constexpr int ApplicationProtocolVersion = 1;
 	}
