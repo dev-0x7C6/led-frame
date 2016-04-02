@@ -1,8 +1,8 @@
-#include "mainwindow.h"
 #include <QApplication>
 
 #include <core/containers/application-info-container.h>
 #include <core/devices/device-manager.h>
+#include <gui/tray/system-tray.h>
 
 int main(int argc, char *argv[]) {
 	Container::ApplicationInfoContainer info;
@@ -11,8 +11,9 @@ int main(int argc, char *argv[]) {
 	application.setApplicationVersion(info.versionToString());
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
 	Device::DeviceManager manager;
-	MainWindow window;
-	window.show();
-	int result = application.exec();
-	return result;
+	Tray::SystemTray tray;
+	QObject::connect(&tray, &Tray::SystemTray::closeRequest, [&application] {
+		application.quit();
+	});
+	return application.exec();
 }

@@ -1,25 +1,25 @@
-QT += core gui widgets serialport opengl qml quick xml multimedia
-
-CONFIG += console
-CONFIG += c++14
-
-QMAKE_CXXFLAGS_RELEASE = -std=c++14 -pipe -O2 -Wall -W -march=native
-QMAKE_CXXFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
-QMAKE_LFLAGS_RELEASE += -std=c++14 -pipe -O2 -Wall -W -march=native
-QMAKE_LFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
-
-LIBS += -lX11
-
-unix {
-  QT += dbus
-  HEADERS  +=
-}
-
-TARGET = ambientleddriver
+TARGET = led-frame
 TEMPLATE = app
 
+QT += core
+QT += gui
+QT += multimedia
+QT += opengl
+QT += qml
+QT += quick
+QT += serialport
+QT += widgets
+QT += xml
+
+CONFIG += c++14
+CONFIG += console
+
+QMAKE_CXXFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
+QMAKE_CXXFLAGS_RELEASE = -std=c++14 -pipe -O2 -Wall -W -march=native
+QMAKE_LFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
+QMAKE_LFLAGS_RELEASE += -std=c++14 -pipe -O2 -Wall -W -march=native
+
 SOURCES += main.cpp\
-    mainwindow.cpp \
     widgets/alc-color-correction-widget.cpp \
     dialogs/alc-screen-configure-dialog.cpp \
     widgets/alc-symulation-widget.cpp \
@@ -53,9 +53,10 @@ SOURCES += main.cpp\
     core/devices/device-thread.cpp \
     core/emitters/image-emitter.cpp \
     core/emitters/screen-emitter.cpp \
-    core/functionals/loop-sync.cpp
+    core/functionals/loop-sync.cpp \
+    gui/tray/system-tray.cpp
 
-HEADERS += mainwindow.h \
+HEADERS += \
     widgets/alc-color-correction-widget.h \
     dialogs/alc-screen-configure-dialog.h \
     widgets/alc-symulation-widget.h \
@@ -89,9 +90,10 @@ HEADERS += mainwindow.h \
     core/devices/device-thread.h \
     core/emitters/image-emitter.h \
     core/emitters/screen-emitter.h \
-    core/functionals/loop-sync.h
+    core/functionals/loop-sync.h \
+    gui/tray/system-tray.h
 
-FORMS += mainwindow.ui \
+FORMS += \
     widgets/alc-color-correction-widget.ui \
     dialogs/alc-screen-configure-dialog.ui \
     dialogs/alc-about-dialog.ui \
