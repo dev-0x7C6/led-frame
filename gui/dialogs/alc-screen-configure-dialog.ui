@@ -737,7 +737,7 @@
   <customwidget>
    <class>ALCColorCorrectionWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/alc-color-correction-widget.h</header>
+   <header>gui/widgets/alc-color-correction-widget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

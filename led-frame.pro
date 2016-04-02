@@ -20,10 +20,10 @@ QMAKE_LFLAGS_DEBUG += -std=c++14 -pipe -g2 -Wall -W -ggdb
 QMAKE_LFLAGS_RELEASE += -std=c++14 -pipe -O2 -Wall -W -march=native
 
 SOURCES += main.cpp\
-    widgets/alc-color-correction-widget.cpp \
-    dialogs/alc-screen-configure-dialog.cpp \
-    widgets/alc-symulation-widget.cpp \
-    dialogs/alc-about-dialog.cpp \
+	gui/widgets/alc-color-correction-widget.cpp \
+	gui/dialogs/alc-screen-configure-dialog.cpp \
+	gui/widgets/alc-symulation-widget.cpp \
+	gui/dialogs/alc-about-dialog.cpp \
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
     core/containers/color-scanline-container.cpp \
@@ -41,7 +41,7 @@ SOURCES += main.cpp\
     core/enums/emitter-type-enum.cpp \
     core/abstracts/abstract-receiver.cpp \
     core/enums/position-enum.cpp \
-		core/functionals/color-stream.cpp \
+	core/functionals/color-stream.cpp \
     core/emitters/color-emitter.cpp \
     core/factories/emitter-factory.cpp \
     core/emitters/animation-emitter.cpp \
@@ -57,10 +57,10 @@ SOURCES += main.cpp\
     gui/tray/system-tray.cpp
 
 HEADERS += \
-    widgets/alc-color-correction-widget.h \
-    dialogs/alc-screen-configure-dialog.h \
-    widgets/alc-symulation-widget.h \
-    dialogs/alc-about-dialog.h \
+	gui/widgets/alc-color-correction-widget.h \
+	gui/dialogs/alc-screen-configure-dialog.h \
+	gui/widgets/alc-symulation-widget.h \
+	gui/dialogs/alc-about-dialog.h \
     core/containers/abstract-container.h \
     core/containers/color-correction-container.h \
     core/containers/color-scanline-container.h \
@@ -78,7 +78,7 @@ HEADERS += \
     core/enums/emitter-type-enum.h \
     core/abstracts/abstract-receiver.h \
     core/enums/position-enum.h \
-		core/functionals/color-stream.h \
+	core/functionals/color-stream.h \
     core/emitters/color-emitter.h \
     core/factories/emitter-factory.h \
     core/emitters/animation-emitter.h \
@@ -94,10 +94,10 @@ HEADERS += \
     gui/tray/system-tray.h
 
 FORMS += \
-    widgets/alc-color-correction-widget.ui \
-    dialogs/alc-screen-configure-dialog.ui \
-    dialogs/alc-about-dialog.ui \
-    widgets/alc-emitter-widget.ui
+	gui/widgets/alc-color-correction-widget.ui \
+	gui/dialogs/alc-screen-configure-dialog.ui \
+	gui/dialogs/alc-about-dialog.ui \
+	gui/widgets/alc-emitter-widget.ui
 
 RESOURCES += \
     resources/resource.qrc \

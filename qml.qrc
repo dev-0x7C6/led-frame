@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/LedAmbient.qml</file>
-        <file>qml/Monitor.qml</file>
-        <file>qml/Scene.qml</file>
+        <file>gui/qml/LedAmbient.qml</file>
+        <file>gui/qml/Monitor.qml</file>
+        <file>gui/qml/Scene.qml</file>
     </qresource>
 </RCC>

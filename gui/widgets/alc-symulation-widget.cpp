@@ -1,4 +1,4 @@
-#include "widgets/alc-symulation-widget.h"
+#include "gui/widgets/alc-symulation-widget.h"
 
 #include <QBoxLayout>
 #include <QElapsedTimer>

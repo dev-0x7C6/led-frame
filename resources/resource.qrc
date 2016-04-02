@@ -1,72 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>16x16/all-screens.png</file>
-        <file>16x16/selected-screen.png</file>
         <file>256x256/display.png</file>
-        <file>22x22/brightness.png</file>
-        <file>22x22/alghoritm.png</file>
-        <file>22x22/chunks.png</file>
-        <file>22x22/fpsrate.png</file>
-        <file>22x22/leds.png</file>
-        <file>22x22/screen.png</file>
-        <file>22x22/skip.png</file>
-        <file>22x22/area.png</file>
-        <file>custom/wiimotedev-small.png</file>
-        <file>custom/wiimotedev.png</file>
-        <file>128x128/about.png</file>
-        <file>64x64/icon.png</file>
-        <file>16x16/selected-area.png</file>
-        <file>22x22/all-screens.png</file>
-        <file>22x22/selected-screen.png</file>
-        <file>22x22/selected-area.png</file>
-        <file>22x22/device.png</file>
-        <file>22x22/no-device.png</file>
-        <file>22x22/color.png</file>
-        <file>22x22/animation.png</file>
-        <file>16x16/draw-triangle3.png</file>
-        <file>16x16/draw-triangle4.png</file>
-        <file>16x16/edit-delete.png</file>
-        <file>16x16/go-down.png</file>
-        <file>16x16/go-top.png</file>
-        <file>16x16/go-up.png</file>
-        <file>16x16/go-bottom.png</file>
-        <file>16x16/align-horizontal-left.png</file>
-        <file>16x16/align-horizontal-right.png</file>
-        <file>16x16/align-vertical-bottom.png</file>
-        <file>16x16/align-vertical-top.png</file>
-        <file>custom/blue.png</file>
-        <file>custom/green.png</file>
-        <file>custom/red.png</file>
-        <file>22x22/from-image.png</file>
         <file>256x256/display2.png</file>
-        <file>16x16/configure.png</file>
-        <file>16x16/rename.png</file>
         <file>tray.png</file>
-        <file>weather/weather-clear-night.png</file>
-        <file>weather/weather-clear.png</file>
-        <file>weather/weather-clouds-night.png</file>
-        <file>weather/weather-clouds.png</file>
-        <file>weather/weather-few-clouds-night.png</file>
-        <file>weather/weather-few-clouds.png</file>
-        <file>weather/weather-freezing-rain.png</file>
-        <file>weather/weather-hail.png</file>
-        <file>weather/weather-many-clouds.png</file>
-        <file>weather/weather-mist.png</file>
-        <file>weather/weather-none-available.png</file>
-        <file>weather/weather-showers-day.png</file>
-        <file>weather/weather-showers-night.png</file>
-        <file>weather/weather-showers-scattered-day.png</file>
-        <file>weather/weather-showers-scattered-night.png</file>
-        <file>weather/weather-showers-scattered.png</file>
-        <file>weather/weather-showers.png</file>
-        <file>weather/weather-snow-rain.png</file>
-        <file>weather/weather-snow-scattered-day.png</file>
-        <file>weather/weather-snow-scattered-night.png</file>
-        <file>weather/weather-snow-scattered.png</file>
-        <file>weather/weather-snow.png</file>
-        <file>weather/weather-storm-day.png</file>
-        <file>weather/weather-storm-night.png</file>
-        <file>weather/weather-storm.png</file>
-        <file>16x16/leds.png</file>
     </qresource>
 </RCC>
