@@ -14,7 +14,7 @@ namespace Emitter {
 		virtual QString name() const override;
 		virtual Enum::EmitterType type() const override;
 
-		QRect fragment(const uint32_t &index);
+		QRect fragment(int w, int h, const uint32_t &index);
 
 		void loadFromFile(const QString &path);
 

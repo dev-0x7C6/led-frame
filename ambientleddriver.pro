@@ -41,7 +41,6 @@ SOURCES += main.cpp\
     connector/alc-receiver.cpp \
     dialogs/alc-strip-configurator-dialog.cpp \
     dialogs/alc-animation-configure-dialog.cpp \
-    classes/alc-runtime-sync.cpp \
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
     core/containers/color-scanline-container.cpp \
@@ -70,7 +69,9 @@ SOURCES += main.cpp\
     core/devices/device-manager.cpp \
     core/devices/device-port.cpp \
     core/devices/device-thread.cpp \
-    core/emitters/image-emitter.cpp
+    core/emitters/image-emitter.cpp \
+    core/emitters/screen-emitter.cpp \
+    core/functionals/loop-sync.cpp
 
 HEADERS += mainwindow.h \
     classes/alc-settings.h \
@@ -94,7 +95,6 @@ HEADERS += mainwindow.h \
     connector/alc-receiver.h \
     dialogs/alc-strip-configurator-dialog.h \
     dialogs/alc-animation-configure-dialog.h \
-    classes/alc-runtime-sync.h \
     core/containers/abstract-container.h \
     core/containers/color-correction-container.h \
     core/containers/color-scanline-container.h \
@@ -123,7 +123,9 @@ HEADERS += mainwindow.h \
     core/devices/device-manager.h \
     core/devices/device-port.h \
     core/devices/device-thread.h \
-    core/emitters/image-emitter.h
+    core/emitters/image-emitter.h \
+    core/emitters/screen-emitter.h \
+    core/functionals/loop-sync.h
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \

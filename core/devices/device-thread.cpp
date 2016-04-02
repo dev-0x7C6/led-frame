@@ -3,6 +3,7 @@
 #include <core/devices/device-thread.h>
 #include <core/enums/position-enum.h>
 #include <core/functionals/color-stream.h>
+#include <core/functionals/loop-sync.h>
 
 #include <QElapsedTimer>
 

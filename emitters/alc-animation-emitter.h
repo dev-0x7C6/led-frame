@@ -9,7 +9,6 @@
 #include <atomic>
 
 #include "emitters/alc-emitter.h"
-#include "classes/alc-runtime-sync.h"
 
 namespace Emitters {
 

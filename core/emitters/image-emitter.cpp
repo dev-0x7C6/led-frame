@@ -19,22 +19,22 @@ Enum::EmitterType ImageEmitter::type() const {
 	return Enum::EmitterType::Image;
 }
 
-QRect ImageEmitter::fragment(const uint32_t &index) {
+QRect ImageEmitter::fragment(int w, int h, const uint32_t &index) {
 	auto l = static_cast<int>(ColorScanlineContainer::linesize());
 	auto i = static_cast<int>(index) % l;
 
 	switch (ColorScanlineContainer::fromIndexToPosition(index)) {
 		case Position::Left:
-			return QRect(0, (m_image.height() / l) * (l - i - 1), 200, (m_image.height() / l));
+			return QRect(0, (h / l) * (l - i - 1), 200, (h / l));
 
 		case Position::Top:
-			return QRect((m_image.width() / l) * i, 0, (m_image.width() / l), 200);
+			return QRect((w / l) * i, 0, (w / l), 200);
 
 		case Position::Right:
-			return QRect(m_image.width() - 200, (m_image.height() / l) * i, 200, (m_image.height() / l));
+			return QRect(w - 200, (h / l) * i, 200, (h / l));
 
 		case Position::Bottom:
-			return QRect((m_image.width() / l) * (l - i - 1), m_image.height() - 200, (m_image.width() / l), 200);
+			return QRect((w / l) * (l - i - 1), h - 200, (w / l), 200);
 
 		default:
 			return {};
@@ -49,7 +49,7 @@ void ImageEmitter::loadFromFile(const QString &path) {
 	uint32_t *colors = scanline.data();
 
 	for (uint32_t i = 0; i < Container::ColorScanlineContainer::resolution(); ++i) {
-		QRect area = fragment(i);
+		QRect area = fragment(m_image.width(), m_image.height(), i);
 		int c = area.width() * area.height();
 		uint64_t r = 0;
 		uint64_t g = 0;

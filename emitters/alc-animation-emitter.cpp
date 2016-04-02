@@ -4,6 +4,9 @@
 
 #include "emitters/alc-animation-emitter.h"
 #include "dialogs/alc-animation-configure-dialog.h"
+#include <core/functionals/loop-sync.h>
+
+using namespace Functional;
 
 namespace Emitters {
 

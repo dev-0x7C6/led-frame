@@ -1,7 +1,5 @@
 #pragma once
 
-#include <classes/alc-color-samples.h>
-#include <classes/alc-runtime-sync.h>
 #include <connector/alc-receiver.h>
 #include <core/abstracts/abstract-receiver.h>
 #include <core/enums/color-format-enum.h>

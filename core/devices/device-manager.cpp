@@ -46,7 +46,7 @@ void DeviceManager::timerEvent(QTimerEvent *event) {
 			});
 		});
 		thread->start();
-		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Image));
+		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
 		m_threads.push_back(std::move(thread));
 	}
 }
