@@ -22,9 +22,7 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     classes/alc-settings.cpp \
     widgets/alc-color-correction-widget.cpp \
-    widgets/alc-led-configuration-widget.cpp \
     managers/alc-emitter-manager.cpp \
-    managers/alc-led-strip-manager.cpp \
     dialogs/alc-screen-configure-dialog.cpp \
     classes/alc-color-samples.cpp \
     widgets/alc-symulation-widget.cpp \
@@ -37,9 +35,7 @@ SOURCES += main.cpp\
     widgets/alc-device-widget.cpp \
     widgets/alc-emitter-widget.cpp \
     widgets/alc-screen-widget.cpp \
-    classes/alc-strip-configuration.cpp \
     connector/alc-receiver.cpp \
-    dialogs/alc-strip-configurator-dialog.cpp \
     dialogs/alc-animation-configure-dialog.cpp \
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
@@ -76,9 +72,7 @@ SOURCES += main.cpp\
 HEADERS += mainwindow.h \
     classes/alc-settings.h \
     widgets/alc-color-correction-widget.h \
-    widgets/alc-led-configuration-widget.h \
     managers/alc-emitter-manager.h \
-    managers/alc-led-strip-manager.h \
     dialogs/alc-screen-configure-dialog.h \
     classes/alc-color-samples.h \
     widgets/alc-symulation-widget.h \
@@ -91,9 +85,7 @@ HEADERS += mainwindow.h \
     widgets/alc-device-widget.h \
     widgets/alc-emitter-widget.h \
     widgets/alc-screen-widget.h \
-    classes/alc-strip-configuration.h \
     connector/alc-receiver.h \
-    dialogs/alc-strip-configurator-dialog.h \
     dialogs/alc-animation-configure-dialog.h \
     core/containers/abstract-container.h \
     core/containers/color-correction-container.h \
@@ -129,13 +121,11 @@ HEADERS += mainwindow.h \
 
 FORMS += mainwindow.ui \
     widgets/alc-color-correction-widget.ui \
-    widgets/alc-led-configuration-widget.ui \
     dialogs/alc-screen-configure-dialog.ui \
     dialogs/alc-about-dialog.ui \
     widgets/alc-device-widget.ui \
     widgets/alc-emitter-widget.ui \
     widgets/alc-screen-widget.ui \
-    dialogs/alc-strip-configurator-dialog.ui \
     dialogs/alc-animation-configure-dialog.ui
 
 RESOURCES += \
