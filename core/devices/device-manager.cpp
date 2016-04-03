@@ -47,7 +47,7 @@ void DeviceManager::timerEvent(QTimerEvent *event) {
 		});
 		thread->start();
 
-		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get()))
+		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
 		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
@@ -55,6 +55,6 @@ void DeviceManager::timerEvent(QTimerEvent *event) {
 	}
 }
 
-void DeviceManager::setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *)> &callback) {
+void DeviceManager::setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *, const QString &serialNumber)> &callback) {
 	m_registerDeviceCallback = callback;
 }

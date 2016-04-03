@@ -18,14 +18,14 @@ namespace Device {
 		explicit DeviceManager(QObject *parent = 0);
 		virtual ~DeviceManager();
 
-		void setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *)> &callback);
+		void setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *, const QString &serialNumber)> &callback);
 
 	protected:
 		void timerEvent(QTimerEvent *event);
 
 	private:
 		std::list<std::unique_ptr<DeviceThread>> m_threads;
-		std::function<bool(Interface::IReceiver *)> m_registerDeviceCallback;
+		std::function<bool(Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
 
 		int m_timerId;
 

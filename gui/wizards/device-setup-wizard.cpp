@@ -15,6 +15,7 @@ DeviceSetupWizard::DeviceSetupWizard(Interface::IReceiver *receiver) {
 	addPage(page3);
 	addPage(page1);
 	addPage(page2);
+	resize(800, 500);
 }
 
 void DeviceSetupWizard::accept() {

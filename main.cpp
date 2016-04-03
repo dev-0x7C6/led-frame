@@ -5,6 +5,8 @@
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
 
+#include <QSettings>
+
 int main(int argc, char *argv[]) {
 	Container::ApplicationInfoContainer info;
 	QApplication application(argc, argv);
@@ -13,9 +15,20 @@ int main(int argc, char *argv[]) {
 	application.setApplicationVersion(info.versionToString());
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
 	Device::DeviceManager manager;
-	manager.setRegisterDeviceCallback([](Interface::IReceiver * receiver) {
-		Wizard::DeviceSetupWizard wizard(receiver);
-		wizard.exec();
+	QSettings settings(info.applicationName(), info.applicationName());
+	manager.setRegisterDeviceCallback([&settings](Interface::IReceiver * receiver, const QString & serialNumber) {
+		settings.beginGroup("devices");
+		settings.beginGroup(serialNumber);
+
+		if (settings.value("name", "").toString().isEmpty()) {
+			Wizard::DeviceSetupWizard wizard(receiver);
+			wizard.exec();
+			receiver->setName(wizard.field("name").toString());
+			settings.setValue("name", wizard.field("name").toString());
+		}
+
+		settings.endGroup();
+		settings.endGroup();
 		return true;
 	});
 	Tray::SystemTray tray;

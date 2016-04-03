@@ -24,6 +24,7 @@ namespace Interface {
 		virtual bool isEmitterConnected() = 0;
 
 		virtual Container::DeviceConfigContainer config() = 0;
+		virtual void setName(const QString &name) = 0;
 
 	};
 

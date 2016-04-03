@@ -21,7 +21,6 @@ namespace Device {
 		explicit DeviceThread(std::unique_ptr<DevicePort> &&device, QSerialPortInfo details, QObject *parent = 0);
 		virtual ~DeviceThread();
 
-		virtual QString name() const override;
 		virtual Enum::ReceiverType type() const override;
 
 		QSerialPortInfo details();

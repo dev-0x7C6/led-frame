@@ -26,10 +26,6 @@ DeviceThread::~DeviceThread() {
 	wait();
 }
 
-QString DeviceThread::name() const {
-	return m_details.systemLocation();
-}
-
 Enum::ReceiverType DeviceThread::type() const {
 	return Enum::ReceiverType::Device;
 }

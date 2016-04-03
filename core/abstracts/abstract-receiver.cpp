@@ -15,6 +15,14 @@ bool AbstractReceiver::isEmitterConnected() {
 	return (m_emitter != nullptr);
 }
 
+QString AbstractReceiver::name() const {
+	return m_name;
+}
+
+void AbstractReceiver::setName(const QString &name) {
+	m_name = name;
+}
+
 Container::ColorScanlineContainer &AbstractReceiver::data() {
 	if (m_emitter == nullptr)
 		return m_data;
