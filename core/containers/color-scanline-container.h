@@ -24,6 +24,7 @@ namespace Container {
 		static uint32_t linesize();
 		static uint32_t resolution();
 
+		void fill(const Enum::Position &position, const uint32_t &color);
 		void fill(const uint32_t &color);
 		void rotate(const uint32_t &color);
 

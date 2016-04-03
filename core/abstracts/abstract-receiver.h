@@ -14,6 +14,7 @@ namespace Abstract {
 
 	protected:
 		Container::ColorScanlineContainer &data();
+		const Container::ColorScanlineContainer &constData();
 
 	private:
 		Container::ColorScanlineContainer m_data;

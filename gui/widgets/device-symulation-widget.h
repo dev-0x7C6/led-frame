@@ -9,6 +9,8 @@
 class QQuickItem;
 class QQuickView;
 
+#include <array>
+
 namespace Widget {
 
 	class DeviceSymulationWidget : public QWidget, public Abstract::AbstractReceiver {
@@ -21,25 +23,18 @@ namespace Widget {
 		virtual Enum::ReceiverType type() const override;
 		virtual Container::DeviceConfigContainer config() override;
 
-		void onShow();
-
 		void createQmlMonitor();
-		void freeQmlMonitor();
-		void createQmlObjects(int size = 300);
-		void freeQmlObjects();
-		void resetQmlObjects();
 
-	private:
-		void createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size);
+		void createQmlRibbon();
+		void resizeQmlRibbon(QSize area, const int &size = 256);
+		void resizeQmlMonitor(QSize area);
 
 	protected:
-		virtual void timerEvent(QTimerEvent *) override;
+		virtual void timerEvent(QTimerEvent *event) override;
+		virtual void resizeEvent(QResizeEvent *event) override;
 
 	private:
-		QQuickItem *m_root;
-
-		QObject *m_objs[4][8];
-		QQuickItem *m_items[4][8];
+		std::array<QQuickItem *, 24> m_leds;
 		QQuickItem *m_monitor;
 		QQuickView *m_view;
 	};

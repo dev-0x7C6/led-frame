@@ -64,9 +64,12 @@ void ImageEmitter::loadFromFile(const QString &path) {
 			b += static_cast<uint8_t>(rgb >> 0x00);
 		}
 
-		r = std::min(static_cast<uint64_t>(255), r /= static_cast<uint64_t>(c));
-		g = std::min(static_cast<uint64_t>(255), g /= static_cast<uint64_t>(c));
-		b = std::min(static_cast<uint64_t>(255), b /= static_cast<uint64_t>(c));
+		r /= static_cast<uint64_t>(c);
+		g /= static_cast<uint64_t>(c);
+		b /= static_cast<uint64_t>(c);
+		r = std::min(static_cast<uint64_t>(255), r);
+		g = std::min(static_cast<uint64_t>(255), g);
+		b = std::min(static_cast<uint64_t>(255), b);
 		colors[i] = qRgb(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
 	}
 

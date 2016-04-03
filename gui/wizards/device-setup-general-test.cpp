@@ -23,7 +23,7 @@ DeviceSetupGeneralTest::DeviceSetupGeneralTest(Interface::IReceiver *device)
 }
 
 void DeviceSetupGeneralTest::initializePage() {
-	auto emitter = EmitterFactory::create(EmitterType::Image);
+	auto emitter = EmitterFactory::create(EmitterType::Test);
 	m_receiver->connectEmitter(emitter);
 	m_symulation->connectEmitter(emitter);
 }

@@ -6,7 +6,8 @@ namespace Enum {
 		Animation,
 		Color,
 		Image,
-		Screen
+		Screen,
+		Test
 	};
 
 }

@@ -57,7 +57,8 @@ SOURCES += main.cpp\
     gui/wizards/device-setup-info.cpp \
     core/enums/direction.cpp \
     core/containers/led-ribbon-config-container.cpp \
-    gui/widgets/device-symulation-widget.cpp
+    gui/widgets/device-symulation-widget.cpp \
+    core/emitters/test-emitter.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -100,7 +101,8 @@ HEADERS += \
     gui/wizards/device-setup-info.h \
     core/enums/direction.h \
     core/containers/led-ribbon-config-container.h \
-    gui/widgets/device-symulation-widget.h
+    gui/widgets/device-symulation-widget.h \
+    core/emitters/test-emitter.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

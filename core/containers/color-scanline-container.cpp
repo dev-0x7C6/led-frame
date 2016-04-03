@@ -1,14 +1,16 @@
 #include <core/containers/color-scanline-container.h>
 
-using namespace Container;
+#include <cassert>
 
+using namespace Container;
 
 Enum::ContainerType ColorScanlineContainer::type() const {
 	return Enum::ContainerType::ColorScanline;
 }
 
 uint32_t *Container::ColorScanlineContainer::data(const Enum::Position &position) {
-	return m_data.data() + (static_cast<int>(position) * 64);
+	assert(static_cast<uint32_t>(position) <= 3);
+	return m_data.data() + (static_cast<uint32_t>(position) * linesize());
 }
 
 uint32_t *ColorScanlineContainer::data() {
@@ -36,4 +38,11 @@ uint32_t Container::ColorScanlineContainer::linesize() {
 
 uint32_t ColorScanlineContainer::resolution() {
 	return scanline_size;
+}
+
+void ColorScanlineContainer::fill(const Enum::Position &position, const uint32_t &color) {
+	auto colors = data(position);
+
+	for (uint32_t i = 0; i < linesize(); ++i)
+		colors[i] = color;
 }

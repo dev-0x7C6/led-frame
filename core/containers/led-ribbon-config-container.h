@@ -15,7 +15,7 @@ namespace Container {
 			uint16_t position : 2;
 			uint16_t format : 3;
 			uint16_t count : 8;
-		};
+		} __attribute__((packed));
 
 		static_assert(sizeof(LedRibbonConfigStruct) == 2, "Struct size is different than expected.");
 	}

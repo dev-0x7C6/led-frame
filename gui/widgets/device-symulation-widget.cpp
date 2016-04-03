@@ -16,6 +16,8 @@
 #include <QQuickView>
 #include <QRadialGradient>
 #include <QSurfaceFormat>
+#include <QResizeEvent>
+#include <QtDebug>
 
 using namespace Container;
 using namespace Enum;
@@ -23,7 +25,6 @@ using namespace Widget;
 
 DeviceSymulationWidget::DeviceSymulationWidget(QWidget *parent) :
 	QWidget(parent),
-	//ALCReceiver(),
 	m_view(new QQuickView()) {
 	QPalette p = palette();
 	p.setBrush(QPalette::Window, QColor::fromRgb(20, 20, 20));
@@ -32,19 +33,26 @@ DeviceSymulationWidget::DeviceSymulationWidget(QWidget *parent) :
 	startTimer(1000 / 24);
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
 	QWidget *container = QWidget::createWindowContainer(m_view, this);
-	container->setMinimumSize(500, 380);
-	container->setMaximumSize(500, 380);
+	m_view->setColor(QColor::fromRgb(0, 0, 0));
+	container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	container->setFocusPolicy(Qt::TabFocus);
+	QPalette p1 = palette();
+	p.setBrush(QPalette::Window, QColor::fromRgb(0, 0, 0));
+	container->setPalette(p1);
+	container->setBackgroundRole(QPalette::Window);
 	layout->addWidget(container);
 	setLayout(layout);
 	m_view->setSource(QUrl("qrc:/gui/qml/Scene.qml"));
 	createQmlMonitor();
-	createQmlObjects();
+	createQmlRibbon();
 }
 
 DeviceSymulationWidget::~DeviceSymulationWidget() {
-	freeQmlMonitor();
-	freeQmlObjects();
+	delete m_monitor;
+
+	for (auto led : m_leds)
+		delete led;
+
 	delete m_view;
 }
 
@@ -86,176 +94,137 @@ void DeviceSymulationWidget::createQmlMonitor() {
 	QQmlComponent monitor(m_view->engine(), QUrl("qrc:/gui/qml/Monitor.qml"));
 	m_monitor = qobject_cast<QQuickItem *>(monitor.create());
 	m_monitor->setX(500 / 2 - 128);
-	m_monitor->setY(380 / 2 - 106);
+	m_monitor->setY(380 / 2 - 128);
 	m_monitor->setZ(1000);
 	m_monitor->setParent(m_view->rootObject());
 	m_monitor->setParentItem(qobject_cast<QQuickItem *>(m_view->rootObject()));
 }
 
-void DeviceSymulationWidget::freeQmlMonitor() {
-	delete m_monitor;
-}
-
-void DeviceSymulationWidget::createQmlObjects(int size) {
-	QRect draw(80, 80, 500 - 160, 380 - 160);
+void DeviceSymulationWidget::createQmlRibbon() {
 	QQmlComponent led(m_view->engine(), QUrl("qrc:/gui/qml/LedAmbient.qml"));
-	QObject *obj;
 	QQuickItem *item;
-	m_root = qobject_cast<QQuickItem *>(m_view->rootObject());
+	Container::DeviceConfigContainer ribbons = config();
+	auto setDefaultQmlVariables = [this](QQuickItem * item) {
+		item->setX(0);
+		item->setY(0);
+		item->setAntialiasing(false);
+		item->setHeight(10);
+		item->setWidth(10);
+		item->setSmooth(false);
+		item->setParent(m_view->rootObject());
+		item->setParentItem(static_cast<QQuickItem *>(m_view->rootObject()));
+	};
+	uint32_t counter = 0;
 
-	for (int ii = 0; ii < 4; ++ii) {
-		switch (ii) {
-			case 2:
-				for (int i = 0; i < 8; ++i) {
-					obj = led.create();
-					item = qobject_cast<QQuickItem *>(obj);
-					item->setX(draw.x() + (draw.width() / 7 * i) - size / 2);
-					item->setY(draw.y() - size / 2);
-					//  item->setVisible(false);
-					createQmlObject(ii, i, item, obj, size);
+	for (uint8_t i = 0; i < 4; ++i) {
+		auto ribbon = ribbons.ribbon(i);
+
+		for (uint8_t j = 0; j < ribbon.count(); ++j) {
+			item = static_cast<QQuickItem *>(led.create());
+			setDefaultQmlVariables(item);
+			m_leds[counter++] = item;
+		}
+	}
+}
+
+void DeviceSymulationWidget::resizeQmlRibbon(QSize area, const int &size) {
+	QSize siz(234, 142);
+	QPoint center(area.width() / 2, area.height() / 2);
+	QRect draw(center.x() - size / 2, center.y() - size / 2, 256, 256);
+	Container::DeviceConfigContainer cfg = config();
+	uint32_t counter = 0;
+	auto resizeLed = [&counter, this](int x, int y, int size) {
+		auto item = m_leds.at(counter++);
+		item->setX(x);
+		item->setY(y);
+		item->setSize(QSize(size, size));
+	};
+
+	for (uint8_t i = 0; i < 4; ++i) {
+		auto ribbon = cfg.ribbon(i);
+		auto sh = siz.width() / (ribbon.count() - 1);
+		auto sv = siz.height() / (ribbon.count() - 1);
+
+		switch (ribbon.position()) {
+			case Position::Top:
+				for (uint8_t j = 0; j < ribbon.count(); ++j) {
+					auto x = center.x() - siz.width() / 2 - size / 2 + (sh * j);
+					auto y = center.y() - siz.height() / 2 - size / 2;
+					resizeLed(x, y, size);
 				}
 
 				break;
 
-			case 0:
-				for (int i = 0; i < 8; ++i) {
-					obj = led.create();
-					item = qobject_cast<QQuickItem *>(obj);
-					item->setX(draw.x() + (draw.width() / 7 * (7 - i)) - size / 2);
-					item->setY(draw.y() + draw.height() - size / 2);
-					//   item->setVisible(false);
-					createQmlObject(ii, i, item, obj, size);
+			case Position::Bottom:
+				for (uint8_t j = 0; j < ribbon.count(); ++j) {
+					auto x = center.x() + siz.width() / 2 - size / 2 - (sh * j);
+					auto y = center.y() + siz.height() / 2 - size / 2;
+					resizeLed(x, y, size);
 				}
 
 				break;
 
-			case 1:
-				for (int i = 0; i < 4; ++i) {
-					obj = led.create();
-					item = qobject_cast<QQuickItem *>(obj);
-					item->setX(draw.x() - size / 2);
-					item->setY(draw.y() + ((draw.height() - size / 2) / 4 * (3 - i)) - size / 4);
-					createQmlObject(ii, i, item, obj, size);
+			case Position::Right:
+				for (uint8_t j = 0; j < ribbon.count(); ++j) {
+					auto x = center.x() + siz.width() / 2 - size / 2;
+					auto y = center.y() - siz.height() / 2 - size / 2 + (sv * j);
+					resizeLed(x, y, size);
 				}
 
 				break;
 
-			case 3:
-				for (int i = 0; i < 4; ++i) {
-					obj = led.create();
-					item = qobject_cast<QQuickItem *>(obj);
-					item->setX(draw.x() + draw.width() - size / 2);
-					item->setY(draw.y() + ((draw.height() - size / 2) / 4 * i) - size / 4);
-					createQmlObject(ii, i, item, obj, size);
+			case Position::Left:
+				for (uint8_t j = 0; j < ribbon.count(); ++j) {
+					auto x = center.x() - siz.width() / 2 - size / 2;
+					auto y = center.y() + siz.height() / 2 - size / 2 - (sv * j);
+					resizeLed(x, y, size);
 				}
 
+				break;
+
+			case Position::Last:
 				break;
 		}
 	}
 }
 
-void DeviceSymulationWidget::freeQmlObjects() {
-	for (int ii = 0; ii < 4; ++ii)
-		switch (ii) {
-			case 0:
-			case 2:
-				for (int i = 0; i < 8; ++i)
-					delete m_objs[ii][i];
-
-				break;
-
-			case 1:
-			case 3:
-				for (int i = 0; i < 4; ++i)
-					delete m_objs[ii][i];
-
-				break;
-		}
+void DeviceSymulationWidget::resizeQmlMonitor(QSize area) {
+	m_monitor->setX(area.width() / 2 - 128);
+	m_monitor->setY(area.height() / 2 - 128);
+	m_monitor->setZ(1000);
+	m_monitor->setParent(m_view->rootObject());
+	m_monitor->setParentItem(qobject_cast<QQuickItem *>(m_view->rootObject()));
 }
 
-void DeviceSymulationWidget::resetQmlObjects() {
-	for (int ii = 0; ii < 4; ++ii)
-		switch (ii) {
-			case 0:
-			case 2:
-				for (int i = 0; i < 8; ++i) {
-					QQuickItem *item = m_items[ii][i];
-					item->setOpacity(0.0);
-					item->setZ(0);
-					item->setProperty("sample", "black");
-				}
-
-				break;
-
-			case 1:
-			case 3:
-				for (int i = 0; i < 4; ++i) {
-					QQuickItem *item = m_items[ii][i];
-					item->setOpacity(0.0);
-					item->setZ(0);
-					item->setProperty("sample", "black");
-				}
-
-				break;
-		}
-
-	for (int i = 0; i < 8; ++i) {
-	}
-}
-
-void DeviceSymulationWidget::createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size) {
-	m_items[ii][i] = item;
-	m_objs[ii][i] = obj;
-	item->setAntialiasing(false);
-	item->setHeight(size);
-	item->setSmooth(false);
-	item->setWidth(size);
-	item->setParent(m_view->rootObject());
-	item->setParentItem(m_root);
+void DeviceSymulationWidget::resizeEvent(QResizeEvent *event) {
+	resizeQmlRibbon(event->size());
+	resizeQmlMonitor(event->size());
 }
 
 void DeviceSymulationWidget::timerEvent(QTimerEvent *) {
 	if (!isEmitterConnected())
 		return;
 
-	auto source = Abstract::AbstractReceiver::data();
+	Container::DeviceConfigContainer cfg = config();
+	auto source = constData();
+	uint32_t counter = 0;
 
-	for (int ii = 0; ii < 4; ++ii) {
-		auto colors = source.data(static_cast<Enum::Position>(ii));
+	for (uint8_t i = 0; i < 4; ++i) {
+		auto ribbon = cfg.ribbon(i);
+		auto colors = source.data(ribbon.position());
 
-		switch (ii) {
-			case 1:
-			case 3:
-				for (int i = 0; i < 4; ++i) {
-					double step = 64.0 / static_cast<double>(4 - 1);
-					auto index = std::min(64, static_cast<int>(i * step));
-					QColor color(colors[index]);
-					QQuickItem *item = m_items[ii][i];
+		for (int j = 0; j < ribbon.count(); ++j) {
+			double step = 64.0 / static_cast<double>(ribbon.count() - 1);
+			auto index = std::min(63, static_cast<int>(j * step));
+			QColor color(colors[index]);
+			QQuickItem *item = m_leds.at(counter++);
 
-					if (item->property("sample").toString() != color.name()) {
-						item->setOpacity((1.0 - color.blackF()) * 0.8);
-						item->setProperty("sample", QColor(colors[index]).name());
-					}
-				}
-
-				break;
-
-			case 0:
-			case 2:
-				for (int i = 0; i < 8; ++i) {
-					double step = 64.0 / static_cast<double>(8 - 1);
-					auto index = std::min(64, static_cast<int>(i * step));
-					QColor color(colors[index]);
-					QQuickItem *item = m_items[ii][i];
-
-					if (item->property("sample").toString() != color.name()) {
-						item->setOpacity((1.0 - color.blackF()) * 0.8);
-						item->setProperty("sample", QColor(colors[index]).name());
-					}
-				}
-
-				break;
+			if (item->property("sample").toString() != color.name()) {
+				item->setOpacity(0.33);
+				item->setProperty("sample", QColor(colors[index]).name());
+			}
 		}
 	}
 }
+
 

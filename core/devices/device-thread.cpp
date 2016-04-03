@@ -56,7 +56,7 @@ void DeviceThread::run() {
 			double step = 64.0 / static_cast<double>(config.count() - 1);
 
 			for (int i = 0; i < config.count(); ++i) {
-				auto index = std::min(64, static_cast<int>(i * step));
+				auto index = std::min(63, static_cast<int>(i * step));
 				stream.insert(config.colorFormat(), source.data(config.position())[index]);
 			}
 		}

@@ -23,3 +23,11 @@ Container::ColorScanlineContainer &AbstractReceiver::data() {
 	return m_data;
 }
 
+const Container::ColorScanlineContainer &AbstractReceiver::constData() {
+	if (m_emitter == nullptr)
+		return m_data;
+
+	m_data = m_emitter->data();
+	return m_data;
+}
+
