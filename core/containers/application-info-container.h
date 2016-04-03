@@ -10,9 +10,8 @@ namespace Container {
 		constexpr auto ApplicationName = "LedFrame";
 		constexpr auto ApplicationCodename = "";
 		constexpr int ApplicationVersionMajor = 0;
-		constexpr int ApplicationVersionMinor = 6;
-		constexpr int ApplicationVersionPatch = 5;
-		constexpr int ApplicationProtocolVersion = 1;
+		constexpr int ApplicationVersionMinor = 7;
+		constexpr int ApplicationVersionPatch = 0;
 	}
 
 	class ApplicationInfoContainer final : public AbstractContainer {
@@ -22,7 +21,6 @@ namespace Container {
 
 		virtual Enum::ContainerType type() const override;
 
-		int applicationProtocolVersion() const;
 		int applicationVersionMajor() const;
 		int applicationVersionMinor() const;
 		int applicationVersionPatch() const;
@@ -32,7 +30,6 @@ namespace Container {
 		QString applicationName() const;
 
 	private:
-		int m_applicationProtocolVersion;
 		int m_applicationVersionMajor;
 		int m_applicationVersionMinor;
 		int m_applicationVersionPatch;

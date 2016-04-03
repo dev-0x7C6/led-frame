@@ -4,7 +4,6 @@ using namespace Container;
 
 ApplicationInfoContainer::ApplicationInfoContainer()
 	: AbstractContainer()
-	, m_applicationProtocolVersion(Const::ApplicationProtocolVersion)
 	, m_applicationVersionMajor(Const::ApplicationVersionMajor)
 	, m_applicationVersionMinor(Const::ApplicationVersionMinor)
 	, m_applicationVersionPatch(Const::ApplicationVersionPatch)
@@ -41,8 +40,4 @@ QString ApplicationInfoContainer::versionToString() const {
 	  QString::number(m_applicationVersionMajor) + '.' +
 	  QString::number(m_applicationVersionMinor) + '.' +
 	  QString::number(m_applicationVersionPatch);
-}
-
-int ApplicationInfoContainer::applicationProtocolVersion() const {
-	return m_applicationProtocolVersion;
 }

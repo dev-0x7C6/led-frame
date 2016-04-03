@@ -23,12 +23,13 @@ int main(int argc, char *argv[]) {
 		if (settings.value("name", "").toString().isEmpty()) {
 			Wizard::DeviceSetupWizard wizard(receiver);
 			wizard.exec();
-			receiver->setName(wizard.field("name").toString());
-			settings.setValue("name", wizard.field("name").toString());
+			receiver->setName(wizard.field("deviceName").toString());
+			settings.setValue("name", wizard.field("deviceName").toString());
 		}
 
 		settings.endGroup();
 		settings.endGroup();
+		settings.sync();
 		return true;
 	});
 	Tray::SystemTray tray;
