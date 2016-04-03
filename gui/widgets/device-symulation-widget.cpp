@@ -1,4 +1,7 @@
-#include "gui/widgets/alc-symulation-widget.h"
+#include <core/containers/color-scanline-container.h>
+#include <core/containers/device-config-container.h>
+#include <core/containers/led-ribbon-config-container.h>
+#include <gui/widgets/device-symulation-widget.h>
 
 #include <QBoxLayout>
 #include <QElapsedTimer>
@@ -14,7 +17,11 @@
 #include <QRadialGradient>
 #include <QSurfaceFormat>
 
-ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
+using namespace Container;
+using namespace Enum;
+using namespace Widget;
+
+DeviceSymulationWidget::DeviceSymulationWidget(QWidget *parent) :
 	QWidget(parent),
 	//ALCReceiver(),
 	m_view(new QQuickView()) {
@@ -30,28 +37,53 @@ ALCSymulationWidget::ALCSymulationWidget(QWidget *parent) :
 	container->setFocusPolicy(Qt::TabFocus);
 	layout->addWidget(container);
 	setLayout(layout);
-	m_view->setSource(QUrl("qrc:/qml/Scene.qml"));
+	m_view->setSource(QUrl("qrc:/gui/qml/Scene.qml"));
 	createQmlMonitor();
 	createQmlObjects();
 }
 
-ALCSymulationWidget::~ALCSymulationWidget() {
-	//  if (m_emitter)
-	//    m_emitter->done();
+DeviceSymulationWidget::~DeviceSymulationWidget() {
 	freeQmlMonitor();
 	freeQmlObjects();
 	delete m_view;
 }
 
-//void ALCSymulationWidget::connectEmitter(Emitters::ALCEmitter *emitter) {
-////  ALCReceiver::connectEmitter(emitter);
+QString DeviceSymulationWidget::name() const {
+	return "Symulation";
+}
 
-//  if (!emitter)
-//    resetQmlObjects();
-//}
+Enum::ReceiverType DeviceSymulationWidget::type() const {
+	return Enum::ReceiverType::Device;
+}
 
-void ALCSymulationWidget::createQmlMonitor() {
-	QQmlComponent monitor(m_view->engine(), QUrl("qrc:/qml/Monitor.qml"));
+Container::DeviceConfigContainer DeviceSymulationWidget::config() {
+	Container::DeviceConfigContainer config;
+	Container::LedRibbonConfigContainer ribbon[4];
+	const auto list = {
+		Position::Top,
+		Position::Right,
+		Position::Bottom,
+		Position::Left
+	};
+
+	for (const auto &position : list) {
+		ribbon[static_cast<uint8_t>(position)].setColorFormat(ColorFormat::RGB);
+		ribbon[static_cast<uint8_t>(position)].setDirection(Direction::Normal);
+		ribbon[static_cast<uint8_t>(position)].setPosition(position);
+
+		if (position == Position::Top || position == Position::Bottom)
+			ribbon[static_cast<uint8_t>(position)].setCount(8);
+		else
+			ribbon[static_cast<uint8_t>(position)].setCount(4);
+
+		config.setRibbon(ribbon[static_cast<uint8_t>(position)], static_cast<uint8_t>(position));
+	}
+
+	return config;
+}
+
+void DeviceSymulationWidget::createQmlMonitor() {
+	QQmlComponent monitor(m_view->engine(), QUrl("qrc:/gui/qml/Monitor.qml"));
 	m_monitor = qobject_cast<QQuickItem *>(monitor.create());
 	m_monitor->setX(500 / 2 - 128);
 	m_monitor->setY(380 / 2 - 106);
@@ -60,13 +92,13 @@ void ALCSymulationWidget::createQmlMonitor() {
 	m_monitor->setParentItem(qobject_cast<QQuickItem *>(m_view->rootObject()));
 }
 
-void ALCSymulationWidget::freeQmlMonitor() {
+void DeviceSymulationWidget::freeQmlMonitor() {
 	delete m_monitor;
 }
 
-void ALCSymulationWidget::createQmlObjects(int size) {
+void DeviceSymulationWidget::createQmlObjects(int size) {
 	QRect draw(80, 80, 500 - 160, 380 - 160);
-	QQmlComponent led(m_view->engine(), QUrl("qrc:/qml/LedAmbient.qml"));
+	QQmlComponent led(m_view->engine(), QUrl("qrc:/gui/qml/LedAmbient.qml"));
 	QObject *obj;
 	QQuickItem *item;
 	m_root = qobject_cast<QQuickItem *>(m_view->rootObject());
@@ -122,7 +154,7 @@ void ALCSymulationWidget::createQmlObjects(int size) {
 	}
 }
 
-void ALCSymulationWidget::freeQmlObjects() {
+void DeviceSymulationWidget::freeQmlObjects() {
 	for (int ii = 0; ii < 4; ++ii)
 		switch (ii) {
 			case 0:
@@ -141,7 +173,7 @@ void ALCSymulationWidget::freeQmlObjects() {
 		}
 }
 
-void ALCSymulationWidget::resetQmlObjects() {
+void DeviceSymulationWidget::resetQmlObjects() {
 	for (int ii = 0; ii < 4; ++ii)
 		switch (ii) {
 			case 0:
@@ -171,7 +203,7 @@ void ALCSymulationWidget::resetQmlObjects() {
 	}
 }
 
-void ALCSymulationWidget::createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size) {
+void DeviceSymulationWidget::createQmlObject(int ii, int i, QQuickItem *item, QObject *obj, int size) {
 	m_items[ii][i] = item;
 	m_objs[ii][i] = obj;
 	item->setAntialiasing(false);
@@ -182,43 +214,48 @@ void ALCSymulationWidget::createQmlObject(int ii, int i, QQuickItem *item, QObje
 	item->setParentItem(m_root);
 }
 
-QString ALCSymulationWidget::name() {
-	return QString("symulation");
-}
+void DeviceSymulationWidget::timerEvent(QTimerEvent *) {
+	if (!isEmitterConnected())
+		return;
 
-void ALCSymulationWidget::timerEvent(QTimerEvent *) {
-	//  if (m_emitter) {
-	//    m_emitter->state(m_samples);
-	//    QVector <int> *colors;
-	//    for (int ii = 0; ii < 4; ++ii)
-	//      switch (ii) {
-	//        case 0:
-	//        case 2:
-	//          colors = m_samples.scaled(ALCColorSamples::Position(ii), 8);
-	//          for (int i = 0; i < 8; ++i) {
-	//            QColor color((*colors)[i]);
-	//            QQuickItem *item = m_items[ii][i];
-	//            if (item->property("sample").toString() != color.name()) {
-	//              item->setOpacity((1.0 - color.blackF()) * 0.8);
-	//              item->setProperty("sample", QColor((*colors)[i]).name());
-	//            }
-	//          }
-	//          delete colors;
-	//          break;
-	//        case 1:
-	//        case 3:
-	//          colors = m_samples.scaled(ALCColorSamples::Position(ii), 4);
-	//          for (int i = 0; i < 4; ++i) {
-	//            QColor color((*colors)[i]);
-	//            QQuickItem *item = m_items[ii][i];
-	//            if (item->property("sample").toString() != color.name()) {
-	//              item->setOpacity((1.0 - color.blackF()) * 0.8);
-	//              item->setProperty("sample", QColor((*colors)[i]).name());
-	//            }
-	//          }
-	//          delete colors;
-	//          break;
-	//      }
-	//  }
+	auto source = Abstract::AbstractReceiver::data();
+
+	for (int ii = 0; ii < 4; ++ii) {
+		auto colors = source.data(static_cast<Enum::Position>(ii));
+
+		switch (ii) {
+			case 1:
+			case 3:
+				for (int i = 0; i < 4; ++i) {
+					double step = 64.0 / static_cast<double>(4 - 1);
+					auto index = std::min(64, static_cast<int>(i * step));
+					QColor color(colors[index]);
+					QQuickItem *item = m_items[ii][i];
+
+					if (item->property("sample").toString() != color.name()) {
+						item->setOpacity((1.0 - color.blackF()) * 0.8);
+						item->setProperty("sample", QColor(colors[index]).name());
+					}
+				}
+
+				break;
+
+			case 0:
+			case 2:
+				for (int i = 0; i < 8; ++i) {
+					double step = 64.0 / static_cast<double>(8 - 1);
+					auto index = std::min(64, static_cast<int>(i * step));
+					QColor color(colors[index]);
+					QQuickItem *item = m_items[ii][i];
+
+					if (item->property("sample").toString() != color.name()) {
+						item->setOpacity((1.0 - color.blackF()) * 0.8);
+						item->setProperty("sample", QColor(colors[index]).name());
+					}
+				}
+
+				break;
+		}
+	}
 }
 

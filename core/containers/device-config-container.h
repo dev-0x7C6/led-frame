@@ -1,26 +1,22 @@
 #pragma once
 
 #include <core/containers/abstract-container.h>
+#include <core/containers/led-ribbon-config-container.h>
 #include <core/enums/color-format-enum.h>
 #include <core/enums/position-enum.h>
 
 #include <QString>
+#include <array>
 
 namespace Container {
 
+	constexpr int RibbonCount = 4;
+
+
 	namespace Struct {
-		struct LedStripConfig final {
-			uint16_t direction : 1;
-			uint16_t position : 2;
-			uint16_t palette : 3;
-			uint16_t count : 8;
-		};
-
-		static_assert(sizeof(LedStripConfig) == 2, "Struct size is different than expected.");
-
 		struct DeviceConfigStruct final {
 			uint8_t version;
-			LedStripConfig strip[4];
+			std::array<Struct::LedRibbonConfigStruct, RibbonCount> ribbon;
 		} __attribute__((packed));
 
 		static_assert(sizeof(DeviceConfigStruct) == 9, "Struct size is different than expected.");
@@ -39,7 +35,8 @@ namespace Container {
 		void fromBase64(const QString &base64);
 
 		uint8_t version() const;
-		Struct::LedStripConfig sequence(const uint8_t &index) const;
+		LedRibbonConfigContainer ribbon(const uint8_t &index) const;
+		void setRibbon(const LedRibbonConfigContainer &ribbon, const uint8_t &index);
 
 	private:
 		Struct::DeviceConfigStruct m_config;

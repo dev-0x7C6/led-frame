@@ -10,6 +10,8 @@ namespace Wizard {
 	public:
 		explicit DeviceSetupWizard(Interface::IReceiver *receiver);
 		virtual ~DeviceSetupWizard() = default;
+
+		virtual void accept() override;
 	};
 
 }

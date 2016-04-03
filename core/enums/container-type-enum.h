@@ -9,7 +9,8 @@ namespace Enum {
 		DeviceConfig,
 		ApplicationInfo,
 		ColorCorrector,
-		ColorScanline
+		ColorScanline,
+		LedRibbonConfig
 	};
 
 }

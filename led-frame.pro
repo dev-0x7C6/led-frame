@@ -19,7 +19,6 @@ include(cflags.pri)
 SOURCES += main.cpp\
 	gui/widgets/alc-color-correction-widget.cpp \
 	gui/dialogs/alc-screen-configure-dialog.cpp \
-	gui/widgets/alc-symulation-widget.cpp \
 	gui/dialogs/alc-about-dialog.cpp \
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
@@ -54,12 +53,15 @@ SOURCES += main.cpp\
     gui/tray/system-tray.cpp \
     gui/wizards/device-setup-wizard.cpp \
     gui/wizards/device-setup-pick-name.cpp \
-    gui/wizards/device-setup-general-test.cpp
+    gui/wizards/device-setup-general-test.cpp \
+    gui/wizards/device-setup-info.cpp \
+    core/enums/direction.cpp \
+    core/containers/led-ribbon-config-container.cpp \
+    gui/widgets/device-symulation-widget.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
 	gui/dialogs/alc-screen-configure-dialog.h \
-	gui/widgets/alc-symulation-widget.h \
 	gui/dialogs/alc-about-dialog.h \
     core/containers/abstract-container.h \
     core/containers/color-correction-container.h \
@@ -94,7 +96,11 @@ HEADERS += \
     gui/tray/system-tray.h \
     gui/wizards/device-setup-wizard.h \
     gui/wizards/device-setup-pick-name.h \
-    gui/wizards/device-setup-general-test.h
+    gui/wizards/device-setup-general-test.h \
+    gui/wizards/device-setup-info.h \
+    core/enums/direction.h \
+    core/containers/led-ribbon-config-container.h \
+    gui/widgets/device-symulation-widget.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

@@ -1,30 +1,12 @@
 #include <core/containers/device-config-container.h>
 
-//#include <qdebug.h>
+#include <qdebug.h>
 
 using namespace Enum;
 using namespace Container;
 using namespace Container::Struct;
 
 DeviceConfigContainer::DeviceConfigContainer() {
-	//  m_config.version = 1;
-	//  m_config.strip[0].count = 13;
-	//  m_config.strip[0].direction = 1;
-	//  m_config.strip[0].palette = static_cast<int>(ColorFormat::GRB);
-	//  m_config.strip[0].position = static_cast<int>(Position::Left);
-	//  m_config.strip[1].count = 25;
-	//  m_config.strip[1].direction = 1;
-	//  m_config.strip[1].palette = static_cast<int>(ColorFormat::GRB);
-	//  m_config.strip[1].position = static_cast<int>(Position::Top);
-	//  m_config.strip[2].count = 13;
-	//  m_config.strip[2].direction = 1;
-	//  m_config.strip[2].palette = static_cast<int>(ColorFormat::GRB);
-	//  m_config.strip[2].position = static_cast<int>(Position::Right);
-	//  m_config.strip[3].count = 25;
-	//  m_config.strip[3].direction = 1;
-	//  m_config.strip[3].palette = static_cast<int>(ColorFormat::GRB);
-	//  m_config.strip[3].position = static_cast<int>(Position::Bottom);
-	//  qDebug() << toBase64();
 }
 
 DeviceConfigContainer::DeviceConfigContainer(const QString &base64) : DeviceConfigContainer() {
@@ -50,9 +32,16 @@ uint8_t DeviceConfigContainer::version() const {
 	return m_config.version;
 }
 
-LedStripConfig DeviceConfigContainer::sequence(const uint8_t &index) const {
-	if (index > 3)
-		return {};
+LedRibbonConfigContainer DeviceConfigContainer::ribbon(const uint8_t &index) const {
+	if (index > m_config.ribbon.size())
+		return LedRibbonConfigContainer();
 
-	return m_config.strip[index];
+	return LedRibbonConfigContainer(m_config.ribbon.at(index));
+}
+
+void DeviceConfigContainer::setRibbon(const LedRibbonConfigContainer &ribbon, const uint8_t &index) {
+	if (index > m_config.ribbon.size())
+		return;
+
+	m_config.ribbon[index] = ribbon.config();
 }

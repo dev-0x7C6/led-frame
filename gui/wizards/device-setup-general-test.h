@@ -3,6 +3,10 @@
 #include <core/interfaces/ireceiver.h>
 #include <QWizardPage>
 
+namespace Widget {
+	class DeviceSymulationWidget;
+}
+
 namespace Wizard {
 
 	class DeviceSetupGeneralTest : public QWizardPage {
@@ -16,6 +20,7 @@ namespace Wizard {
 
 	private:
 		Interface::IReceiver *m_receiver;
+		Widget::DeviceSymulationWidget *m_symulation;
 	};
 
 }

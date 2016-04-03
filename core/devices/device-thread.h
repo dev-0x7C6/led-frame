@@ -2,6 +2,7 @@
 
 #include <core/abstracts/abstract-receiver.h>
 #include <core/enums/color-format-enum.h>
+#include <core/containers/device-config-container.h>
 
 #include <QSerialPort>
 #include <QSerialPortInfo>
@@ -25,6 +26,8 @@ namespace Device {
 
 		QSerialPortInfo details();
 		void interrupt();
+
+		virtual Container::DeviceConfigContainer config() override;
 
 	protected:
 		virtual void run() override;

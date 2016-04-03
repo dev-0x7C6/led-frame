@@ -1,9 +1,10 @@
 #pragma once
 
-#include <core/interfaces/templates/itemplate-attach.h>
 #include <core/containers/color-scanline-container.h>
+#include <core/containers/device-config-container.h>
 #include <core/enums/receiver-type-enum.h>
 #include <core/interfaces/icolor-corrector.h>
+#include <core/interfaces/templates/itemplate-attach.h>
 
 #include <QString>
 
@@ -21,6 +22,8 @@ namespace Interface {
 
 		virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) = 0;
 		virtual bool isEmitterConnected() = 0;
+
+		virtual Container::DeviceConfigContainer config() = 0;
 
 	};
 

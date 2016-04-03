@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QString>
+
 namespace Enum {
 
 	enum class Position : unsigned char {
@@ -9,5 +11,7 @@ namespace Enum {
 		Bottom,
 		Last
 	};
+
+	QString name(const Position &position);
 
 }

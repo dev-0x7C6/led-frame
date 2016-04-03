@@ -6,6 +6,7 @@
 #include <core/functionals/loop-sync.h>
 
 #include <QElapsedTimer>
+#include <algorithm>
 
 using namespace Container;
 using namespace Device;
@@ -37,10 +38,10 @@ void DeviceThread::run() {
 	Functional::ColorStream stream;
 	Functional::LoopSync sync;
 	const auto configs = {
-		m_device->config().sequence(0),
-		m_device->config().sequence(1),
-		m_device->config().sequence(2),
-		m_device->config().sequence(3)
+		m_device->config().ribbon(0),
+		m_device->config().ribbon(1),
+		m_device->config().ribbon(2),
+		m_device->config().ribbon(3)
 	};
 
 	do {
@@ -52,17 +53,16 @@ void DeviceThread::run() {
 		auto source = data();
 
 		for (const auto &config : configs) {
-			double step = 64.0 / static_cast<double>(config.count - 1);
+			double step = 64.0 / static_cast<double>(config.count() - 1);
 
-			for (int i = 0; i < config.count; ++i) {
-				//const auto format = static_cast<Enum::ColorFormat>(config.palette);
-				const auto position = static_cast<Enum::Position>(config.position);
-				stream.insert(ColorFormat::RGB, source.data(position)[static_cast<int>(i * step)]);
+			for (int i = 0; i < config.count(); ++i) {
+				auto index = std::min(64, static_cast<int>(i * step));
+				stream.insert(config.colorFormat(), source.data(config.position())[index]);
 			}
 		}
 
 		stream.write(*m_device);
-		m_device->waitForBytesWritten(10);
+		m_device->waitForBytesWritten(100);
 		m_device->clear();
 		sync.wait(100);
 	} while (!m_interrupt && m_device->error() == 0);
@@ -77,5 +77,9 @@ QSerialPortInfo DeviceThread::details() {
 
 void DeviceThread::interrupt() {
 	m_interrupt = true;
+}
+
+Container::DeviceConfigContainer DeviceThread::config() {
+	return m_device->config();
 }
 

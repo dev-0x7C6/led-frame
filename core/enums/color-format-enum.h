@@ -1,8 +1,12 @@
 #pragma once
 
+#include <QString>
+
+#include <cstdint>
+
 namespace Enum {
 
-	enum class ColorFormat : unsigned char {
+	enum class ColorFormat : uint8_t {
 		RGB,
 		RBG,
 		GRB,
@@ -10,5 +14,7 @@ namespace Enum {
 		GBR,
 		BGR
 	};
+
+	QString name(const ColorFormat &format);
 
 }
