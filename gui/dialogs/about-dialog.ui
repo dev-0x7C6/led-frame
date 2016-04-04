@@ -16,12 +16,6 @@
     <height>300</height>
    </size>
   </property>
-  <property name="maximumSize">
-   <size>
-    <width>750</width>
-    <height>300</height>
-   </size>
-  </property>
   <property name="palette">
    <palette>
     <active>
