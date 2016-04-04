@@ -16,9 +16,11 @@ SystemTray::SystemTray(QObject *parent)
 	m_tray.setContextMenu(m_menu);
 	draw();
 	m_menu->addSeparator();
+	auto about = m_menu->addAction("About");
 	auto quit = m_menu->addAction("Quit");
 	m_tray.show();
 	connect(quit, &QAction::triggered, this, &SystemTray::closeRequest);
+	connect(about, &QAction::triggered, this, &SystemTray::aboutRequest);
 }
 
 void SystemTray::draw() {

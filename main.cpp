@@ -4,6 +4,7 @@
 #include <core/devices/device-manager.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
+#include <gui/dialogs/about-dialog.h>
 
 #include <QSettings>
 
@@ -35,6 +36,10 @@ int main(int argc, char *argv[]) {
 	Tray::SystemTray tray;
 	QObject::connect(&tray, &Tray::SystemTray::closeRequest, [&application] {
 		application.quit();
+	});
+	QObject::connect(&tray, &Tray::SystemTray::aboutRequest, [] {
+		Widget::AboutDialog dialog;
+		dialog.exec();
 	});
 	return application.exec();
 }

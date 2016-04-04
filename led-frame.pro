@@ -19,7 +19,6 @@ include(cflags.pri)
 SOURCES += main.cpp\
 	gui/widgets/alc-color-correction-widget.cpp \
 	gui/dialogs/alc-screen-configure-dialog.cpp \
-	gui/dialogs/alc-about-dialog.cpp \
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
     core/containers/color-scanline-container.cpp \
@@ -58,12 +57,14 @@ SOURCES += main.cpp\
     core/enums/direction.cpp \
     core/containers/led-ribbon-config-container.cpp \
     gui/widgets/device-symulation-widget.cpp \
-    core/emitters/test-emitter.cpp
+    core/emitters/test-emitter.cpp \
+    gui/dialogs/about-dialog.cpp \
+    components/painters/wave-paint-engine.cpp \
+    components/widgets/decorated-dialog.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
 	gui/dialogs/alc-screen-configure-dialog.h \
-	gui/dialogs/alc-about-dialog.h \
     core/containers/abstract-container.h \
     core/containers/color-correction-container.h \
     core/containers/color-scanline-container.h \
@@ -102,13 +103,16 @@ HEADERS += \
     core/enums/direction.h \
     core/containers/led-ribbon-config-container.h \
     gui/widgets/device-symulation-widget.h \
-    core/emitters/test-emitter.h
+    core/emitters/test-emitter.h \
+    gui/dialogs/about-dialog.h \
+    components/painters/wave-paint-engine.h \
+    components/widgets/decorated-dialog.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \
 	gui/dialogs/alc-screen-configure-dialog.ui \
-	gui/dialogs/alc-about-dialog.ui \
-	gui/widgets/alc-emitter-widget.ui
+	gui/widgets/alc-emitter-widget.ui \
+    gui/dialogs/about-dialog.ui
 
 RESOURCES += \
     resources/resource.qrc \

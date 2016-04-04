@@ -21,6 +21,7 @@ namespace Tray {
 
 	signals:
 		void closeRequest();
+		void aboutRequest();
 	};
 
 }
