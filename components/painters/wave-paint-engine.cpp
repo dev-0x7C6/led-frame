@@ -16,9 +16,9 @@ WavePaintEngine::WavePaintEngine(QWidget *parent)
 	m_waveGradientModel.addPoint(0.600, QColor::fromRgbF(0.100, 0.100, 0.100), true);
 	m_waveGradientModel.addPoint(0.840, QColor::fromRgbF(0.500, 0.500, 0.500), true);
 	m_waveGradientModel.addPoint(0.845, QColor::fromRgbF(1.000, 1.000, 1.000), true);
-	m_waveGradientModel.addPoint(0.858, QColor::fromRgbF(0.150, 0.150, 0.150), true);
+	m_waveGradientModel.addPoint(0.870, QColor::fromRgbF(0.150, 0.150, 0.150), true);
 	m_waveGradientModel.addPoint(1.000, QColor::fromRgbF(0.000, 0.000, 0.000), false);
-	m_waveGradientModel.setSinMultipler(0.01);
+	m_waveGradientModel.setSinMultipler(0.015);
 	QObject::connect(&m_reflesh, &QTimer::timeout, [this]() {
 		update();
 	});
