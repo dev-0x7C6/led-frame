@@ -7,6 +7,7 @@
 #include <gui/dialogs/about-dialog.h>
 
 #include <QSettings>
+#include <QMessageBox>
 
 int main(int argc, char *argv[]) {
 	Container::ApplicationInfoContainer info;
@@ -22,11 +23,13 @@ int main(int argc, char *argv[]) {
 		settings.beginGroup(serialNumber);
 
 		if (settings.value("name", "").toString().isEmpty()) {
+			QMessageBox::information(nullptr, QObject::tr("Led frame detected"), QObject::tr("Detected new led frame device, application will run setup wizard."), QMessageBox::Ok);
 			Wizard::DeviceSetupWizard wizard(receiver);
 			wizard.exec();
 			receiver->setName(wizard.field("deviceName").toString());
 			settings.setValue("name", wizard.field("deviceName").toString());
-		}
+		} else
+			receiver->setName(settings.value("name", "").toString());
 
 		settings.endGroup();
 		settings.endGroup();

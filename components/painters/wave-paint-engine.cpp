@@ -13,12 +13,12 @@ WavePaintEngine::WavePaintEngine(QWidget *parent)
 	  m_parent(parent) {
 	m_waveGradientModel.addPoint(0.000, QColor::fromRgbF(0.000, 0.000, 0.000), false);
 	m_waveGradientModel.addPoint(0.200, QColor::fromRgbF(0.000, 0.000, 0.000), true);
-	m_waveGradientModel.addPoint(0.500, QColor::fromRgbF(0.100, 0.100, 0.100), true);
-	m_waveGradientModel.addPoint(0.740, QColor::fromRgbF(0.500, 0.500, 0.500), true);
-	m_waveGradientModel.addPoint(0.745, QColor::fromRgbF(1.000, 1.000, 1.000), true);
-	m_waveGradientModel.addPoint(0.758, QColor::fromRgbF(0.150, 0.150, 0.150), true);
+	m_waveGradientModel.addPoint(0.600, QColor::fromRgbF(0.100, 0.100, 0.100), true);
+	m_waveGradientModel.addPoint(0.840, QColor::fromRgbF(0.500, 0.500, 0.500), true);
+	m_waveGradientModel.addPoint(0.845, QColor::fromRgbF(1.000, 1.000, 1.000), true);
+	m_waveGradientModel.addPoint(0.858, QColor::fromRgbF(0.150, 0.150, 0.150), true);
 	m_waveGradientModel.addPoint(1.000, QColor::fromRgbF(0.000, 0.000, 0.000), false);
-	m_waveGradientModel.setSinMultipler(0.02);
+	m_waveGradientModel.setSinMultipler(0.01);
 	QObject::connect(&m_reflesh, &QTimer::timeout, [this]() {
 		update();
 	});
@@ -58,10 +58,9 @@ void WavePaintEngine::paint(const QRect &rect, QPainter &painter) {
 		return;
 
 	painter.save();
-	painter.setOpacity(m_opacity);
 	painter.setBrush(Qt::NoBrush);
 	painter.setPen(Qt::NoPen);
-	painter.drawPixmap(rect, m_pixmap, {m_shift, 0, m_pixmap.width() / 6, m_pixmap.height()});
+	painter.drawPixmap(rect, m_pixmap, {m_shift, 0, rect.width(), m_pixmap.height()});
 	painter.restore();
 }
 
@@ -69,8 +68,8 @@ void WavePaintEngine::resize(const QSize &size) {
 	if (!m_animationEnabled)
 		return;
 
-	if (m_pixmap.width() != size.width() * 2 || m_pixmap.height() != size.height()) {
-		m_pixmap = { size.width() * 2, size.height() };
+	if (m_pixmap.width() != size.width() * 4 || m_pixmap.height() != size.height()) {
+		m_pixmap = { size.width() * 4, size.height() };
 	}
 
 	QPainter painter(&m_pixmap);
@@ -86,7 +85,7 @@ void WavePaintEngine::resize(const QSize &size) {
 	double hue = 0;
 
 	for (double i = 0; i < m_pixmap.width(); i += sample) {
-		double wave = qSin(counter += (M_PI * 2) / diff) * m_waveGradientModel.sinMultipler();
+		double wave = qSin(counter += (M_PI) / diff) * m_waveGradientModel.sinMultipler();
 		QLinearGradient gradient(0, 0, 0, size.height());
 		hue = i / m_pixmap.width() * 2;
 
@@ -107,7 +106,7 @@ void WavePaintEngine::update() {
 	if (!m_animationEnabled)
 		return;
 
-	m_shift += (m_pixmap.width() / 600);
+	m_shift += m_parent->width() / 200;
 
 	if (m_shift > m_pixmap.width() / 2)
 		m_shift = 0;
@@ -134,7 +133,7 @@ void WavePaintEngine::setAnimationEnabled(bool animationEnabled) {
 		update();
 
 		if (!m_reflesh.isActive())
-			m_reflesh.start(1000.0 / 30.0);
+			m_reflesh.start(1000.0 / 24.0);
 	} else
 		m_animationEnabled = animationEnabled;
 

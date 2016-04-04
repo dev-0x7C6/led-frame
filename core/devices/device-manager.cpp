@@ -50,7 +50,7 @@ void DeviceManager::timerEvent(QTimerEvent *event) {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
-		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
+		//thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
 		m_threads.push_back(std::move(thread));
 	}
 }
