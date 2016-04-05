@@ -5,6 +5,7 @@
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
 #include <gui/dialogs/about-dialog.h>
+#include <core/devices/device-thread.h>
 
 #include <QSettings>
 #include <QMessageBox>
@@ -40,9 +41,12 @@ int main(int argc, char *argv[]) {
 	QObject::connect(&tray, &Tray::SystemTray::closeRequest, [&application] {
 		application.quit();
 	});
-	QObject::connect(&tray, &Tray::SystemTray::aboutRequest, [] {
-		Widget::AboutDialog dialog;
-		dialog.exec();
+	QObject::connect(&tray, &Tray::SystemTray::aboutRequest, [&manager] {
+		auto saveEmitter = manager.primary()->connectedEmitter();
+		auto dialog = std::make_shared<Widget::AboutDialog>();
+		manager.primary()->connectEmitter(dialog);
+		dialog->exec();
+		manager.primary()->connectEmitter(saveEmitter);
 	});
 	return application.exec();
 }

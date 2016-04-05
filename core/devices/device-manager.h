@@ -20,6 +20,8 @@ namespace Device {
 
 		void setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *, const QString &serialNumber)> &callback);
 
+		DeviceThread *primary();
+
 	protected:
 		void timerEvent(QTimerEvent *event);
 

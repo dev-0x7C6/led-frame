@@ -12,6 +12,7 @@ namespace Abstract {
 
 		virtual void connectEmitter(const std::shared_ptr<Interface::IEmitter> &emitter) override;
 		virtual bool isEmitterConnected() override;
+		virtual const std::shared_ptr<Interface::IEmitter> &connectedEmitter() const override;
 
 		virtual QString name() const override;
 		virtual void setName(const QString &name) override;
@@ -24,7 +25,6 @@ namespace Abstract {
 		Container::ColorScanlineContainer m_data;
 		std::shared_ptr<Interface::IEmitter> m_emitter;
 		QString m_name;
-
 	};
 
 }

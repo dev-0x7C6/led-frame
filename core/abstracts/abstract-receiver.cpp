@@ -15,6 +15,10 @@ bool AbstractReceiver::isEmitterConnected() {
 	return (m_emitter != nullptr);
 }
 
+const std::shared_ptr<Interface::IEmitter> &AbstractReceiver::connectedEmitter() const {
+	return m_emitter;
+}
+
 QString AbstractReceiver::name() const {
 	return m_name;
 }

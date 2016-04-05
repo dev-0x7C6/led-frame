@@ -1,5 +1,7 @@
 #pragma once
 
+#include <core/containers/color-scanline-container.h>
+
 #include <QColor>
 #include <QPainter>
 #include <QTimer>
@@ -42,19 +44,18 @@ namespace Widget {
 		bool animationEnabled() const;
 		void setAnimationEnabled(bool animationEnabled);
 
-		double opacity() const;
-		void setOpacity(double opacity);
+		const Container::ColorScanlineContainer &scanline() const;
 
 	protected:
 		void update();
 
 	private:
 		bool m_animationEnabled;
-		double m_opacity;
 		QTimer m_reflesh;
 		int m_shift;
 		QPixmap m_pixmap;
 		QWidget *m_parent;
+		Container::ColorScanlineContainer m_scanline;
 
 		WaveGradientModel m_waveGradientModel;
 	};

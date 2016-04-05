@@ -7,7 +7,8 @@ namespace Enum {
 		Color,
 		Image,
 		Screen,
-		Test
+		Test,
+		About
 	};
 
 }

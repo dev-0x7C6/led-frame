@@ -23,6 +23,8 @@ namespace Interface {
 		virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) = 0;
 		virtual bool isEmitterConnected() = 0;
 
+		virtual const std::shared_ptr<IEmitter> &connectedEmitter() const = 0;
+
 		virtual Container::DeviceConfigContainer config() = 0;
 		virtual void setName(const QString &name) = 0;
 

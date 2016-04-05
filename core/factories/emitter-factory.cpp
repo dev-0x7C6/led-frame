@@ -4,6 +4,7 @@
 #include <core/emitters/screen-emitter.h>
 #include <core/emitters/test-emitter.h>
 #include <core/factories/emitter-factory.h>
+#include <gui/dialogs/about-dialog.h>
 
 using Enum::EmitterType;
 using namespace Factory;
@@ -24,6 +25,9 @@ std::shared_ptr<Interface::IEmitter> EmitterFactory::create(const Enum::EmitterT
 
 		case EmitterType::Test:
 			return std::make_shared<Emitter::TestEmitter>();
+
+		case EmitterType::About:
+			return std::make_shared<Widget::AboutDialog>();
 	}
 
 	return nullptr;

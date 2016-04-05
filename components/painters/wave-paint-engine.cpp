@@ -8,15 +8,14 @@ using namespace Widget;
 
 WavePaintEngine::WavePaintEngine(QWidget *parent)
 	: m_animationEnabled(false),
-	  m_opacity(0.5),
 	  m_shift(0),
 	  m_parent(parent) {
 	m_waveGradientModel.addPoint(0.000, QColor::fromRgbF(0.000, 0.000, 0.000), false);
 	m_waveGradientModel.addPoint(0.200, QColor::fromRgbF(0.000, 0.000, 0.000), true);
 	m_waveGradientModel.addPoint(0.600, QColor::fromRgbF(0.100, 0.100, 0.100), true);
-	m_waveGradientModel.addPoint(0.840, QColor::fromRgbF(0.500, 0.500, 0.500), true);
-	m_waveGradientModel.addPoint(0.845, QColor::fromRgbF(1.000, 1.000, 1.000), true);
-	m_waveGradientModel.addPoint(0.870, QColor::fromRgbF(0.150, 0.150, 0.150), true);
+	m_waveGradientModel.addPoint(0.820, QColor::fromRgbF(0.500, 0.500, 0.500), true);
+	m_waveGradientModel.addPoint(0.825, QColor::fromRgbF(1.000, 1.000, 1.000), true);
+	m_waveGradientModel.addPoint(0.850, QColor::fromRgbF(0.150, 0.150, 0.150), true);
 	m_waveGradientModel.addPoint(1.000, QColor::fromRgbF(0.000, 0.000, 0.000), false);
 	m_waveGradientModel.setSinMultipler(0.015);
 	QObject::connect(&m_reflesh, &QTimer::timeout, [this]() {
@@ -102,11 +101,31 @@ void WavePaintEngine::resize(const QSize &size) {
 	}
 }
 
+#include <QtDebug>
+
 void WavePaintEngine::update() {
 	if (!m_animationEnabled)
 		return;
 
 	m_shift += m_parent->width() / 200;
+
+	for (uint32_t i = 0; i < Container::ColorScanlineContainer::linesize(); ++i) {
+		double step = m_parent->width() / 64;
+		double hue = static_cast<double>(m_shift + (step * i)) / m_pixmap.width() * 2;
+
+		if (hue > 1.0)
+			hue = hue - 1.0;
+
+		auto color = QColor::fromHslF(hue, 1, 0.5).rgb();
+		m_scanline.data(Enum::Position::Top)[i] = color;
+		m_scanline.data(Enum::Position::Bottom)[i] = color;
+
+		if (i == 0)
+			m_scanline.fill(Enum::Position::Left, color);
+
+		if (i == Container::ColorScanlineContainer::linesize() - 1)
+			m_scanline.fill(Enum::Position::Right, color);
+	}
 
 	if (m_shift > m_pixmap.width() / 2)
 		m_shift = 0;
@@ -114,12 +133,8 @@ void WavePaintEngine::update() {
 	m_parent->update();
 }
 
-double WavePaintEngine::opacity() const {
-	return m_opacity;
-}
-
-void WavePaintEngine::setOpacity(double opacity) {
-	m_opacity = opacity;
+const Container::ColorScanlineContainer &WavePaintEngine::scanline() const {
+	return m_scanline;
 }
 
 bool WavePaintEngine::animationEnabled() const {
@@ -140,3 +155,4 @@ void WavePaintEngine::setAnimationEnabled(bool animationEnabled) {
 	if (m_reflesh.isActive() && m_animationEnabled == false)
 		m_reflesh.stop();
 }
+
