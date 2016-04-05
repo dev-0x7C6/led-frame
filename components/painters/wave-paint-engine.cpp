@@ -118,7 +118,7 @@ void WavePaintEngine::update() {
 
 		auto color = QColor::fromHslF(hue, 1, 0.5).rgb();
 		m_scanline.data(Enum::Position::Top)[i] = color;
-		m_scanline.data(Enum::Position::Bottom)[i] = color;
+		m_scanline.data(Enum::Position::Bottom)[63 - i] = color;
 
 		if (i == 0)
 			m_scanline.fill(Enum::Position::Left, color);
