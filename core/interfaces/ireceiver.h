@@ -12,7 +12,7 @@ namespace Interface {
 
 	class IEmitter;
 
-	class IReceiver {
+	class IReceiver : public IColorCorrector {
 	public:
 		explicit IReceiver() = default;
 		virtual ~IReceiver() = default;

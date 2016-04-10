@@ -23,7 +23,7 @@ namespace Widget {
 		virtual Enum::EmitterType type() const override;
 
 	protected:
-		virtual void timerEvent(QTimerEvent *event);
+		virtual void timerEvent(QTimerEvent *event) override;
 
 	private:
 		Ui::AboutDialog *m_ui;

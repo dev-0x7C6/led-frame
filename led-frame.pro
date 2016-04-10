@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     core/emitters/test-emitter.cpp \
     gui/dialogs/about-dialog.cpp \
     components/painters/wave-paint-engine.cpp \
-    components/widgets/decorated-dialog.cpp
+    components/widgets/decorated-dialog.cpp \
+    core/emitters/emitter-manager.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -106,7 +107,8 @@ HEADERS += \
     core/emitters/test-emitter.h \
     gui/dialogs/about-dialog.h \
     components/painters/wave-paint-engine.h \
-    components/widgets/decorated-dialog.h
+    components/widgets/decorated-dialog.h \
+    core/emitters/emitter-manager.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

@@ -10,7 +10,7 @@ namespace Interface {
 		explicit IColorCorrector();
 		virtual ~IColorCorrector() = default;
 
-		Container::ColorCorrectionContainer &correction();
+		virtual Container::ColorCorrectionContainer &correction();
 
 	private:
 		Container::ColorCorrectionContainer m_correction;

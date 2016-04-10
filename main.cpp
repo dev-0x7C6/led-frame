@@ -38,15 +38,17 @@ int main(int argc, char *argv[]) {
 		return true;
 	});
 	Tray::SystemTray tray;
+	auto dialog = std::make_shared<Widget::AboutDialog>();
 	QObject::connect(&tray, &Tray::SystemTray::closeRequest, [&application] {
 		application.quit();
 	});
-	QObject::connect(&tray, &Tray::SystemTray::aboutRequest, [&manager] {
-		auto saveEmitter = manager.primary()->connectedEmitter();
-		auto dialog = std::make_shared<Widget::AboutDialog>();
+	QObject::connect(&tray, &Tray::SystemTray::aboutRequest, [&manager, &dialog] {
+		if (dialog->isVisible())
+			return;
+		auto save = manager.primary()->connectedEmitter();
 		manager.primary()->connectEmitter(dialog);
 		dialog->exec();
-		manager.primary()->connectEmitter(saveEmitter);
+		manager.primary()->connectEmitter(save);
 	});
 	return application.exec();
 }

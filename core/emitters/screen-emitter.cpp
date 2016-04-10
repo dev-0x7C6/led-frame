@@ -42,18 +42,18 @@ QRect ScreenEmitter::fragment(int w, int h, const uint32_t &index) {
 
 	switch (ColorScanlineContainer::fromIndexToPosition(index)) {
 		case Position::Left:
-			return QRect(0, (h / l) * (l - i - 1), 100, (h / l));
+			return QRect(0, (h / l) * (l - i - 1), 196, (h / l));
 
 		case Position::Top:
-			return QRect((w / l) * i, 0, (w / l), 100);
+			return QRect((w / l) * i, 0, (w / l), 196);
 
 		case Position::Right:
-			return QRect(w - 100, (h / l) * i, 100, (h / l));
+			return QRect(w - 196, (h / l) * i, 196, (h / l));
 
 		case Position::Bottom:
-			return QRect((w / l) * (l - i - 1), h - 100, (w / l), 100);
+			return QRect((w / l) * (l - i - 1), h - 196, (w / l), 196);
 
-		default:
+		case Position::Last:
 			return {};
 	}
 
@@ -74,11 +74,10 @@ void ScreenEmitter::run() {
 			uint64_t r = 0;
 			uint64_t g = 0;
 			uint64_t b = 0;
-			uint32_t rgb = 0;
 
-			for (int j = 0; j < c; j += 16) {
+			for (int j = 0; j < c; j += 8) {
 				QPoint point(area.x() + (j % area.width()), area.y() + (j / area.width()));
-				rgb = static_cast<uint32_t>(pixmap.pixel(point));
+				const auto rgb = static_cast<uint32_t>(pixmap.pixel(point));
 				r += static_cast<uint8_t>(rgb >> 0x10);
 				g += static_cast<uint8_t>(rgb >> 0x08);
 				b += static_cast<uint8_t>(rgb >> 0x00);
