@@ -8,7 +8,7 @@
 
 namespace Container {
 
-	constexpr int scanline_size = 256;
+	constexpr int scanline_size = 128;
 
 	class ColorScanlineContainer final : public AbstractContainer {
 	public:

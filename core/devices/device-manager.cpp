@@ -9,8 +9,8 @@
 using namespace Device;
 
 DeviceManager::DeviceManager(QObject *parent)
-	: QObject(parent),
-	  m_timerId(startTimer(250)) {
+	: QObject(parent) {
+	startTimer(250);
 }
 
 DeviceManager::~DeviceManager() {

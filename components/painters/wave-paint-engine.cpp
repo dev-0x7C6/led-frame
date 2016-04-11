@@ -110,7 +110,7 @@ void WavePaintEngine::update() {
 	m_shift += m_parent->width() / 200;
 
 	for (uint32_t i = 0; i < Container::ColorScanlineContainer::linesize(); ++i) {
-		double step = m_parent->width() / 64;
+		double step = m_parent->width() / static_cast<double>(Container::ColorScanlineContainer::linesize());
 		double hue = static_cast<double>(m_shift + (step * i)) / m_pixmap.width() * 2;
 
 		if (hue > 1.0)
@@ -118,7 +118,7 @@ void WavePaintEngine::update() {
 
 		auto color = QColor::fromHslF(hue, 1, 0.5).rgb();
 		m_scanline.data(Enum::Position::Top)[i] = color;
-		m_scanline.data(Enum::Position::Bottom)[63 - i] = color;
+		m_scanline.data(Enum::Position::Bottom)[Container::ColorScanlineContainer::linesize() - i - 1] = color;
 
 		if (i == 0)
 			m_scanline.fill(Enum::Position::Left, color);

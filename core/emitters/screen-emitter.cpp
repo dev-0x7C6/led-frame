@@ -94,6 +94,6 @@ void ScreenEmitter::run() {
 		}
 
 		commit(scanline);
-		loop.wait(30);
+		loop.wait(60);
 	} while (!m_interrupted);
 }

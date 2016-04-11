@@ -3,8 +3,7 @@
 #include <core/containers/color-scanline-container.h>
 #include <core/containers/device-config-container.h>
 #include <core/enums/receiver-type-enum.h>
-#include <core/interfaces/icolor-corrector.h>
-#include <core/interfaces/templates/itemplate-attach.h>
+#include <core/abstracts/abstract-corrector-attach.h>
 
 #include <QString>
 
@@ -12,7 +11,7 @@ namespace Interface {
 
 	class IEmitter;
 
-	class IReceiver : public IColorCorrector {
+	class IReceiver : public Abstract::AbstractCorrectorAttach {
 	public:
 		explicit IReceiver() = default;
 		virtual ~IReceiver() = default;

@@ -4,9 +4,11 @@
 #include <core/enums/position-enum.h>
 #include <core/functionals/color-stream.h>
 #include <core/functionals/loop-sync.h>
+#include <core/correctors/color-enhancer-corrector.h>
 
 #include <QElapsedTimer>
 #include <algorithm>
+#include <memory>
 
 using namespace Container;
 using namespace Device;
@@ -49,11 +51,12 @@ void DeviceThread::run() {
 		auto source = data();
 
 		for (const auto &config : configs) {
-			double step = 64.0 / static_cast<double>(config.count() - 1);
+			double step = static_cast<double>(source.linesize()) / static_cast<double>(config.count() - 1);
 
 			for (int i = 0; i < config.count(); ++i) {
-				auto index = std::min(63, static_cast<int>(i * step));
-				stream.insert(config.colorFormat(), source.data(config.position())[index]);
+				auto index = std::min(static_cast<int>(source.linesize() - 1), static_cast<int>(i * step));
+				auto color = source.data(config.position())[index];
+				stream.insert(config.colorFormat(), execute(color));
 			}
 		}
 
@@ -78,4 +81,3 @@ void DeviceThread::interrupt() {
 Container::DeviceConfigContainer DeviceThread::config() {
 	return m_device->config();
 }
-

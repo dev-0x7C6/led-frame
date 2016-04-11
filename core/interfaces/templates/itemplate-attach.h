@@ -9,8 +9,8 @@ namespace Interface {
 			explicit IAttachTemplate() = default;
 			virtual ~IAttachTemplate() = default;
 
-			virtual void attach(Class &pair) = 0;
-			virtual void detach(Class &pair) = 0;
+			virtual void attach(Class &&pair) = 0;
+			virtual void detach(Class &&pair) = 0;
 		};
 
 	}

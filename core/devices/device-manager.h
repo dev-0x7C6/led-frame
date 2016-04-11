@@ -29,8 +29,6 @@ namespace Device {
 		std::list<std::unique_ptr<DeviceThread>> m_threads;
 		std::function<bool(Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
 
-		int m_timerId;
-
 	};
 
 }

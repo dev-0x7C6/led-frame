@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/abstracts/abstract-receiver.h>
+#include <core/abstracts/abstract-corrector-attach.h>
 
 #include <QRgb>
 #include <QVector>
@@ -13,7 +14,10 @@ class QQuickView;
 
 namespace Widget {
 
-	class DeviceSymulationWidget : public QWidget, public Abstract::AbstractReceiver {
+	class DeviceSymulationWidget
+		: public QWidget
+		, public Abstract::AbstractReceiver {
+
 		Q_OBJECT
 	public:
 		explicit DeviceSymulationWidget(QWidget *parent = 0);

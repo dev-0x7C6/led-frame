@@ -61,7 +61,14 @@ SOURCES += main.cpp\
     gui/dialogs/about-dialog.cpp \
     components/painters/wave-paint-engine.cpp \
     components/widgets/decorated-dialog.cpp \
-    core/emitters/emitter-manager.cpp
+    core/emitters/emitter-manager.cpp \
+    core/abstracts/abstract-corrector-attach.cpp \
+    core/correctors/color-enhancer-corrector.cpp \
+    core/enums/corrector-type.cpp \
+    core/abstracts/abstract-corrector.cpp \
+    core/factories/corrector-factory.cpp \
+    core/correctors/brightness-corrector.cpp \
+    core/correctors/rgb-channel-corrector.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -108,7 +115,14 @@ HEADERS += \
     gui/dialogs/about-dialog.h \
     components/painters/wave-paint-engine.h \
     components/widgets/decorated-dialog.h \
-    core/emitters/emitter-manager.h
+    core/emitters/emitter-manager.h \
+    core/abstracts/abstract-corrector-attach.h \
+    core/correctors/color-enhancer-corrector.h \
+    core/enums/corrector-type.h \
+    core/abstracts/abstract-corrector.h \
+    core/factories/corrector-factory.h \
+    core/correctors/brightness-corrector.h \
+    core/correctors/rgb-channel-corrector.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

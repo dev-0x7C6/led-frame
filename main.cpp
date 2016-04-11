@@ -1,25 +1,35 @@
 #include <QApplication>
 
 #include <core/containers/application-info-container.h>
+#include <core/correctors/brightness-corrector.h>
 #include <core/devices/device-manager.h>
+#include <core/devices/device-thread.h>
+#include <core/factories/corrector-factory.h>
+#include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
-#include <gui/dialogs/about-dialog.h>
-#include <core/devices/device-thread.h>
 
 #include <QSettings>
 #include <QMessageBox>
 
+using namespace Container;
+using namespace Corrector;
+using namespace Device;
+using namespace Enum;
+using namespace Factory;
+
 int main(int argc, char *argv[]) {
-	Container::ApplicationInfoContainer info;
+	ApplicationInfoContainer info;
 	QApplication application(argc, argv);
 	application.setQuitOnLastWindowClosed(false);
 	application.setApplicationName(info.applicationName());
 	application.setApplicationVersion(info.versionToString());
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
-	Device::DeviceManager manager;
+	//
+	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness);
+	DeviceManager manager;
 	QSettings settings(info.applicationName(), info.applicationName());
-	manager.setRegisterDeviceCallback([&settings](Interface::IReceiver * receiver, const QString & serialNumber) {
+	manager.setRegisterDeviceCallback([&settings, &brightnessCorrector ](Interface::IReceiver * receiver, const QString & serialNumber) {
 		settings.beginGroup("devices");
 		settings.beginGroup(serialNumber);
 
@@ -35,6 +45,8 @@ int main(int argc, char *argv[]) {
 		settings.endGroup();
 		settings.endGroup();
 		settings.sync();
+		receiver->attach(brightnessCorrector);
+		//receiver->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
 	Tray::SystemTray tray;
