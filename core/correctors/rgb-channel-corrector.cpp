@@ -3,6 +3,12 @@
 using namespace Enum;
 using namespace Corrector;
 
+RGBChannelCorrector::RGBChannelCorrector()
+	: m_rfactor(1.0)
+	, m_gfactor(1.0)
+	, m_bfactor(1.0) {
+}
+
 CorrectorType RGBChannelCorrector::type() {
 	return CorrectorType::RGBChannel;
 }

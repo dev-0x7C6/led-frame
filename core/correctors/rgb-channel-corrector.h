@@ -6,7 +6,7 @@ namespace Corrector {
 
 	class RGBChannelCorrector final : public Abstract::AbstractCorrector {
 	public:
-		explicit RGBChannelCorrector() = default;
+		explicit RGBChannelCorrector();
 		virtual ~RGBChannelCorrector() = default;
 
 		virtual Enum::CorrectorType type() override;
