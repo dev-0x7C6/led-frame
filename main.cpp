@@ -8,6 +8,7 @@
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
+#include <core/correctors/rgb-channel-corrector.h>
 
 #include <QSettings>
 #include <QMessageBox>
@@ -25,11 +26,11 @@ int main(int argc, char *argv[]) {
 	application.setApplicationName(info.applicationName());
 	application.setApplicationVersion(info.versionToString());
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
-	//
 	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness);
+	auto rgbCorrector = std::make_shared<Corrector::RGBChannelCorrector>();
 	DeviceManager manager;
 	QSettings settings(info.applicationName(), info.applicationName());
-	manager.setRegisterDeviceCallback([&settings, &brightnessCorrector ](Interface::IReceiver * receiver, const QString & serialNumber) {
+	manager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Interface::IReceiver * receiver, const QString & serialNumber) {
 		settings.beginGroup("devices");
 		settings.beginGroup(serialNumber);
 
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]) {
 		settings.endGroup();
 		settings.sync();
 		receiver->attach(brightnessCorrector);
-		//receiver->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
+		receiver->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
 	Tray::SystemTray tray;

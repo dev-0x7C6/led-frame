@@ -68,7 +68,9 @@ SOURCES += main.cpp\
     core/abstracts/abstract-corrector.cpp \
     core/factories/corrector-factory.cpp \
     core/correctors/brightness-corrector.cpp \
-    core/correctors/rgb-channel-corrector.cpp
+    core/correctors/rgb-channel-corrector.cpp \
+    core/interfaces/iremote-server.cpp \
+    core/interfaces/iremote-client.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -122,7 +124,9 @@ HEADERS += \
     core/abstracts/abstract-corrector.h \
     core/factories/corrector-factory.h \
     core/correctors/brightness-corrector.h \
-    core/correctors/rgb-channel-corrector.h
+    core/correctors/rgb-channel-corrector.h \
+    core/interfaces/iremote-server.h \
+    core/interfaces/iremote-client.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \
