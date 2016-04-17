@@ -1,6 +1,5 @@
 #pragma once
 
-#include <core/interfaces/templates/itemplate-attach.h>
 #include <core/interfaces/icolor-corrector.h>
 #include <memory>
 

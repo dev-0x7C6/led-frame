@@ -12,7 +12,6 @@ namespace Emitter {
 		explicit ScreenEmitter(QObject *parent = nullptr);
 		virtual ~ScreenEmitter();
 
-		virtual QString name() const override;
 		virtual Enum::EmitterType type() const override;
 
 		void interrupt();

@@ -26,8 +26,6 @@ SOURCES += main.cpp\
     core/enums/color-type-enum.cpp \
     core/enums/container-type-enum.cpp \
     core/interfaces/icolor-corrector.cpp \
-    core/interfaces/templates/ipopulate-template.cpp \
-    core/interfaces/templates/itemplate-attach.cpp \
     core/interfaces/icolor-corrector-attach.cpp \
     core/interfaces/ireceiver.cpp \
     core/enums/receiver-type-enum.cpp \
@@ -70,7 +68,9 @@ SOURCES += main.cpp\
     core/correctors/brightness-corrector.cpp \
     core/correctors/rgb-channel-corrector.cpp \
     core/interfaces/iremote-server.cpp \
-    core/interfaces/iremote-client.cpp
+    core/interfaces/iremote-client.cpp \
+    core/interfaces/iemitter-manager.cpp \
+    core/abstracts/abstract-emitter-manager.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -82,8 +82,6 @@ HEADERS += \
     core/enums/color-type-enum.h \
     core/enums/container-type-enum.h \
     core/interfaces/icolor-corrector.h \
-    core/interfaces/templates/ipopulate-template.h \
-    core/interfaces/templates/itemplate-attach.h \
     core/interfaces/icolor-corrector-attach.h \
     core/interfaces/ireceiver.h \
     core/enums/receiver-type-enum.h \
@@ -126,7 +124,9 @@ HEADERS += \
     core/correctors/brightness-corrector.h \
     core/correctors/rgb-channel-corrector.h \
     core/interfaces/iremote-server.h \
-    core/interfaces/iremote-client.h
+    core/interfaces/iremote-client.h \
+    core/interfaces/iemitter-manager.h \
+    core/abstracts/abstract-emitter-manager.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

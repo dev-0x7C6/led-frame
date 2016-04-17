@@ -11,7 +11,6 @@ namespace Emitter {
 		explicit AnimationEmitter(QObject *parent = nullptr);
 		virtual ~AnimationEmitter() = default;
 
-		virtual QString name() const override;
 		virtual Enum::EmitterType type() const override;
 
 	protected:

@@ -2,22 +2,60 @@
 
 #include <core/containers/application-info-container.h>
 #include <core/correctors/brightness-corrector.h>
+#include <core/correctors/rgb-channel-corrector.h>
 #include <core/devices/device-manager.h>
 #include <core/devices/device-thread.h>
+#include <core/emitters/emitter-manager.h>
 #include <core/factories/corrector-factory.h>
+#include <core/factories/emitter-factory.h>
+#include <core/emitters/screen-emitter.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
-#include <core/correctors/rgb-channel-corrector.h>
 
 #include <QSettings>
 #include <QMessageBox>
+#include <QScreen>
+
+#include <memory>
 
 using namespace Container;
 using namespace Corrector;
 using namespace Device;
+using namespace Emitter::Manager;
 using namespace Enum;
 using namespace Factory;
+
+void createDefaultEmitters(EmitterManager &manager) {
+	auto screens = QGuiApplication::screens();
+
+	for (auto screen : screens) {
+		auto emitter = EmitterFactory::create(EmitterType::Screen);
+		auto inside = static_cast<Emitter::ScreenEmitter *>(emitter.get());
+		inside->setName(screen->name());
+		manager.attach(emitter);
+	}
+
+	auto animation1 = EmitterFactory::create(EmitterType::Animation);
+	auto animation2 = EmitterFactory::create(EmitterType::Animation);
+	auto animation3 = EmitterFactory::create(EmitterType::Animation);
+	auto color1 = EmitterFactory::create(EmitterType::Animation);
+	auto color2 = EmitterFactory::create(EmitterType::Animation);
+	auto color3 = EmitterFactory::create(EmitterType::Animation);
+	animation1->setName(QObject::tr("Animation #1"));
+	animation2->setName(QObject::tr("Animation #2"));
+	animation3->setName(QObject::tr("Animation #3"));
+	color1->setName(QObject::tr("Color #1"));
+	color2->setName(QObject::tr("Color #2"));
+	color3->setName(QObject::tr("Color #3"));
+	manager.attach(animation1);
+	manager.attach(animation2);
+	manager.attach(animation3);
+	manager.attach(color1);
+	manager.attach(color2);
+	manager.attach(color3);
+}
+
 
 int main(int argc, char *argv[]) {
 	ApplicationInfoContainer info;
@@ -26,11 +64,17 @@ int main(int argc, char *argv[]) {
 	application.setApplicationName(info.applicationName());
 	application.setApplicationVersion(info.versionToString());
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
+	QSettings settings(info.applicationName(), info.applicationName());
 	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness);
 	auto rgbCorrector = std::make_shared<Corrector::RGBChannelCorrector>();
-	DeviceManager manager;
-	QSettings settings(info.applicationName(), info.applicationName());
-	manager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Interface::IReceiver * receiver, const QString & serialNumber) {
+	DeviceManager deviceManager;
+	EmitterManager emitterManager(settings);
+	emitterManager.load();
+
+	if (emitterManager.isFirstRun())
+		createDefaultEmitters(emitterManager);
+
+	deviceManager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Interface::IReceiver * receiver, const QString & serialNumber) {
 		settings.beginGroup("devices");
 		settings.beginGroup(serialNumber);
 
@@ -55,13 +99,15 @@ int main(int argc, char *argv[]) {
 	QObject::connect(&tray, &Tray::SystemTray::closeRequest, [&application] {
 		application.quit();
 	});
-	QObject::connect(&tray, &Tray::SystemTray::aboutRequest, [&manager, &dialog] {
+	QObject::connect(&tray, &Tray::SystemTray::aboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())
 			return;
-		auto save = manager.primary()->connectedEmitter();
-		manager.primary()->connectEmitter(dialog);
+		auto save = deviceManager.primary()->connectedEmitter();
+		deviceManager.primary()->connectEmitter(dialog);
 		dialog->exec();
-		manager.primary()->connectEmitter(save);
+		deviceManager.primary()->connectEmitter(save);
 	});
-	return application.exec();
+	int result = application.exec();
+	emitterManager.save();
+	return result;
 }

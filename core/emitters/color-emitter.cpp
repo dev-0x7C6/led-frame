@@ -6,10 +6,6 @@ ColorEmitter::ColorEmitter() {
 	setColor(Qt::darkBlue);
 }
 
-QString ColorEmitter::name() const {
-	return "Color";
-}
-
 Enum::EmitterType ColorEmitter::type() const {
 	return Enum::EmitterType::Color;
 }

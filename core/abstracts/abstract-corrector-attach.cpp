@@ -5,8 +5,7 @@ using namespace Abstract;
 
 void AbstractCorrectorAttach::attach(const std::shared_ptr<Interface::IColorCorrector> &corrector) {
 	m_correctors.emplace_back(corrector);
-	std::sort(m_correctors.begin(), m_correctors.end(),
-	[](const std::shared_ptr<Interface::IColorCorrector> &a, const std::shared_ptr<Interface::IColorCorrector> &b) {
+	std::sort(m_correctors.begin(), m_correctors.end(), [](const auto & a, auto & b) {
 		return (a->priority() > b->priority());
 	});
 }

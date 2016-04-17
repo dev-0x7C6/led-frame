@@ -11,7 +11,6 @@ namespace Emitter {
 		explicit TestEmitter(QObject *parent = nullptr);
 		virtual ~TestEmitter() = default;
 
-		virtual QString name() const override;
 		virtual Enum::EmitterType type() const override;
 
 	protected:

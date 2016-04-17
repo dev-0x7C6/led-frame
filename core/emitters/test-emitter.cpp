@@ -16,10 +16,6 @@ TestEmitter::TestEmitter(QObject *parent)
 	timerEvent(nullptr);
 }
 
-QString TestEmitter::name() const {
-	return "test";
-}
-
 EmitterType TestEmitter::type() const {
 	return EmitterType::Test;
 }

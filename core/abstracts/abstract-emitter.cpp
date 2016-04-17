@@ -15,3 +15,11 @@ Container::ColorScanlineContainer AbstractEmitter::data() {
 	std::lock_guard<std::mutex> _(m_mutex);
 	return m_data;
 }
+
+QString AbstractEmitter::name() const {
+	return m_name;
+}
+
+void AbstractEmitter::setName(const QString &name) {
+	m_name = name;
+}

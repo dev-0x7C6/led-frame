@@ -22,10 +22,6 @@ AnimationEmitter::AnimationEmitter(QObject *parent)
 	m_colors.fill(0);
 }
 
-QString AnimationEmitter::name() const {
-	return "Animation";
-}
-
 Enum::EmitterType AnimationEmitter::type() const {
 	return Enum::EmitterType::Animation;
 }

@@ -20,6 +20,8 @@ namespace Interface {
 
 		virtual void commit(const Container::ColorScanlineContainer &scanline) = 0;
 		virtual Container::ColorScanlineContainer data() = 0;
+
+		virtual void setName(const QString &name) = 0;
 	};
 
 }

@@ -11,7 +11,6 @@ namespace Emitter {
 		explicit ColorEmitter();
 		virtual ~ColorEmitter() = default;
 
-		virtual QString name() const override;
 		virtual Enum::EmitterType type() const override;
 
 		QColor color() const;

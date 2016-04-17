@@ -11,7 +11,6 @@ namespace Emitter {
 		explicit ImageEmitter();
 		virtual ~ImageEmitter() = default;
 
-		virtual QString name() const override;
 		virtual Enum::EmitterType type() const override;
 
 		QRect fragment(int w, int h, const uint32_t &index);

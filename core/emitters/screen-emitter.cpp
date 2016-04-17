@@ -24,10 +24,6 @@ ScreenEmitter::~ScreenEmitter() {
 	wait();
 }
 
-QString ScreenEmitter::name() const {
-	return "Screen";
-}
-
 EmitterType ScreenEmitter::type() const {
 	return EmitterType::Screen;
 }

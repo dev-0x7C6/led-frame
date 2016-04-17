@@ -11,10 +11,6 @@ ImageEmitter::ImageEmitter() {
 	loadFromFile("/home/dev/test.jpg");
 }
 
-QString ImageEmitter::name() const {
-	return "Image";
-}
-
 Enum::EmitterType ImageEmitter::type() const {
 	return Enum::EmitterType::Image;
 }
