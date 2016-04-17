@@ -1,10 +1,10 @@
 #include <core/containers/device-config-container.h>
+#include <core/correctors/color-enhancer-corrector.h>
 #include <core/devices/device-port.h>
 #include <core/devices/device-thread.h>
 #include <core/enums/position-enum.h>
 #include <core/functionals/color-stream.h>
 #include <core/functionals/loop-sync.h>
-#include <core/correctors/color-enhancer-corrector.h>
 
 #include <QElapsedTimer>
 #include <algorithm>
@@ -15,17 +15,21 @@ using namespace Device;
 using namespace Enum;
 
 DeviceThread::DeviceThread(std::unique_ptr<DevicePort> &&device, QSerialPortInfo details, QObject *parent)
-	: QThread(parent),
-	  Abstract::AbstractReceiver(),
-	  m_device(std::move(device)),
-	  m_details(details),
-	  m_interrupt(false) {
+	: QThread(parent)
+	, Abstract::AbstractReceiver()
+	, m_device(std::move(device))
+	, m_details(details)
+	, m_interrupt(false)
+
+{
 	m_device->moveToThread(this);
+	start();
 }
 
 DeviceThread::~DeviceThread() {
 	interrupt();
 	wait();
+	connectEmitter(nullptr);
 }
 
 Enum::ReceiverType DeviceThread::type() const {

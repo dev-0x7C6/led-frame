@@ -7,7 +7,7 @@ using namespace Enum;
 using namespace Corrector;
 
 ColorEnhancerCorrector::ColorEnhancerCorrector()
-	: m_factor(1.2) {
+	: m_factor(1.5) {
 }
 
 Enum::CorrectorType Corrector::ColorEnhancerCorrector::type() {

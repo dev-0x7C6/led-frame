@@ -14,13 +14,17 @@ namespace Device {
 	class DevicePort;
 
 	class DeviceManager : public QObject {
+		Q_OBJECT
 	public:
-		explicit DeviceManager(QObject *parent = 0);
+		explicit DeviceManager(QObject *parent = nullptr);
 		virtual ~DeviceManager();
 
 		void setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *, const QString &serialNumber)> &callback);
 
 		DeviceThread *primary();
+
+	protected:
+		void removeThread();
 
 	protected:
 		void timerEvent(QTimerEvent *event);

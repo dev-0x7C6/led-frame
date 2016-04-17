@@ -9,7 +9,9 @@
 using namespace Device;
 
 DeviceManager::DeviceManager(QObject *parent)
-	: QObject(parent) {
+	: QObject(parent)
+
+{
 	startTimer(250);
 }
 
@@ -40,12 +42,7 @@ void DeviceManager::timerEvent(QTimerEvent *event) {
 		device->setDataBits(QSerialPort::Data8);
 		device->setStopBits(QSerialPort::OneStop);
 		auto thread = std::make_unique<DeviceThread>(std::move(device), ports[i]);
-		connect(thread.get(), &DeviceThread::finished, [this] {
-			m_threads.remove_if([this](const std::unique_ptr<DeviceThread> &thread) {
-				return thread.get() == sender();
-			});
-		});
-		thread->start();
+		connect(thread.get(), &DeviceThread::finished, this, &DeviceManager::removeThread, Qt::QueuedConnection);
 
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
@@ -61,4 +58,13 @@ void DeviceManager::setRegisterDeviceCallback(const std::function<bool (Interfac
 
 DeviceThread *DeviceManager::primary() {
 	return m_threads.front().get();
+}
+
+void DeviceManager::removeThread() {
+	auto thread = reinterpret_cast<DeviceThread *>(sender());
+	thread->interrupt();
+	thread->wait();
+	m_threads.remove_if([thread](const auto & match) {
+		return match.get() == thread;
+	});
 }
