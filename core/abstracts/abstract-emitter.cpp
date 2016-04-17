@@ -2,7 +2,7 @@
 
 using namespace Abstract;
 
-AbstractEmitter::AbstractEmitter() {
+AbstractEmitter::AbstractEmitter() : m_connectionCount(0) {
 	m_data.fill(0);
 }
 
@@ -22,4 +22,18 @@ QString AbstractEmitter::name() const {
 
 void AbstractEmitter::setName(const QString &name) {
 	m_name = name;
+}
+
+void AbstractEmitter::connect() {
+	m_connectionCount++;
+	onConnect(m_connectionCount);
+}
+
+void AbstractEmitter::disconnect() {
+	m_connectionCount--;
+	onDisconnect(m_connectionCount);
+}
+
+uint32_t AbstractEmitter::connectionCount() {
+	return m_connectionCount;
 }

@@ -7,8 +7,18 @@ AbstractReceiver::AbstractReceiver() {
 	m_data.fill(0);
 }
 
+AbstractReceiver::~AbstractReceiver() {
+	connectEmitter(nullptr);
+}
+
 void AbstractReceiver::connectEmitter(const std::shared_ptr<Interface::IEmitter> &emitter) {
+	if (m_emitter)
+		m_emitter->disconnect();
+
 	m_emitter = emitter;
+
+	if (m_emitter)
+		m_emitter->connect();
 }
 
 bool AbstractReceiver::isEmitterConnected() {
@@ -42,4 +52,3 @@ const Container::ColorScanlineContainer &AbstractReceiver::constData() {
 	m_data = m_emitter->data();
 	return m_data;
 }
-

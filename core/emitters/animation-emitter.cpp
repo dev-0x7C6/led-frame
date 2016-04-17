@@ -22,8 +22,26 @@ AnimationEmitter::AnimationEmitter(QObject *parent)
 	m_colors.fill(0);
 }
 
+AnimationEmitter::~AnimationEmitter() {
+	if (m_animation.state() == QAbstractAnimation::Running)
+		m_animation.stop();
+}
+
 Enum::EmitterType AnimationEmitter::type() const {
 	return Enum::EmitterType::Animation;
+}
+
+void AnimationEmitter::onConnect(const uint32_t &count) {
+	if (m_animation.state() != QAbstractAnimation::Running && count > 0)
+		m_animation.start();
+}
+
+void AnimationEmitter::onDisconnect(const uint32_t &count) {
+	if (count != 0)
+		return;
+
+	if (m_animation.state() == QAbstractAnimation::Running)
+		m_animation.stop();
 }
 
 void AnimationEmitter::process(const QVariant &value) {

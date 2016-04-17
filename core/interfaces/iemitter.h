@@ -22,6 +22,12 @@ namespace Interface {
 		virtual Container::ColorScanlineContainer data() = 0;
 
 		virtual void setName(const QString &name) = 0;
+
+		virtual void connect() = 0;
+		virtual void disconnect() = 0;
+
+		virtual uint32_t connectionCount() = 0;
+
 	};
 
 }

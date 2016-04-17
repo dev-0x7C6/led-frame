@@ -71,3 +71,9 @@ void ImageEmitter::loadFromFile(const QString &path) {
 
 	commit(scanline);
 }
+
+void ImageEmitter::onConnect(const uint32_t &) {
+}
+
+void ImageEmitter::onDisconnect(const uint32_t &) {
+}

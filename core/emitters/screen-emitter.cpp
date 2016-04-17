@@ -16,7 +16,6 @@ ScreenEmitter::ScreenEmitter(QObject *parent)
 	, m_interrupted(false)
 
 {
-	start();
 }
 
 ScreenEmitter::~ScreenEmitter() {
@@ -26,6 +25,19 @@ ScreenEmitter::~ScreenEmitter() {
 
 EmitterType ScreenEmitter::type() const {
 	return EmitterType::Screen;
+}
+
+void ScreenEmitter::onConnect(const uint32_t &count) {
+	if (!isRunning() && count > 0)
+		start();
+}
+
+void ScreenEmitter::onDisconnect(const uint32_t &count) {
+	if (count != 0)
+		return;
+
+	interrupt();
+	wait();
 }
 
 void ScreenEmitter::interrupt() {

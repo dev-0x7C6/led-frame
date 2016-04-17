@@ -108,3 +108,9 @@ void TestEmitter::timerEvent(QTimerEvent *) {
 	commit(scanline);
 	m_currentStep++;
 }
+
+void TestEmitter::onConnect(const uint32_t &) {
+}
+
+void TestEmitter::onDisconnect(const uint32_t &) {
+}

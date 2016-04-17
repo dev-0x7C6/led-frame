@@ -15,11 +15,11 @@ Enum::CorrectorType Corrector::ColorEnhancerCorrector::type() {
 }
 
 uint32_t ColorEnhancerCorrector::correct(const uint32_t &color) {
-	auto r = static_cast<uint32_t>((color >> 0x10) & 0xFFu);
-	auto g = static_cast<uint32_t>((color >> 0x08) & 0xFFu);
-	auto b = static_cast<uint32_t>((color >> 0x00) & 0xFFu);
+	auto r = static_cast<uint32_t>((color >> 0x10) & 0xffu);
+	auto g = static_cast<uint32_t>((color >> 0x08) & 0xffu);
+	auto b = static_cast<uint32_t>((color >> 0x00) & 0xffu);
 	auto convert = QColor::fromRgb(r, g, b).toHsl();
-	auto buff = QColor::fromHslF(convert.hueF(), std::min(1.0, convert.saturationF() * 1.3), convert.lightnessF());
+	auto buff = QColor::fromHslF(convert.hueF(), std::min(1.0, convert.saturationF() * m_factor), convert.lightnessF());
 	auto normal = buff.toRgb();
 	//const double factor = m_factor;
 	//  if (r > g && r > b)

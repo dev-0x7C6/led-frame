@@ -14,10 +14,12 @@ namespace Emitter {
 
 		virtual Enum::EmitterType type() const override;
 
-		void interrupt();
-
 	protected:
+		void interrupt();
 		virtual void run() override;
+
+		virtual void onConnect(const uint32_t &count) override;
+		virtual void onDisconnect(const uint32_t &count) override;
 
 	private:
 		QRect fragment(int w, int h, const uint32_t &index);

@@ -16,6 +16,10 @@ namespace Emitter {
 		QColor color() const;
 		void setColor(const QColor &color);
 
+	protected:
+		virtual void onConnect(const uint32_t &count) override;
+		virtual void onDisconnect(const uint32_t &count) override;
+
 	private:
 		Container::ColorScanlineContainer m_scanline;
 		QColor m_color;

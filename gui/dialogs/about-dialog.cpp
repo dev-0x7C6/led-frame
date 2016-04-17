@@ -31,3 +31,9 @@ Enum::EmitterType AboutDialog::type() const {
 void AboutDialog::timerEvent(QTimerEvent *) {
 	commit(wave().scanline());
 }
+
+void AboutDialog::onConnect(const uint32_t &) {
+}
+
+void AboutDialog::onDisconnect(const uint32_t &) {
+}

@@ -15,6 +15,9 @@ namespace Emitter {
 
 	protected:
 		virtual void timerEvent(QTimerEvent *event) override;
+		virtual void onConnect(const uint32_t &count) override;
+		virtual void onDisconnect(const uint32_t &count) override;
+
 
 	private:
 		uint8_t m_currentStep;

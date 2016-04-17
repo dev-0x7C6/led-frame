@@ -24,6 +24,9 @@ namespace Widget {
 
 	protected:
 		virtual void timerEvent(QTimerEvent *event) override;
+		virtual void onConnect(const uint32_t &count) override;
+		virtual void onDisconnect(const uint32_t &count) override;
+
 
 	private:
 		Ui::AboutDialog *m_ui;
