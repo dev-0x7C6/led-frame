@@ -11,7 +11,7 @@ namespace Container {
 		constexpr auto ApplicationCodename = "";
 		constexpr int ApplicationVersionMajor = 0;
 		constexpr int ApplicationVersionMinor = 7;
-		constexpr int ApplicationVersionPatch = 5;
+		constexpr int ApplicationVersionPatch = 6;
 	}
 
 	class ApplicationInfoContainer final : public AbstractContainer {
