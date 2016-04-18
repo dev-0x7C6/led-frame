@@ -25,8 +25,6 @@ namespace Device {
 
 	protected:
 		void removeThread();
-
-	protected:
 		void timerEvent(QTimerEvent *event);
 
 	private:

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <core/abstracts/abstract-receiver.h>
-#include <core/enums/color-format-enum.h>
 #include <core/containers/device-config-container.h>
+#include <core/enums/color-format-enum.h>
 
 #include <QSerialPort>
 #include <QSerialPortInfo>

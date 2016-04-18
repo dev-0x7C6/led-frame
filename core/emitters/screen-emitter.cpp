@@ -28,8 +28,10 @@ EmitterType ScreenEmitter::type() const {
 }
 
 void ScreenEmitter::onConnect(const uint32_t &count) {
-	if (!isRunning() && count > 0)
+	if (!isRunning() && count > 0) {
+		m_interrupted = false;
 		start();
+	}
 }
 
 void ScreenEmitter::onDisconnect(const uint32_t &count) {
