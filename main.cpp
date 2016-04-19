@@ -96,10 +96,10 @@ int main(int argc, char *argv[]) {
 	});
 	Tray::SystemTray tray;
 	auto dialog = std::make_shared<Widget::AboutDialog>();
-	QObject::connect(&tray, &Tray::SystemTray::closeRequest, [&application] {
+	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
 		application.quit();
 	});
-	QObject::connect(&tray, &Tray::SystemTray::aboutRequest, [&deviceManager, &dialog] {
+	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())
 			return;
 		auto save = deviceManager.primary()->connectedEmitter();

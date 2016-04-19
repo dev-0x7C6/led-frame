@@ -70,7 +70,9 @@ SOURCES += main.cpp\
     core/interfaces/iremote-server.cpp \
     core/interfaces/iremote-client.cpp \
     core/interfaces/iemitter-manager.cpp \
-    core/abstracts/abstract-emitter-manager.cpp
+    core/abstracts/abstract-emitter-manager.cpp \
+    core/menus/device-menu.cpp \
+    core/menus/emitter-menu.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -126,7 +128,9 @@ HEADERS += \
     core/interfaces/iremote-server.h \
     core/interfaces/iremote-client.h \
     core/interfaces/iemitter-manager.h \
-    core/abstracts/abstract-emitter-manager.h
+    core/abstracts/abstract-emitter-manager.h \
+    core/menus/device-menu.h \
+    core/menus/emitter-menu.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \
