@@ -25,6 +25,10 @@ SystemTray::SystemTray(QObject *parent)
 	connect(about, &QAction::triggered, this, &SystemTray::signalAboutRequest);
 }
 
+SystemTray::~SystemTray() {
+	delete m_deviceMenu;
+}
+
 
 void SystemTray::redrawTrayIcon(const double &opacity) {
 	QPixmap source(":/tray.png");
