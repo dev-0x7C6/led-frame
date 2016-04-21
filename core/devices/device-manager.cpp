@@ -43,7 +43,7 @@ void DeviceManager::rescan() {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
-		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Animation));
+		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
 		attach(std::move(thread));
 	}
 }

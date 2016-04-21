@@ -4,7 +4,7 @@
 
 namespace Enum {
 
-	enum class EmitterType : uint32_t {
+	enum class EmitterType : uint8_t {
 		Animation,
 		Color,
 		Image,

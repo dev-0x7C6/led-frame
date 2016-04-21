@@ -20,19 +20,19 @@ namespace Functional {
 		void write(QIODevice &device);
 
 	protected:
-		inline uint32_t getr(const uint32_t &color) const;
-		inline uint32_t getg(const uint32_t &color) const;
-		inline uint32_t getb(const uint32_t &color) const;
+		inline uint8_t getr(const uint32_t &color) const;
+		inline uint8_t getg(const uint32_t &color) const;
+		inline uint8_t getb(const uint32_t &color) const;
 
-		inline void writeRGB(const uint32_t &r, const uint32_t &g, const uint32_t &b);
-		inline void writeRBG(const uint32_t &r, const uint32_t &g, const uint32_t &b);
-		inline void writeGRB(const uint32_t &r, const uint32_t &g, const uint32_t &b);
-		inline void writeGBR(const uint32_t &r, const uint32_t &g, const uint32_t &b);
-		inline void writeBRG(const uint32_t &r, const uint32_t &g, const uint32_t &b);
-		inline void writeBGR(const uint32_t &r, const uint32_t &g, const uint32_t &b);
+		inline void writeRGB(const uint8_t &r, const uint8_t &g, const uint8_t &b);
+		inline void writeRBG(const uint8_t &r, const uint8_t &g, const uint8_t &b);
+		inline void writeGRB(const uint8_t &r, const uint8_t &g, const uint8_t &b);
+		inline void writeGBR(const uint8_t &r, const uint8_t &g, const uint8_t &b);
+		inline void writeBRG(const uint8_t &r, const uint8_t &g, const uint8_t &b);
+		inline void writeBGR(const uint8_t &r, const uint8_t &g, const uint8_t &b);
 
 	private:
-		std::array<uint32_t, 270> m_buffer;
+		std::array<uint8_t, 270> m_buffer;
 		size_t m_seek;
 
 	};

@@ -4,7 +4,7 @@
 
 namespace Enum {
 
-	enum class ReceiverType : uint32_t {
+	enum class ReceiverType : uint8_t {
 		Device
 	};
 

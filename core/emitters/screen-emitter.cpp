@@ -72,28 +72,33 @@ QRect ScreenEmitter::fragment(int w, int h, const uint32_t &index) {
 
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
+	Container::ColorScanlineContainer scanline;
+	uint32_t *colors = scanline.data();
+	constexpr int step = 16;
 
 	do {
 		auto pixmap = QGuiApplication::screens().first()->grabWindow(0).toImage();
-		Container::ColorScanlineContainer scanline;
-		uint32_t *colors = scanline.data();
+		const uint32_t *data = reinterpret_cast<const uint32_t *>(pixmap.constBits());
+		const auto w = pixmap.width();
+		const auto h = pixmap.height();
 
 		for (uint32_t i = 0; i < scanline_size; ++i) {
-			QRect area = fragment(pixmap.width(), pixmap.height(), i);
+			QRect area = fragment(w, h, i);
 			int c = area.width() * area.height();
 			uint64_t r = 0;
 			uint64_t g = 0;
 			uint64_t b = 0;
 
-			for (int j = 0; j < c; j += 8) {
-				QPoint point(area.x() + (j % area.width()), area.y() + (j / area.width()));
-				const auto rgb = static_cast<uint32_t>(pixmap.pixel(point));
-				r += static_cast<uint8_t>(rgb >> 0x10);
-				g += static_cast<uint8_t>(rgb >> 0x08);
-				b += static_cast<uint8_t>(rgb >> 0x00);
+			for (int j = 0; j < c; j += step) {
+				const auto x = area.x() + (j % area.width());
+				const auto y = area.y() + (j / area.width());
+				const auto p = x + (y * w);
+				r += static_cast<uint8_t>(data[p] >> 0x10);
+				g += static_cast<uint8_t>(data[p] >> 0x08);
+				b += static_cast<uint8_t>(data[p] >> 0x00);
 			}
 
-			c /= 16;
+			c /= step;
 			r /= static_cast<uint64_t>(c);
 			g /= static_cast<uint64_t>(c);
 			b /= static_cast<uint64_t>(c);

@@ -4,7 +4,7 @@
 
 namespace Enum {
 
-	enum class Position : uint32_t {
+	enum class Position : uint8_t {
 		Left,
 		Top,
 		Right,

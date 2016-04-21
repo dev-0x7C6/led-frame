@@ -4,7 +4,7 @@
 
 namespace Enum {
 
-	enum class ColorType : uint32_t {
+	enum class ColorType : uint8_t {
 		Red,
 		Green,
 		Blue,
