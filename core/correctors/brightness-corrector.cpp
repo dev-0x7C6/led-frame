@@ -4,7 +4,7 @@ using namespace Enum;
 using namespace Corrector;
 
 BrightnessCorrector::BrightnessCorrector()
-	: m_brightness(0.5) {
+	: m_brightness(0.3) {
 }
 
 CorrectorType BrightnessCorrector::type() {
@@ -15,7 +15,7 @@ uint32_t BrightnessCorrector::correct(const uint32_t &color) {
 	auto r = static_cast<uint32_t>((color >> 0x10) & 0xffu);
 	auto g = static_cast<uint32_t>((color >> 0x08) & 0xffu);
 	auto b = static_cast<uint32_t>((color >> 0x00) & 0xffu);
-	const double brightness = m_brightness;
+	const float brightness = m_brightness;
 	r *= brightness;
 	g *= brightness;
 	b *= brightness;
@@ -29,10 +29,10 @@ uint32_t BrightnessCorrector::correct(const uint32_t &color) {
 	return base;
 }
 
-double BrightnessCorrector::brightness() const {
+float BrightnessCorrector::brightness() const {
 	return m_brightness;
 }
 
-void BrightnessCorrector::setBrightness(const double &brightness) {
+void BrightnessCorrector::setBrightness(const float &brightness) {
 	m_brightness = brightness;
 }

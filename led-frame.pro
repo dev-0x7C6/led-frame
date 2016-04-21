@@ -72,7 +72,12 @@ SOURCES += main.cpp\
     core/interfaces/iemitter-manager.cpp \
     core/abstracts/abstract-emitter-manager.cpp \
     core/menus/device-menu.cpp \
-    core/menus/emitter-menu.cpp
+    core/menus/emitter-menu.cpp \
+    core/interfaces/imenu.cpp \
+    core/abstracts/abstract-menu.cpp \
+    core/interfaces/ireceiver-manager.cpp \
+    core/abstracts/abstract-receiver-manager.cpp \
+    core/interfaces/ireceiver-notify.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -130,7 +135,12 @@ HEADERS += \
     core/interfaces/iemitter-manager.h \
     core/abstracts/abstract-emitter-manager.h \
     core/menus/device-menu.h \
-    core/menus/emitter-menu.h
+    core/menus/emitter-menu.h \
+    core/interfaces/imenu.h \
+    core/abstracts/abstract-menu.h \
+    core/interfaces/ireceiver-manager.h \
+    core/abstracts/abstract-receiver-manager.h \
+    core/interfaces/ireceiver-notify.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

@@ -1,19 +1,20 @@
 #pragma once
 
-#include <QObject>
-
-#include <core/interfaces/ireceiver.h>
+#include <core/abstracts/abstract-receiver-manager.h>
 
 #include <functional>
 #include <list>
 #include <memory>
+
+#include <QObject>
+#include <QTimer>
 
 namespace Device {
 
 	class DeviceThread;
 	class DevicePort;
 
-	class DeviceManager : public QObject {
+	class DeviceManager : public QObject, public Abstract::AbstractReceiverManager {
 		Q_OBJECT
 	public:
 		explicit DeviceManager(QObject *parent = nullptr);
@@ -24,13 +25,12 @@ namespace Device {
 		DeviceThread *primary();
 
 	protected:
-		void removeThread();
-		void timerEvent(QTimerEvent *event);
+		void remove();
+		void rescan();
 
 	private:
-		std::list<std::unique_ptr<DeviceThread>> m_threads;
 		std::function<bool(Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
-
+		QTimer m_deviceScan;
 	};
 
 }

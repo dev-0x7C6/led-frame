@@ -28,10 +28,10 @@ namespace Container {
 
 		virtual Enum::ContainerType type() const override;
 
-		Enum::ColorFormat colorFormat() const;
-		Enum::Direction direction() const;
-		Enum::Position position() const;
-		uint8_t count() const;
+		inline Enum::ColorFormat colorFormat() const;
+		inline Enum::Direction direction() const;
+		inline Enum::Position position() const;
+		inline uint8_t count() const;
 
 		void setColorFormat(const Enum::ColorFormat &format);
 		void setCount(const uint8_t &count);
@@ -44,5 +44,21 @@ namespace Container {
 		Struct::LedRibbonConfigStruct m_config;
 	};
 
+
+	Enum::ColorFormat LedRibbonConfigContainer::colorFormat() const {
+		return static_cast<Enum::ColorFormat>(m_config.format);
+	}
+
+	Enum::Direction LedRibbonConfigContainer::direction() const {
+		return static_cast<Enum::Direction>(m_config.direction);
+	}
+
+	Enum::Position LedRibbonConfigContainer::position() const {
+		return static_cast<Enum::Position>(m_config.position);
+	}
+
+	uint8_t LedRibbonConfigContainer::count() const {
+		return static_cast<uint8_t>(m_config.count);
+	}
 
 }

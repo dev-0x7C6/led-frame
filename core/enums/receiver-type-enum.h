@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstdint>
+
 namespace Enum {
 
-	enum class ReceiverType : unsigned char {
+	enum class ReceiverType : uint32_t {
 		Device
 	};
 

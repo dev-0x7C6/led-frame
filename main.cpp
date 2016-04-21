@@ -6,9 +6,9 @@
 #include <core/devices/device-manager.h>
 #include <core/devices/device-thread.h>
 #include <core/emitters/emitter-manager.h>
+#include <core/emitters/screen-emitter.h>
 #include <core/factories/corrector-factory.h>
 #include <core/factories/emitter-factory.h>
-#include <core/emitters/screen-emitter.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
@@ -102,10 +102,10 @@ int main(int argc, char *argv[]) {
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())
 			return;
-		auto save = deviceManager.primary()->connectedEmitter();
-		deviceManager.primary()->connectEmitter(dialog);
+		//auto save = deviceManager.primary()->connectedEmitter();
+		//deviceManager.primary()->connectEmitter(dialog);
 		dialog->exec();
-		deviceManager.primary()->connectEmitter(save);
+		//deviceManager.primary()->connectEmitter(save);
 	});
 	int result = application.exec();
 	emitterManager.save();

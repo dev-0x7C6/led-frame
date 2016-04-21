@@ -10,10 +10,10 @@ ColorStream::ColorStream()
 {
 }
 
-void ColorStream::insert(const Enum::ColorFormat &format, unsigned int color) {
-	const unsigned char r = static_cast<unsigned char>(std::min(red(color), 255.0));
-	const unsigned char g = static_cast<unsigned char>(std::min(green(color), 255.0));
-	const unsigned char b = static_cast<unsigned char>(std::min(blue(color), 255.0));
+void ColorStream::insert(const Enum::ColorFormat &format, const uint32_t &color) {
+	const auto r = getr(color);
+	const auto g = getg(color);
+	const auto b = getb(color);
 
 	switch (format) {
 		case ColorFormat::RGB:
@@ -41,57 +41,56 @@ void ColorStream::write(QIODevice &device) {
 	m_seek = 0;
 }
 
-Container::ColorCorrectionContainer &ColorStream::correction() {
-	return m_correction;
+uint32_t ColorStream::getr(const uint32_t &color) const {
+	return (color >> 16) & 0xff;
 }
 
-double ColorStream::red(unsigned int color) const {
-	return static_cast<double>(((color >> 16) & 0xff)) *
-	       m_correction.color(Enum::ColorType::Red) * m_correction.color(Enum::ColorType::Light);
+uint32_t ColorStream::getg(const uint32_t &color) const {
+	return (color >> 8) & 0xff;
 }
 
-double ColorStream::green(unsigned int color) const {
-	return static_cast<double>(((color >> 8) & 0xff)) *
-	       m_correction.color(Enum::ColorType::Green) * m_correction.color(Enum::ColorType::Light);
+uint32_t ColorStream::getb(const uint32_t &color) const {
+	return color & 0xff;
 }
 
-double ColorStream::blue(unsigned int color) const {
-	return static_cast<double>((color & 0xff)) *
-	       m_correction.color(Enum::ColorType::Blue) * m_correction.color(Enum::ColorType::Light);
+void ColorStream::writeRGB(const uint32_t &r, const uint32_t &g, const uint32_t &b) {
+	m_buffer[m_seek + 0] = r;
+	m_buffer[m_seek + 1] = g;
+	m_buffer[m_seek + 2] = b;
+	m_seek += 3;
 }
 
-void ColorStream::writeRGB(unsigned char r, unsigned char g, unsigned char b) {
-	m_buffer[m_seek++] = r;
-	m_buffer[m_seek++] = g;
-	m_buffer[m_seek++] = b;
+void ColorStream::writeRBG(const uint32_t &r, const uint32_t &g, const uint32_t &b) {
+	m_buffer[m_seek + 0] = r;
+	m_buffer[m_seek + 1] = b;
+	m_buffer[m_seek + 2] = g;
+	m_seek += 3;
 }
 
-void ColorStream::writeRBG(unsigned char r, unsigned char g, unsigned char b) {
-	m_buffer[m_seek++] = r;
-	m_buffer[m_seek++] = b;
-	m_buffer[m_seek++] = g;
+void ColorStream::writeGRB(const uint32_t &r, const uint32_t &g, const uint32_t &b) {
+	m_buffer[m_seek + 0] = g;
+	m_buffer[m_seek + 1] = r;
+	m_buffer[m_seek + 2] = b;
+	m_seek += 3;
 }
 
-void ColorStream::writeGRB(unsigned char r, unsigned char g, unsigned char b) {
-	m_buffer[m_seek++] = g;
-	m_buffer[m_seek++] = r;
-	m_buffer[m_seek++] = b;
+void ColorStream::writeGBR(const uint32_t &r, const uint32_t &g, const uint32_t &b) {
+	m_buffer[m_seek + 0] = g;
+	m_buffer[m_seek + 1] = b;
+	m_buffer[m_seek + 2] = r;
+	m_seek += 3;
 }
 
-void ColorStream::writeGBR(unsigned char r, unsigned char g, unsigned char b) {
-	m_buffer[m_seek++] = g;
-	m_buffer[m_seek++] = b;
-	m_buffer[m_seek++] = r;
+void ColorStream::writeBRG(const uint32_t &r, const uint32_t &g, const uint32_t &b) {
+	m_buffer[m_seek + 0] = b;
+	m_buffer[m_seek + 1] = r;
+	m_buffer[m_seek + 2] = g;
+	m_seek += 3;
 }
 
-void ColorStream::writeBRG(unsigned char r, unsigned char g, unsigned char b) {
-	m_buffer[m_seek++] = b;
-	m_buffer[m_seek++] = r;
-	m_buffer[m_seek++] = g;
-}
-
-void ColorStream::writeBGR(unsigned char r, unsigned char g, unsigned char b) {
-	m_buffer[m_seek++] = b;
-	m_buffer[m_seek++] = g;
-	m_buffer[m_seek++] = r;
+void ColorStream::writeBGR(const uint32_t &r, const uint32_t &g, const uint32_t &b) {
+	m_buffer[m_seek + 0] = b;
+	m_buffer[m_seek + 1] = g;
+	m_buffer[m_seek + 2] = r;
+	m_seek += 3;
 }

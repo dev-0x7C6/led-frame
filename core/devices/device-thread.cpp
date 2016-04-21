@@ -45,6 +45,7 @@ void DeviceThread::run() {
 		m_device->config().ribbon(2),
 		m_device->config().ribbon(3)
 	};
+	Container::ColorScanlineContainer source;
 
 	do {
 		if (!isEmitterConnected()) {
@@ -52,22 +53,21 @@ void DeviceThread::run() {
 			continue;
 		}
 
-		auto source = data();
+		source = data();
 
 		for (const auto &config : configs) {
-			double step = static_cast<double>(source.linesize()) / static_cast<double>(config.count() - 1);
+			double step = static_cast<double>(scanline_line) / static_cast<double>(config.count() - 1);
 
 			for (int i = 0; i < config.count(); ++i) {
-				auto index = std::min(static_cast<int>(source.linesize() - 1), static_cast<int>(i * step));
+				auto index = std::min(static_cast<int>(scanline_line - 1), static_cast<int>(i * step));
 				auto color = source.data(config.position())[index];
 				stream.insert(config.colorFormat(), execute(color));
 			}
 		}
 
 		stream.write(*m_device);
-		m_device->waitForBytesWritten(100);
-		m_device->clear();
-		sync.wait(100);
+		m_device->waitForBytesWritten(-1);
+		sync.wait(60);
 	} while (!m_interrupt && m_device->error() == 0);
 
 	if (m_device->isOpen() && m_device->isWritable())

@@ -47,7 +47,7 @@ void ScreenEmitter::interrupt() {
 }
 
 QRect ScreenEmitter::fragment(int w, int h, const uint32_t &index) {
-	auto l = static_cast<int>(ColorScanlineContainer::linesize());
+	auto l = static_cast<int>(scanline_line);
 	auto i = static_cast<int>(index) % l;
 
 	switch (ColorScanlineContainer::fromIndexToPosition(index)) {
@@ -78,7 +78,7 @@ void ScreenEmitter::run() {
 		Container::ColorScanlineContainer scanline;
 		uint32_t *colors = scanline.data();
 
-		for (uint32_t i = 0; i < Container::ColorScanlineContainer::resolution(); ++i) {
+		for (uint32_t i = 0; i < scanline_size; ++i) {
 			QRect area = fragment(pixmap.width(), pixmap.height(), i);
 			int c = area.width() * area.height();
 			uint64_t r = 0;

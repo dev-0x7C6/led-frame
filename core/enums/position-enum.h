@@ -4,7 +4,7 @@
 
 namespace Enum {
 
-	enum class Position : unsigned char {
+	enum class Position : uint32_t {
 		Left,
 		Top,
 		Right,

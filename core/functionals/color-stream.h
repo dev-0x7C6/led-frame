@@ -1,10 +1,11 @@
 #pragma once
 
 #include <core/containers/color-correction-container.h>
-#include <core/enums/color-type-enum.h>
 #include <core/enums/color-format-enum.h>
+#include <core/enums/color-type-enum.h>
 
 #include <array>
+#include <cstdint>
 
 class QIODevice;
 
@@ -15,27 +16,23 @@ namespace Functional {
 		explicit ColorStream();
 		virtual ~ColorStream() = default;
 
-		void insert(const Enum::ColorFormat &format, unsigned int color);
-
+		void insert(const Enum::ColorFormat &format, const uint32_t &color);
 		void write(QIODevice &device);
 
-		Container::ColorCorrectionContainer &correction();
-
 	protected:
-		double red(unsigned int color) const;
-		double green(unsigned int color) const;
-		double blue(unsigned int color) const;
+		inline uint32_t getr(const uint32_t &color) const;
+		inline uint32_t getg(const uint32_t &color) const;
+		inline uint32_t getb(const uint32_t &color) const;
 
-		void writeRGB(unsigned char r, unsigned char g, unsigned char b);
-		void writeRBG(unsigned char r, unsigned char g, unsigned char b);
-		void writeGRB(unsigned char r, unsigned char g, unsigned char b);
-		void writeGBR(unsigned char r, unsigned char g, unsigned char b);
-		void writeBRG(unsigned char r, unsigned char g, unsigned char b);
-		void writeBGR(unsigned char r, unsigned char g, unsigned char b);
+		inline void writeRGB(const uint32_t &r, const uint32_t &g, const uint32_t &b);
+		inline void writeRBG(const uint32_t &r, const uint32_t &g, const uint32_t &b);
+		inline void writeGRB(const uint32_t &r, const uint32_t &g, const uint32_t &b);
+		inline void writeGBR(const uint32_t &r, const uint32_t &g, const uint32_t &b);
+		inline void writeBRG(const uint32_t &r, const uint32_t &g, const uint32_t &b);
+		inline void writeBGR(const uint32_t &r, const uint32_t &g, const uint32_t &b);
 
 	private:
-		Container::ColorCorrectionContainer m_correction;
-		std::array<unsigned char, 270> m_buffer;
+		std::array<uint32_t, 270> m_buffer;
 		size_t m_seek;
 
 	};

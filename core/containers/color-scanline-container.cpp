@@ -1,24 +1,13 @@
 #include <core/containers/color-scanline-container.h>
 
-#include <cassert>
-
 using namespace Container;
 
 Enum::ContainerType ColorScanlineContainer::type() const {
 	return Enum::ContainerType::ColorScanline;
 }
 
-uint32_t *Container::ColorScanlineContainer::data(const Enum::Position &position) {
-	assert(static_cast<uint32_t>(position) <= 3);
-	return m_data.data() + (static_cast<uint32_t>(position) * linesize());
-}
-
-uint32_t *ColorScanlineContainer::data() {
-	return m_data.data();
-}
-
 Enum::Position ColorScanlineContainer::fromIndexToPosition(const uint32_t &index) {
-	return static_cast<Enum::Position>(index / linesize());
+	return static_cast<Enum::Position>(index / scanline_line);
 }
 
 void ColorScanlineContainer::fill(const uint32_t &color) {
@@ -29,20 +18,17 @@ void ColorScanlineContainer::rotate(const uint32_t &color) {
 	for (size_t i = 0; i < m_data.size() - 1; ++i)
 		m_data[i] = m_data[i + 1];
 
-	m_data[resolution() - 1] = color;
+	m_data[scanline_size - 1] = color;
 }
 
-uint32_t Container::ColorScanlineContainer::linesize() {
-	return scanline_size / static_cast<int>(Enum::Position::Last);
-}
-
-uint32_t ColorScanlineContainer::resolution() {
-	return scanline_size;
+ColorScanlineContainer &ColorScanlineContainer::operator =(const ColorScanlineContainer &other) {
+	m_data = other.m_data;
+	return *this;
 }
 
 void ColorScanlineContainer::fill(const Enum::Position &position, const uint32_t &color) {
 	auto colors = data(position);
 
-	for (uint32_t i = 0; i < linesize(); ++i)
+	for (uint32_t i = 0; i < scanline_line; ++i)
 		colors[i] = color;
 }

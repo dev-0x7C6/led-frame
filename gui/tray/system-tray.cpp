@@ -1,14 +1,12 @@
 #include <gui/tray/system-tray.h>
 
-#include <QWheelEvent>
 #include <QMenu>
 #include <QPainter>
 #include <QPixmap>
 #include <QRadialGradient>
+#include <QWheelEvent>
 
 using namespace Tray;
-
-#include <QDebug>
 
 SystemTray::SystemTray(QObject *parent)
 	: QSystemTrayIcon(parent)
@@ -17,6 +15,8 @@ SystemTray::SystemTray(QObject *parent)
 {
 	setContextMenu(m_menu);
 	redrawTrayIcon(1.0);
+	m_devices = m_menu->addAction("Devices");
+	m_devices->setMenu(m_deviceMenu.menu());
 	m_menu->addSeparator();
 	auto about = m_menu->addAction("About");
 	auto quit = m_menu->addAction("&Quit");
@@ -24,6 +24,7 @@ SystemTray::SystemTray(QObject *parent)
 	connect(quit, &QAction::triggered, this, &SystemTray::signalCloseRequest);
 	connect(about, &QAction::triggered, this, &SystemTray::signalAboutRequest);
 }
+
 
 void SystemTray::redrawTrayIcon(const double &opacity) {
 	QPixmap source(":/tray.png");

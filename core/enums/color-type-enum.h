@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstdint>
+
 namespace Enum {
 
-	enum class ColorType : unsigned char {
+	enum class ColorType : uint32_t {
 		Red,
 		Green,
 		Blue,

@@ -42,14 +42,14 @@ double RGBChannelCorrector::blueFactor() const {
 	return m_bfactor;
 }
 
-void RGBChannelCorrector::setRedFactor(const double &factor) {
+void RGBChannelCorrector::setRedFactor(const float &factor) {
 	m_rfactor = factor;
 }
 
-void RGBChannelCorrector::setGreenFactor(const double &factor) {
+void RGBChannelCorrector::setGreenFactor(const float &factor) {
 	m_gfactor = factor;
 }
 
-void RGBChannelCorrector::setBlueFactor(const double &factor) {
+void RGBChannelCorrector::setBlueFactor(const float &factor) {
 	m_bfactor = factor;
 }

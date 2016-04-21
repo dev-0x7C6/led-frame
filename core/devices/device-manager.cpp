@@ -12,21 +12,17 @@ DeviceManager::DeviceManager(QObject *parent)
 	: QObject(parent)
 
 {
-	startTimer(250);
+	connect(&m_deviceScan, &QTimer::timeout, this, &DeviceManager::rescan);
+	m_deviceScan.setInterval(2000);
+	m_deviceScan.start();
 }
 
 DeviceManager::~DeviceManager() {
-	for (auto &thread : m_threads) {
-		disconnect(thread.get(), 0, 0, 0);
-		thread->interrupt();
-		thread->wait();
-	}
 }
 
-void DeviceManager::timerEvent(QTimerEvent *event) {
-	Q_UNUSED(event);
+void DeviceManager::rescan() {
 	Container::DeviceInfoContainer deviceInfo("LedFrame", "LedFrame", 500000);
-	QList <QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+	const QList <QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
 	for (int i = 0; i < ports.count(); ++i) {
 		if ((ports[i].manufacturer() != deviceInfo.manufacturer())) continue;
@@ -42,13 +38,13 @@ void DeviceManager::timerEvent(QTimerEvent *event) {
 		device->setDataBits(QSerialPort::Data8);
 		device->setStopBits(QSerialPort::OneStop);
 		auto thread = std::make_unique<DeviceThread>(std::move(device), ports[i]);
-		connect(thread.get(), &DeviceThread::finished, this, &DeviceManager::removeThread, Qt::QueuedConnection);
+		connect(thread.get(), &DeviceThread::finished, this, &DeviceManager::remove, Qt::QueuedConnection);
 
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
-		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
-		m_threads.push_back(std::move(thread));
+		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Animation));
+		attach(std::move(thread));
 	}
 }
 
@@ -56,15 +52,8 @@ void DeviceManager::setRegisterDeviceCallback(const std::function<bool (Interfac
 	m_registerDeviceCallback = callback;
 }
 
-DeviceThread *DeviceManager::primary() {
-	return m_threads.front().get();
+void DeviceManager::remove() {
+	auto receiver = reinterpret_cast<Interface::IReceiver *>(sender());
+	detach(receiver);
 }
 
-void DeviceManager::removeThread() {
-	auto thread = reinterpret_cast<DeviceThread *>(sender());
-	thread->interrupt();
-	thread->wait();
-	m_threads.remove_if([thread](const auto & match) {
-		return match.get() == thread;
-	});
-}
