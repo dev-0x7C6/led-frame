@@ -22,18 +22,8 @@ SOURCES += main.cpp\
     core/containers/abstract-container.cpp \
     core/containers/color-correction-container.cpp \
     core/containers/color-scanline-container.cpp \
-    core/enums/color-format-enum.cpp \
-    core/enums/color-type-enum.cpp \
-    core/enums/container-type-enum.cpp \
-    core/interfaces/icolor-corrector.cpp \
-    core/interfaces/icolor-corrector-attach.cpp \
-    core/interfaces/ireceiver.cpp \
-    core/enums/receiver-type-enum.cpp \
-    core/interfaces/iemitter.cpp \
     core/abstracts/abstract-emitter.cpp \
-    core/enums/emitter-type-enum.cpp \
     core/abstracts/abstract-receiver.cpp \
-    core/enums/position-enum.cpp \
 	core/functionals/color-stream.cpp \
     core/emitters/color-emitter.cpp \
     core/factories/emitter-factory.cpp \
@@ -52,7 +42,6 @@ SOURCES += main.cpp\
     gui/wizards/device-setup-pick-name.cpp \
     gui/wizards/device-setup-general-test.cpp \
     gui/wizards/device-setup-info.cpp \
-    core/enums/direction.cpp \
     core/containers/led-ribbon-config-container.cpp \
     gui/widgets/device-symulation-widget.cpp \
     core/emitters/test-emitter.cpp \
@@ -62,22 +51,15 @@ SOURCES += main.cpp\
     core/emitters/emitter-manager.cpp \
     core/abstracts/abstract-corrector-attach.cpp \
     core/correctors/color-enhancer-corrector.cpp \
-    core/enums/corrector-type.cpp \
     core/abstracts/abstract-corrector.cpp \
     core/factories/corrector-factory.cpp \
     core/correctors/brightness-corrector.cpp \
     core/correctors/rgb-channel-corrector.cpp \
-    core/interfaces/iremote-server.cpp \
-    core/interfaces/iremote-client.cpp \
-    core/interfaces/iemitter-manager.cpp \
     core/abstracts/abstract-emitter-manager.cpp \
     core/menus/device-menu.cpp \
     core/menus/emitter-menu.cpp \
-    core/interfaces/imenu.cpp \
     core/abstracts/abstract-menu.cpp \
-    core/interfaces/ireceiver-manager.cpp \
     core/abstracts/abstract-receiver-manager.cpp \
-    core/interfaces/ireceiver-notify.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -140,7 +122,8 @@ HEADERS += \
     core/abstracts/abstract-menu.h \
     core/interfaces/ireceiver-manager.h \
     core/abstracts/abstract-receiver-manager.h \
-    core/interfaces/ireceiver-notify.h
+    core/interfaces/ireceiver-notify.h \
+    core/interfaces/iscreen-capture.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

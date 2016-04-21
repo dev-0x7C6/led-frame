@@ -15,6 +15,7 @@ DeviceManager::DeviceManager(QObject *parent)
 	connect(&m_deviceScan, &QTimer::timeout, this, &DeviceManager::rescan);
 	m_deviceScan.setInterval(2000);
 	m_deviceScan.start();
+	rescan();
 }
 
 DeviceManager::~DeviceManager() {
