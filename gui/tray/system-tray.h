@@ -14,7 +14,7 @@ namespace Tray {
 		Q_OBJECT
 	public:
 		explicit SystemTray(QObject *parent = nullptr);
-		virtual ~SystemTray() = default;
+		virtual ~SystemTray();
 
 
 	protected:

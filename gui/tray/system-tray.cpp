@@ -26,9 +26,8 @@ SystemTray::SystemTray(QObject *parent)
 }
 
 SystemTray::~SystemTray() {
-	delete m_deviceMenu;
+	delete m_menu;
 }
-
 
 void SystemTray::redrawTrayIcon(const double &opacity) {
 	QPixmap source(":/tray.png");
