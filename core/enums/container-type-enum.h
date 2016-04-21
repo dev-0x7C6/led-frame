@@ -4,7 +4,7 @@
 
 namespace Enum {
 
-	enum class ContainerType : uint8_t {
+	enum class ContainerType {
 		DeviceInfo,
 		DeviceConfig,
 		ApplicationInfo,

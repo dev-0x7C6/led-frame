@@ -60,6 +60,8 @@ SOURCES += main.cpp\
     core/menus/emitter-menu.cpp \
     core/abstracts/abstract-menu.cpp \
     core/abstracts/abstract-receiver-manager.cpp \
+    core/functionals/captures/qt-screen-capture.cpp \
+    core/factories/screen-capture-factory.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -123,7 +125,10 @@ HEADERS += \
     core/interfaces/ireceiver-manager.h \
     core/abstracts/abstract-receiver-manager.h \
     core/interfaces/ireceiver-notify.h \
-    core/interfaces/iscreen-capture.h
+    core/interfaces/iscreen-capture.h \
+    core/enums/screen-capture-type.h \
+    core/functionals/captures/qt-screen-capture.h \
+    core/factories/screen-capture-factory.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \

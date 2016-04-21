@@ -1,13 +1,14 @@
-#include <core/emitters/screen-emitter.h>
 #include <core/containers/color-scanline-container.h>
+#include <core/emitters/screen-emitter.h>
+#include <core/factories/screen-capture-factory.h>
 #include <core/functionals/loop-sync.h>
 
-#include <QGuiApplication>
-#include <QScreen>
-#include <QPixmap>
+#include <QRect>
+#include <QColor>
 
 using namespace Enum;
 using namespace Emitter;
+using namespace Factory;
 using namespace Container;
 
 ScreenEmitter::ScreenEmitter(QObject *parent)
@@ -75,12 +76,13 @@ void ScreenEmitter::run() {
 	Container::ColorScanlineContainer scanline;
 	uint32_t *colors = scanline.data();
 	constexpr int step = 16;
+	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
 
 	do {
-		auto pixmap = QGuiApplication::screens().first()->grabWindow(0).toImage();
-		const uint32_t *data = reinterpret_cast<const uint32_t *>(pixmap.constBits());
-		const auto w = pixmap.width();
-		const auto h = pixmap.height();
+		sc->capture();
+		const uint32_t *data = sc->data();
+		const auto w = sc->width();
+		const auto h = sc->height();
 
 		for (uint32_t i = 0; i < scanline_size; ++i) {
 			QRect area = fragment(w, h, i);
@@ -109,6 +111,6 @@ void ScreenEmitter::run() {
 		}
 
 		commit(scanline);
-		loop.wait(60);
+		loop.wait(30);
 	} while (!m_interrupted);
 }

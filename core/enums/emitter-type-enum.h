@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 namespace Enum {
 
-	enum class EmitterType : uint8_t {
+	enum class EmitterType {
 		Animation,
 		Color,
 		Image,

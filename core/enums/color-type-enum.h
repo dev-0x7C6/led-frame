@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 namespace Enum {
 
-	enum class ColorType : uint8_t {
+	enum class ColorType {
 		Red,
 		Green,
 		Blue,

@@ -4,7 +4,7 @@
 
 namespace Enum {
 
-	enum class CorrectorType : uint8_t {
+	enum class CorrectorType {
 		ColorEnhancer,
 		Brightness,
 		RGBChannel,
