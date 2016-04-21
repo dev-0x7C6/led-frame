@@ -19,8 +19,8 @@ uint32_t QtScreenCapture::height() {
 	return m_frame.height();
 }
 
-void QtScreenCapture::capture() {
-	m_frame = QGuiApplication::screens().first()->grabWindow(0).toImage();
+void QtScreenCapture::capture(int x, int y, int w, int h) {
+	m_frame = QGuiApplication::screens().first()->grabWindow(0, x, y, w, h).toImage();
 }
 
 const uint32_t *QtScreenCapture::data() {

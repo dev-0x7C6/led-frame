@@ -3,6 +3,8 @@
 #include <core/factories/screen-capture-factory.h>
 #include <core/functionals/loop-sync.h>
 
+#include <QGuiApplication>
+#include <QScreen>
 #include <QRect>
 #include <QColor>
 
@@ -76,10 +78,11 @@ void ScreenEmitter::run() {
 	Container::ColorScanlineContainer scanline;
 	uint32_t *colors = scanline.data();
 	constexpr int step = 16;
-	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
+	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ScreenCapture);
+	auto screen = QGuiApplication::screens().first()->size();
 
 	do {
-		sc->capture();
+		sc->capture(0, 0, screen.width(), screen.height());
 		const uint32_t *data = sc->data();
 		const auto w = sc->width();
 		const auto h = sc->height();

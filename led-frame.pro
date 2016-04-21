@@ -16,6 +16,11 @@ CONFIG += console
 
 include(cflags.pri)
 
+unix {
+  LIBS += -lX11
+}
+
+
 SOURCES += main.cpp\
 	gui/widgets/alc-color-correction-widget.cpp \
 	gui/dialogs/alc-screen-configure-dialog.cpp \
@@ -61,7 +66,8 @@ SOURCES += main.cpp\
     core/abstracts/abstract-menu.cpp \
     core/abstracts/abstract-receiver-manager.cpp \
     core/functionals/captures/qt-screen-capture.cpp \
-    core/factories/screen-capture-factory.cpp
+    core/factories/screen-capture-factory.cpp \
+    core/functionals/captures/x11-screen-capture.cpp
 
 HEADERS += \
 	gui/widgets/alc-color-correction-widget.h \
@@ -128,7 +134,8 @@ HEADERS += \
     core/interfaces/iscreen-capture.h \
     core/enums/screen-capture-type.h \
     core/functionals/captures/qt-screen-capture.h \
-    core/factories/screen-capture-factory.h
+    core/factories/screen-capture-factory.h \
+    core/functionals/captures/x11-screen-capture.h
 
 FORMS += \
 	gui/widgets/alc-color-correction-widget.ui \
