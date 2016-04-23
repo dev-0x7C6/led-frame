@@ -41,6 +41,3 @@ void AbstractReceiverManager::detach(IReceiver *receiver) {
 	for (const auto &notify : m_notifiers)
 		notify->detached(receiver);
 }
-
-void AbstractReceiverManager::notify() {
-}
