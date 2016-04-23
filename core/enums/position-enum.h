@@ -12,7 +12,7 @@ namespace Enum {
 		Last
 	};
 
-    inline auto name(const Position &position) {
+	inline auto name(const Position &position) {
 		switch (position) {
 			case Position::Left:
 				return "Left";

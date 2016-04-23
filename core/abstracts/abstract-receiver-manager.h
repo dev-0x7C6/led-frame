@@ -19,6 +19,9 @@ namespace Abstract {
 		virtual void attach(std::unique_ptr<Interface::IReceiver> &&receiver) override;
 		virtual void detach(Interface::IReceiver *receiver) override;
 
+	protected:
+		void notify();
+
 	private:
 		std::list<std::unique_ptr<Interface::IReceiver>> m_receivers;
 		std::list<Interface::IReceiverNotify *> m_notifiers;
