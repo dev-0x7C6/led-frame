@@ -8,25 +8,34 @@
 
 using namespace Tray;
 
-SystemTray::SystemTray(QObject *parent)
-	: QSystemTrayIcon(parent)
-	, m_menu(new QMenu())
+SystemTray::SystemTray(QWidget *parent)
+	: QMainWindow(parent)
 
 {
-	setContextMenu(m_menu);
+	auto mainMenu = new QMenu(this);
+	auto deviceMenu = new QMenu(this);
 	redrawTrayIcon(1.0);
-	m_devices = m_menu->addAction("Devices");
-	m_devices->setMenu(m_deviceMenu.menu());
-	m_menu->addSeparator();
-	auto about = m_menu->addAction("About");
-	auto quit = m_menu->addAction("&Quit");
-	show();
+	m_tray.setContextMenu(mainMenu);
+	m_tray.show();
+	auto actionDevices = mainMenu->addAction("Devices");
+	actionDevices->setMenu(deviceMenu);
+	m_deviceMenu.setMenu(deviceMenu);
+	mainMenu->addSeparator();
+	auto about = mainMenu->addAction("About");
+	auto quit = mainMenu->addAction("&Quit");
 	connect(quit, &QAction::triggered, this, &SystemTray::signalCloseRequest);
 	connect(about, &QAction::triggered, this, &SystemTray::signalAboutRequest);
 }
 
 SystemTray::~SystemTray() {
-	delete m_menu;
+}
+
+void SystemTray::attached(Interface::IReceiver *receiver) {
+	m_deviceMenu.attached(receiver);
+}
+
+void SystemTray::detached(Interface::IReceiver *receiver) {
+	m_deviceMenu.detached(receiver);
 }
 
 void SystemTray::redrawTrayIcon(const double &opacity) {
@@ -43,5 +52,5 @@ void SystemTray::redrawTrayIcon(const double &opacity) {
 	painter.drawRect(0, 0, 22, 22);
 	painter.setOpacity(1.0);
 	painter.drawPixmap(3, 3, 16, 16, source);
-	setIcon(QIcon(sheet));
+	m_tray.setIcon(QIcon(sheet));
 }

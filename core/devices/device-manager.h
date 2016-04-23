@@ -22,10 +22,9 @@ namespace Device {
 
 		void setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *, const QString &serialNumber)> &callback);
 
-		DeviceThread *primary();
+		void run();
 
 	protected:
-		void remove();
 		void rescan();
 
 	private:

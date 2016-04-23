@@ -4,14 +4,10 @@
 
 using namespace Abstract;
 
-AbstractMenu::AbstractMenu()
-	: m_menu(new QMenu()) {
-}
-
-AbstractMenu::~AbstractMenu() {
-	delete m_menu;
-}
-
 QMenu *AbstractMenu::menu() {
 	return m_menu;
+}
+
+void AbstractMenu::setMenu(QMenu *menu) {
+	m_menu = menu;
 }

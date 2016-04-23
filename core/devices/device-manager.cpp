@@ -13,9 +13,6 @@ DeviceManager::DeviceManager(QObject *parent)
 
 {
 	connect(&m_deviceScan, &QTimer::timeout, this, &DeviceManager::rescan);
-	m_deviceScan.setInterval(2000);
-	m_deviceScan.start();
-	rescan();
 }
 
 DeviceManager::~DeviceManager() {
@@ -39,7 +36,10 @@ void DeviceManager::rescan() {
 		device->setDataBits(QSerialPort::Data8);
 		device->setStopBits(QSerialPort::OneStop);
 		auto thread = std::make_unique<DeviceThread>(std::move(device), ports[i]);
-		connect(thread.get(), &DeviceThread::finished, this, &DeviceManager::remove, Qt::QueuedConnection);
+		auto interface = thread.get();
+		connect(interface, &DeviceThread::finished, this, [this, interface]() {
+			detach(interface);
+		}, Qt::QueuedConnection);
 
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
@@ -53,8 +53,9 @@ void DeviceManager::setRegisterDeviceCallback(const std::function<bool (Interfac
 	m_registerDeviceCallback = callback;
 }
 
-void DeviceManager::remove() {
-	auto receiver = reinterpret_cast<Interface::IReceiver *>(sender());
-	detach(receiver);
-}
 
+void DeviceManager::run() {
+	m_deviceScan.setInterval(2000);
+	m_deviceScan.start();
+	rescan();
+}

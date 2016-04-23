@@ -95,6 +95,7 @@ int main(int argc, char *argv[]) {
 		return true;
 	});
 	Tray::SystemTray tray;
+	deviceManager.attach(&tray);
 	auto dialog = std::make_shared<Widget::AboutDialog>();
 	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
 		application.quit();
@@ -102,11 +103,12 @@ int main(int argc, char *argv[]) {
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())
 			return;
-		//auto save = deviceManager.primary()->connectedEmitter();
-		//deviceManager.primary()->connectEmitter(dialog);
+		auto save = deviceManager.primary()->connectedEmitter();
+		deviceManager.primary()->connectEmitter(dialog);
 		dialog->exec();
-		//deviceManager.primary()->connectEmitter(save);
+		deviceManager.primary()->connectEmitter(save);
 	});
+	deviceManager.run();
 	int result = application.exec();
 	emitterManager.save();
 	return result;

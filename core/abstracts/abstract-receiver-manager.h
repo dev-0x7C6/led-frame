@@ -12,6 +12,8 @@ namespace Abstract {
 		explicit AbstractReceiverManager() = default;
 		virtual ~AbstractReceiverManager();
 
+		virtual Interface::IReceiver *primary();
+
 		virtual void attach(Interface::IReceiverNotify *notify) override;
 		virtual void detach(Interface::IReceiverNotify *notify) override;
 

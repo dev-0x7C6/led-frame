@@ -4,7 +4,7 @@ using namespace Enum;
 using namespace Corrector;
 
 BrightnessCorrector::BrightnessCorrector()
-	: m_brightness(0.3) {
+	: m_brightness(1) {
 }
 
 CorrectorType BrightnessCorrector::type() {

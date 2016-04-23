@@ -9,6 +9,7 @@ namespace Interface {
 		explicit IMenu() = default;
 		virtual ~IMenu() = default;
 
+		virtual void setMenu(QMenu *menu) = 0;
 		virtual QMenu *menu() = 0;
 	};
 
