@@ -13,7 +13,7 @@ namespace Enum {
 		BGR
 	};
 
-	constexpr auto name(const ColorFormat &format) {
+    inline auto name(const ColorFormat &format) {
 		switch (format) {
 			case ColorFormat::RGB:
 				return "RGB";

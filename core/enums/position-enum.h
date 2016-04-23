@@ -12,7 +12,7 @@ namespace Enum {
 		Last
 	};
 
-	constexpr auto name(const Position &position) {
+    inline auto name(const Position &position) {
 		switch (position) {
 			case Position::Left:
 				return "Left";
@@ -32,6 +32,5 @@ namespace Enum {
 
 		return "";
 	}
-
 
 }
