@@ -3,7 +3,6 @@ TEMPLATE = app
 
 QT += core
 QT += gui
-QT += multimedia
 QT += opengl
 QT += qml
 QT += quick
