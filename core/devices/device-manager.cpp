@@ -28,7 +28,7 @@ void DeviceManager::rescan() {
 		auto device = std::make_unique<DevicePort>(ports[i]);
 
 		if (!device->open(QIODevice::ReadWrite))
-			return;
+			continue;
 
 		device->setBaudRate(deviceInfo.baudrate());
 		device->setFlowControl(QSerialPort::NoFlowControl);
@@ -46,6 +46,7 @@ void DeviceManager::rescan() {
 
 		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
 		attach(std::move(thread));
+		emit afterAttach();
 	}
 }
 

@@ -135,7 +135,8 @@ HEADERS += \
 	gui/wizards/device-setup-general-test.h \
 	gui/wizards/device-setup-info.h \
 	gui/wizards/device-setup-pick-name.h \
-	gui/wizards/device-setup-wizard.h
+	gui/wizards/device-setup-wizard.h \
+    core/interfaces/iemitter-notify.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \

@@ -7,7 +7,7 @@ using namespace Enum;
 using namespace Corrector;
 
 ColorEnhancerCorrector::ColorEnhancerCorrector()
-	: m_factor(1.5) {
+	: Abstract::AbstractCorrector(1.5) {
 }
 
 Enum::CorrectorType Corrector::ColorEnhancerCorrector::type() {
@@ -36,12 +36,4 @@ uint32_t ColorEnhancerCorrector::correct(const uint32_t &color) {
 	base |= g << 0x08;
 	base |= b << 0x00;
 	return base;
-}
-
-double ColorEnhancerCorrector::factor() const {
-	return m_factor;
-}
-
-void ColorEnhancerCorrector::setFactor(const double &factor) {
-	m_factor = factor;
 }

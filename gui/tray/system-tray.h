@@ -1,39 +1,44 @@
 #pragma once
 
-#include <core/menus/device-menu.h>
 #include <core/interfaces/ireceiver-notify.h>
+#include <core/menus/device-menu.h>
 
+#include <QMainWindow>
 #include <QObject>
 #include <QSystemTrayIcon>
-#include <QMainWindow>
 
-class QMenu;
 class QAction;
+class QMenu;
 
 namespace Tray {
 
 	class SystemTray final
-		: public QMainWindow
+		: public QSystemTrayIcon
 		, public Interface::IReceiverNotify
+		, public Interface::IEmitterNotify
 
 	{
 		Q_OBJECT
 	public:
-		explicit SystemTray(QWidget *parent = nullptr);
+		explicit SystemTray(QObject *parent = nullptr);
 		virtual ~SystemTray();
 
+		virtual void attached(Interface::IEmitter *emitter) override;
+		virtual void detached(Interface::IEmitter *emitter) override;
 		virtual void attached(Interface::IReceiver *receiver) override;
 		virtual void detached(Interface::IReceiver *receiver) override;
+
+		virtual bool event(QEvent *event) override;
 
 	protected:
 		void redrawTrayIcon(const double &opacity);
 
 	private:
-		QSystemTrayIcon m_tray;
 		QAction *m_devices;
 		Menu::DeviceMenu m_deviceMenu;
 
 	signals:
+		void signalWheelChanged(int delta);
 		void signalCloseRequest();
 		void signalAboutRequest();
 	};

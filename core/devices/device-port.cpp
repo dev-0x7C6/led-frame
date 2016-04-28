@@ -1,6 +1,7 @@
 #include <core/devices/device-port.h>
 
 #include <QSerialPortInfo>
+#include <QRegExp>
 
 using namespace Device;
 

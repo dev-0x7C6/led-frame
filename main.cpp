@@ -94,11 +94,26 @@ int main(int argc, char *argv[]) {
 		receiver->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
+	QObject::connect(&deviceManager, &DeviceManager::afterAttach, [&emitterManager]() {
+		emitterManager.populate();
+	});
 	Tray::SystemTray tray;
+	emitterManager.attach(&tray);
 	deviceManager.attach(&tray);
 	auto dialog = std::make_shared<Widget::AboutDialog>();
 	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
 		application.quit();
+	});
+	QObject::connect(&tray, &Tray::SystemTray::signalWheelChanged, [&brightnessCorrector](int delta) {
+		auto value = brightnessCorrector->factor() + ((delta > 0) ? 0.05 : -0.05);
+
+		if (value > 1.0)
+			value = 1.0;
+
+		if (value < 0.05)
+			value = 0.05;
+
+		brightnessCorrector->setFactor(value);
 	});
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())

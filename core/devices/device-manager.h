@@ -30,6 +30,9 @@ namespace Device {
 	private:
 		std::function<bool(Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
 		QTimer m_deviceScan;
+
+	signals:
+		void afterAttach();
 	};
 
 }

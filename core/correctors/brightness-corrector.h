@@ -12,11 +12,6 @@ namespace Corrector {
 		virtual Enum::CorrectorType type() override;
 		virtual uint32_t correct(const uint32_t &color) override;
 
-		float brightness() const;
-		void setBrightness(const float &brightness);
-
-	private:
-		std::atomic<float> m_brightness;
 	};
 
 }
