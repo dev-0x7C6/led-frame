@@ -6,8 +6,8 @@
 
 #include <list>
 #include <map>
+#include <set>
 #include <memory>
-
 
 class QAction;
 
@@ -34,6 +34,7 @@ namespace Menu {
 		void setBeforeAction(QAction *beforeAction);
 
 	private:
+		std::set<Interface::IEmitter *> m_emitters;
 		std::list<Interface::IReceiver *> m_receivers;
 		std::map<Interface::IReceiver *, QAction *> m_map;
 		std::map<Interface::IReceiver *, std::unique_ptr<EmitterMenu>> m_emitterMenu;

@@ -101,9 +101,9 @@ int main(int argc, char *argv[]) {
 	emitterManager.attach(&tray);
 	deviceManager.attach(&tray);
 	auto dialog = std::make_shared<Widget::AboutDialog>();
-	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
-		application.quit();
-	});
+	//  QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
+	//    application.quit();
+	//  });
 	QObject::connect(&tray, &Tray::SystemTray::signalWheelChanged, [&brightnessCorrector](int delta) {
 		auto value = brightnessCorrector->factor() + ((delta > 0) ? 0.05 : -0.05);
 

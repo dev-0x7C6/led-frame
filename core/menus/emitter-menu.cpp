@@ -1,4 +1,5 @@
 #include <core/menus/emitter-menu.h>
+#include <core/interfaces/iemitter.h>
 
 #include <QMenu>
 #include <QAction>
@@ -12,8 +13,8 @@ EmitterMenu::EmitterMenu(QAction *parent, Interface::IReceiver *receiver)
 	m_parent->setMenu(menu());
 }
 
-void EmitterMenu::attached(Interface::IEmitter *) {
-	menu()->addAction("cos");
+void EmitterMenu::attached(Interface::IEmitter *emitter) {
+	menu()->addAction(emitter->name());
 }
 
 void EmitterMenu::detached(Interface::IEmitter *) {

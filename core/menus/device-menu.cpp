@@ -16,11 +16,15 @@ DeviceMenu::~DeviceMenu() {
 }
 
 void DeviceMenu::attached(IEmitter *emitter) {
+	m_emitters.insert(emitter);
+
 	for (const auto &receiver : m_receivers)
 		m_emitterMenu.at(receiver)->attached(emitter);
 }
 
 void DeviceMenu::detached(IEmitter *emitter) {
+	m_emitters.erase(emitter);
+
 	for (const auto &receiver : m_receivers)
 		m_emitterMenu.at(receiver)->detached(emitter);
 }
@@ -31,6 +35,9 @@ void DeviceMenu::attached(IReceiver *receiver) {
 	m_map.insert({ receiver, action });
 	m_receivers.push_back(receiver);
 	m_emitterMenu.emplace(receiver, std::make_unique<EmitterMenu>(action, receiver));
+	//  for (const auto &emitter : m_emitters)
+	//    for (const auto &receiver : m_receivers)
+	//      m_emitterMenu.at(receiver)->attached(emitter);
 }
 
 void DeviceMenu::detached(IReceiver *receiver) {
