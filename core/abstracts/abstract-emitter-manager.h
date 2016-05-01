@@ -15,8 +15,6 @@ namespace Abstract {
 		virtual void attach(Interface::IEmitterNotify *notify) override;
 		virtual void detach(Interface::IEmitterNotify *notify) override;
 
-		virtual void populate() override;
-
 		virtual const std::list<std::shared_ptr<Interface::IEmitter>> &list() const override;
 
 	private:

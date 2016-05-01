@@ -25,16 +25,17 @@ namespace Menu {
 		explicit DeviceMenu();
 		virtual ~DeviceMenu();
 
-		virtual void attached(Interface::IEmitter *emitter) override;
+		virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+		virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+
 		virtual void attached(Interface::IReceiver *receiver) override;
-		virtual void detached(Interface::IEmitter *emitter) override;
 		virtual void detached(Interface::IReceiver *receiver) override;
 
 		QAction *beforeAction() const;
 		void setBeforeAction(QAction *beforeAction);
 
 	private:
-		std::set<Interface::IEmitter *> m_emitters;
+		std::set<std::shared_ptr<Interface::IEmitter>> m_emitters;
 		std::list<Interface::IReceiver *> m_receivers;
 		std::map<Interface::IReceiver *, QAction *> m_map;
 		std::map<Interface::IReceiver *, std::unique_ptr<EmitterMenu>> m_emitterMenu;

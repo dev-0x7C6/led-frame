@@ -8,12 +8,12 @@ void AbstractEmitterManager::attach(std::shared_ptr<IEmitter> &emitter) {
 	m_emitters.push_back(emitter);
 
 	for (const auto &notify : m_notifiers)
-		notify->attached(emitter.get());
+		notify->attached(emitter);
 }
 
 void AbstractEmitterManager::detach(std::shared_ptr<IEmitter> &emitter) {
 	for (const auto &notify : m_notifiers)
-		notify->detached(emitter.get());
+		notify->detached(emitter);
 
 	m_emitters.remove_if([&emitter](const auto & value)  {
 		return (emitter.get() == value.get());
@@ -28,7 +28,7 @@ void AbstractEmitterManager::attach(IEmitterNotify *notify) {
 	m_notifiers.push_back(notify);
 
 	for (const auto &emitter : m_emitters)
-		notify->attached(emitter.get());
+		notify->attached(emitter);
 }
 
 void AbstractEmitterManager::detach(IEmitterNotify *notify) {
@@ -37,11 +37,5 @@ void AbstractEmitterManager::detach(IEmitterNotify *notify) {
 	});
 
 	for (const auto &emitter : m_emitters)
-		notify->detached(emitter.get());
-}
-
-void AbstractEmitterManager::populate() {
-	for (const auto &notify : m_notifiers)
-		for (const auto &emitter : m_emitters)
-			notify->attached(emitter.get());
+		notify->detached(emitter);
 }

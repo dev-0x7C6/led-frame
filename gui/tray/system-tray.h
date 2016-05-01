@@ -3,8 +3,6 @@
 #include <core/interfaces/ireceiver-notify.h>
 #include <core/menus/device-menu.h>
 
-#include <QMainWindow>
-#include <QObject>
 #include <QSystemTrayIcon>
 
 class QAction;
@@ -23,8 +21,8 @@ namespace Tray {
 		explicit SystemTray(QObject *parent = nullptr);
 		virtual ~SystemTray();
 
-		virtual void attached(Interface::IEmitter *emitter) override;
-		virtual void detached(Interface::IEmitter *emitter) override;
+		virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+		virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
 		virtual void attached(Interface::IReceiver *receiver) override;
 		virtual void detached(Interface::IReceiver *receiver) override;
 

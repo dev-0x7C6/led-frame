@@ -6,6 +6,7 @@
 #include <QRadialGradient>
 #include <QWheelEvent>
 
+using namespace Interface;
 using namespace Tray;
 
 SystemTray::SystemTray(QObject *parent)
@@ -28,11 +29,11 @@ SystemTray::SystemTray(QObject *parent)
 SystemTray::~SystemTray() {
 }
 
-void SystemTray::attached(Interface::IEmitter *emitter) {
+void SystemTray::attached(const std::shared_ptr<IEmitter> &emitter) {
 	m_deviceMenu.attached(emitter);
 }
 
-void SystemTray::detached(Interface::IEmitter *emitter) {
+void SystemTray::detached(const std::shared_ptr<IEmitter> &emitter) {
 	m_deviceMenu.detached(emitter);
 }
 

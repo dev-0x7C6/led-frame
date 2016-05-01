@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 namespace Interface {
 
 	class IEmitter;
@@ -9,8 +11,8 @@ namespace Interface {
 		explicit IEmitterNotify() = default;
 		virtual ~IEmitterNotify() = default;
 
-		virtual void attached(IEmitter *emitter) = 0;
-		virtual void detached(IEmitter *emitter) = 0;
+		virtual void attached(const std::shared_ptr<IEmitter> &emitter) = 0;
+		virtual void detached(const std::shared_ptr<IEmitter> &emitter) = 0;
 
 	};
 

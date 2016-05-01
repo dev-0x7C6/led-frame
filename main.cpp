@@ -39,9 +39,9 @@ void createDefaultEmitters(EmitterManager &manager) {
 	auto animation1 = EmitterFactory::create(EmitterType::Animation);
 	auto animation2 = EmitterFactory::create(EmitterType::Animation);
 	auto animation3 = EmitterFactory::create(EmitterType::Animation);
-	auto color1 = EmitterFactory::create(EmitterType::Animation);
-	auto color2 = EmitterFactory::create(EmitterType::Animation);
-	auto color3 = EmitterFactory::create(EmitterType::Animation);
+	auto color1 = EmitterFactory::create(EmitterType::Color);
+	auto color2 = EmitterFactory::create(EmitterType::Color);
+	auto color3 = EmitterFactory::create(EmitterType::Color);
 	animation1->setName(QObject::tr("Animation #1"));
 	animation2->setName(QObject::tr("Animation #2"));
 	animation3->setName(QObject::tr("Animation #3"));
@@ -94,24 +94,21 @@ int main(int argc, char *argv[]) {
 		receiver->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
-	QObject::connect(&deviceManager, &DeviceManager::afterAttach, [&emitterManager]() {
-		emitterManager.populate();
-	});
 	Tray::SystemTray tray;
 	emitterManager.attach(&tray);
 	deviceManager.attach(&tray);
 	auto dialog = std::make_shared<Widget::AboutDialog>();
-	//  QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
-	//    application.quit();
-	//  });
+	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
+		application.quit();
+	});
 	QObject::connect(&tray, &Tray::SystemTray::signalWheelChanged, [&brightnessCorrector](int delta) {
-		auto value = brightnessCorrector->factor() + ((delta > 0) ? 0.05 : -0.05);
+		auto value = brightnessCorrector->factor() + ((delta > 0) ? 0.05f : -0.05f);
 
-		if (value > 1.0)
-			value = 1.0;
+		if (value > 1.0f)
+			value = 1.0f;
 
-		if (value < 0.05)
-			value = 0.05;
+		if (value < 0.05f)
+			value = 0.05f;
 
 		brightnessCorrector->setFactor(value);
 	});
