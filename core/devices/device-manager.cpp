@@ -2,7 +2,6 @@
 #include <core/devices/device-manager.h>
 #include <core/devices/device-port.h>
 #include <core/devices/device-thread.h>
-#include <core/factories/emitter-factory.h>
 
 #include <memory>
 
@@ -44,7 +43,6 @@ void DeviceManager::rescan() {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
-		thread->connectEmitter(Factory::EmitterFactory::create(Enum::EmitterType::Screen));
 		attach(std::move(thread));
 		emit afterAttach();
 	}
@@ -53,7 +51,6 @@ void DeviceManager::rescan() {
 void DeviceManager::setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *, const QString &serialNumber)> &callback) {
 	m_registerDeviceCallback = callback;
 }
-
 
 void DeviceManager::run() {
 	m_deviceScan.setInterval(2000);

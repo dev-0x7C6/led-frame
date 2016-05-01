@@ -17,9 +17,14 @@ SystemTray::SystemTray(QObject *parent)
 	redrawTrayIcon(1.0);
 	setContextMenu(mainMenu);
 	show();
+	mainMenu->addAction("Devices")->setEnabled(false);
 	mainMenu->addSeparator();
 	m_deviceMenu.setBeforeAction(mainMenu->addSeparator());
 	m_deviceMenu.setMenu(mainMenu);
+	mainMenu->addSeparator();
+	m_brightnessAction = mainMenu->addAction("");
+	m_brightnessAction->setEnabled(false);
+	mainMenu->addSeparator();
 	auto about = mainMenu->addAction("About");
 	auto quit = mainMenu->addAction("&Quit");
 	connect(quit, &QAction::triggered, this, &SystemTray::signalCloseRequest);
@@ -43,6 +48,15 @@ void SystemTray::attached(Interface::IReceiver *receiver) {
 
 void SystemTray::detached(Interface::IReceiver *receiver) {
 	m_deviceMenu.detached(receiver);
+}
+
+void SystemTray::changed(IReceiver *receiver) {
+	m_deviceMenu.changed(receiver);
+}
+
+void SystemTray::setBrightness(const float &brightness) {
+	m_brightnessAction->setText(tr("Brightness: %1%").arg(QString::number(std::min(100, static_cast<int>(brightness * 100)))));
+	redrawTrayIcon(brightness);
 }
 
 bool SystemTray::event(QEvent *event) {

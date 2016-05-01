@@ -23,8 +23,12 @@ namespace Tray {
 
 		virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
 		virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+
 		virtual void attached(Interface::IReceiver *receiver) override;
 		virtual void detached(Interface::IReceiver *receiver) override;
+		virtual void changed(Interface::IReceiver *receiver) override;
+
+		virtual void setBrightness(const float &brightness);
 
 		virtual bool event(QEvent *event) override;
 
@@ -32,6 +36,7 @@ namespace Tray {
 		void redrawTrayIcon(const double &opacity);
 
 	private:
+		QAction *m_brightnessAction;
 		QAction *m_devices;
 		Menu::DeviceMenu m_deviceMenu;
 

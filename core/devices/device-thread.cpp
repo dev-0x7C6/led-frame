@@ -29,6 +29,7 @@ DeviceThread::DeviceThread(std::unique_ptr<DevicePort> &&device, QSerialPortInfo
 DeviceThread::~DeviceThread() {
 	interrupt();
 	wait();
+	changed(nullptr);
 	connectEmitter(nullptr);
 }
 
@@ -47,7 +48,8 @@ void DeviceThread::run() {
 	};
 	Container::ColorScanlineContainer source;
 
-	do {
+	while (!m_interrupt && m_device->error() == 0 &&
+	       m_device->isDataTerminalReady()) {
 		if (!isEmitterConnected()) {
 			sync.wait(10);
 			continue;
@@ -68,7 +70,7 @@ void DeviceThread::run() {
 		stream.write(*m_device);
 		m_device->waitForBytesWritten(-1);
 		sync.wait(90);
-	} while (!m_interrupt && m_device->error() == 0);
+	};
 
 	if (m_device->isOpen() && m_device->isWritable())
 		m_device->close();

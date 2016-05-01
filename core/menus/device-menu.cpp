@@ -30,7 +30,7 @@ void DeviceMenu::detached(const std::shared_ptr<IEmitter> &emitter) {
 }
 
 void DeviceMenu::attached(IReceiver *receiver) {
-	auto action = new QAction(receiver->name(), nullptr);
+	auto action = new QAction(QIcon(":/tray.png"), receiver->name(), nullptr);
 	menu()->insertAction(m_beforeAction, action);
 	m_map.insert({ receiver, action });
 	m_receivers.push_back(receiver);
@@ -45,6 +45,10 @@ void DeviceMenu::detached(IReceiver *receiver) {
 	m_map.erase(receiver);
 	m_receivers.remove(receiver);
 	m_emitterMenu.erase(receiver);
+}
+
+void DeviceMenu::changed(IReceiver *receiver) {
+	m_emitterMenu.at(receiver)->changed();
 }
 
 QAction *DeviceMenu::beforeAction() const {

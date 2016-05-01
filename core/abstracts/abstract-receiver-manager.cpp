@@ -31,6 +31,10 @@ void AbstractReceiverManager::detach(IReceiverNotify *notify) {
 
 void AbstractReceiverManager::attach(std::unique_ptr<IReceiver> &&receiver) {
 	auto interface = receiver.get();
+	interface->changed([this, interface]() {
+		for (const auto &notify : m_notifiers)
+			notify->changed(interface);
+	});
 	m_receivers.emplace_back(std::move(receiver));
 
 	for (const auto &notify : m_notifiers)
@@ -38,6 +42,7 @@ void AbstractReceiverManager::attach(std::unique_ptr<IReceiver> &&receiver) {
 }
 
 void AbstractReceiverManager::detach(IReceiver *receiver) {
+	receiver->changed(nullptr);
 	m_receivers.remove_if([receiver](const auto & match) {
 		return match.get() == receiver;
 	});

@@ -17,6 +17,8 @@ namespace Abstract {
 		virtual QString name() const override;
 		virtual void setName(const QString &name) override;
 
+		virtual void changed(const std::function<void ()> &callback) override;
+
 	protected:
 		Container::ColorScanlineContainer &data();
 		const Container::ColorScanlineContainer &constData();
@@ -25,6 +27,9 @@ namespace Abstract {
 		Container::ColorScanlineContainer m_data;
 		std::shared_ptr<Interface::IEmitter> m_emitter;
 		QString m_name;
+		std::function<void()> m_callback;
+
+
 	};
 
 }

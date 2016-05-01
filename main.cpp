@@ -13,9 +13,9 @@
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
 
-#include <QSettings>
 #include <QMessageBox>
 #include <QScreen>
+#include <QSettings>
 
 #include <memory>
 
@@ -95,13 +95,14 @@ int main(int argc, char *argv[]) {
 		return true;
 	});
 	Tray::SystemTray tray;
+	tray.setBrightness(brightnessCorrector->factor());
 	emitterManager.attach(&tray);
 	deviceManager.attach(&tray);
 	auto dialog = std::make_shared<Widget::AboutDialog>();
 	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
 		application.quit();
 	});
-	QObject::connect(&tray, &Tray::SystemTray::signalWheelChanged, [&brightnessCorrector](int delta) {
+	QObject::connect(&tray, &Tray::SystemTray::signalWheelChanged, [&brightnessCorrector, &tray](int delta) {
 		auto value = brightnessCorrector->factor() + ((delta > 0) ? 0.05f : -0.05f);
 
 		if (value > 1.0f)
@@ -111,6 +112,7 @@ int main(int argc, char *argv[]) {
 			value = 0.05f;
 
 		brightnessCorrector->setFactor(value);
+		tray.setBrightness(value);
 	});
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())

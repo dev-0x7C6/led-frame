@@ -27,6 +27,8 @@ namespace Interface {
 		virtual Container::DeviceConfigContainer config() = 0;
 		virtual void setName(const QString &name) = 0;
 
+		virtual void changed(const std::function<void()> &callback) = 0;
+
 	};
 
 }

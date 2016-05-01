@@ -19,6 +19,9 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Interface::IEmitter>
 
 	if (m_emitter)
 		m_emitter->connect();
+
+	if (m_callback)
+		m_callback();
 }
 
 bool AbstractReceiver::isEmitterConnected() {
@@ -35,6 +38,13 @@ QString AbstractReceiver::name() const {
 
 void AbstractReceiver::setName(const QString &name) {
 	m_name = name;
+
+	if (m_callback)
+		m_callback();
+}
+
+void AbstractReceiver::changed(const std::function<void ()> &callback) {
+	m_callback = callback;
 }
 
 Container::ColorScanlineContainer &AbstractReceiver::data() {

@@ -4,6 +4,8 @@
 #include <core/interfaces/iemitter-notify.h>
 #include <core/interfaces/ireceiver.h>
 
+#include <map>
+
 class QAction;
 class QActionGroup;
 
@@ -20,8 +22,11 @@ namespace Menu {
 
 		virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
 		virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+		void changed();
 
 	private:
+		std::map<Interface::IEmitter *, QAction *> m_map;
+
 		QAction *m_parent;
 		QAction *m_actionEmitters;
 		Interface::IReceiver *m_receiver;

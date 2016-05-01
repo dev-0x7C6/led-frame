@@ -22,16 +22,30 @@ EmitterMenu::EmitterMenu(QAction *parent, Interface::IReceiver *receiver)
 
 void EmitterMenu::attached(const std::shared_ptr<IEmitter> &emitter) {
 	auto action = m_actionEmitters->menu()->addAction(emitter->name());
+	m_map.insert({emitter.get(), action});
 	QObject::connect(action, &QAction::triggered, [this, &emitter](bool) {
 		m_receiver->connectEmitter(emitter);
 	});
+	action->setCheckable(true);
 
 	if (m_receiver->connectedEmitter() == emitter)
 		action->setChecked(true);
 
-	action->setCheckable(true);
 	m_group->addAction(action);
 	m_group->setExclusive(true);
+}
+
+void EmitterMenu::changed() {
+	QAction *action;
+
+	try {
+		action = m_map.at(m_receiver->connectedEmitter().get());
+	} catch (const std::out_of_range &) {
+		action = nullptr;
+	}
+
+	if (action)
+		action->setChecked(true);
 }
 
 void EmitterMenu::detached(const std::shared_ptr<IEmitter> &) {
