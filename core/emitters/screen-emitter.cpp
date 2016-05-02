@@ -78,7 +78,11 @@ void ScreenEmitter::run() {
 	Container::ColorScanlineContainer scanline;
 	uint32_t *colors = scanline.data();
 	constexpr int step = 16;
+#ifdef X11
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ScreenCapture);
+#else
+    auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
+#endif
 	auto screen = QGuiApplication::screens().first()->size();
 
 	do {

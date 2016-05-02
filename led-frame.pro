@@ -16,6 +16,7 @@ CONFIG += console
 include(cflags.pri)
 
 unix {
+        DEFINES += X11
 	LIBS += -lX11
 	SOURCES += core/functionals/captures/x11-screen-capture.cpp
 	HEADERS += core/functionals/captures/x11-screen-capture.h
