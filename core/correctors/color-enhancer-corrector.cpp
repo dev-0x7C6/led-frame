@@ -28,9 +28,9 @@ uint32_t ColorEnhancerCorrector::correct(const uint32_t &color) {
 	//      g *= factor;
 	//    if (b > r && b > g)
 	//      b *= factor;
-	r = std::min(0xff, normal.red());
-	g = std::min(0xff, normal.green());
-	b = std::min(0xff, normal.blue());
+	r = std::min(0xffu, static_cast<uint32_t>(normal.red()));
+	g = std::min(0xffu, static_cast<uint32_t>(normal.green()));
+	b = std::min(0xffu, static_cast<uint32_t>(normal.blue()));
 	uint32_t base = 0;
 	base |= r << 0x10;
 	base |= g << 0x08;

@@ -22,6 +22,7 @@ EmitterMenu::EmitterMenu(QAction *parent, Interface::IReceiver *receiver)
 
 void EmitterMenu::attached(const std::shared_ptr<IEmitter> &emitter) {
 	auto action = m_actionEmitters->menu()->addAction(emitter->name());
+	action->setIcon(icon(emitter->type()));
 	m_map.insert({emitter.get(), action});
 	QObject::connect(action, &QAction::triggered, [this, &emitter](bool) {
 		m_receiver->connectEmitter(emitter);
