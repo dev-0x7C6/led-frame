@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include <QString>
 
 namespace Enum {
 
@@ -9,5 +9,20 @@ namespace Enum {
 		Brightness,
 		RGBChannel,
 	};
+
+	inline QString name(const CorrectorType &type) {
+		switch (type) {
+			case CorrectorType::ColorEnhancer:
+				return "Color enhancer";
+
+			case CorrectorType::Brightness:
+				return "Brightness";
+
+			case CorrectorType::RGBChannel:
+				return "RGB correction";
+		}
+
+		return "";
+	}
 
 }

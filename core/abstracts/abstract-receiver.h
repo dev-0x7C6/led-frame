@@ -29,7 +29,6 @@ namespace Abstract {
 		QString m_name;
 		std::function<void()> m_callback;
 
-
 	};
 
 }

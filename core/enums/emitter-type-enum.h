@@ -16,13 +16,15 @@ namespace Enum {
 	inline QIcon icon(const EmitterType &type) {
 		switch (type) {
 			case EmitterType::Animation:
-				return {};
+				return QIcon(":/emitters/animation-emitter.svg");
+
 			case EmitterType::Color:
-				return {};
+				return QIcon(":/emitters/color-emitter.svg");
+
 			case EmitterType::Image:
 				return {};
 			case EmitterType::Screen:
-				return QIcon(":/tray.png");
+				return QIcon(":/emitters/screen-emitter.png");
 
 			case EmitterType::Test:
 				return {};

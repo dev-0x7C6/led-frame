@@ -2,8 +2,19 @@
 
 using namespace Abstract;
 
+AbstractCorrector::AbstractCorrector()
+	: m_enabled(true)
+	, m_priority(10)
+	, m_factor(1.0)
+
+{
+}
+
 AbstractCorrector::AbstractCorrector(const float &factor)
-	: m_factor(factor) {
+	: AbstractCorrector()
+
+{
+	m_factor = factor;
 }
 
 bool AbstractCorrector::enabled() const {

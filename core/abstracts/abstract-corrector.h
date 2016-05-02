@@ -8,7 +8,7 @@ namespace Abstract {
 	class AbstractCorrector : public Interface::IColorCorrector {
 	public:
 		explicit AbstractCorrector(const float &factor);
-		explicit AbstractCorrector() = default;
+		explicit AbstractCorrector();
 		virtual ~AbstractCorrector() = default;
 
 		virtual bool enabled() const override;

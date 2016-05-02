@@ -10,11 +10,16 @@ void AbstractCorrectorAttach::attach(const std::shared_ptr<Interface::IColorCorr
 	});
 }
 
+const std::vector<std::shared_ptr<Interface::IColorCorrector>> &AbstractCorrectorAttach::list() const {
+	return m_correctors;
+}
+
 uint32_t AbstractCorrectorAttach::execute(const uint32_t &color) {
 	uint32_t base = color;
 
 	for (const auto &corrector : m_correctors)
-		base = corrector->correct(base);
+		if (corrector->enabled())
+			base = corrector->correct(base);
 
 	return base;
 }

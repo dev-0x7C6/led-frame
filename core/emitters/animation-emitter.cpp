@@ -16,7 +16,7 @@ AnimationEmitter::AnimationEmitter(QObject *parent)
 	m_animation.setKeyValueAt(0.600, QColor::fromRgbF(0, 1, 0));
 	m_animation.setKeyValueAt(0.800, QColor::fromRgbF(1, 1, 0));
 	m_animation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
-	m_animation.setDuration(2000);
+	m_animation.setDuration(5000);
 	m_animation.setLoopCount(-1);
 	m_animation.start();
 	m_colors.fill(0);
