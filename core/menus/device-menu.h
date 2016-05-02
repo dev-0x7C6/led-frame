@@ -15,7 +15,7 @@ namespace Menu {
 
 	class EmitterMenu;
 
-	class DeviceMenu final
+	class  DeviceMenu final
 		: public Abstract::AbstractMenu
 		, public Interface::IEmitterNotify
 		, public Interface::IReceiverNotify
