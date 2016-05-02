@@ -7,6 +7,6 @@ namespace Enum {
 #ifdef X11
 		X11ScreenCapture,
 #endif
-    };
+	};
 
 }

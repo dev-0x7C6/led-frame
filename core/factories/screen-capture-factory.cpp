@@ -15,6 +15,7 @@ std::unique_ptr<IScreenCapture> ScreenCaptureFactory::create(const ScreenCapture
 		case ScreenCaptureType::QtScreenCapture:
 			return std::make_unique<QtScreenCapture>();
 #ifdef X11
+
 		case ScreenCaptureType::X11ScreenCapture:
 			return std::make_unique<X11ScreenCapture>();
 #endif
