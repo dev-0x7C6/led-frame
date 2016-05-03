@@ -12,6 +12,7 @@ namespace Abstract {
 
 		virtual void attach(std::shared_ptr<Interface::IEmitter> &emitter) override;
 		virtual void detach(std::shared_ptr<Interface::IEmitter> &emitter) override;
+
 		virtual void attach(Interface::IEmitterNotify *notify) override;
 		virtual void detach(Interface::IEmitterNotify *notify) override;
 

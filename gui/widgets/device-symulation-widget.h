@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/abstracts/abstract-receiver.h>
-#include <core/abstracts/abstract-corrector-attach.h>
+#include <core/abstracts/abstract-corrector-manager.h>
 
 #include <QRgb>
 #include <QVector>

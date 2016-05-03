@@ -6,7 +6,7 @@
 using namespace Enum;
 using namespace Factory;
 
-std::shared_ptr<Interface::IColorCorrector> CorrectorFactory::create(const CorrectorType &type) {
+std::shared_ptr<Interface::ICorrector> CorrectorFactory::create(const CorrectorType &type) {
 	switch (type) {
 		case CorrectorType::Brightness:
 			return std::make_shared<Corrector::BrightnessCorrector>();

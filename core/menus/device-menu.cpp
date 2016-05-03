@@ -47,7 +47,7 @@ void DeviceMenu::detached(IReceiver *receiver) {
 	m_emitterMenu.erase(receiver);
 }
 
-void DeviceMenu::changed(IReceiver *receiver) {
+void DeviceMenu::modified(IReceiver *receiver) {
 	m_emitterMenu.at(receiver)->changed();
 }
 

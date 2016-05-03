@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/interfaces/icolor-corrector.h>
+#include <core/interfaces/icorrector.h>
 
 namespace Factory {
 
@@ -9,7 +9,7 @@ namespace Factory {
 		explicit CorrectorFactory() = delete;
 		virtual ~CorrectorFactory() = delete;
 
-		static std::shared_ptr<Interface::IColorCorrector> create(const Enum::CorrectorType &type);
+		static std::shared_ptr<Interface::ICorrector> create(const Enum::CorrectorType &type);
 	};
 
 }

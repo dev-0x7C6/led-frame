@@ -5,10 +5,10 @@
 
 namespace Interface {
 
-	class IColorCorrector {
+	class ICorrector {
 	public:
-		explicit IColorCorrector() = default;
-		virtual ~IColorCorrector() = default;
+		explicit ICorrector() = default;
+		virtual ~ICorrector() = default;
 
 		virtual Enum::CorrectorType type() = 0;
 

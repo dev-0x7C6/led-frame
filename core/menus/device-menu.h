@@ -30,7 +30,7 @@ namespace Menu {
 
 		virtual void attached(Interface::IReceiver *receiver) override;
 		virtual void detached(Interface::IReceiver *receiver) override;
-		virtual void changed(Interface::IReceiver *receiver) override;
+		virtual void modified(Interface::IReceiver *receiver) override;
 
 		QAction *beforeAction() const;
 		void setBeforeAction(QAction *beforeAction);

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <core/interfaces/icolor-corrector.h>
+#include <core/interfaces/icorrector.h>
 #include <atomic>
 
 namespace Abstract {
 
-	class AbstractCorrector : public Interface::IColorCorrector {
+	class AbstractCorrector : public Interface::ICorrector {
 	public:
 		explicit AbstractCorrector(const float &factor);
 		explicit AbstractCorrector();

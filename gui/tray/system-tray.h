@@ -26,7 +26,7 @@ namespace Tray {
 
 		virtual void attached(Interface::IReceiver *receiver) override;
 		virtual void detached(Interface::IReceiver *receiver) override;
-		virtual void changed(Interface::IReceiver *receiver) override;
+		virtual void modified(Interface::IReceiver *receiver) override;
 
 		virtual void setBrightness(const float &brightness);
 

@@ -33,7 +33,7 @@ void AbstractReceiverManager::attach(std::unique_ptr<IReceiver> &&receiver) {
 	auto interface = receiver.get();
 	interface->changed([this, interface]() {
 		for (const auto &notify : m_notifiers)
-			notify->changed(interface);
+			notify->modified(interface);
 	});
 	m_receivers.emplace_back(std::move(receiver));
 

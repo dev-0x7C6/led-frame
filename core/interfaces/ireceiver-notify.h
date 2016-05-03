@@ -11,7 +11,7 @@ namespace Interface {
 
 		virtual void attached(IReceiver *receiver) = 0;
 		virtual void detached(IReceiver *receiver) = 0;
-		virtual void changed(IReceiver *receiver) = 0;
+		virtual void modified(IReceiver *receiver) = 0;
 
 	};
 

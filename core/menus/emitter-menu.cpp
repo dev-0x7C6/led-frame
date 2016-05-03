@@ -23,7 +23,7 @@ EmitterMenu::EmitterMenu(QAction *parent, Interface::IReceiver *receiver)
 	m_actionEmitters->setMenu(new QMenu);
 	m_actionCorrectors->setMenu(new QMenu);
 
-	for (const auto &corrector : receiver->list()) {
+	for (const auto &corrector : receiver->correctorList()) {
 		auto action = m_actionCorrectors->menu()->addAction(name(corrector->type()));
 		action->setCheckable(true);
 		action->setChecked(corrector->enabled());

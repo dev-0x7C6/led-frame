@@ -50,8 +50,8 @@ void SystemTray::detached(Interface::IReceiver *receiver) {
 	m_deviceMenu.detached(receiver);
 }
 
-void SystemTray::changed(IReceiver *receiver) {
-	m_deviceMenu.changed(receiver);
+void SystemTray::modified(IReceiver *receiver) {
+	m_deviceMenu.modified(receiver);
 }
 
 void SystemTray::setBrightness(const float &brightness) {

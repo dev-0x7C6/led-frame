@@ -26,7 +26,6 @@ unix {
 SOURCES += \
 	components/painters/wave-paint-engine.cpp \
 	components/widgets/decorated-dialog.cpp \
-	core/abstracts/abstract-corrector-attach.cpp \
 	core/abstracts/abstract-corrector.cpp \
 	core/abstracts/abstract-emitter.cpp \
 	core/abstracts/abstract-emitter-manager.cpp \
@@ -69,12 +68,12 @@ SOURCES += \
 	gui/wizards/device-setup-info.cpp \
 	gui/wizards/device-setup-pick-name.cpp \
 	gui/wizards/device-setup-wizard.cpp \
-	main.cpp
+	main.cpp \
+    core/abstracts/abstract-corrector-manager.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
 	components/widgets/decorated-dialog.h \
-	core/abstracts/abstract-corrector-attach.h \
 	core/abstracts/abstract-corrector.h \
 	core/abstracts/abstract-emitter.h \
 	core/abstracts/abstract-emitter-manager.h \
@@ -115,8 +114,6 @@ HEADERS += \
 	core/functionals/captures/qt-screen-capture.h \
 	core/functionals/color-stream.h \
 	core/functionals/loop-sync.h \
-	core/interfaces/icolor-corrector-attach.h \
-	core/interfaces/icolor-corrector.h \
 	core/interfaces/iemitter.h \
 	core/interfaces/iemitter-manager.h \
 	core/interfaces/imenu.h \
@@ -137,7 +134,11 @@ HEADERS += \
 	gui/wizards/device-setup-info.h \
 	gui/wizards/device-setup-pick-name.h \
 	gui/wizards/device-setup-wizard.h \
-    core/interfaces/iemitter-notify.h
+    core/interfaces/iemitter-notify.h \
+    core/interfaces/icorrector-notify.h \
+    core/interfaces/icorrector-manager.h \
+    core/interfaces/icorrector.h \
+    core/abstracts/abstract-corrector-manager.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \
