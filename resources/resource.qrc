@@ -6,5 +6,6 @@
         <file>emitters/animation-emitter.svg</file>
         <file>emitters/color-emitter.svg</file>
         <file>emitters/screen-emitter.png</file>
+        <file>emitters/image-emitter.svg</file>
     </qresource>
 </RCC>

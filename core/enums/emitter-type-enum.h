@@ -22,7 +22,8 @@ namespace Enum {
 				return QIcon(":/emitters/color-emitter.svg");
 
 			case EmitterType::Image:
-				return {};
+				return QIcon(":/emitters/image-emitter.svg");
+
 			case EmitterType::Screen:
 				return QIcon(":/emitters/screen-emitter.png");
 

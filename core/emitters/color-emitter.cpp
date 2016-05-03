@@ -3,7 +3,7 @@
 using namespace Emitter;
 
 ColorEmitter::ColorEmitter() {
-	setColor(Qt::darkBlue);
+	setColor(Qt::darkGreen);
 }
 
 Enum::EmitterType ColorEmitter::type() const {

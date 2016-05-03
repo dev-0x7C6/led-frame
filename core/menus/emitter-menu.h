@@ -25,13 +25,11 @@ namespace Menu {
 
 	private:
 		std::map<Interface::IEmitter *, QAction *> m_map;
-
 		QAction *m_parent;
 		QAction *m_actionEmitters;
 		QAction *m_actionCorrectors;
 		Interface::IReceiver *m_receiver;
 		QActionGroup *m_emitterActionGroup;
-		QActionGroup *m_correctorActionGroup;
 		QMenu *m_menu;
 	};
 

@@ -38,22 +38,22 @@ void createDefaultEmitters(EmitterManager &manager) {
 
 	auto animation1 = EmitterFactory::create(EmitterType::Animation);
 	auto animation2 = EmitterFactory::create(EmitterType::Animation);
-	auto animation3 = EmitterFactory::create(EmitterType::Animation);
 	auto color1 = EmitterFactory::create(EmitterType::Color);
 	auto color2 = EmitterFactory::create(EmitterType::Color);
-	auto color3 = EmitterFactory::create(EmitterType::Color);
+	auto image1 = EmitterFactory::create(EmitterType::Image);
+	auto image2 = EmitterFactory::create(EmitterType::Image);
 	animation1->setName(QObject::tr("Animation #1"));
 	animation2->setName(QObject::tr("Animation #2"));
-	animation3->setName(QObject::tr("Animation #3"));
 	color1->setName(QObject::tr("Color #1"));
 	color2->setName(QObject::tr("Color #2"));
-	color3->setName(QObject::tr("Color #3"));
+	image1->setName(QObject::tr("Image #1"));
+	image2->setName(QObject::tr("Image #2"));
 	manager.attach(animation1);
 	manager.attach(animation2);
-	manager.attach(animation3);
 	manager.attach(color1);
 	manager.attach(color2);
-	manager.attach(color3);
+	manager.attach(image1);
+	manager.attach(image2);
 }
 
 
