@@ -16,10 +16,10 @@ EmitterMenu::EmitterMenu(QAction *parent, Interface::IReceiver *receiver)
 	, m_emitterActionGroup(new QActionGroup(nullptr))
 
 {
-	setMenu(new QMenu());
-	m_parent->setMenu(menu());
-	m_actionEmitters = menu()->addAction("Emitters");
-	m_actionCorrectors = menu()->addAction("Correctors");
+	m_menu = new QMenu();
+	m_parent->setMenu(m_menu);
+	m_actionEmitters = m_menu->addAction("Emitters");
+	m_actionCorrectors = m_menu->addAction("Correctors");
 	m_actionEmitters->setMenu(new QMenu);
 	m_actionCorrectors->setMenu(new QMenu);
 

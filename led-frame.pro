@@ -29,7 +29,6 @@ SOURCES += \
 	core/abstracts/abstract-corrector.cpp \
 	core/abstracts/abstract-emitter.cpp \
 	core/abstracts/abstract-emitter-manager.cpp \
-	core/abstracts/abstract-menu.cpp \
 	core/abstracts/abstract-receiver.cpp \
 	core/abstracts/abstract-receiver-manager.cpp \
 	core/containers/abstract-container.cpp \
@@ -77,7 +76,6 @@ HEADERS += \
 	core/abstracts/abstract-corrector.h \
 	core/abstracts/abstract-emitter.h \
 	core/abstracts/abstract-emitter-manager.h \
-	core/abstracts/abstract-menu.h \
 	core/abstracts/abstract-receiver.h \
 	core/abstracts/abstract-receiver-manager.h \
 	core/containers/abstract-container.h \
@@ -116,7 +114,6 @@ HEADERS += \
 	core/functionals/loop-sync.h \
 	core/interfaces/iemitter.h \
 	core/interfaces/iemitter-manager.h \
-	core/interfaces/imenu.h \
 	core/interfaces/ireceiver.h \
 	core/interfaces/ireceiver-manager.h \
 	core/interfaces/ireceiver-notify.h \

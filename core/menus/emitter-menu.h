@@ -1,19 +1,18 @@
 #pragma once
 
-#include <core/abstracts/abstract-menu.h>
 #include <core/interfaces/iemitter-notify.h>
 #include <core/interfaces/ireceiver.h>
 
 #include <map>
 
+class QMenu;
 class QAction;
 class QActionGroup;
 
 namespace Menu {
 
 	class EmitterMenu final
-		: public Abstract::AbstractMenu
-		, public Interface::IEmitterNotify
+		: public Interface::IEmitterNotify
 
 	{
 	public:
@@ -33,6 +32,7 @@ namespace Menu {
 		Interface::IReceiver *m_receiver;
 		QActionGroup *m_emitterActionGroup;
 		QActionGroup *m_correctorActionGroup;
+		QMenu *m_menu;
 	};
 
 }

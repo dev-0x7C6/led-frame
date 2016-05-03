@@ -58,3 +58,11 @@ QAction *DeviceMenu::beforeAction() const {
 void DeviceMenu::setBeforeAction(QAction *beforeAction) {
 	m_beforeAction = beforeAction;
 }
+
+QMenu *DeviceMenu::menu() const {
+	return m_menu;
+}
+
+void DeviceMenu::setMenu(QMenu *menu) {
+	m_menu = menu;
+}

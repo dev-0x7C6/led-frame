@@ -1,4 +1,4 @@
-#include <core/abstracts/abstract-corrector-attach.h>
+#include <core/abstracts/abstract-corrector-manager.h>
 #include <core/interfaces/icorrector-notify.h>
 
 #include <algorithm>

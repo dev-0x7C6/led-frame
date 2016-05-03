@@ -1,6 +1,5 @@
 #pragma once
 
-#include <core/abstracts/abstract-menu.h>
 #include <core/interfaces/iemitter-notify.h>
 #include <core/interfaces/ireceiver-notify.h>
 
@@ -9,6 +8,7 @@
 #include <set>
 #include <memory>
 
+class QMenu;
 class QAction;
 
 namespace Menu {
@@ -16,8 +16,7 @@ namespace Menu {
 	class EmitterMenu;
 
 	class  DeviceMenu final
-		: public Abstract::AbstractMenu
-		, public Interface::IEmitterNotify
+		: public Interface::IEmitterNotify
 		, public Interface::IReceiverNotify
 
 	{
@@ -35,12 +34,16 @@ namespace Menu {
 		QAction *beforeAction() const;
 		void setBeforeAction(QAction *beforeAction);
 
+		QMenu *menu() const;
+		void setMenu(QMenu *menu);
+
 	private:
 		std::set<std::shared_ptr<Interface::IEmitter>> m_emitters;
 		std::list<Interface::IReceiver *> m_receivers;
 		std::map<Interface::IReceiver *, QAction *> m_map;
 		std::map<Interface::IReceiver *, std::unique_ptr<EmitterMenu>> m_emitterMenu;
 		QAction *m_beforeAction;
+		QMenu *m_menu;
 
 	};
 
