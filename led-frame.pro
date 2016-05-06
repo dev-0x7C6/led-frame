@@ -68,7 +68,8 @@ SOURCES += \
 	gui/wizards/device-setup-pick-name.cpp \
 	gui/wizards/device-setup-wizard.cpp \
 	main.cpp \
-    core/abstracts/abstract-corrector-manager.cpp
+    core/abstracts/abstract-corrector-manager.cpp \
+    core/networking/broadcast-service.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -135,7 +136,8 @@ HEADERS += \
     core/interfaces/icorrector-notify.h \
     core/interfaces/icorrector-manager.h \
     core/interfaces/icorrector.h \
-    core/abstracts/abstract-corrector-manager.h
+    core/abstracts/abstract-corrector-manager.h \
+    core/networking/broadcast-service.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \
