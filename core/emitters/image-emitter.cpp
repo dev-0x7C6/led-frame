@@ -8,7 +8,7 @@ using namespace Emitter;
 using namespace Enum;
 
 ImageEmitter::ImageEmitter() {
-	loadFromFile("/home/dev/test.jpg");
+	//  loadFromFile("/home/dev/test.jpg");
 }
 
 Enum::EmitterType ImageEmitter::type() const {

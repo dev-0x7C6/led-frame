@@ -3,6 +3,10 @@
 #include <QTimer>
 #include <QUdpSocket>
 #include <QNetworkInterface>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QHostInfo>
+
 
 using namespace Network;
 
@@ -38,8 +42,13 @@ void BroadcastService::timeout() {
 		}
 	}
 
-	QByteArray datagram = ("ledframe@" + host.toString()
-	                       + ":" + QString::number(m_servicePort)).toLocal8Bit();
+	QJsonObject object {
+		{"computer", QHostInfo::localHostName()},
+		{"host", host.toString()},
+		{"port",  QString::number(m_servicePort)}
+	};
+	QJsonDocument document(object);
+	QByteArray datagram = document.toJson();
 	m_socket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, 45454);
 }
 
