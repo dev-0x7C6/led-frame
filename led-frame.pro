@@ -8,6 +8,7 @@ QT += qml
 QT += quick
 QT += serialport
 QT += widgets
+QT += websockets
 QT += xml
 
 CONFIG += c++14
@@ -69,7 +70,8 @@ SOURCES += \
 	gui/wizards/device-setup-wizard.cpp \
 	main.cpp \
     core/abstracts/abstract-corrector-manager.cpp \
-    core/networking/broadcast-service.cpp
+    core/networking/broadcast-service.cpp \
+    core/networking/web-socket-server.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -137,7 +139,8 @@ HEADERS += \
     core/interfaces/icorrector-manager.h \
     core/interfaces/icorrector.h \
     core/abstracts/abstract-corrector-manager.h \
-    core/networking/broadcast-service.h
+    core/networking/broadcast-service.h \
+    core/networking/web-socket-server.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \

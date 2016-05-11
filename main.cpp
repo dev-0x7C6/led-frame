@@ -10,6 +10,7 @@
 #include <core/factories/corrector-factory.h>
 #include <core/factories/emitter-factory.h>
 #include <core/networking/broadcast-service.h>
+#include <core/networking/web-socket-server.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
@@ -115,7 +116,8 @@ int main(int argc, char *argv[]) {
 		brightnessCorrector->setFactor(value);
 		tray.setBrightness(value);
 	});
-	Network::BroadcastService broadcastService;
+	Network::WebSocketServer webSocketServer;
+	Network::BroadcastService broadcastService(webSocketServer.port());
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())
 			return;

@@ -10,15 +10,15 @@
 
 using namespace Network;
 
-BroadcastService::BroadcastService(QObject *parent)
+BroadcastService::BroadcastService(const uint16_t &port, QObject *parent)
 	: QObject(parent)
 	, m_socket(new QUdpSocket)
-	, m_servicePort(3498)
+	, m_servicePort(port)
 
 {
 	auto timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, &BroadcastService::timeout);
-	timer->start(3000);
+	timer->start(300);
 }
 
 void BroadcastService::timeout() {

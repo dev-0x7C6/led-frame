@@ -9,7 +9,7 @@ namespace Network {
 	class BroadcastService final : public QObject {
 		Q_OBJECT
 	public:
-		explicit BroadcastService(QObject *parent = nullptr);
+		explicit BroadcastService(const uint16_t &port = 4999, QObject *parent = nullptr);
 		virtual ~BroadcastService() = default;
 
 		uint16_t servicePort() const;
