@@ -11,7 +11,9 @@ WebSocketServer::WebSocketServer(const uint16_t &port, QObject *parent)
 
 {
 	m_webSocketServer->listen(QHostAddress::Any, port);
-	connect(m_webSocketServer, &QWebSocketServer::newConnection, this, &WebSocketServer::incommingConnection);
+	connect(m_webSocketServer, &QWebSocketServer::newConnection, [this]() {
+		emit signalIncommingConnection(m_webSocketServer->nextPendingConnection());
+	});
 }
 
 bool WebSocketServer::isListening() const {
@@ -20,8 +22,4 @@ bool WebSocketServer::isListening() const {
 
 uint16_t WebSocketServer::port() const {
 	return m_webSocketServer->serverPort();
-}
-
-void WebSocketServer::incommingConnection() {
-	m_webSocketServer->nextPendingConnection();
 }

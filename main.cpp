@@ -11,6 +11,7 @@
 #include <core/factories/emitter-factory.h>
 #include <core/networking/broadcast-service.h>
 #include <core/networking/web-socket-server.h>
+#include <core/networking/web-socket.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
@@ -18,6 +19,7 @@
 #include <QMessageBox>
 #include <QScreen>
 #include <QSettings>
+#include <QWebSocket>
 
 #include <memory>
 
@@ -118,6 +120,9 @@ int main(int argc, char *argv[]) {
 	});
 	Network::WebSocketServer webSocketServer;
 	Network::BroadcastService broadcastService(webSocketServer.port());
+	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection, [&brightnessCorrector, &webSocketServer](QWebSocket * socket) {
+		new Network::WebSocket(brightnessCorrector.get(), socket, &webSocketServer);
+	});
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())
 			return;

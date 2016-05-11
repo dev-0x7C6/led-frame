@@ -2,11 +2,13 @@
 
 #include <QObject>
 
+class QWebSocket;
 class QWebSocketServer;
 
 namespace Network {
 
 	class WebSocketServer final : public QObject {
+		Q_OBJECT
 	public:
 		explicit WebSocketServer(const uint16_t &port = 4999, QObject *parent = nullptr);
 		virtual ~WebSocketServer() = default;
@@ -14,11 +16,11 @@ namespace Network {
 		bool isListening() const;
 		uint16_t port() const;
 
-	protected:
-		void incommingConnection();
-
 	private:
 		QWebSocketServer *m_webSocketServer;
+
+	signals:
+		void signalIncommingConnection(QWebSocket *socket);
 	};
 
 }

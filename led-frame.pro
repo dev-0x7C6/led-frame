@@ -71,7 +71,8 @@ SOURCES += \
 	main.cpp \
     core/abstracts/abstract-corrector-manager.cpp \
     core/networking/broadcast-service.cpp \
-    core/networking/web-socket-server.cpp
+    core/networking/web-socket-server.cpp \
+    core/networking/web-socket.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -140,7 +141,8 @@ HEADERS += \
     core/interfaces/icorrector.h \
     core/abstracts/abstract-corrector-manager.h \
     core/networking/broadcast-service.h \
-    core/networking/web-socket-server.h
+    core/networking/web-socket-server.h \
+    core/networking/web-socket.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \
