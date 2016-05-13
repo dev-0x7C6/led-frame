@@ -18,7 +18,7 @@ BroadcastService::BroadcastService(const uint16_t &port, QObject *parent)
 {
 	auto timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, &BroadcastService::timeout);
-	timer->start(300);
+	timer->start(3000);
 }
 
 void BroadcastService::timeout() {

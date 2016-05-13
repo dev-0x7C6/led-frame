@@ -16,10 +16,13 @@
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
 
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QMessageBox>
 #include <QScreen>
 #include <QSettings>
 #include <QWebSocket>
+
 
 #include <memory>
 
@@ -95,6 +98,7 @@ int main(int argc, char *argv[]) {
 		settings.endGroup();
 		settings.sync();
 		receiver->attach(brightnessCorrector);
+		receiver->attach(rgbCorrector);
 		receiver->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
@@ -120,8 +124,29 @@ int main(int argc, char *argv[]) {
 	});
 	Network::WebSocketServer webSocketServer;
 	Network::BroadcastService broadcastService(webSocketServer.port());
-	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection, [&brightnessCorrector, &webSocketServer](QWebSocket * socket) {
-		new Network::WebSocket(brightnessCorrector.get(), socket, &webSocketServer);
+	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection, [&brightnessCorrector, &rgbCorrector, &webSocketServer](QWebSocket * socket) {
+		auto connection = new Network::WebSocket(socket, &webSocketServer);
+		QObject::connect(connection, &Network::WebSocket::textMessageReceived, [&brightnessCorrector, &rgbCorrector](const QString & message) {
+			auto json = QJsonDocument::fromJson(message.toUtf8());
+			auto obj = json.object();
+			brightnessCorrector->setFactor(obj.value("brightness").toDouble());
+			rgbCorrector->setRedFactor(obj.value("rcorrector").toDouble());
+			rgbCorrector->setGreenFactor(obj.value("gcorrector").toDouble());
+			rgbCorrector->setBlueFactor(obj.value("bcorrector").toDouble());
+		});
+		auto poller = new QTimer(connection);
+		poller->setInterval(50);
+		poller->start();
+		QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector]() {
+			auto json = QJsonObject {
+				{"brightness", brightnessCorrector->factor()},
+				{"rcorrector", rgbCorrector->redFactor()},
+				{"gcorrector", rgbCorrector->greenFactor()},
+				{"bcorrector", rgbCorrector->blueFactor()},
+			};
+			auto doc = QJsonDocument(json);
+			connection->sendTextMessage(doc.toJson());
+		});
 	});
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())

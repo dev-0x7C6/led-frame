@@ -9,16 +9,18 @@ class QWebSocket;
 namespace Network {
 
 	class WebSocket : public QObject {
+		Q_OBJECT
 	public:
-		explicit WebSocket(Interface::ICorrector *corrector, QWebSocket *socket, QObject *parent = nullptr);
+		explicit WebSocket(QWebSocket *socket, QObject *parent = nullptr);
 		virtual ~WebSocket() = default;
 
-	protected:
-		void textMessageReceived(const QString &message);
+		void sendTextMessage(const QString &message);
 
 	private:
 		QWebSocket *m_webSocket;
-		Interface::ICorrector *m_corrector;
+
+	signals:
+		void textMessageReceived(const QString &message);
 	};
 
 }
