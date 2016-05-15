@@ -10,9 +10,10 @@
 
 using namespace Network;
 
-BroadcastService::BroadcastService(const uint16_t &port, QObject *parent)
+BroadcastService::BroadcastService(const QString &deviceName, const uint16_t &port, QObject *parent)
 	: QObject(parent)
 	, m_socket(new QUdpSocket)
+	, m_deviceName(deviceName)
 	, m_servicePort(port)
 
 {
@@ -44,6 +45,7 @@ void BroadcastService::timeout() {
 
 	QJsonObject object {
 		{"computer", QHostInfo::localHostName()},
+		{"device", m_deviceName},
 		{"host", host.toString()},
 		{"port",  QString::number(m_servicePort)}
 	};

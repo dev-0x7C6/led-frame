@@ -2,10 +2,12 @@
 #include <core/devices/device-manager.h>
 #include <core/devices/device-port.h>
 #include <core/devices/device-thread.h>
+#include <core/networking/broadcast-service.h>
 
 #include <memory>
 
 using namespace Device;
+using namespace Network;
 
 DeviceManager::DeviceManager(QObject *parent)
 	: QObject(parent)
@@ -43,6 +45,7 @@ void DeviceManager::rescan() {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
+		new Network::BroadcastService(thread->name(), 4999, interface);
 		attach(std::move(thread));
 		emit afterAttach();
 	}
