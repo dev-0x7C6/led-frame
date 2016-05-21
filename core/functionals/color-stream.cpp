@@ -7,18 +7,14 @@ using namespace Functional;
 ColorStream::ColorStream()
 		: m_seek(0) {}
 
-void ColorStream::insert(const Enum::ColorFormat &format, const uint32_t &color) {
-	const auto r = getr(color);
-	const auto g = getg(color);
-	const auto b = getb(color);
-
+void ColorStream::insert(Enum::ColorFormat format, uint32_t color) {
 	switch (format) {
-		case ColorFormat::RGB: return writeRGB(r, g, b);
-		case ColorFormat::RBG: return writeRBG(r, g, b);
-		case ColorFormat::GRB: return writeGRB(r, g, b);
-		case ColorFormat::BRG: return writeBRG(r, g, b);
-		case ColorFormat::GBR: return writeGBR(r, g, b);
-		case ColorFormat::BGR: return writeBGR(r, g, b);
+		case ColorFormat::RGB: return writeRGB(color);
+		case ColorFormat::RBG: return writeRBG(color);
+		case ColorFormat::GRB: return writeGRB(color);
+		case ColorFormat::BRG: return writeBRG(color);
+		case ColorFormat::GBR: return writeGBR(color);
+		case ColorFormat::BGR: return writeBGR(color);
 	}
 }
 
@@ -27,48 +23,50 @@ void ColorStream::write(QIODevice &device) {
 	m_seek = 0;
 }
 
-uint8_t ColorStream::getr(const uint32_t &color) const { return static_cast<uint8_t>(color >> 16); }
-uint8_t ColorStream::getg(const uint32_t &color) const { return static_cast<uint8_t>(color >> 8); }
-uint8_t ColorStream::getb(const uint32_t &color) const { return static_cast<uint8_t>(color); }
-
-void ColorStream::writeRGB(const uint8_t &r, const uint8_t &g, const uint8_t &b) {
-	m_buffer[m_seek + 0] = r;
-	m_buffer[m_seek + 1] = g;
-	m_buffer[m_seek + 2] = b;
+void ColorStream::writeRGB(uint32_t color) {
+	const auto seek = m_seek;
+	m_buffer[seek + 0] = color >> 0x10 & 0xffu; // r
+	m_buffer[seek + 1] = color >> 0x08 & 0xffu; // g
+	m_buffer[seek + 2] = color >> 0x00 & 0xffu; // b
 	m_seek += 3;
 }
 
-void ColorStream::writeRBG(const uint8_t &r, const uint8_t &g, const uint8_t &b) {
-	m_buffer[m_seek + 0] = r;
-	m_buffer[m_seek + 1] = b;
-	m_buffer[m_seek + 2] = g;
+void ColorStream::writeRBG(uint32_t color) {
+	const auto seek = m_seek;
+	m_buffer[seek + 0] = color >> 0x10 & 0xffu; // r
+	m_buffer[seek + 1] = color >> 0x00 & 0xffu; // b
+	m_buffer[seek + 2] = color >> 0x08 & 0xffu; // g
 	m_seek += 3;
 }
 
-void ColorStream::writeGRB(const uint8_t &r, const uint8_t &g, const uint8_t &b) {
-	m_buffer[m_seek + 0] = g;
-	m_buffer[m_seek + 1] = r;
-	m_buffer[m_seek + 2] = b;
+void ColorStream::writeGRB(uint32_t color) {
+	const auto seek = m_seek;
+	m_buffer[seek + 0] = color >> 0x08 & 0xffu; // g
+	m_buffer[seek + 1] = color >> 0x10 & 0xffu; // r
+	m_buffer[seek + 2] = color >> 0x00 & 0xffu; // b
 	m_seek += 3;
 }
 
-void ColorStream::writeGBR(const uint8_t &r, const uint8_t &g, const uint8_t &b) {
-	m_buffer[m_seek + 0] = g;
-	m_buffer[m_seek + 1] = b;
-	m_buffer[m_seek + 2] = r;
+void ColorStream::writeGBR(uint32_t color) {
+	const auto seek = m_seek;
+	m_buffer[seek + 0] = color >> 0x08 & 0xffu; // g
+	m_buffer[seek + 1] = color >> 0x00 & 0xffu; // b
+	m_buffer[seek + 2] = color >> 0x10 & 0xffu; // r
 	m_seek += 3;
 }
 
-void ColorStream::writeBRG(const uint8_t &r, const uint8_t &g, const uint8_t &b) {
-	m_buffer[m_seek + 0] = b;
-	m_buffer[m_seek + 1] = r;
-	m_buffer[m_seek + 2] = g;
+void ColorStream::writeBRG(uint32_t color) {
+	const auto seek = m_seek;
+	m_buffer[seek + 0] = color >> 0x00 & 0xffu; // b
+	m_buffer[seek + 1] = color >> 0x10 & 0xffu; // r
+	m_buffer[seek + 2] = color >> 0x08 & 0xffu; // g
 	m_seek += 3;
 }
 
-void ColorStream::writeBGR(const uint8_t &r, const uint8_t &g, const uint8_t &b) {
-	m_buffer[m_seek + 0] = b;
-	m_buffer[m_seek + 1] = g;
-	m_buffer[m_seek + 2] = r;
+void ColorStream::writeBGR(uint32_t color) {
+	const auto seek = m_seek;
+	m_buffer[seek + 0] = color >> 0x00 & 0xffu; // b
+	m_buffer[seek + 1] = color >> 0x08 & 0xffu; // g
+	m_buffer[seek + 2] = color >> 0x10 & 0xffu; // r
 	m_seek += 3;
 }

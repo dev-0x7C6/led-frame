@@ -16,20 +16,16 @@ public:
 	explicit ColorStream();
 	virtual ~ColorStream() = default;
 
-	void insert(const Enum::ColorFormat &format, const uint32_t &color);
+	void insert(Enum::ColorFormat format, uint32_t color);
 	void write(QIODevice &device);
 
 protected:
-	inline uint8_t getr(const uint32_t &color) const;
-	inline uint8_t getg(const uint32_t &color) const;
-	inline uint8_t getb(const uint32_t &color) const;
-
-	inline void writeRGB(const uint8_t &r, const uint8_t &g, const uint8_t &b);
-	inline void writeRBG(const uint8_t &r, const uint8_t &g, const uint8_t &b);
-	inline void writeGRB(const uint8_t &r, const uint8_t &g, const uint8_t &b);
-	inline void writeGBR(const uint8_t &r, const uint8_t &g, const uint8_t &b);
-	inline void writeBRG(const uint8_t &r, const uint8_t &g, const uint8_t &b);
-	inline void writeBGR(const uint8_t &r, const uint8_t &g, const uint8_t &b);
+	inline void writeRGB(uint32_t color);
+	inline void writeRBG(uint32_t color);
+	inline void writeGRB(uint32_t color);
+	inline void writeGBR(uint32_t color);
+	inline void writeBRG(uint32_t color);
+	inline void writeBGR(uint32_t color);
 
 private:
 	std::array<uint8_t, 270> m_buffer;
