@@ -13,38 +13,36 @@ class QAction;
 
 namespace Menu {
 
-	class EmitterMenu;
+class EmitterMenu;
 
-	class  DeviceMenu final
-		: public Interface::IEmitterNotify
-		, public Interface::IReceiverNotify
+class DeviceMenu final
+	: public Interface::IEmitterNotify,
+	  public Interface::IReceiverNotify
 
-	{
-	public:
-		explicit DeviceMenu();
-		virtual ~DeviceMenu();
+{
+public:
+	explicit DeviceMenu();
+	virtual ~DeviceMenu();
 
-		virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
-		virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+	virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+	virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
 
-		virtual void attached(Interface::IReceiver *receiver) override;
-		virtual void detached(Interface::IReceiver *receiver) override;
-		virtual void modified(Interface::IReceiver *receiver) override;
+	virtual void attached(Interface::IReceiver *receiver) override;
+	virtual void detached(Interface::IReceiver *receiver) override;
+	virtual void modified(Interface::IReceiver *receiver) override;
 
-		QAction *beforeAction() const;
-		void setBeforeAction(QAction *beforeAction);
+	QAction *beforeAction() const;
+	void setBeforeAction(QAction *beforeAction);
 
-		QMenu *menu() const;
-		void setMenu(QMenu *menu);
+	QMenu *menu() const;
+	void setMenu(QMenu *menu);
 
-	private:
-		std::set<std::shared_ptr<Interface::IEmitter>> m_emitters;
-		std::list<Interface::IReceiver *> m_receivers;
-		std::map<Interface::IReceiver *, QAction *> m_map;
-		std::map<Interface::IReceiver *, std::unique_ptr<EmitterMenu>> m_emitterMenu;
-		QAction *m_beforeAction;
-		QMenu *m_menu;
-
-	};
-
+private:
+	std::set<std::shared_ptr<Interface::IEmitter>> m_emitters;
+	std::list<Interface::IReceiver *> m_receivers;
+	std::map<Interface::IReceiver *, QAction *> m_map;
+	std::map<Interface::IReceiver *, std::unique_ptr<EmitterMenu>> m_emitterMenu;
+	QAction *m_beforeAction;
+	QMenu *m_menu;
+};
 }

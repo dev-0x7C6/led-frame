@@ -15,11 +15,11 @@ using namespace Device;
 using namespace Enum;
 
 DeviceThread::DeviceThread(std::unique_ptr<DevicePort> &&device, QSerialPortInfo details, QObject *parent)
-	: QThread(parent)
-	, Abstract::AbstractReceiver()
-	, m_device(std::move(device))
-	, m_details(details)
-	, m_interrupt(false)
+		: QThread(parent)
+		, Abstract::AbstractReceiver()
+		, m_device(std::move(device))
+		, m_details(details)
+		, m_interrupt(false)
 
 {
 	m_device->moveToThread(this);
@@ -44,12 +44,11 @@ void DeviceThread::run() {
 		m_device->config().ribbon(0),
 		m_device->config().ribbon(1),
 		m_device->config().ribbon(2),
-		m_device->config().ribbon(3)
-	};
+		m_device->config().ribbon(3)};
 	Container::ColorScanlineContainer source;
 
 	while (!m_interrupt && m_device->error() == 0 &&
-	       m_device->isDataTerminalReady()) {
+		m_device->isDataTerminalReady()) {
 		if (!isEmitterConnected()) {
 			sync.wait(10);
 			continue;

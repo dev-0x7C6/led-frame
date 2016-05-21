@@ -4,12 +4,11 @@
 
 namespace Factory {
 
-	class CorrectorFactory final {
-	public:
-		explicit CorrectorFactory() = delete;
-		virtual ~CorrectorFactory() = delete;
+class CorrectorFactory final {
+public:
+	explicit CorrectorFactory() = delete;
+	virtual ~CorrectorFactory() = delete;
 
-		static std::shared_ptr<Interface::ICorrector> create(const Enum::CorrectorType &type);
-	};
-
+	static std::shared_ptr<Interface::ICorrector> create(const Enum::CorrectorType &type);
+};
 }

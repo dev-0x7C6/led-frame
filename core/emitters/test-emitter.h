@@ -6,23 +6,20 @@
 
 namespace Emitter {
 
-	class TestEmitter final : public QObject, public Abstract::AbstractEmitter {
-	public:
-		explicit TestEmitter(QObject *parent = nullptr);
-		virtual ~TestEmitter() = default;
+class TestEmitter final : public QObject, public Abstract::AbstractEmitter {
+public:
+	explicit TestEmitter(QObject *parent = nullptr);
+	virtual ~TestEmitter() = default;
 
-		virtual Enum::EmitterType type() const override;
+	virtual Enum::EmitterType type() const override;
 
-	protected:
-		virtual void timerEvent(QTimerEvent *event) override;
-		virtual void onConnect(const uint32_t &count) override;
-		virtual void onDisconnect(const uint32_t &count) override;
+protected:
+	virtual void timerEvent(QTimerEvent *event) override;
+	virtual void onConnect(const uint32_t &count) override;
+	virtual void onDisconnect(const uint32_t &count) override;
 
-
-	private:
-		uint8_t m_currentStep;
-		uint8_t m_maxStep;
-
-	};
-
+private:
+	uint8_t m_currentStep;
+	uint8_t m_maxStep;
+};
 }

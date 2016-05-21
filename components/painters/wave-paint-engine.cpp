@@ -8,9 +8,9 @@ using namespace Widget;
 using namespace Container;
 
 WavePaintEngine::WavePaintEngine(QWidget *parent)
-	: m_animationEnabled(false),
-	  m_shift(0),
-	  m_parent(parent) {
+		: m_animationEnabled(false)
+		, m_shift(0)
+		, m_parent(parent) {
 	m_waveGradientModel.addPoint(0.000, QColor::fromRgbF(0.000, 0.000, 0.000), false);
 	m_waveGradientModel.addPoint(0.200, QColor::fromRgbF(0.000, 0.000, 0.000), true);
 	m_waveGradientModel.addPoint(0.600, QColor::fromRgbF(0.100, 0.100, 0.100), true);
@@ -69,7 +69,7 @@ void WavePaintEngine::resize(const QSize &size) {
 		return;
 
 	if (m_pixmap.width() != size.width() * 4 || m_pixmap.height() != size.height()) {
-		m_pixmap = { size.width() * 4, size.height() };
+		m_pixmap = {size.width() * 4, size.height()};
 	}
 
 	QPainter painter(&m_pixmap);
@@ -156,4 +156,3 @@ void WavePaintEngine::setAnimationEnabled(bool animationEnabled) {
 	if (m_reflesh.isActive() && m_animationEnabled == false)
 		m_reflesh.stop();
 }
-

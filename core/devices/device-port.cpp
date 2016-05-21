@@ -6,7 +6,7 @@
 using namespace Device;
 
 DevicePort::DevicePort(const QSerialPortInfo &info)
-	: QSerialPort(info)
+		: QSerialPort(info)
 
 {
 	auto config = info.description().remove(QRegExp("[ ]"));

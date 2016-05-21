@@ -10,7 +10,7 @@ using namespace Device;
 using namespace Network;
 
 DeviceManager::DeviceManager(QObject *parent)
-	: QObject(parent)
+		: QObject(parent)
 
 {
 	connect(&m_deviceScan, &QTimer::timeout, this, &DeviceManager::rescan);
@@ -21,7 +21,7 @@ DeviceManager::~DeviceManager() {
 
 void DeviceManager::rescan() {
 	Container::DeviceInfoContainer deviceInfo("LedFrame", "LedFrame", 500000);
-	const QList <QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+	const QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
 	for (int i = 0; i < ports.count(); ++i) {
 		if ((ports[i].manufacturer() != deviceInfo.manufacturer())) continue;
@@ -40,7 +40,8 @@ void DeviceManager::rescan() {
 		auto interface = thread.get();
 		connect(interface, &DeviceThread::finished, this, [this, interface]() {
 			detach(interface);
-		}, Qt::QueuedConnection);
+		},
+			Qt::QueuedConnection);
 
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
@@ -51,7 +52,7 @@ void DeviceManager::rescan() {
 	}
 }
 
-void DeviceManager::setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *, const QString &serialNumber)> &callback) {
+void DeviceManager::setRegisterDeviceCallback(const std::function<bool(Interface::IReceiver *, const QString &serialNumber)> &callback) {
 	m_registerDeviceCallback = callback;
 }
 

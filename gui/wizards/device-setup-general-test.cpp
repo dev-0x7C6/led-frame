@@ -11,8 +11,8 @@ using namespace Widget;
 using namespace Wizard;
 
 DeviceSetupGeneralTest::DeviceSetupGeneralTest(Interface::IReceiver *device)
-	: m_receiver(device)
-	, m_symulation(new DeviceSymulationWidget)
+		: m_receiver(device)
+		, m_symulation(new DeviceSymulationWidget)
 
 {
 	setTitle(tr("Device testing..."));

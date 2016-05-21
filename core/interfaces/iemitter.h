@@ -8,26 +8,24 @@
 
 namespace Interface {
 
-	class IReceiver;
+class IReceiver;
 
-	class IEmitter {
-	public:
-		explicit IEmitter() = default;
-		virtual ~IEmitter() = default;
+class IEmitter {
+public:
+	explicit IEmitter() = default;
+	virtual ~IEmitter() = default;
 
-		virtual QString name() const = 0;
-		virtual Enum::EmitterType type() const = 0;
+	virtual QString name() const = 0;
+	virtual Enum::EmitterType type() const = 0;
 
-		virtual void commit(const Container::ColorScanlineContainer &scanline) = 0;
-		virtual Container::ColorScanlineContainer data() = 0;
+	virtual void commit(const Container::ColorScanlineContainer &scanline) = 0;
+	virtual Container::ColorScanlineContainer data() = 0;
 
-		virtual void setName(const QString &name) = 0;
+	virtual void setName(const QString &name) = 0;
 
-		virtual void connect() = 0;
-		virtual void disconnect() = 0;
+	virtual void connect() = 0;
+	virtual void disconnect() = 0;
 
-		virtual uint32_t connectionCount() = 0;
-
-	};
-
+	virtual uint32_t connectionCount() = 0;
+};
 }

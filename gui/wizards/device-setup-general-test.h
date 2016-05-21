@@ -4,23 +4,22 @@
 #include <QWizardPage>
 
 namespace Widget {
-	class DeviceSymulationWidget;
+class DeviceSymulationWidget;
 }
 
 namespace Wizard {
 
-	class DeviceSetupGeneralTest : public QWizardPage {
-	public:
-		explicit DeviceSetupGeneralTest(Interface::IReceiver *receiver);
-		virtual ~DeviceSetupGeneralTest() = default;
+class DeviceSetupGeneralTest : public QWizardPage {
+public:
+	explicit DeviceSetupGeneralTest(Interface::IReceiver *receiver);
+	virtual ~DeviceSetupGeneralTest() = default;
 
-	protected:
-		virtual void initializePage() override;
-		virtual void cleanupPage() override;
+protected:
+	virtual void initializePage() override;
+	virtual void cleanupPage() override;
 
-	private:
-		Interface::IReceiver *m_receiver;
-		Widget::DeviceSymulationWidget *m_symulation;
-	};
-
+private:
+	Interface::IReceiver *m_receiver;
+	Widget::DeviceSymulationWidget *m_symulation;
+};
 }

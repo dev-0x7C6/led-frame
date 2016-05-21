@@ -4,8 +4,8 @@
 using namespace Emitter::Manager;
 
 EmitterManager::EmitterManager(QSettings &settings)
-	: m_settings(settings)
-	, m_firstRun(false)
+		: m_settings(settings)
+		, m_firstRun(false)
 
 {
 }

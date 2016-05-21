@@ -21,7 +21,7 @@ void AbstractReceiverManager::attach(IReceiverNotify *notify) {
 }
 
 void AbstractReceiverManager::detach(IReceiverNotify *notify) {
-	m_notifiers.remove_if([notify](const auto & match) {
+	m_notifiers.remove_if([notify](const auto &match) {
 		return match == notify;
 	});
 
@@ -43,7 +43,7 @@ void AbstractReceiverManager::attach(std::unique_ptr<IReceiver> &&receiver) {
 
 void AbstractReceiverManager::detach(IReceiver *receiver) {
 	receiver->changed(nullptr);
-	m_receivers.remove_if([receiver](const auto & match) {
+	m_receivers.remove_if([receiver](const auto &match) {
 		return match.get() == receiver;
 	});
 

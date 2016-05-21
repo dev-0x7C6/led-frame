@@ -7,7 +7,7 @@ using namespace Enum;
 using namespace Corrector;
 
 ColorEnhancerCorrector::ColorEnhancerCorrector()
-	: Abstract::AbstractCorrector(1.5) {
+		: Abstract::AbstractCorrector(1.5) {
 }
 
 Enum::CorrectorType Corrector::ColorEnhancerCorrector::type() {

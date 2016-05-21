@@ -3,11 +3,11 @@
 #include <QWidget>
 
 namespace Ui {
-	class ALCColorCorrectionWidget;
+class ALCColorCorrectionWidget;
 }
 
 namespace Correctors {
-	class ALCColorCorrection;
+class ALCColorCorrection;
 }
 
 class ALCColorCorrectionWidget : public QWidget {
@@ -38,5 +38,4 @@ private:
 
 signals:
 	void brightnessChanged(double value);
-
 };

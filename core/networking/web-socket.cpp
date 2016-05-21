@@ -5,8 +5,8 @@
 using namespace Network;
 
 WebSocket::WebSocket(QWebSocket *socket, QObject *parent)
-	: QObject(parent)
-	, m_webSocket(socket) {
+		: QObject(parent)
+		, m_webSocket(socket) {
 	connect(m_webSocket, &QWebSocket::textMessageReceived, this, &WebSocket::textMessageReceived);
 }
 

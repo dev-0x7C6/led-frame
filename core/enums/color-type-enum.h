@@ -2,12 +2,11 @@
 
 namespace Enum {
 
-	enum class ColorType {
-		Red,
-		Green,
-		Blue,
-		Light,
-		Last
-	};
-
+enum class ColorType {
+	Red,
+	Green,
+	Blue,
+	Light,
+	Last
+};
 }

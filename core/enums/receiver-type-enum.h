@@ -2,8 +2,7 @@
 
 namespace Enum {
 
-	enum class ReceiverType {
-		Device
-	};
-
+enum class ReceiverType {
+	Device
+};
 }

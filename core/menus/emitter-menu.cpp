@@ -11,9 +11,9 @@ using namespace Interface;
 using namespace Menu;
 
 EmitterMenu::EmitterMenu(QAction *parent, Interface::IReceiver *receiver)
-	: m_parent(parent)
-	, m_receiver(receiver)
-	, m_emitterActionGroup(new QActionGroup(nullptr))
+		: m_parent(parent)
+		, m_receiver(receiver)
+		, m_emitterActionGroup(new QActionGroup(nullptr))
 
 {
 	m_menu = new QMenu();

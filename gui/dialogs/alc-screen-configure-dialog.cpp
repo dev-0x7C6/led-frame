@@ -1,9 +1,9 @@
 #include "alc-screen-configure-dialog.h"
 #include "ui_alc-screen-configure-dialog.h"
 
-ALCScreenConfigureDialog::ALCScreenConfigureDialog(QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::ALCScreenConfigureDialog) {
+ALCScreenConfigureDialog::ALCScreenConfigureDialog(QWidget *parent)
+		: QDialog(parent)
+		, ui(new Ui::ALCScreenConfigureDialog) {
 	ui->setupUi(this);
 	connect(ui->fps, &QSlider::valueChanged, this, &ALCScreenConfigureDialog::fpsValueChanged);
 	connect(ui->clip, &QSlider::valueChanged, this, &ALCScreenConfigureDialog::clipValueChanged);
@@ -91,7 +91,7 @@ void ALCScreenConfigureDialog::accepted(QAbstractButton *button) {
 	//    return;
 	QRect area;
 	QString str;
-	QList <QScreen *> screens = QApplication::screens();
+	QList<QScreen *> screens = QApplication::screens();
 
 	switch (ui->buttons->buttonRole(button)) {
 		case QDialogButtonBox::ApplyRole:

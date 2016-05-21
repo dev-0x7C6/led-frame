@@ -3,16 +3,14 @@
 using namespace Container;
 
 DeviceInfoContainer::DeviceInfoContainer()
-	: m_baudrate(500000) {
+		: m_baudrate(500000) {
 }
 
-DeviceInfoContainer::DeviceInfoContainer(const QString &description
-    , const QString &manufacturer
-    , int baudrate)
+DeviceInfoContainer::DeviceInfoContainer(const QString &description, const QString &manufacturer, int baudrate)
 
-	: m_decription(description)
-	, m_manufacturer(manufacturer)
-	, m_baudrate(baudrate)
+		: m_decription(description)
+		, m_manufacturer(manufacturer)
+		, m_baudrate(baudrate)
 
 {
 }

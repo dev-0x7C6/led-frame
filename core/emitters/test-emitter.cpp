@@ -7,9 +7,9 @@ using namespace Emitter;
 using namespace Enum;
 
 TestEmitter::TestEmitter(QObject *parent)
-	: QObject(parent)
-	, m_currentStep(0)
-	, m_maxStep(19)
+		: QObject(parent)
+		, m_currentStep(0)
+		, m_maxStep(19)
 
 {
 	startTimer(750);

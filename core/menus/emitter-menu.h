@@ -11,26 +11,25 @@ class QActionGroup;
 
 namespace Menu {
 
-	class EmitterMenu final
-		: public Interface::IEmitterNotify
+class EmitterMenu final
+	: public Interface::IEmitterNotify
 
-	{
-	public:
-		explicit EmitterMenu(QAction *parent, Interface::IReceiver *receiver);
-		virtual ~EmitterMenu() = default;
+{
+public:
+	explicit EmitterMenu(QAction *parent, Interface::IReceiver *receiver);
+	virtual ~EmitterMenu() = default;
 
-		virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
-		virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
-		void changed();
+	virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+	virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+	void changed();
 
-	private:
-		std::map<Interface::IEmitter *, QAction *> m_map;
-		QAction *m_parent;
-		QAction *m_actionEmitters;
-		QAction *m_actionCorrectors;
-		Interface::IReceiver *m_receiver;
-		QActionGroup *m_emitterActionGroup;
-		QMenu *m_menu;
-	};
-
+private:
+	std::map<Interface::IEmitter *, QAction *> m_map;
+	QAction *m_parent;
+	QAction *m_actionEmitters;
+	QAction *m_actionCorrectors;
+	Interface::IReceiver *m_receiver;
+	QActionGroup *m_emitterActionGroup;
+	QMenu *m_menu;
+};
 }

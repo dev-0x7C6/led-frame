@@ -9,7 +9,7 @@ using namespace Interface;
 using namespace Menu;
 
 DeviceMenu::DeviceMenu()
-	: m_beforeAction(nullptr) {
+		: m_beforeAction(nullptr) {
 }
 
 DeviceMenu::~DeviceMenu() {
@@ -32,7 +32,7 @@ void DeviceMenu::detached(const std::shared_ptr<IEmitter> &emitter) {
 void DeviceMenu::attached(IReceiver *receiver) {
 	auto action = new QAction(QIcon(":/tray.png"), receiver->name(), nullptr);
 	menu()->insertAction(m_beforeAction, action);
-	m_map.insert({ receiver, action });
+	m_map.insert({receiver, action});
 	m_receivers.push_back(receiver);
 	m_emitterMenu.emplace(receiver, std::make_unique<EmitterMenu>(action, receiver));
 

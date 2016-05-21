@@ -6,15 +6,14 @@
 
 namespace Device {
 
-	class DevicePort final : public QSerialPort {
-	public:
-		explicit DevicePort(const QSerialPortInfo &info);
-		virtual ~DevicePort() = default;
+class DevicePort final : public QSerialPort {
+public:
+	explicit DevicePort(const QSerialPortInfo &info);
+	virtual ~DevicePort() = default;
 
-		const Container::DeviceConfigContainer &config() const;
+	const Container::DeviceConfigContainer &config() const;
 
-	private:
-		Container::DeviceConfigContainer m_config;
-	};
-
+private:
+	Container::DeviceConfigContainer m_config;
+};
 }

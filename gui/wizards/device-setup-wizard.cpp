@@ -8,8 +8,8 @@ using namespace Interface;
 using namespace Wizard;
 
 DeviceSetupWizard::DeviceSetupWizard(IReceiver *receiver)
-	: QWizard()
-	, m_receiver(receiver)
+		: QWizard()
+		, m_receiver(receiver)
 
 {
 	setWindowTitle(tr("Device setup wizard"));

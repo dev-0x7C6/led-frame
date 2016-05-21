@@ -4,10 +4,9 @@
 
 namespace Wizard {
 
-	class DeviceSetupPickName : public QWizardPage {
-	public:
-		explicit DeviceSetupPickName();
-		virtual ~DeviceSetupPickName() = default;
-	};
-
+class DeviceSetupPickName : public QWizardPage {
+public:
+	explicit DeviceSetupPickName();
+	virtual ~DeviceSetupPickName() = default;
+};
 }

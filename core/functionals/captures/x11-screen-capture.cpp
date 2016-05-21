@@ -4,7 +4,7 @@ using namespace Enum;
 using namespace Functional::Capture;
 
 X11ScreenCapture::X11ScreenCapture()
-	: m_frame(nullptr)
+		: m_frame(nullptr)
 
 {
 	m_display = XOpenDisplay(nullptr);

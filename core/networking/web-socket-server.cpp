@@ -6,8 +6,8 @@
 using namespace Network;
 
 WebSocketServer::WebSocketServer(const uint16_t &port, QObject *parent)
-	: QObject(parent)
-	, m_webSocketServer(new QWebSocketServer("LedFrameRemote", QWebSocketServer::NonSecureMode, this))
+		: QObject(parent)
+		, m_webSocketServer(new QWebSocketServer("LedFrameRemote", QWebSocketServer::NonSecureMode, this))
 
 {
 	m_webSocketServer->listen(QHostAddress::Any, port);

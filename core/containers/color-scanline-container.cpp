@@ -21,7 +21,7 @@ void ColorScanlineContainer::rotate(const uint32_t &color) {
 	m_data[scanline_size - 1] = color;
 }
 
-ColorScanlineContainer &ColorScanlineContainer::operator =(const ColorScanlineContainer &other) {
+ColorScanlineContainer &ColorScanlineContainer::operator=(const ColorScanlineContainer &other) {
 	m_data = other.m_data;
 	return *this;
 }

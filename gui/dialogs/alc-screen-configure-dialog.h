@@ -4,7 +4,7 @@
 #include <QAbstractButton>
 
 namespace Ui {
-	class ALCScreenConfigureDialog;
+class ALCScreenConfigureDialog;
 }
 
 class ALCScreenConfigureDialog : public QDialog {
@@ -24,4 +24,3 @@ private:
 
 	void accepted(QAbstractButton *);
 };
-

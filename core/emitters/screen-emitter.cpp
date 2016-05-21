@@ -14,9 +14,9 @@ using namespace Factory;
 using namespace Container;
 
 ScreenEmitter::ScreenEmitter(QObject *parent)
-	: QThread(parent)
-	, Abstract::AbstractEmitter()
-	, m_interrupted(false)
+		: QThread(parent)
+		, Abstract::AbstractEmitter()
+		, m_interrupted(false)
 
 {
 }

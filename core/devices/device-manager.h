@@ -11,28 +11,27 @@
 
 namespace Device {
 
-	class DeviceThread;
-	class DevicePort;
+class DeviceThread;
+class DevicePort;
 
-	class DeviceManager : public QObject, public Abstract::AbstractReceiverManager {
-		Q_OBJECT
-	public:
-		explicit DeviceManager(QObject *parent = nullptr);
-		virtual ~DeviceManager();
+class DeviceManager : public QObject, public Abstract::AbstractReceiverManager {
+	Q_OBJECT
+public:
+	explicit DeviceManager(QObject *parent = nullptr);
+	virtual ~DeviceManager();
 
-		void setRegisterDeviceCallback(const std::function<bool (Interface::IReceiver *, const QString &serialNumber)> &callback);
+	void setRegisterDeviceCallback(const std::function<bool(Interface::IReceiver *, const QString &serialNumber)> &callback);
 
-		void run();
+	void run();
 
-	protected:
-		void rescan();
+protected:
+	void rescan();
 
-	private:
-		std::function<bool(Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
-		QTimer m_deviceScan;
+private:
+	std::function<bool(Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
+	QTimer m_deviceScan;
 
-	signals:
-		void afterAttach();
-	};
-
+signals:
+	void afterAttach();
+};
 }

@@ -2,10 +2,9 @@
 
 namespace Interface {
 
-	class IRemoteClient {
-	public:
-		explicit IRemoteClient() = default;
-		virtual ~IRemoteClient() = default;
-	};
-
+class IRemoteClient {
+public:
+	explicit IRemoteClient() = default;
+	virtual ~IRemoteClient() = default;
+};
 }

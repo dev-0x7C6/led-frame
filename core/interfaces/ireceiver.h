@@ -9,26 +9,24 @@
 
 namespace Interface {
 
-	class IEmitter;
+class IEmitter;
 
-	class IReceiver : public Abstract::AbstractCorrectorManager {
-	public:
-		explicit IReceiver() = default;
-		virtual ~IReceiver() = default;
+class IReceiver : public Abstract::AbstractCorrectorManager {
+public:
+	explicit IReceiver() = default;
+	virtual ~IReceiver() = default;
 
-		virtual QString name() const = 0;
-		virtual Enum::ReceiverType type() const = 0;
+	virtual QString name() const = 0;
+	virtual Enum::ReceiverType type() const = 0;
 
-		virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) = 0;
-		virtual bool isEmitterConnected() = 0;
+	virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) = 0;
+	virtual bool isEmitterConnected() = 0;
 
-		virtual const std::shared_ptr<IEmitter> &connectedEmitter() const = 0;
+	virtual const std::shared_ptr<IEmitter> &connectedEmitter() const = 0;
 
-		virtual Container::DeviceConfigContainer config() = 0;
-		virtual void setName(const QString &name) = 0;
+	virtual Container::DeviceConfigContainer config() = 0;
+	virtual void setName(const QString &name) = 0;
 
-		virtual void changed(const std::function<void()> &callback) = 0;
-
-	};
-
+	virtual void changed(const std::function<void()> &callback) = 0;
+};
 }

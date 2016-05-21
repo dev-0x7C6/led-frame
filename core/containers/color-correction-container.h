@@ -8,19 +8,17 @@
 
 namespace Container {
 
-	class ColorCorrectionContainer final : public AbstractContainer {
-	public:
-		explicit ColorCorrectionContainer();
-		virtual ~ColorCorrectionContainer() = default;
+class ColorCorrectionContainer final : public AbstractContainer {
+public:
+	explicit ColorCorrectionContainer();
+	virtual ~ColorCorrectionContainer() = default;
 
-		virtual Enum::ContainerType type() const override;
+	virtual Enum::ContainerType type() const override;
 
-		void setColor(const double &value, const Enum::ColorType &type);
-		double color(const Enum::ColorType &type) const;
+	void setColor(const double &value, const Enum::ColorType &type);
+	double color(const Enum::ColorType &type) const;
 
-	private:
-		std::array<std::atomic<double>, static_cast<int>(Enum::ColorType::Last)> m_color;
-
-	};
-
+private:
+	std::array<std::atomic<double>, static_cast<int>(Enum::ColorType::Last)> m_color;
+};
 }

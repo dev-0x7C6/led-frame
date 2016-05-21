@@ -3,7 +3,8 @@
 using namespace Enum;
 using namespace Corrector;
 
-BrightnessCorrector::BrightnessCorrector() : Abstract::AbstractCorrector(0.5) {
+BrightnessCorrector::BrightnessCorrector()
+		: Abstract::AbstractCorrector(0.5) {
 }
 
 CorrectorType BrightnessCorrector::type() {

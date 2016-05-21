@@ -7,7 +7,6 @@
 
 using namespace Wizard;
 
-
 DeviceSetupPickName::DeviceSetupPickName() {
 	setTitle(tr("Device configuration"));
 	setSubTitle(tr("Pick device nickname"));

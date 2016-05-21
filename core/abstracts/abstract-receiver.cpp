@@ -43,7 +43,7 @@ void AbstractReceiver::setName(const QString &name) {
 		m_callback();
 }
 
-void AbstractReceiver::changed(const std::function<void ()> &callback) {
+void AbstractReceiver::changed(const std::function<void()> &callback) {
 	m_callback = callback;
 }
 

@@ -9,7 +9,8 @@ using namespace Container::Struct;
 DeviceConfigContainer::DeviceConfigContainer() {
 }
 
-DeviceConfigContainer::DeviceConfigContainer(const QString &base64) : DeviceConfigContainer() {
+DeviceConfigContainer::DeviceConfigContainer(const QString &base64)
+		: DeviceConfigContainer() {
 	fromBase64(base64);
 }
 

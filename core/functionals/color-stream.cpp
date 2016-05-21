@@ -5,10 +5,7 @@ using namespace Enum;
 using namespace Functional;
 
 ColorStream::ColorStream()
-	: m_seek(0)
-
-{
-}
+		: m_seek(0) {}
 
 void ColorStream::insert(const Enum::ColorFormat &format, const uint32_t &color) {
 	const auto r = getr(color);
@@ -16,23 +13,12 @@ void ColorStream::insert(const Enum::ColorFormat &format, const uint32_t &color)
 	const auto b = getb(color);
 
 	switch (format) {
-		case ColorFormat::RGB:
-			return writeRGB(r, g, b);
-
-		case ColorFormat::RBG:
-			return writeRBG(r, g, b);
-
-		case ColorFormat::GRB:
-			return writeGRB(r, g, b);
-
-		case ColorFormat::BRG:
-			return writeBRG(r, g, b);
-
-		case ColorFormat::GBR:
-			return writeGBR(r, g, b);
-
-		case ColorFormat::BGR:
-			return writeBGR(r, g, b);
+		case ColorFormat::RGB: return writeRGB(r, g, b);
+		case ColorFormat::RBG: return writeRBG(r, g, b);
+		case ColorFormat::GRB: return writeGRB(r, g, b);
+		case ColorFormat::BRG: return writeBRG(r, g, b);
+		case ColorFormat::GBR: return writeGBR(r, g, b);
+		case ColorFormat::BGR: return writeBGR(r, g, b);
 	}
 }
 
@@ -41,17 +27,9 @@ void ColorStream::write(QIODevice &device) {
 	m_seek = 0;
 }
 
-uint8_t ColorStream::getr(const uint32_t &color) const {
-	return static_cast<uint8_t>(color >> 16);
-}
-
-uint8_t ColorStream::getg(const uint32_t &color) const {
-	return static_cast<uint8_t>(color >> 8);
-}
-
-uint8_t ColorStream::getb(const uint32_t &color) const {
-	return static_cast<uint8_t>(color);
-}
+uint8_t ColorStream::getr(const uint32_t &color) const { return static_cast<uint8_t>(color >> 16); }
+uint8_t ColorStream::getg(const uint32_t &color) const { return static_cast<uint8_t>(color >> 8); }
+uint8_t ColorStream::getb(const uint32_t &color) const { return static_cast<uint8_t>(color); }
 
 void ColorStream::writeRGB(const uint8_t &r, const uint8_t &g, const uint8_t &b) {
 	m_buffer[m_seek + 0] = r;

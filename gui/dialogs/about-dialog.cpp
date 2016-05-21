@@ -5,9 +5,9 @@
 
 using namespace Widget;
 
-AboutDialog::AboutDialog(QWidget *parent) :
-	DecoratedDialog(parent),
-	m_ui(new Ui::AboutDialog)
+AboutDialog::AboutDialog(QWidget *parent)
+		: DecoratedDialog(parent)
+		, m_ui(new Ui::AboutDialog)
 
 {
 	wave().setAnimationEnabled(true);

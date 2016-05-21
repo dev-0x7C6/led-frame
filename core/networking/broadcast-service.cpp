@@ -7,14 +7,13 @@
 #include <QJsonDocument>
 #include <QHostInfo>
 
-
 using namespace Network;
 
 BroadcastService::BroadcastService(const QString &deviceName, const uint16_t &port, QObject *parent)
-	: QObject(parent)
-	, m_socket(new QUdpSocket)
-	, m_deviceName(deviceName)
-	, m_servicePort(port)
+		: QObject(parent)
+		, m_socket(new QUdpSocket)
+		, m_deviceName(deviceName)
+		, m_servicePort(port)
 
 {
 	auto timer = new QTimer(this);
@@ -43,12 +42,11 @@ void BroadcastService::timeout() {
 		}
 	}
 
-	QJsonObject object {
+	QJsonObject object{
 		{"computer", QHostInfo::localHostName()},
 		{"device", m_deviceName},
 		{"host", host.toString()},
-		{"port",  QString::number(m_servicePort)}
-	};
+		{"port", QString::number(m_servicePort)}};
 	QJsonDocument document(object);
 	QByteArray datagram = document.toJson();
 	m_socket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, 45454);

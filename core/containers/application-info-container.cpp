@@ -3,12 +3,12 @@
 using namespace Container;
 
 ApplicationInfoContainer::ApplicationInfoContainer()
-	: AbstractContainer()
-	, m_applicationVersionMajor(Const::ApplicationVersionMajor)
-	, m_applicationVersionMinor(Const::ApplicationVersionMinor)
-	, m_applicationVersionPatch(Const::ApplicationVersionPatch)
-	, m_applicationCodename(Const::ApplicationCodename)
-	, m_applicationName(Const::ApplicationName) {
+		: AbstractContainer()
+		, m_applicationVersionMajor(Const::ApplicationVersionMajor)
+		, m_applicationVersionMinor(Const::ApplicationVersionMinor)
+		, m_applicationVersionPatch(Const::ApplicationVersionPatch)
+		, m_applicationCodename(Const::ApplicationCodename)
+		, m_applicationName(Const::ApplicationName) {
 }
 
 Enum::ContainerType ApplicationInfoContainer::type() const {
@@ -36,8 +36,7 @@ int ApplicationInfoContainer::applicationVersionPatch() const {
 }
 
 QString ApplicationInfoContainer::versionToString() const {
-	return
-	  QString::number(m_applicationVersionMajor) + '.' +
-	  QString::number(m_applicationVersionMinor) + '.' +
-	  QString::number(m_applicationVersionPatch);
+	return QString::number(m_applicationVersionMajor) + '.' +
+		QString::number(m_applicationVersionMinor) + '.' +
+		QString::number(m_applicationVersionPatch);
 }

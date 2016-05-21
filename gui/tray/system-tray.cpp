@@ -10,7 +10,7 @@ using namespace Interface;
 using namespace Tray;
 
 SystemTray::SystemTray(QObject *parent)
-	: QSystemTrayIcon(parent)
+		: QSystemTrayIcon(parent)
 
 {
 	auto mainMenu = new QMenu();

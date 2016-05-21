@@ -5,7 +5,7 @@
 using namespace Emitter;
 
 AnimationEmitter::AnimationEmitter(QObject *parent)
-	: QObject(parent)
+		: QObject(parent)
 
 {
 	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, this, &AnimationEmitter::process);

@@ -3,10 +3,10 @@
 
 using namespace Functional;
 
-LoopSync::LoopSync() :
-	m_runtime(0),
-	m_alltime(0),
-	m_loop(0) {
+LoopSync::LoopSync()
+		: m_runtime(0)
+		, m_alltime(0)
+		, m_loop(0) {
 	m_elapsed.start();
 }
 

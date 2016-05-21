@@ -23,9 +23,9 @@ using namespace Container;
 using namespace Enum;
 using namespace Widget;
 
-DeviceSymulationWidget::DeviceSymulationWidget(QWidget *parent) :
-	QWidget(parent),
-	m_view(new QQuickView()) {
+DeviceSymulationWidget::DeviceSymulationWidget(QWidget *parent)
+		: QWidget(parent)
+		, m_view(new QQuickView()) {
 	QPalette p = palette();
 	p.setBrush(QPalette::Window, QColor::fromRgb(20, 20, 20));
 	setPalette(p);
@@ -71,8 +71,7 @@ Container::DeviceConfigContainer DeviceSymulationWidget::config() {
 		Position::Top,
 		Position::Right,
 		Position::Bottom,
-		Position::Left
-	};
+		Position::Left};
 
 	for (const auto &position : list) {
 		ribbon[static_cast<uint8_t>(position)].setColorFormat(ColorFormat::RGB);
@@ -104,7 +103,7 @@ void DeviceSymulationWidget::createQmlRibbon() {
 	QQmlComponent led(m_view->engine(), QUrl("qrc:/gui/qml/LedAmbient.qml"));
 	QQuickItem *item;
 	Container::DeviceConfigContainer ribbons = config();
-	auto setDefaultQmlVariables = [this](QQuickItem * item) {
+	auto setDefaultQmlVariables = [this](QQuickItem *item) {
 		item->setX(0);
 		item->setY(0);
 		item->setAntialiasing(false);
@@ -226,5 +225,3 @@ void DeviceSymulationWidget::timerEvent(QTimerEvent *) {
 		}
 	}
 }
-
-

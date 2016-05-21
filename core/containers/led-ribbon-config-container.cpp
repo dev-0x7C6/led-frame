@@ -6,7 +6,7 @@ using namespace Enum;
 using namespace Container;
 
 LedRibbonConfigContainer::LedRibbonConfigContainer(const Struct::LedRibbonConfigStruct &config)
-	: m_config(config) {
+		: m_config(config) {
 }
 
 ContainerType LedRibbonConfigContainer::type() const {

@@ -23,7 +23,6 @@
 #include <QSettings>
 #include <QWebSocket>
 
-
 #include <memory>
 
 using namespace Container;
@@ -63,7 +62,6 @@ void createDefaultEmitters(EmitterManager &manager) {
 	manager.attach(image2);
 }
 
-
 int main(int argc, char *argv[]) {
 	ApplicationInfoContainer info;
 	QApplication application(argc, argv);
@@ -81,7 +79,7 @@ int main(int argc, char *argv[]) {
 	if (emitterManager.isFirstRun())
 		createDefaultEmitters(emitterManager);
 
-	deviceManager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Interface::IReceiver * receiver, const QString & serialNumber) {
+	deviceManager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Interface::IReceiver *receiver, const QString &serialNumber) {
 		settings.beginGroup("devices");
 		settings.beginGroup(serialNumber);
 
@@ -123,9 +121,9 @@ int main(int argc, char *argv[]) {
 		tray.setBrightness(value);
 	});
 	Network::WebSocketServer webSocketServer;
-	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection, [&brightnessCorrector, &rgbCorrector, &webSocketServer](QWebSocket * socket) {
+	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection, [&brightnessCorrector, &rgbCorrector, &webSocketServer](QWebSocket *socket) {
 		auto connection = new Network::WebSocket(socket, &webSocketServer);
-		QObject::connect(connection, &Network::WebSocket::textMessageReceived, [&brightnessCorrector, &rgbCorrector](const QString & message) {
+		QObject::connect(connection, &Network::WebSocket::textMessageReceived, [&brightnessCorrector, &rgbCorrector](const QString &message) {
 			auto json = QJsonDocument::fromJson(message.toUtf8());
 			auto obj = json.object();
 			brightnessCorrector->setFactor(static_cast<float>(obj.value("brightness").toDouble()));
@@ -137,7 +135,7 @@ int main(int argc, char *argv[]) {
 		poller->setInterval(50);
 		poller->start();
 		QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector]() {
-			auto json = QJsonObject {
+			auto json = QJsonObject{
 				{"brightness", static_cast<double>(brightnessCorrector->factor())},
 				{"rcorrector", rgbCorrector->redFactor()},
 				{"gcorrector", rgbCorrector->greenFactor()},

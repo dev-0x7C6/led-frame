@@ -1,9 +1,9 @@
 #include "alc-color-correction-widget.h"
 #include "ui_alc-color-correction-widget.h"
 
-ALCColorCorrectionWidget::ALCColorCorrectionWidget(QWidget *parent) :
-	QWidget(parent),
-	ui(new Ui::ALCColorCorrectionWidget) {
+ALCColorCorrectionWidget::ALCColorCorrectionWidget(QWidget *parent)
+		: QWidget(parent)
+		, ui(new Ui::ALCColorCorrectionWidget) {
 	ui->setupUi(this);
 	connect(ui->brightnessSlider, &QSlider::valueChanged, this, &ALCColorCorrectionWidget::brightnessSliderChanged);
 	connect(ui->blueSlider, &QSlider::valueChanged, this, &ALCColorCorrectionWidget::blueSliderChanged);

@@ -5,22 +5,21 @@
 class QSettings;
 
 namespace Emitter {
-	namespace Manager {
+namespace Manager {
 
-		class EmitterManager final : public Abstract::AbstractEmitterManager {
-		public:
-			explicit EmitterManager(QSettings &settings);
-			virtual ~EmitterManager() = default;
+class EmitterManager final : public Abstract::AbstractEmitterManager {
+public:
+	explicit EmitterManager(QSettings &settings);
+	virtual ~EmitterManager() = default;
 
-			virtual void load() override;
-			virtual void save() override;
+	virtual void load() override;
+	virtual void save() override;
 
-			virtual bool isFirstRun() override;
+	virtual bool isFirstRun() override;
 
-		private:
-			QSettings &m_settings;
-			bool m_firstRun;
-		};
-
-	}
+private:
+	QSettings &m_settings;
+	bool m_firstRun;
+};
+}
 }

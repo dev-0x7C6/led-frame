@@ -6,26 +6,25 @@
 
 namespace Container {
 
-	class DeviceInfoContainer final : public AbstractContainer {
-	public:
-		explicit DeviceInfoContainer();
-		explicit DeviceInfoContainer(const QString &description, const QString &manufacturer, int baudrate);
-		virtual ~DeviceInfoContainer() = default;
+class DeviceInfoContainer final : public AbstractContainer {
+public:
+	explicit DeviceInfoContainer();
+	explicit DeviceInfoContainer(const QString &description, const QString &manufacturer, int baudrate);
+	virtual ~DeviceInfoContainer() = default;
 
-		virtual Enum::ContainerType type() const override;
+	virtual Enum::ContainerType type() const override;
 
-		QString decription() const;
-		QString manufacturer() const;
-		int baudrate() const;
+	QString decription() const;
+	QString manufacturer() const;
+	int baudrate() const;
 
-		void setBaudrate(int baudrate);
-		void setDecription(const QString &decription);
-		void setManufacturer(const QString &manufacturer);
+	void setBaudrate(int baudrate);
+	void setDecription(const QString &decription);
+	void setManufacturer(const QString &manufacturer);
 
-	private:
-		QString m_decription;
-		QString m_manufacturer;
-		int m_baudrate;
-	};
-
+private:
+	QString m_decription;
+	QString m_manufacturer;
+	int m_baudrate;
+};
 }

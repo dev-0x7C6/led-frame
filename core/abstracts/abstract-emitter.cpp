@@ -2,7 +2,8 @@
 
 using namespace Abstract;
 
-AbstractEmitter::AbstractEmitter() : m_connectionCount(0) {
+AbstractEmitter::AbstractEmitter()
+		: m_connectionCount(0) {
 	m_data.fill(0);
 }
 
@@ -16,13 +17,8 @@ Container::ColorScanlineContainer AbstractEmitter::data() {
 	return m_data;
 }
 
-QString AbstractEmitter::name() const {
-	return m_name;
-}
-
-void AbstractEmitter::setName(const QString &name) {
-	m_name = name;
-}
+QString AbstractEmitter::name() const { return m_name; }
+void AbstractEmitter::setName(const QString &name) { m_name = name; }
 
 void AbstractEmitter::connect() {
 	m_connectionCount++;
@@ -34,6 +30,4 @@ void AbstractEmitter::disconnect() {
 	onDisconnect(m_connectionCount);
 }
 
-uint32_t AbstractEmitter::connectionCount() {
-	return m_connectionCount;
-}
+uint32_t AbstractEmitter::connectionCount() {return m_connectionCount; }
