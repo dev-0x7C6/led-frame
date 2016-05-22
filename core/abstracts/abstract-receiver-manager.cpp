@@ -9,9 +9,7 @@ AbstractReceiverManager::~AbstractReceiverManager() {
 	m_notifiers.clear();
 }
 
-IReceiver *AbstractReceiverManager::primary() {
-	return m_receivers.front().get();
-}
+IReceiver *AbstractReceiverManager::primary() { return m_receivers.front().get(); }
 
 void AbstractReceiverManager::attach(IReceiverNotify *notify) {
 	m_notifiers.push_back(notify);
@@ -28,6 +26,8 @@ void AbstractReceiverManager::detach(IReceiverNotify *notify) {
 	for (const auto &receiver : m_receivers)
 		notify->detached(receiver.get());
 }
+
+const std::list<std::unique_ptr<IReceiver>> &AbstractReceiverManager::list() const { return m_receivers; }
 
 void AbstractReceiverManager::attach(std::unique_ptr<IReceiver> &&receiver) {
 	auto interface = receiver.get();

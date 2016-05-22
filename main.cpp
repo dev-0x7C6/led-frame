@@ -21,6 +21,7 @@
 #include <QMessageBox>
 #include <QScreen>
 #include <QSettings>
+#include <QJsonArray>
 #include <QWebSocket>
 
 #include <memory>
@@ -100,14 +101,17 @@ int main(int argc, char *argv[]) {
 		receiver->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
+
 	Tray::SystemTray tray;
 	tray.setBrightness(brightnessCorrector->factor());
 	emitterManager.attach(&tray);
 	deviceManager.attach(&tray);
 	auto dialog = std::make_shared<Widget::AboutDialog>();
+
 	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
 		application.quit();
 	});
+
 	QObject::connect(&tray, &Tray::SystemTray::signalWheelChanged, [&brightnessCorrector, &tray](int delta) {
 		auto value = brightnessCorrector->factor() + ((delta > 0) ? 0.05f : -0.05f);
 
@@ -120,31 +124,84 @@ int main(int argc, char *argv[]) {
 		brightnessCorrector->setFactor(value);
 		tray.setBrightness(value);
 	});
+
 	Network::WebSocketServer webSocketServer;
-	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection, [&brightnessCorrector, &rgbCorrector, &webSocketServer](QWebSocket *socket) {
-		auto connection = new Network::WebSocket(socket, &webSocketServer);
-		QObject::connect(connection, &Network::WebSocket::textMessageReceived, [&brightnessCorrector, &rgbCorrector](const QString &message) {
-			auto json = QJsonDocument::fromJson(message.toUtf8());
-			auto obj = json.object();
-			brightnessCorrector->setFactor(static_cast<float>(obj.value("brightness").toDouble()));
-			rgbCorrector->setRedFactor(static_cast<float>(obj.value("rcorrector").toDouble()));
-			rgbCorrector->setGreenFactor(static_cast<float>(obj.value("gcorrector").toDouble()));
-			rgbCorrector->setBlueFactor(static_cast<float>(obj.value("bcorrector").toDouble()));
+	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection,
+		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &emitterManager, &deviceManager](QWebSocket *socket) {
+			auto connection = new Network::WebSocket(socket, &webSocketServer);
+			QObject::connect(connection, &Network::WebSocket::textMessageReceived,
+				[&brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager](const QString &message) {
+					auto json = QJsonDocument::fromJson(message.toUtf8());
+					auto obj = json.object();
+
+					if (obj.value("command") == "set_correction") {
+						brightnessCorrector->setFactor(obj.value("l").toDouble());
+						rgbCorrector->setRedFactor(obj.value("r").toDouble());
+						rgbCorrector->setGreenFactor(obj.value("g").toDouble());
+						rgbCorrector->setBlueFactor(obj.value("b").toDouble());
+					}
+
+					if (obj.value("command") == "set_emitter") {
+						auto deviceId = obj.value("device").toString();
+						auto emitterId = obj.value("emitter").toString();
+
+						Interface::IReceiver *receiver = nullptr;
+
+						for (const auto &device : deviceManager.list())
+							if (device->name() == deviceId)
+								receiver = device.get();
+
+						if (receiver)
+							for (const auto &emitter : emitterManager.list())
+								if (emitter->name() == emitterId)
+									receiver->connectEmitter(emitter);
+					}
+
+					qDebug() << obj;
+				});
+			auto poller = new QTimer(connection);
+			poller->setInterval(25);
+			poller->start();
+
+			QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager]() {
+				auto emitters = QJsonArray();
+				auto devices = QJsonArray();
+
+				for (const auto &device : deviceManager.list()) {
+					QString name = "";
+					if (device->isEmitterConnected())
+						name = device->connectedEmitter()->name();
+
+					auto json = QJsonObject{
+						{"name", device->name()},
+						{"connected", name}};
+					devices.append(json);
+				}
+
+				for (const auto &emitter : emitterManager.list())
+					emitters.append(QJsonValue(emitter->name()));
+
+				auto jsonCorrector = QJsonObject{
+					{"l", brightnessCorrector->factor()},
+					{"r", rgbCorrector->redFactor()},
+					{"g", rgbCorrector->greenFactor()},
+					{"b", rgbCorrector->blueFactor()},
+				};
+
+				auto jsonGlobal = QJsonObject{
+					{"corrector", jsonCorrector}};
+
+				auto json = QJsonObject{
+					{"global", jsonGlobal},
+					{"emitters", emitters},
+					{"devices", devices},
+				};
+				auto doc = QJsonDocument(json);
+				connection->sendTextMessage(doc.toJson());
+
+			});
 		});
-		auto poller = new QTimer(connection);
-		poller->setInterval(50);
-		poller->start();
-		QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector]() {
-			auto json = QJsonObject{
-				{"brightness", static_cast<double>(brightnessCorrector->factor())},
-				{"rcorrector", rgbCorrector->redFactor()},
-				{"gcorrector", rgbCorrector->greenFactor()},
-				{"bcorrector", rgbCorrector->blueFactor()},
-			};
-			auto doc = QJsonDocument(json);
-			connection->sendTextMessage(doc.toJson());
-		});
-	});
+
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
 		if (dialog->isVisible())
 			return;
@@ -153,6 +210,7 @@ int main(int argc, char *argv[]) {
 		dialog->exec();
 		deviceManager.primary()->connectEmitter(save);
 	});
+
 	deviceManager.run();
 	int result = application.exec();
 	emitterManager.save();

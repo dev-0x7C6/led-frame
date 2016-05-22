@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <list>
 
 namespace Interface {
 
@@ -14,6 +15,8 @@ public:
 
 	virtual void attach(IReceiverNotify *notify) = 0;
 	virtual void detach(IReceiverNotify *notify) = 0;
+
+	virtual const std::list<std::unique_ptr<IReceiver>> &list() const = 0;
 
 protected:
 	virtual void attach(std::unique_ptr<IReceiver> &&receiver) = 0;

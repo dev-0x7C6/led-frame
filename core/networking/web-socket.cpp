@@ -12,4 +12,5 @@ WebSocket::WebSocket(QWebSocket *socket, QObject *parent)
 
 void WebSocket::sendTextMessage(const QString &message) {
 	m_webSocket->sendTextMessage(message);
+	m_webSocket->flush();
 }

@@ -30,4 +30,4 @@ void AbstractEmitter::disconnect() {
 	onDisconnect(m_connectionCount);
 }
 
-uint32_t AbstractEmitter::connectionCount() {return m_connectionCount; }
+uint32_t AbstractEmitter::connectionCount() { return m_connectionCount; }

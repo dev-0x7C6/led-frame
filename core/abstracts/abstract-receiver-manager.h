@@ -17,6 +17,8 @@ public:
 	virtual void attach(Interface::IReceiverNotify *notify) override;
 	virtual void detach(Interface::IReceiverNotify *notify) override;
 
+	virtual const std::list<std::unique_ptr<Interface::IReceiver>> &list() const override;
+
 protected:
 	virtual void attach(std::unique_ptr<Interface::IReceiver> &&receiver) override;
 	virtual void detach(Interface::IReceiver *receiver) override;

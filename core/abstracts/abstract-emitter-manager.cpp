@@ -15,7 +15,7 @@ void AbstractEmitterManager::detach(std::shared_ptr<IEmitter> &emitter) {
 	for (const auto &notify : m_notifiers)
 		notify->detached(emitter);
 
-	m_emitters.remove_if([&emitter](const auto &match) -> bool{
+	m_emitters.remove_if([&emitter](const auto &match) -> bool {
 		return (emitter.get() == match.get());
 	});
 }
