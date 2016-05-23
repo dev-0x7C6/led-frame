@@ -12,6 +12,7 @@ public:
 	virtual ~AnimationEmitter();
 
 	virtual Enum::EmitterType type() const override;
+	virtual QJsonObject parameters() const override;
 
 protected:
 	void process(const QVariant &value);
@@ -22,5 +23,6 @@ protected:
 private:
 	Container::ColorScanlineContainer m_colors;
 	QVariantAnimation m_animation;
+
 };
 }

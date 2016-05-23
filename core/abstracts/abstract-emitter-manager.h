@@ -21,5 +21,6 @@ public:
 private:
 	std::list<std::shared_ptr<Interface::IEmitter>> m_emitters;
 	std::list<Interface::IEmitterNotify *> m_notifiers;
+
 };
 }

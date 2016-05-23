@@ -28,6 +28,8 @@ Enum::EmitterType AboutDialog::type() const {
 	return Enum::EmitterType::About;
 }
 
+QJsonObject AboutDialog::parameters() const { return {}; }
+
 void AboutDialog::timerEvent(QTimerEvent *) {
 	commit(wave().scanline());
 }

@@ -12,6 +12,7 @@ public:
 	virtual ~ImageEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;
+	virtual QJsonObject parameters() const override;
 
 	QRect fragment(int w, int h, const uint32_t &index);
 

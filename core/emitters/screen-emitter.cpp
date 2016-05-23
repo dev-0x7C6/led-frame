@@ -16,9 +16,14 @@ using namespace Container;
 ScreenEmitter::ScreenEmitter(QObject *parent)
 		: QThread(parent)
 		, Abstract::AbstractEmitter()
+		, m_width(0)
+		, m_height(0)
 		, m_interrupted(false)
 
 {
+	auto screen = QGuiApplication::screens().first()->size();
+	m_width = screen.width();
+	m_height = screen.height();
 }
 
 ScreenEmitter::~ScreenEmitter() {
@@ -28,6 +33,14 @@ ScreenEmitter::~ScreenEmitter() {
 
 EmitterType ScreenEmitter::type() const {
 	return EmitterType::Screen;
+}
+
+QJsonObject ScreenEmitter::parameters() const {
+	return {
+		{"name", name()},
+		{"type", static_cast<int>(type())},
+		{"description", description(type())},
+		{"parameters", QString::number(m_width) + "x" + QString::number(m_height)}};
 }
 
 void ScreenEmitter::onConnect(const uint32_t &count) {
@@ -84,6 +97,8 @@ void ScreenEmitter::run() {
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
 #endif
 	auto screen = QGuiApplication::screens().first()->size();
+	m_width = screen.width();
+	m_height = screen.height();
 
 	do {
 		sc->capture(0, 0, screen.width(), screen.height());

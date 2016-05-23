@@ -13,6 +13,7 @@ public:
 	virtual ~ScreenEmitter();
 
 	virtual Enum::EmitterType type() const override;
+	virtual QJsonObject parameters() const override;
 
 protected:
 	void interrupt();
@@ -25,6 +26,8 @@ private:
 	QRect fragment(int w, int h, const uint32_t &index);
 
 private:
+	std::atomic<int> m_width;
+	std::atomic<int> m_height;
 	std::atomic_bool m_interrupted;
 };
 }

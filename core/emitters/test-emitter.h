@@ -12,6 +12,7 @@ public:
 	virtual ~TestEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;
+	virtual QJsonObject parameters() const override;
 
 protected:
 	virtual void timerEvent(QTimerEvent *event) override;

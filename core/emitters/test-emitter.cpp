@@ -20,6 +20,10 @@ EmitterType TestEmitter::type() const {
 	return EmitterType::Test;
 }
 
+QJsonObject TestEmitter::parameters() const {
+	return {};
+}
+
 void TestEmitter::timerEvent(QTimerEvent *) {
 	if (m_currentStep == m_maxStep)
 		m_currentStep = 0;

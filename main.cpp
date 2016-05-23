@@ -129,6 +129,7 @@ int main(int argc, char *argv[]) {
 	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection,
 		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &emitterManager, &deviceManager](QWebSocket *socket) {
 			auto connection = new Network::WebSocket(socket, &webSocketServer);
+			emitterManager.attach(connection);
 			QObject::connect(connection, &Network::WebSocket::textMessageReceived,
 				[&brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager](const QString &message) {
 					auto json = QJsonDocument::fromJson(message.toUtf8());
@@ -164,39 +165,48 @@ int main(int argc, char *argv[]) {
 			poller->start();
 
 			QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager]() {
-				auto emitters = QJsonArray();
-				auto devices = QJsonArray();
+//				auto emitters = QJsonArray();
+//				auto devices = QJsonArray();
 
-				for (const auto &device : deviceManager.list()) {
-					QString name = "";
-					if (device->isEmitterConnected())
-						name = device->connectedEmitter()->name();
+//				for (const auto &device : deviceManager.list()) {
+//					QString name = "";
+//					if (device->isEmitterConnected())
+//						name = device->connectedEmitter()->name();
 
-					auto json = QJsonObject{
-						{"name", device->name()},
-						{"connected", name}};
-					devices.append(json);
-				}
+//					auto json = QJsonObject{
+//						{"name", device->name()},
+//						{"connected", name}};
+//					devices.append(json);
+//				}
 
-				for (const auto &emitter : emitterManager.list())
-					emitters.append(QJsonValue(emitter->name()));
+//				for (const auto &emitter : emitterManager.list())
+//					emitters.append(QJsonValue(emitter->name()));
 
-				auto jsonCorrector = QJsonObject{
+//				auto jsonCorrector = QJsonObject{
+//					{"l", brightnessCorrector->factor()},
+//					{"r", rgbCorrector->redFactor()},
+//					{"g", rgbCorrector->greenFactor()},
+//					{"b", rgbCorrector->blueFactor()},
+//				};
+
+//				auto jsonGlobal = QJsonObject{
+//					{"corrector", jsonCorrector}};
+
+//				auto json = QJsonObject{
+//					{"global", jsonGlobal},
+//					{"emitters", emitters},
+//					{"devices", devices},
+//				};
+
+				auto jsonCommand = QJsonObject{
+					{"command", "set_global_correction"},
 					{"l", brightnessCorrector->factor()},
 					{"r", rgbCorrector->redFactor()},
 					{"g", rgbCorrector->greenFactor()},
 					{"b", rgbCorrector->blueFactor()},
 				};
 
-				auto jsonGlobal = QJsonObject{
-					{"corrector", jsonCorrector}};
-
-				auto json = QJsonObject{
-					{"global", jsonGlobal},
-					{"emitters", emitters},
-					{"devices", devices},
-				};
-				auto doc = QJsonDocument(json);
+				auto doc = QJsonDocument(jsonCommand);
 				connection->sendTextMessage(doc.toJson());
 
 			});

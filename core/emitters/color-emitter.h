@@ -12,6 +12,7 @@ public:
 	virtual ~ColorEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;
+	virtual QJsonObject parameters() const override;
 
 	QColor color() const;
 	void setColor(const QColor &color);

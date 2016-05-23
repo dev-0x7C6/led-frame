@@ -10,6 +10,15 @@ Enum::EmitterType ColorEmitter::type() const {
 	return Enum::EmitterType::Color;
 }
 
+QJsonObject ColorEmitter::parameters() const {
+	return {
+		{"name", name()},
+		{"type", static_cast<int>(type())},
+		{"description", description(type())},
+		{"parameters", m_color.name()}
+	};
+}
+
 QColor ColorEmitter::color() const {
 	return m_color;
 }
