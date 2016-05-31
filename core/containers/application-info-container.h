@@ -10,8 +10,8 @@ namespace Const {
 constexpr auto ApplicationName = "LedFrame";
 constexpr auto ApplicationCodename = "";
 constexpr int ApplicationVersionMajor = 0;
-constexpr int ApplicationVersionMinor = 7;
-constexpr int ApplicationVersionPatch = 9;
+constexpr int ApplicationVersionMinor = 8;
+constexpr int ApplicationVersionPatch = 0;
 }
 
 class ApplicationInfoContainer final : public AbstractContainer {
