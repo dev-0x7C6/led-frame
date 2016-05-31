@@ -1,16 +1,17 @@
 #include <core/menus/emitter-menu.h>
-#include <core/interfaces/iemitter.h>
-#include <core/interfaces/ireceiver.h>
+#include <core/emitters/interfaces/iemitter.h>
+#include <core/receivers/interfaces/ireceiver.h>
 
 #include <QMenu>
 #include <QAction>
 #include <QObject>
 #include <QActionGroup>
 
-using namespace Interface;
+using namespace Emitter::Interface;
+using namespace Receiver::Interface;
 using namespace Menu;
 
-EmitterMenu::EmitterMenu(QAction *parent, Interface::IReceiver *receiver)
+EmitterMenu::EmitterMenu(QAction *parent, Receiver::Interface::IReceiver *receiver)
 		: m_parent(parent)
 		, m_receiver(receiver)
 		, m_emitterActionGroup(new QActionGroup(nullptr))

@@ -4,7 +4,7 @@
 
 #include <core/containers/device-config-container.h>
 
-namespace Device {
+namespace Functional {
 
 class DevicePort final : public QSerialPort {
 public:

@@ -1,5 +1,5 @@
 #include <core/networking/web-socket.h>
-#include <core/interfaces/iemitter.h>
+#include <core/emitters/interfaces/iemitter.h>
 
 #include <QWebSocket>
 #include <QJsonObject>
@@ -19,7 +19,7 @@ void WebSocket::sendTextMessage(const QString &message) {
 	m_webSocket->flush();
 }
 
-void WebSocket::attached(const std::shared_ptr<Interface::IEmitter> &emitter) {
+void WebSocket::attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {
 	auto command = emitter->parameters();
 	command.insert("command", "emitter_attached");
 	auto doc = QJsonDocument(command);
@@ -27,5 +27,5 @@ void WebSocket::attached(const std::shared_ptr<Interface::IEmitter> &emitter) {
 	m_webSocket->flush();
 }
 
-void WebSocket::detached(const std::shared_ptr<Interface::IEmitter> &) {
+void WebSocket::detached(const std::shared_ptr<Emitter::Interface::IEmitter> &) {
 }

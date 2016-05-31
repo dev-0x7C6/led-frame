@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/interfaces/ireceiver.h>
+#include <core/receivers/interfaces/ireceiver.h>
 #include <QWizardPage>
 
 namespace Widget {
@@ -11,7 +11,7 @@ namespace Wizard {
 
 class DeviceSetupGeneralTest : public QWizardPage {
 public:
-	explicit DeviceSetupGeneralTest(Interface::IReceiver *receiver);
+	explicit DeviceSetupGeneralTest(Receiver::Interface::IReceiver *receiver);
 	virtual ~DeviceSetupGeneralTest() = default;
 
 protected:
@@ -19,7 +19,7 @@ protected:
 	virtual void cleanupPage() override;
 
 private:
-	Interface::IReceiver *m_receiver;
+	Receiver::Interface::IReceiver *m_receiver;
 	Widget::DeviceSymulationWidget *m_symulation;
 };
 }

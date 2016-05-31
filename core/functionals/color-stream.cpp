@@ -9,12 +9,23 @@ ColorStream::ColorStream()
 
 void ColorStream::insert(Enum::ColorFormat format, uint32_t color) {
 	switch (format) {
-		case ColorFormat::RGB: return writeRGB(color);
-		case ColorFormat::RBG: return writeRBG(color);
-		case ColorFormat::GRB: return writeGRB(color);
-		case ColorFormat::BRG: return writeBRG(color);
-		case ColorFormat::GBR: return writeGBR(color);
-		case ColorFormat::BGR: return writeBGR(color);
+		case ColorFormat::RGB:
+			return writeRGB(color);
+
+		case ColorFormat::RBG:
+			return writeRBG(color);
+
+		case ColorFormat::GRB:
+			return writeGRB(color);
+
+		case ColorFormat::BRG:
+			return writeBRG(color);
+
+		case ColorFormat::GBR:
+			return writeGBR(color);
+
+		case ColorFormat::BGR:
+			return writeBGR(color);
 	}
 }
 

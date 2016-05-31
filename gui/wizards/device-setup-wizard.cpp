@@ -1,10 +1,10 @@
-#include <core/interfaces/ireceiver.h>
+#include <core/receivers/interfaces/ireceiver.h>
 #include <gui/wizards/device-setup-general-test.h>
 #include <gui/wizards/device-setup-info.h>
 #include <gui/wizards/device-setup-pick-name.h>
 #include <gui/wizards/device-setup-wizard.h>
 
-using namespace Interface;
+using namespace Receiver::Interface;
 using namespace Wizard;
 
 DeviceSetupWizard::DeviceSetupWizard(IReceiver *receiver)

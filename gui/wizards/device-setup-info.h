@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/interfaces/ireceiver.h>
+#include <core/receivers/interfaces/ireceiver.h>
 
 #include <QWizardPage>
 
@@ -8,7 +8,7 @@ namespace Wizard {
 
 class DeviceSetupInfo final : public QWizardPage {
 public:
-	explicit DeviceSetupInfo(Interface::IReceiver *receiver);
+	explicit DeviceSetupInfo(Receiver::Interface::IReceiver *receiver);
 	virtual ~DeviceSetupInfo() = default;
 };
 }

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/abstracts/abstract-receiver.h>
-#include <core/abstracts/abstract-corrector-manager.h>
+#include <core/receivers/abstracts/abstract-receiver.h>
+#include <core/correctors/abstracts/abstract-corrector-manager.h>
 
 #include <QRgb>
 #include <QVector>
@@ -16,7 +16,7 @@ namespace Widget {
 
 class DeviceSymulationWidget
 	: public QWidget,
-	  public Abstract::AbstractReceiver {
+	  public Receiver::Abstract::AbstractReceiver {
 
 	Q_OBJECT
 public:

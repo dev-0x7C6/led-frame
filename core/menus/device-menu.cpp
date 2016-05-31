@@ -1,11 +1,12 @@
-#include <core/interfaces/ireceiver.h>
+#include <core/receivers/interfaces/ireceiver.h>
 #include <core/menus/device-menu.h>
 #include <core/menus/emitter-menu.h>
 
 #include <QAction>
 #include <QMenu>
 
-using namespace Interface;
+using namespace Emitter::Interface;
+using namespace Receiver::Interface;
 using namespace Menu;
 
 DeviceMenu::DeviceMenu()

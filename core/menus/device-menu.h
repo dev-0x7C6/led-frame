@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/interfaces/iemitter-notify.h>
-#include <core/interfaces/ireceiver-notify.h>
+#include <core/emitters/interfaces/iemitter-notify.h>
+#include <core/receivers/interfaces/ireceiver-notify.h>
 
 #include <list>
 #include <map>
@@ -16,20 +16,20 @@ namespace Menu {
 class EmitterMenu;
 
 class DeviceMenu final
-	: public Interface::IEmitterNotify,
-	  public Interface::IReceiverNotify
+	: public Emitter::Interface::IEmitterNotify,
+	  public Receiver::Interface::IReceiverNotify
 
 {
 public:
 	explicit DeviceMenu();
 	virtual ~DeviceMenu();
 
-	virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
-	virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 
-	virtual void attached(Interface::IReceiver *receiver) override;
-	virtual void detached(Interface::IReceiver *receiver) override;
-	virtual void modified(Interface::IReceiver *receiver) override;
+	virtual void attached(Receiver::Interface::IReceiver *receiver) override;
+	virtual void detached(Receiver::Interface::IReceiver *receiver) override;
+	virtual void modified(Receiver::Interface::IReceiver *receiver) override;
 
 	QAction *beforeAction() const;
 	void setBeforeAction(QAction *beforeAction);
@@ -38,10 +38,10 @@ public:
 	void setMenu(QMenu *menu);
 
 private:
-	std::set<std::shared_ptr<Interface::IEmitter>> m_emitters;
-	std::list<Interface::IReceiver *> m_receivers;
-	std::map<Interface::IReceiver *, QAction *> m_map;
-	std::map<Interface::IReceiver *, std::unique_ptr<EmitterMenu>> m_emitterMenu;
+	std::set<std::shared_ptr<Emitter::Interface::IEmitter>> m_emitters;
+	std::list<Receiver::Interface::IReceiver *> m_receivers;
+	std::map<Receiver::Interface::IReceiver *, QAction *> m_map;
+	std::map<Receiver::Interface::IReceiver *, std::unique_ptr<EmitterMenu>> m_emitterMenu;
 	QAction *m_beforeAction;
 	QMenu *m_menu;
 };

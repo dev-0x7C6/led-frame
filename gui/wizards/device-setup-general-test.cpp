@@ -1,16 +1,16 @@
-#include <gui/wizards/device-setup-general-test.h>
-#include <core/factories/emitter-factory.h>
-#include <core/devices/device-thread.h>
+#include <core/receivers/concretes/device-thread.h>
+#include <core/emitters/factories/emitter-factory.h>
 #include <gui/widgets/device-symulation-widget.h>
+#include <gui/wizards/device-setup-general-test.h>
 
 #include <QGridLayout>
 
 using namespace Enum;
-using namespace Factory;
+using namespace Emitter::Factory;
 using namespace Widget;
 using namespace Wizard;
 
-DeviceSetupGeneralTest::DeviceSetupGeneralTest(Interface::IReceiver *device)
+DeviceSetupGeneralTest::DeviceSetupGeneralTest(Receiver::Interface::IReceiver *device)
 		: m_receiver(device)
 		, m_symulation(new DeviceSymulationWidget)
 

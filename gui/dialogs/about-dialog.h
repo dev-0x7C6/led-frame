@@ -1,7 +1,7 @@
 #pragma once
 
 #include <components/widgets/decorated-dialog.h>
-#include <core/abstracts/abstract-emitter.h>
+#include <core/emitters/abstracts/abstract-emitter.h>
 
 namespace Widget {
 namespace Ui {
@@ -10,7 +10,7 @@ class AboutDialog;
 
 class AboutDialog final
 	: public DecoratedDialog,
-	  public Abstract::AbstractEmitter
+	  public Emitter::Abstract::AbstractEmitter
 
 {
 	Q_OBJECT

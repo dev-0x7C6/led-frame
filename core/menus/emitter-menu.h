@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/interfaces/iemitter-notify.h>
-#include <core/interfaces/ireceiver.h>
+#include <core/emitters/interfaces/iemitter-notify.h>
+#include <core/receivers/interfaces/ireceiver.h>
 
 #include <map>
 
@@ -12,23 +12,23 @@ class QActionGroup;
 namespace Menu {
 
 class EmitterMenu final
-	: public Interface::IEmitterNotify
+	: public Emitter::Interface::IEmitterNotify
 
 {
 public:
-	explicit EmitterMenu(QAction *parent, Interface::IReceiver *receiver);
+	explicit EmitterMenu(QAction *parent, Receiver::Interface::IReceiver *receiver);
 	virtual ~EmitterMenu() = default;
 
-	virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
-	virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	void changed();
 
 private:
-	std::map<Interface::IEmitter *, QAction *> m_map;
+	std::map<Emitter::Interface::IEmitter *, QAction *> m_map;
 	QAction *m_parent;
 	QAction *m_actionEmitters;
 	QAction *m_actionCorrectors;
-	Interface::IReceiver *m_receiver;
+	Receiver::Interface::IReceiver *m_receiver;
 	QActionGroup *m_emitterActionGroup;
 	QMenu *m_menu;
 };

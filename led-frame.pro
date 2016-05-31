@@ -27,11 +27,6 @@ unix {
 SOURCES += \
 	components/painters/wave-paint-engine.cpp \
 	components/widgets/decorated-dialog.cpp \
-	core/abstracts/abstract-corrector.cpp \
-	core/abstracts/abstract-emitter.cpp \
-	core/abstracts/abstract-emitter-manager.cpp \
-	core/abstracts/abstract-receiver.cpp \
-	core/abstracts/abstract-receiver-manager.cpp \
 	core/containers/abstract-container.cpp \
 	core/containers/application-info-container.cpp \
 	core/containers/color-correction-container.cpp \
@@ -39,20 +34,7 @@ SOURCES += \
 	core/containers/device-config-container.cpp \
 	core/containers/device-info-container.cpp \
 	core/containers/led-ribbon-config-container.cpp \
-	core/correctors/brightness-corrector.cpp \
-	core/correctors/color-enhancer-corrector.cpp \
-	core/correctors/rgb-channel-corrector.cpp \
-	core/devices/device-manager.cpp \
 	core/devices/device-port.cpp \
-	core/devices/device-thread.cpp \
-	core/emitters/animation-emitter.cpp \
-	core/emitters/color-emitter.cpp \
-	core/emitters/emitter-manager.cpp \
-	core/emitters/image-emitter.cpp \
-	core/emitters/screen-emitter.cpp \
-	core/emitters/test-emitter.cpp \
-	core/factories/corrector-factory.cpp \
-	core/factories/emitter-factory.cpp \
 	core/factories/screen-capture-factory.cpp \
 	core/functionals/captures/qt-screen-capture.cpp \
 	core/functionals/color-stream.cpp \
@@ -69,19 +51,32 @@ SOURCES += \
 	gui/wizards/device-setup-pick-name.cpp \
 	gui/wizards/device-setup-wizard.cpp \
 	main.cpp \
-    core/abstracts/abstract-corrector-manager.cpp \
     core/networking/broadcast-service.cpp \
     core/networking/web-socket-server.cpp \
-    core/networking/web-socket.cpp
+    core/networking/web-socket.cpp \
+    core/emitters/concretes/animation-emitter.cpp \
+    core/emitters/concretes/color-emitter.cpp \
+    core/emitters/concretes/emitter-manager.cpp \
+    core/emitters/concretes/image-emitter.cpp \
+    core/emitters/concretes/screen-emitter.cpp \
+    core/emitters/concretes/test-emitter.cpp \
+    core/emitters/factories/emitter-factory.cpp \
+    core/correctors/concretes/brightness-corrector.cpp \
+    core/correctors/concretes/rgb-channel-corrector.cpp \
+    core/correctors/concretes/color-enhancer-corrector.cpp \
+    core/correctors/factories/corrector-factory.cpp \
+    core/correctors/abstracts/abstract-corrector-manager.cpp \
+    core/correctors/abstracts/abstract-corrector.cpp \
+    core/emitters/abstracts/abstract-emitter-manager.cpp \
+    core/emitters/abstracts/abstract-emitter.cpp \
+    core/receivers/abstracts/abstract-receiver-manager.cpp \
+    core/receivers/abstracts/abstract-receiver.cpp \
+    core/receivers/concretes/device-manager.cpp \
+    core/receivers/concretes/device-thread.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
 	components/widgets/decorated-dialog.h \
-	core/abstracts/abstract-corrector.h \
-	core/abstracts/abstract-emitter.h \
-	core/abstracts/abstract-emitter-manager.h \
-	core/abstracts/abstract-receiver.h \
-	core/abstracts/abstract-receiver-manager.h \
 	core/containers/abstract-container.h \
 	core/containers/application-info-container.h \
 	core/containers/color-correction-container.h \
@@ -89,18 +84,7 @@ HEADERS += \
 	core/containers/device-config-container.h \
 	core/containers/device-info-container.h \
 	core/containers/led-ribbon-config-container.h \
-	core/correctors/brightness-corrector.h \
-	core/correctors/color-enhancer-corrector.h \
-	core/correctors/rgb-channel-corrector.h \
-	core/devices/device-manager.h \
 	core/devices/device-port.h \
-	core/devices/device-thread.h \
-	core/emitters/animation-emitter.h \
-	core/emitters/color-emitter.h \
-	core/emitters/emitter-manager.h \
-	core/emitters/image-emitter.h \
-	core/emitters/screen-emitter.h \
-	core/emitters/test-emitter.h \
 	core/enums/color-format-enum.h \
 	core/enums/color-type-enum.h \
 	core/enums/container-type-enum.h \
@@ -110,19 +94,10 @@ HEADERS += \
 	core/enums/position-enum.h \
 	core/enums/receiver-type-enum.h \
 	core/enums/screen-capture-type.h \
-	core/factories/corrector-factory.h \
-	core/factories/emitter-factory.h \
 	core/factories/screen-capture-factory.h \
 	core/functionals/captures/qt-screen-capture.h \
 	core/functionals/color-stream.h \
 	core/functionals/loop-sync.h \
-	core/interfaces/iemitter.h \
-	core/interfaces/iemitter-manager.h \
-	core/interfaces/ireceiver.h \
-	core/interfaces/ireceiver-manager.h \
-	core/interfaces/ireceiver-notify.h \
-	core/interfaces/iremote-client.h \
-	core/interfaces/iremote-server.h \
 	core/interfaces/iscreen-capture.h \
 	core/menus/device-menu.h \
 	core/menus/emitter-menu.h \
@@ -135,14 +110,38 @@ HEADERS += \
 	gui/wizards/device-setup-info.h \
 	gui/wizards/device-setup-pick-name.h \
 	gui/wizards/device-setup-wizard.h \
-    core/interfaces/iemitter-notify.h \
-    core/interfaces/icorrector-notify.h \
-    core/interfaces/icorrector-manager.h \
-    core/interfaces/icorrector.h \
-    core/abstracts/abstract-corrector-manager.h \
     core/networking/broadcast-service.h \
     core/networking/web-socket-server.h \
-    core/networking/web-socket.h
+    core/networking/web-socket.h \
+    core/emitters/interfaces/iemitter-manager.h \
+    core/emitters/interfaces/iemitter-notify.h \
+    core/emitters/interfaces/iemitter.h \
+    core/emitters/concretes/animation-emitter.h \
+    core/emitters/concretes/color-emitter.h \
+    core/emitters/concretes/emitter-manager.h \
+    core/emitters/concretes/image-emitter.h \
+    core/emitters/concretes/screen-emitter.h \
+    core/emitters/concretes/test-emitter.h \
+    core/emitters/abstracts/abstract-emitter.h \
+    core/emitters/abstracts/abstract-emitter-manager.h \
+    core/emitters/factories/emitter-factory.h \
+    core/correctors/concretes/brightness-corrector.h \
+    core/correctors/concretes/color-enhancer-corrector.h \
+    core/correctors/concretes/rgb-channel-corrector.h \
+    core/correctors/interfaces/icorrector.h \
+    core/correctors/interfaces/icorrector-notify.h \
+    core/correctors/interfaces/icorrector-manager.h \
+    core/correctors/factories/corrector-factory.h \
+    core/correctors/abstracts/abstract-corrector.h \
+    core/correctors/abstracts/abstract-corrector-manager.h \
+    core/receivers/abstracts/abstract-receiver-manager.h \
+    core/receivers/abstracts/abstract-receiver.h \
+    core/receivers/interfaces/ireceiver-manager.h \
+    core/receivers/interfaces/ireceiver-notify.h \
+    core/receivers/interfaces/ireceiver.h \
+    core/receivers/concretes/device-manager.h \
+    core/receivers/concretes/device-thread.h \
+    core/interfaces/inotification-callback.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \

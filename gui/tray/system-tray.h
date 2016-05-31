@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/interfaces/ireceiver-notify.h>
+#include <core/receivers/interfaces/ireceiver-notify.h>
 #include <core/menus/device-menu.h>
 
 #include <QSystemTrayIcon>
@@ -12,8 +12,8 @@ namespace Tray {
 
 class SystemTray final
 	: public QSystemTrayIcon,
-	  public Interface::IReceiverNotify,
-	  public Interface::IEmitterNotify
+	  public Receiver::Interface::IReceiverNotify,
+	  public Emitter::Interface::IEmitterNotify
 
 {
 	Q_OBJECT
@@ -21,12 +21,12 @@ public:
 	explicit SystemTray(QObject *parent = nullptr);
 	virtual ~SystemTray();
 
-	virtual void attached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
-	virtual void detached(const std::shared_ptr<Interface::IEmitter> &emitter) override;
+	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 
-	virtual void attached(Interface::IReceiver *receiver) override;
-	virtual void detached(Interface::IReceiver *receiver) override;
-	virtual void modified(Interface::IReceiver *receiver) override;
+	virtual void attached(Receiver::Interface::IReceiver *receiver) override;
+	virtual void detached(Receiver::Interface::IReceiver *receiver) override;
+	virtual void modified(Receiver::Interface::IReceiver *receiver) override;
 
 	virtual void setBrightness(const float &brightness);
 

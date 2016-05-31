@@ -3,7 +3,7 @@
 #include <QSerialPortInfo>
 #include <QRegExp>
 
-using namespace Device;
+using namespace Functional;
 
 DevicePort::DevicePort(const QSerialPortInfo &info)
 		: QSerialPort(info)

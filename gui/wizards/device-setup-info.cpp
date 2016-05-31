@@ -9,7 +9,7 @@
 
 using namespace Wizard;
 
-DeviceSetupInfo::DeviceSetupInfo(Interface::IReceiver *receiver) {
+DeviceSetupInfo::DeviceSetupInfo(Receiver::Interface::IReceiver *receiver) {
 	setTitle(tr("Device configuration"));
 	setSubTitle(tr("Detected setup"));
 	auto layout = new QGridLayout;
