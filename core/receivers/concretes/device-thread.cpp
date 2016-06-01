@@ -1,10 +1,11 @@
 #include <core/containers/device-config-container.h>
 #include <core/correctors/concretes/color-enhancer-corrector.h>
+#include <core/correctors/concretes/corrector-manager.h>
 #include <core/devices/device-port.h>
-#include <core/receivers/concretes/device-thread.h>
 #include <core/enums/position-enum.h>
 #include <core/functionals/color-stream.h>
 #include <core/functionals/loop-sync.h>
+#include <core/receivers/concretes/device-thread.h>
 
 #include <QElapsedTimer>
 #include <algorithm>
@@ -64,7 +65,7 @@ void DeviceReceiver::run() {
 			for (int i = 0; i < config.count(); ++i) {
 				auto index = std::min(static_cast<int>(scanline_line - 1), static_cast<int>(i * step));
 				auto color = source.data(config.position())[index];
-				stream.insert(config.colorFormat(), execute(color));
+				stream.insert(config.colorFormat(), correctorManager()->execute(color));
 			}
 		}
 

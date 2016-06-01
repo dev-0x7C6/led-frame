@@ -72,7 +72,8 @@ SOURCES += \
     core/receivers/abstracts/abstract-receiver-manager.cpp \
     core/receivers/abstracts/abstract-receiver.cpp \
     core/receivers/concretes/device-manager.cpp \
-    core/receivers/concretes/device-thread.cpp
+    core/receivers/concretes/device-thread.cpp \
+    core/correctors/concretes/corrector-manager.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -141,7 +142,8 @@ HEADERS += \
     core/receivers/interfaces/ireceiver.h \
     core/receivers/concretes/device-manager.h \
     core/receivers/concretes/device-thread.h \
-    core/interfaces/inotification-callback.h
+    core/interfaces/inotification-callback.h \
+    core/correctors/concretes/corrector-manager.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \

@@ -23,7 +23,6 @@ public:
 
 	virtual const std::list<std::shared_ptr<Corrector::Interface::ICorrector>> &correctorList() const override;
 
-protected:
 	virtual uint32_t execute(const uint32_t &color) override;
 
 private:

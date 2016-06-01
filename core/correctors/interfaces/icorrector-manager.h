@@ -10,7 +10,7 @@ namespace Interface {
 
 class ICorrectorNotify;
 
-class ICorrectorManager {
+class ICorrectorManager : public ::Interface::INotificationCallback {
 public:
 	explicit ICorrectorManager() = default;
 	virtual ~ICorrectorManager() = default;

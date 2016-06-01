@@ -1,5 +1,6 @@
-#include <core/menus/emitter-menu.h>
+#include <core/correctors/concretes/corrector-manager.h>
 #include <core/emitters/interfaces/iemitter.h>
+#include <core/menus/emitter-menu.h>
 #include <core/receivers/interfaces/ireceiver.h>
 
 #include <QMenu>
@@ -24,7 +25,7 @@ EmitterMenu::EmitterMenu(QAction *parent, Receiver::Interface::IReceiver *receiv
 	m_actionEmitters->setMenu(new QMenu);
 	m_actionCorrectors->setMenu(new QMenu);
 
-	for (const auto &corrector : receiver->correctorList()) {
+	for (const auto &corrector : receiver->correctorManager()->correctorList()) {
 		auto action = m_actionCorrectors->menu()->addAction(name(corrector->type()));
 		action->setCheckable(true);
 		action->setChecked(corrector->enabled());

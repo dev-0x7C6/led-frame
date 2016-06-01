@@ -2,16 +2,17 @@
 
 #include <core/containers/application-info-container.h>
 #include <core/correctors/concretes/brightness-corrector.h>
+#include <core/correctors/concretes/corrector-manager.h>
 #include <core/correctors/concretes/rgb-channel-corrector.h>
 #include <core/correctors/factories/corrector-factory.h>
-#include <core/receivers/concretes/device-manager.h>
-#include <core/receivers/concretes/device-thread.h>
 #include <core/emitters/concretes/emitter-manager.h>
 #include <core/emitters/concretes/screen-emitter.h>
 #include <core/emitters/factories/emitter-factory.h>
 #include <core/networking/broadcast-service.h>
 #include <core/networking/web-socket.h>
 #include <core/networking/web-socket-server.h>
+#include <core/receivers/concretes/device-manager.h>
+#include <core/receivers/concretes/device-thread.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
@@ -75,14 +76,14 @@ int main(int argc, char *argv[]) {
 	QSettings settings(info.applicationName(), info.applicationName());
 	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness);
 	auto rgbCorrector = std::make_shared<RGBChannelCorrector>();
-	ReceiverManager deviceManager;
+	ReceiverManager receiverManager;
 	EmitterManager emitterManager(settings);
 	emitterManager.load();
 
 	if (emitterManager.isFirstRun())
 		createDefaultEmitters(emitterManager);
 
-	deviceManager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
+	receiverManager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
 		settings.beginGroup("devices");
 		settings.beginGroup(serialNumber);
 
@@ -98,15 +99,15 @@ int main(int argc, char *argv[]) {
 		settings.endGroup();
 		settings.endGroup();
 		settings.sync();
-		receiver->attach(brightnessCorrector);
-		receiver->attach(rgbCorrector);
-		receiver->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
+		receiver->correctorManager()->attach(brightnessCorrector);
+		receiver->correctorManager()->attach(rgbCorrector);
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
 	Tray::SystemTray tray;
 	tray.setBrightness(brightnessCorrector->factor());
 	emitterManager.attach(&tray);
-	deviceManager.attach(&tray);
+	receiverManager.attach(&tray);
 	auto dialog = std::make_shared<Widget::AboutDialog>();
 	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
 		application.quit();
@@ -125,11 +126,11 @@ int main(int argc, char *argv[]) {
 	});
 	Network::WebSocketServer webSocketServer;
 	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection,
-		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &emitterManager, &deviceManager](QWebSocket *socket) {
+		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &emitterManager, &receiverManager](QWebSocket *socket) {
 			auto connection = new Network::WebSocket(socket, &webSocketServer);
 			emitterManager.attach(connection);
 			QObject::connect(connection, &Network::WebSocket::textMessageReceived,
-				[&brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager](const QString &message) {
+				[&brightnessCorrector, &rgbCorrector, &emitterManager, &receiverManager](const QString &message) {
 					auto json = QJsonDocument::fromJson(message.toUtf8());
 					auto obj = json.object();
 
@@ -145,7 +146,7 @@ int main(int argc, char *argv[]) {
 						auto emitterId = obj.value("emitter").toString();
 						Receiver::Interface::IReceiver *receiver = nullptr;
 
-						for (const auto &device : deviceManager.list())
+						for (const auto &device : receiverManager.list())
 							if (device->name() == deviceId)
 								receiver = device.get();
 
@@ -157,56 +158,31 @@ int main(int argc, char *argv[]) {
 
 					qDebug() << obj;
 				});
-			auto poller = new QTimer(connection);
-			poller->setInterval(100);
-			poller->start();
-			QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager]() {
-				//        auto emitters = QJsonArray();
-				//        auto devices = QJsonArray();
-				//        for (const auto &device : deviceManager.list()) {
-				//          QString name = "";
-				//          if (device->isEmitterConnected())
-				//            name = device->connectedEmitter()->name();
-				//          auto json = QJsonObject{
-				//            {"name", device->name()},
-				//            {"connected", name}};
-				//          devices.append(json);
-				//        }
-				//        for (const auto &emitter : emitterManager.list())
-				//          emitters.append(QJsonValue(emitter->name()));
-				//        auto jsonCorrector = QJsonObject{
-				//          {"l", brightnessCorrector->factor()},
-				//          {"r", rgbCorrector->redFactor()},
-				//          {"g", rgbCorrector->greenFactor()},
-				//          {"b", rgbCorrector->blueFactor()},
-				//        };
-				//        auto jsonGlobal = QJsonObject{
-				//          {"corrector", jsonCorrector}};
-				//        auto json = QJsonObject{
-				//          {"global", jsonGlobal},
-				//          {"emitters", emitters},
-				//          {"devices", devices},
-				//        };
-				auto jsonCommand = QJsonObject{
-					{"command", "set_global_correction"},
-					{"l", brightnessCorrector->factor()},
-					{"r", rgbCorrector->redFactor()},
-					{"g", rgbCorrector->greenFactor()},
-					{"b", rgbCorrector->blueFactor()},
-				};
-				auto doc = QJsonDocument(jsonCommand);
-				connection->sendTextMessage(doc.toJson());
-			});
+
+			//			auto poller = new QTimer(connection);
+			//			poller->setInterval(100);
+			//			poller->start();
+			//			QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager]() {
+			//				auto jsonCommand = QJsonObject{
+			//					{"command", "set_global_correction"},
+			//					{"l", brightnessCorrector->factor()},
+			//					{"r", rgbCorrector->redFactor()},
+			//					{"g", rgbCorrector->greenFactor()},
+			//					{"b", rgbCorrector->blueFactor()},
+			//				};
+			//				auto doc = QJsonDocument(jsonCommand);
+			//				connection->sendTextMessage(doc.toJson());
+			//			});
 		});
-	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&deviceManager, &dialog] {
+	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&receiverManager, &dialog] {
 		if (dialog->isVisible())
 			return;
-		auto save = deviceManager.primary()->connectedEmitter();
-		deviceManager.primary()->connectEmitter(dialog);
+		auto save = receiverManager.primary()->connectedEmitter();
+		receiverManager.primary()->connectEmitter(dialog);
 		dialog->exec();
-		deviceManager.primary()->connectEmitter(save);
+		receiverManager.primary()->connectEmitter(save);
 	});
-	deviceManager.run();
+	receiverManager.run();
 	int result = application.exec();
 	emitterManager.save();
 	return result;

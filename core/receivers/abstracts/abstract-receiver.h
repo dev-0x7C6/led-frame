@@ -19,6 +19,7 @@ public:
 	virtual void setName(const QString &name) override;
 
 	virtual void changed(const std::function<void()> &callback) override;
+	virtual Corrector::Concrete::Manager::CorrectorManager *correctorManager() override;
 
 protected:
 	Container::ColorScanlineContainer &data();
@@ -26,6 +27,7 @@ protected:
 
 private:
 	Container::ColorScanlineContainer m_data;
+	std::unique_ptr<Corrector::Concrete::Manager::CorrectorManager> m_correctorManager;
 	std::shared_ptr<Emitter::Interface::IEmitter> m_emitter;
 	QString m_name;
 	std::function<void()> m_callback;

@@ -1,9 +1,14 @@
 #include <core/receivers/abstracts/abstract-receiver.h>
 #include <core/emitters/interfaces/iemitter.h>
+#include <core/correctors/concretes/corrector-manager.h>
+
+#include <memory>
 
 using namespace Receiver::Abstract;
+using namespace Corrector::Concrete::Manager;
 
-AbstractReceiver::AbstractReceiver() {
+AbstractReceiver::AbstractReceiver()
+		: m_correctorManager(std::make_unique<CorrectorManager>()) {
 	m_data.fill(0);
 }
 
@@ -45,6 +50,10 @@ void AbstractReceiver::setName(const QString &name) {
 
 void AbstractReceiver::changed(const std::function<void()> &callback) {
 	m_callback = callback;
+}
+
+Corrector::Concrete::Manager::CorrectorManager *AbstractReceiver::correctorManager() {
+	return m_correctorManager.get();
 }
 
 Container::ColorScanlineContainer &AbstractReceiver::data() {
