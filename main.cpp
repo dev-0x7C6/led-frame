@@ -159,20 +159,20 @@ int main(int argc, char *argv[]) {
 					qDebug() << obj;
 				});
 
-			//			auto poller = new QTimer(connection);
-			//			poller->setInterval(100);
-			//			poller->start();
-			//			QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager]() {
-			//				auto jsonCommand = QJsonObject{
-			//					{"command", "set_global_correction"},
-			//					{"l", brightnessCorrector->factor()},
-			//					{"r", rgbCorrector->redFactor()},
-			//					{"g", rgbCorrector->greenFactor()},
-			//					{"b", rgbCorrector->blueFactor()},
-			//				};
-			//				auto doc = QJsonDocument(jsonCommand);
-			//				connection->sendTextMessage(doc.toJson());
-			//			});
+			auto poller = new QTimer(connection);
+			poller->setInterval(100);
+			poller->start();
+			QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager]() {
+				auto jsonCommand = QJsonObject{
+					{"command", "set_global_correction"},
+					{"l", brightnessCorrector->factor()},
+					{"r", rgbCorrector->redFactor()},
+					{"g", rgbCorrector->greenFactor()},
+					{"b", rgbCorrector->blueFactor()},
+				};
+				auto doc = QJsonDocument(jsonCommand);
+				connection->sendTextMessage(doc.toJson());
+			});
 		});
 	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&receiverManager, &dialog] {
 		if (dialog->isVisible())
