@@ -9,10 +9,6 @@ AbstractReceiverManager::~AbstractReceiverManager() {
 	m_notifiers.clear();
 }
 
-IReceiver *AbstractReceiverManager::primary() {
-	return m_receivers.front().get();
-}
-
 void AbstractReceiverManager::attach(IReceiverNotify *notify) {
 	m_notifiers.push_back(notify);
 

@@ -7,20 +7,14 @@ AbstractCorrector::AbstractCorrector()
 		, m_priority(10)
 		, m_factor(1.0) {}
 
-AbstractCorrector::AbstractCorrector(const float &factor)
+AbstractCorrector::AbstractCorrector(float factor)
 		: AbstractCorrector() {
 	m_factor = factor;
 }
 
-bool AbstractCorrector::enabled() const {
-	return m_enabled;
-}
-float AbstractCorrector::factor() const {
-	return m_factor;
-}
-uint32_t AbstractCorrector::priority() const {
-	return m_priority;
-}
+bool AbstractCorrector::enabled() const { return m_enabled; }
+float AbstractCorrector::factor() const { return m_factor; }
+uint32_t AbstractCorrector::priority() const { return m_priority; }
 
 void AbstractCorrector::setEnabled(const bool &enabled) {
 	if (m_enabled != enabled) {
@@ -28,7 +22,7 @@ void AbstractCorrector::setEnabled(const bool &enabled) {
 		notify();
 	}
 }
-void AbstractCorrector::setFactor(const float &factor) {
+void AbstractCorrector::setFactor(float factor) {
 	if (m_factor != factor) {
 		m_factor = factor;
 		notify();

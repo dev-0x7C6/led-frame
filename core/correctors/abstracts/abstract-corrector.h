@@ -8,7 +8,7 @@ namespace Abstract {
 
 class AbstractCorrector : public Corrector::Interface::ICorrector {
 public:
-	explicit AbstractCorrector(const float &factor);
+	explicit AbstractCorrector(float factor);
 	explicit AbstractCorrector();
 	virtual ~AbstractCorrector() = default;
 
@@ -17,7 +17,7 @@ public:
 	virtual uint32_t priority() const override;
 
 	virtual void setEnabled(const bool &enabled) override;
-	virtual void setFactor(const float &factor) override;
+	virtual void setFactor(float factor) override;
 	virtual void setPriority(const uint32_t &priority) override;
 
 private:

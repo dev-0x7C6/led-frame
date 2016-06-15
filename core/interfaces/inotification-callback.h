@@ -1,25 +1,21 @@
 #pragma once
 
+#include <QObject>
 #include <functional>
 
 namespace Interface {
 
-class INotificationCallback {
+class INotificationCallback : public QObject {
+	Q_OBJECT
 public:
 	explicit INotificationCallback() = default;
 	virtual ~INotificationCallback() = default;
 
-	virtual void setNotificationCallback(const std::function<void()> &callback) {
-		m_callback = callback;
+	void callback(QObject *object, const std::function<void()> &callback) {
+		connect(this, &INotificationCallback::notify, object, callback);
 	}
 
-protected:
-	virtual void notify() {
-		if (m_callback)
-			m_callback();
-	}
-
-private:
-	std::function<void()> m_callback;
+signals:
+	void notify();
 };
 }

@@ -116,26 +116,12 @@ void WavePaintEngine::update() {
 
 		if (hue > 1.0)
 			hue = hue - 1.0;
-
-		auto color = QColor::fromHslF(hue, 1, 0.5).rgb();
-		m_scanline.data(Enum::Position::Top)[i] = color;
-		m_scanline.data(Enum::Position::Bottom)[scanline_line - i - 1] = color;
-
-		if (i == 0)
-			m_scanline.fill(Enum::Position::Left, color);
-
-		if (i == Container::scanline_line - 1)
-			m_scanline.fill(Enum::Position::Right, color);
 	}
 
 	if (m_shift > m_pixmap.width() / 2)
 		m_shift = 0;
 
 	m_parent->update();
-}
-
-const Container::ColorScanlineContainer &WavePaintEngine::scanline() const {
-	return m_scanline;
 }
 
 bool WavePaintEngine::animationEnabled() const {

@@ -10,14 +10,11 @@ enum class EmitterType {
 	Color,
 	Image,
 	Screen,
-	Test,
-	About
+	Test
 };
 
 inline QIcon icon(const EmitterType &type) {
 	switch (type) {
-		case EmitterType::About:
-			return {};
 		case EmitterType::Animation:
 			return QIcon(":/emitters/animation-emitter.svg");
 
@@ -39,8 +36,6 @@ inline QIcon icon(const EmitterType &type) {
 
 inline QString description(const EmitterType &type) {
 	switch (type) {
-		case EmitterType::About:
-			return {};
 		case EmitterType::Animation:
 			return "Animation";
 

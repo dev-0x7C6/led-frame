@@ -13,8 +13,6 @@ public:
 	explicit AbstractReceiverManager() = default;
 	virtual ~AbstractReceiverManager();
 
-	virtual Receiver::Interface::IReceiver *primary();
-
 	virtual void attach(Receiver::Interface::IReceiverNotify *notify) override;
 	virtual void detach(Receiver::Interface::IReceiverNotify *notify) override;
 

@@ -4,7 +4,6 @@
 #include <core/emitters/concretes/screen-emitter.h>
 #include <core/emitters/concretes/test-emitter.h>
 #include <core/emitters/factories/emitter-factory.h>
-#include <gui/dialogs/about-dialog.h>
 
 using namespace Emitter::Concrete;
 using namespace Emitter::Factory;
@@ -27,9 +26,6 @@ std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type) {
 
 		case EmitterType::Test:
 			return std::make_shared<TestEmitter>();
-
-		case EmitterType::About:
-			return std::make_shared<Widget::AboutDialog>();
 	}
 
 	return nullptr;

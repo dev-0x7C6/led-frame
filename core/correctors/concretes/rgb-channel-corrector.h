@@ -13,13 +13,13 @@ public:
 	virtual Enum::CorrectorType type() override;
 	virtual uint32_t correct(const uint32_t &color) override;
 
-	double redFactor() const;
-	double greenFactor() const;
-	double blueFactor() const;
+	float redFactor() const;
+	float greenFactor() const;
+	float blueFactor() const;
 
-	void setRedFactor(const float &factor);
-	void setGreenFactor(const float &factor);
-	void setBlueFactor(const float &factor);
+	void setRedFactor(float factor);
+	void setGreenFactor(float factor);
+	void setBlueFactor(float factor);
 
 private:
 	std::atomic<float> m_rfactor;

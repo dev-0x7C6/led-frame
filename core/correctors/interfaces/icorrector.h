@@ -20,7 +20,7 @@ public:
 	virtual uint32_t priority() const = 0;
 
 	virtual void setEnabled(const bool &enabled) = 0;
-	virtual void setFactor(const float &factor) = 0;
+	virtual void setFactor(float factor) = 0;
 	virtual void setPriority(const uint32_t &priority) = 0;
 };
 }

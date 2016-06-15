@@ -21,7 +21,7 @@ void AbstractCorrectorManager::attach(const std::shared_ptr<ICorrector> &correct
 	//    return (a->priority() > b->priority());
 	//  });
 
-	interface->setNotificationCallback([this]() { notify(); });
+	QObject::connect(interface, &INotificationCallback::notify, this, &INotificationCallback::notify);
 
 	for (const auto &notify : m_notifiers)
 		notify->attached(interface);
@@ -29,8 +29,6 @@ void AbstractCorrectorManager::attach(const std::shared_ptr<ICorrector> &correct
 
 void AbstractCorrectorManager::detach(const std::shared_ptr<ICorrector> &corrector) {
 	auto interface = corrector.get();
-
-	interface->setNotificationCallback(nullptr);
 
 	for (const auto &notify : m_notifiers)
 		notify->detached(interface);

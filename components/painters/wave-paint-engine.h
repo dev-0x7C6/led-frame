@@ -44,8 +44,6 @@ public:
 	bool animationEnabled() const;
 	void setAnimationEnabled(bool animationEnabled);
 
-	const Container::ColorScanlineContainer &scanline() const;
-
 protected:
 	void update();
 
@@ -55,7 +53,6 @@ private:
 	int m_shift;
 	QPixmap m_pixmap;
 	QWidget *m_parent;
-	Container::ColorScanlineContainer m_scanline;
 
 	WaveGradientModel m_waveGradientModel;
 };

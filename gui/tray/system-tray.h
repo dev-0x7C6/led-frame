@@ -4,6 +4,7 @@
 #include <core/menus/device-menu.h>
 
 #include <QSystemTrayIcon>
+#include <functional>
 
 class QAction;
 class QMenu;
@@ -13,10 +14,7 @@ namespace Tray {
 class SystemTray final
 	: public QSystemTrayIcon,
 	  public Receiver::Interface::IReceiverNotify,
-	  public Emitter::Interface::IEmitterNotify
-
-{
-	Q_OBJECT
+	  public Emitter::Interface::IEmitterNotify {
 public:
 	explicit SystemTray(QObject *parent = nullptr);
 	virtual ~SystemTray();
@@ -28,21 +26,17 @@ public:
 	virtual void detached(Receiver::Interface::IReceiver *receiver) override;
 	virtual void modified(Receiver::Interface::IReceiver *receiver) override;
 
-	virtual void setBrightness(const float &brightness);
+	virtual void setBrightness(float brightness);
 
-	virtual bool event(QEvent *event) override;
-
-protected:
-	void redrawTrayIcon(const double &opacity);
+	void setAboutRequestCallback(const std::function<void()> &aboutRequestCallback);
+	void setCloseRequestCallback(const std::function<void()> &closeRequestCallback);
 
 private:
+	std::function<void()> m_aboutRequestCallback;
+	std::function<void()> m_closeRequestCallback;
+
 	QAction *m_brightnessAction;
 	QAction *m_devices;
 	Menu::DeviceMenu m_deviceMenu;
-
-signals:
-	void signalWheelChanged(int delta);
-	void signalCloseRequest();
-	void signalAboutRequest();
 };
 }

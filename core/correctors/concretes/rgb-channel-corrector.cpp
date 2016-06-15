@@ -30,26 +30,35 @@ uint32_t RGBChannelCorrector::correct(const uint32_t &color) {
 	return base;
 }
 
-double RGBChannelCorrector::redFactor() const {
+float RGBChannelCorrector::redFactor() const {
 	return m_rfactor;
 }
 
-double RGBChannelCorrector::greenFactor() const {
+float RGBChannelCorrector::greenFactor() const {
 	return m_gfactor;
 }
 
-double RGBChannelCorrector::blueFactor() const {
+float RGBChannelCorrector::blueFactor() const {
 	return m_bfactor;
 }
 
-void RGBChannelCorrector::setRedFactor(const float &factor) {
-	m_rfactor = factor;
+void RGBChannelCorrector::setRedFactor(float factor) {
+	if (m_rfactor != factor) {
+		m_rfactor = factor;
+		notify();
+	}
 }
 
-void RGBChannelCorrector::setGreenFactor(const float &factor) {
-	m_gfactor = factor;
+void RGBChannelCorrector::setGreenFactor(float factor) {
+	if (m_gfactor != factor) {
+		m_gfactor = factor;
+		notify();
+	}
 }
 
-void RGBChannelCorrector::setBlueFactor(const float &factor) {
-	m_bfactor = factor;
+void RGBChannelCorrector::setBlueFactor(float factor) {
+	if (m_bfactor != factor) {
+		m_bfactor = factor;
+		notify();
+	}
 }

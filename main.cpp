@@ -3,6 +3,7 @@
 #include <core/containers/application-info-container.h>
 #include <core/correctors/concretes/brightness-corrector.h>
 #include <core/correctors/concretes/corrector-manager.h>
+#include <core/correctors/concretes/corrector-manager.h>
 #include <core/correctors/concretes/rgb-channel-corrector.h>
 #include <core/correctors/factories/corrector-factory.h>
 #include <core/emitters/concretes/emitter-manager.h>
@@ -29,6 +30,7 @@
 
 using namespace Container;
 using namespace Corrector::Concrete;
+using namespace Corrector::Concrete::Manager;
 using namespace Corrector::Factory;
 using namespace Emitter::Concrete;
 using namespace Emitter::Concrete::Manager;
@@ -76,9 +78,12 @@ int main(int argc, char *argv[]) {
 	QSettings settings(info.applicationName(), info.applicationName());
 	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness);
 	auto rgbCorrector = std::make_shared<RGBChannelCorrector>();
+	CorrectorManager correctorManager;
 	ReceiverManager receiverManager;
 	EmitterManager emitterManager(settings);
 	emitterManager.load();
+	correctorManager.attach(brightnessCorrector);
+	correctorManager.attach(rgbCorrector);
 
 	if (emitterManager.isFirstRun())
 		createDefaultEmitters(emitterManager);
@@ -104,42 +109,42 @@ int main(int argc, char *argv[]) {
 		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
-	Tray::SystemTray tray;
-	tray.setBrightness(brightnessCorrector->factor());
-	emitterManager.attach(&tray);
-	receiverManager.attach(&tray);
-	auto dialog = std::make_shared<Widget::AboutDialog>();
-	QObject::connect(&tray, &Tray::SystemTray::signalCloseRequest, [&application] {
-		application.quit();
-	});
-	QObject::connect(&tray, &Tray::SystemTray::signalWheelChanged, [&brightnessCorrector, &tray](int delta) {
-		auto value = brightnessCorrector->factor() + ((delta > 0) ? 0.05f : -0.05f);
 
-		if (value > 1.0f)
-			value = 1.0f;
-
-		if (value < 0.05f)
-			value = 0.05f;
-
-		brightnessCorrector->setFactor(value);
-		tray.setBrightness(value);
-	});
 	Network::WebSocketServer webSocketServer;
 	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection,
-		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &emitterManager, &receiverManager](QWebSocket *socket) {
+		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &emitterManager, &receiverManager, &correctorManager](QWebSocket *socket) {
 			auto connection = new Network::WebSocket(socket, &webSocketServer);
 			emitterManager.attach(connection);
+
+			auto broadcastGlobalCorrection = [connection, &brightnessCorrector, &rgbCorrector]() {
+				auto jsonCommand = QJsonObject{
+					{"command", "set_global_correction"},
+					{"l", static_cast<double>(brightnessCorrector->factor())},
+					{"r", static_cast<double>(rgbCorrector->redFactor())},
+					{"g", static_cast<double>(rgbCorrector->greenFactor())},
+					{"b", static_cast<double>(rgbCorrector->blueFactor())},
+				};
+				auto doc = QJsonDocument(jsonCommand);
+				connection->sendTextMessage(doc.toJson());
+			};
+
+			correctorManager.callback(connection, broadcastGlobalCorrection);
+			broadcastGlobalCorrection();
+
 			QObject::connect(connection, &Network::WebSocket::textMessageReceived,
-				[&brightnessCorrector, &rgbCorrector, &emitterManager, &receiverManager](const QString &message) {
+				[&brightnessCorrector, &rgbCorrector, &emitterManager, &receiverManager, &correctorManager](const QString &message) {
 					auto json = QJsonDocument::fromJson(message.toUtf8());
 					auto obj = json.object();
 
-					if (obj.value("command") == "set_correction") {
-						brightnessCorrector->setFactor(obj.value("l").toDouble());
-						rgbCorrector->setRedFactor(obj.value("r").toDouble());
-						rgbCorrector->setGreenFactor(obj.value("g").toDouble());
-						rgbCorrector->setBlueFactor(obj.value("b").toDouble());
-					}
+					auto setGlobalCorrection = [&brightnessCorrector, &rgbCorrector](double l, double r, double g, double b) {
+						brightnessCorrector->setFactor(static_cast<float>(l));
+						rgbCorrector->setRedFactor(static_cast<float>(r));
+						rgbCorrector->setGreenFactor(static_cast<float>(g));
+						rgbCorrector->setBlueFactor(static_cast<float>(b));
+					};
+
+					if (obj.value("command") == "set_correction")
+						setGlobalCorrection(obj.value("l").toDouble(), obj.value("r").toDouble(), obj.value("g").toDouble(), obj.value("b").toDouble());
 
 					if (obj.value("command") == "set_emitter") {
 						auto deviceId = obj.value("device").toString();
@@ -155,33 +160,30 @@ int main(int argc, char *argv[]) {
 								if (emitter->name() == emitterId)
 									receiver->connectEmitter(emitter);
 					}
-
-					qDebug() << obj;
 				});
-
-			auto poller = new QTimer(connection);
-			poller->setInterval(100);
-			poller->start();
-			QObject::connect(poller, &QTimer::timeout, [connection, &brightnessCorrector, &rgbCorrector, &emitterManager, &deviceManager]() {
-				auto jsonCommand = QJsonObject{
-					{"command", "set_global_correction"},
-					{"l", brightnessCorrector->factor()},
-					{"r", rgbCorrector->redFactor()},
-					{"g", rgbCorrector->greenFactor()},
-					{"b", rgbCorrector->blueFactor()},
-				};
-				auto doc = QJsonDocument(jsonCommand);
-				connection->sendTextMessage(doc.toJson());
-			});
 		});
-	QObject::connect(&tray, &Tray::SystemTray::signalAboutRequest, [&receiverManager, &dialog] {
-		if (dialog->isVisible())
+
+	Tray::SystemTray tray;
+	tray.setBrightness(brightnessCorrector->factor());
+	emitterManager.attach(&tray);
+	receiverManager.attach(&tray);
+
+	correctorManager.callback(&tray, [&tray, &brightnessCorrector]() { tray.setBrightness(brightnessCorrector->factor()); });
+
+	tray.setAboutRequestCallback([] {
+		static bool dialogGuardVisible = false;
+
+		if (dialogGuardVisible)
 			return;
-		auto save = receiverManager.primary()->connectedEmitter();
-		receiverManager.primary()->connectEmitter(dialog);
-		dialog->exec();
-		receiverManager.primary()->connectEmitter(save);
+
+		dialogGuardVisible = true;
+		Widget::AboutDialog dialog;
+		dialog.exec();
+		dialogGuardVisible = false;
 	});
+
+	tray.setCloseRequestCallback([&application] { application.quit(); });
+
 	receiverManager.run();
 	int result = application.exec();
 	emitterManager.save();
