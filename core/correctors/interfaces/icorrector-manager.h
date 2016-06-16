@@ -4,6 +4,7 @@
 
 #include <list>
 #include <memory>
+#include <vector>
 
 namespace Corrector {
 namespace Interface {
@@ -21,10 +22,11 @@ public:
 	virtual void attach(const std::shared_ptr<ICorrector> &corrector) = 0;
 	virtual void detach(const std::shared_ptr<ICorrector> &corrector) = 0;
 
-	virtual const std::list<std::shared_ptr<ICorrector>> &correctorList() const = 0;
+	virtual const std::vector<std::shared_ptr<ICorrector>> &correctorList() const = 0;
 
-protected:
-	virtual uint32_t execute(const uint32_t &color) = 0;
+	virtual uint32_t execute(uint32_t color) = 0;
+	virtual void push() = 0;
+	virtual void pop() = 0;
 };
 }
 }

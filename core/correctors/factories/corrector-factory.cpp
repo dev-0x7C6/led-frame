@@ -1,5 +1,6 @@
 #include <core/correctors/concretes/brightness-corrector.h>
 #include <core/correctors/concretes/color-enhancer-corrector.h>
+#include <core/correctors/concretes/flickr-effect-corrector.h>
 #include <core/correctors/concretes/rgb-channel-corrector.h>
 #include <core/correctors/factories/corrector-factory.h>
 
@@ -18,6 +19,9 @@ std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type) 
 
 		case CorrectorType::RGBChannel:
 			return std::make_shared<RGBChannelCorrector>();
+
+		case CorrectorType::FlickrEffect:
+			return std::make_shared<FlickrEffectCorrector>();
 	}
 
 	return nullptr;

@@ -59,6 +59,8 @@ void DeviceReceiver::run() {
 
 		source = data();
 
+		correctorManager()->push();
+
 		for (const auto &config : configs) {
 			double step = static_cast<double>(scanline_line) / static_cast<double>(config.count() - 1);
 
@@ -68,6 +70,8 @@ void DeviceReceiver::run() {
 				stream.insert(config.colorFormat(), correctorManager()->execute(color));
 			}
 		}
+
+		correctorManager()->pop();
 
 		stream.write(*m_device);
 		m_device->waitForBytesWritten(-1);

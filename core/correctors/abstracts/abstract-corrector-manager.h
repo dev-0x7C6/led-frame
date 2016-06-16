@@ -21,12 +21,14 @@ public:
 	virtual void attach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
 	virtual void detach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
 
-	virtual const std::list<std::shared_ptr<Corrector::Interface::ICorrector>> &correctorList() const override;
+	virtual const std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> &correctorList() const override;
 
-	virtual uint32_t execute(const uint32_t &color) override;
+	virtual uint32_t execute(uint32_t color) override;
+	virtual void push() override;
+	virtual void pop() override;
 
 private:
-	std::list<std::shared_ptr<Corrector::Interface::ICorrector>> m_correctors;
+	std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> m_correctors;
 	std::list<Corrector::Interface::ICorrectorNotify *> m_notifiers;
 };
 }

@@ -16,9 +16,9 @@ public:
 	virtual float factor() const override;
 	virtual uint32_t priority() const override;
 
-	virtual void setEnabled(const bool &enabled) override;
+	virtual void setEnabled(bool enabled) override;
 	virtual void setFactor(float factor) override;
-	virtual void setPriority(const uint32_t &priority) override;
+	virtual void setPriority(uint32_t priority) override;
 
 private:
 	std::atomic<bool> m_enabled;

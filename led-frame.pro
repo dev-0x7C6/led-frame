@@ -74,7 +74,8 @@ SOURCES += \
     core/receivers/concretes/device-manager.cpp \
     core/receivers/concretes/device-thread.cpp \
     core/correctors/concretes/corrector-manager.cpp \
-    gui/tray/system-tray-icon.cpp
+    gui/tray/system-tray-icon.cpp \
+    core/correctors/concretes/flickr-effect-corrector.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -145,7 +146,8 @@ HEADERS += \
     core/receivers/concretes/device-thread.h \
     core/interfaces/inotification-callback.h \
     core/correctors/concretes/corrector-manager.h \
-    gui/tray/system-tray-icon.h
+    gui/tray/system-tray-icon.h \
+    core/correctors/concretes/flickr-effect-corrector.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \

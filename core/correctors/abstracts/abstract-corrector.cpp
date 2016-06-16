@@ -16,7 +16,7 @@ bool AbstractCorrector::enabled() const { return m_enabled; }
 float AbstractCorrector::factor() const { return m_factor; }
 uint32_t AbstractCorrector::priority() const { return m_priority; }
 
-void AbstractCorrector::setEnabled(const bool &enabled) {
+void AbstractCorrector::setEnabled(bool enabled) {
 	if (m_enabled != enabled) {
 		m_enabled = enabled;
 		notify();
@@ -28,7 +28,7 @@ void AbstractCorrector::setFactor(float factor) {
 		notify();
 	}
 }
-void AbstractCorrector::setPriority(const uint32_t &priority) {
+void AbstractCorrector::setPriority(uint32_t priority) {
 	if (m_priority != priority) {
 		m_priority = priority;
 		notify();

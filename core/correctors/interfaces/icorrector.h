@@ -16,12 +16,15 @@ public:
 
 	virtual bool enabled() const = 0;
 	virtual float factor() const = 0;
-	virtual uint32_t correct(const uint32_t &color) = 0;
+	virtual uint32_t correct(uint32_t color) = 0;
 	virtual uint32_t priority() const = 0;
 
-	virtual void setEnabled(const bool &enabled) = 0;
+	virtual void push() {}
+	virtual void pop() {}
+
+	virtual void setEnabled(bool enabled) = 0;
 	virtual void setFactor(float factor) = 0;
-	virtual void setPriority(const uint32_t &priority) = 0;
+	virtual void setPriority(uint32_t priority) = 0;
 };
 }
 }

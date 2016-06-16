@@ -17,9 +17,9 @@ void AbstractCorrectorManager::detach(ICorrectorNotify *notify) {
 void AbstractCorrectorManager::attach(const std::shared_ptr<ICorrector> &corrector) {
 	auto interface = corrector.get();
 	m_correctors.emplace_back(corrector);
-	//  std::sort(m_correctors.begin(), m_correctors.end(), [](const auto & a, auto & b) {
-	//    return (a->priority() > b->priority());
-	//  });
+	std::sort(m_correctors.begin(), m_correctors.end(), [](const auto &a, auto &b) {
+		return (a->priority() > b->priority());
+	});
 
 	QObject::connect(interface, &INotificationCallback::notify, this, &INotificationCallback::notify);
 
@@ -33,19 +33,29 @@ void AbstractCorrectorManager::detach(const std::shared_ptr<ICorrector> &correct
 	for (const auto &notify : m_notifiers)
 		notify->detached(interface);
 
-	m_correctors.remove(corrector);
+	std::remove_if(m_correctors.begin(), m_correctors.end(), [&corrector](const auto &value) { return value == corrector; });
 }
 
-const std::list<std::shared_ptr<ICorrector>> &AbstractCorrectorManager::correctorList() const {
+const std::vector<std::shared_ptr<ICorrector>> &AbstractCorrectorManager::correctorList() const {
 	return m_correctors;
 }
 
-uint32_t AbstractCorrectorManager::execute(const uint32_t &color) {
-	uint32_t base = color;
-
+uint32_t AbstractCorrectorManager::execute(uint32_t color) {
 	for (const auto &corrector : m_correctors)
 		if (corrector->enabled())
-			base = corrector->correct(base);
+			color = corrector->correct(color);
 
-	return base;
+	return color;
+}
+
+void AbstractCorrectorManager::push() {
+	for (const auto &corrector : m_correctors)
+		if (corrector->enabled())
+			corrector->push();
+}
+
+void AbstractCorrectorManager::pop() {
+	for (const auto &corrector : m_correctors)
+		if (corrector->enabled())
+			corrector->pop();
 }

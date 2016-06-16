@@ -11,7 +11,7 @@ public:
 	virtual ~RGBChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() override;
-	virtual uint32_t correct(const uint32_t &color) override;
+	virtual uint32_t correct(uint32_t color) override;
 
 	float redFactor() const;
 	float greenFactor() const;
