@@ -20,7 +20,7 @@ public:
 	virtual void setFactor(float factor) override;
 	virtual void setPriority(uint32_t priority) override;
 
-private:
+protected:
 	std::atomic<bool> m_enabled;
 	std::atomic<uint32_t> m_priority;
 	std::atomic<float> m_factor;

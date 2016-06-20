@@ -3,6 +3,7 @@
 using namespace Corrector::Concrete;
 
 FlickrEffectCorrector::FlickrEffectCorrector() {
+	m_enabled = false;
 }
 
 Enum::CorrectorType FlickrEffectCorrector::type() { return Enum::CorrectorType::FlickrEffect; }

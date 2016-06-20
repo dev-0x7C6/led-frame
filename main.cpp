@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
 		settings.sync();
 		receiver->correctorManager()->attach(brightnessCorrector);
 		receiver->correctorManager()->attach(rgbCorrector);
-		//receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::FlickrEffect));
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::FlickrEffect));
 		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer));
 		return true;
 	});
