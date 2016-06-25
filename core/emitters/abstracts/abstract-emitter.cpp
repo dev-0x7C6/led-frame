@@ -1,5 +1,9 @@
 #include <core/emitters/abstracts/abstract-emitter.h>
 
+#ifdef QT_DEBUG
+#include <iostream>
+#endif
+
 using namespace Emitter::Abstract;
 
 AbstractEmitter::AbstractEmitter()
@@ -27,11 +31,19 @@ void AbstractEmitter::setName(const QString &name) {
 void AbstractEmitter::connect() {
 	m_connectionCount++;
 	onConnect(m_connectionCount);
+#ifdef QT_DEBUG
+	std::cout << "[" << m_name.toStdString() << "] emitter: "
+			  << "connection ref. " << m_connectionCount << std::endl;
+#endif
 }
 
 void AbstractEmitter::disconnect() {
 	m_connectionCount--;
 	onDisconnect(m_connectionCount);
+#ifdef QT_DEBUG
+	std::cout << "[" << m_name.toStdString() << "] emitter: "
+			  << "connection ref. " << m_connectionCount << std::endl;
+#endif
 }
 
 uint32_t AbstractEmitter::connectionCount() {

@@ -3,6 +3,6 @@
 namespace Enum {
 
 enum class ReceiverType {
-	Device
+	Uart
 };
 }

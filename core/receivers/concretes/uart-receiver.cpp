@@ -22,10 +22,7 @@ UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, QSerialPortInfo
 		, m_device(std::move(device))
 		, m_details(details)
 		, m_interrupt(false)
-		, m_thread([this]() { run(); }, this)
-
-{
-
+		, m_thread([this]() { run(); }, this) {
 	m_device->moveToThread(&m_thread);
 	m_thread.start();
 	connect(&m_thread, &QThread::finished, this, &UartReceiver::finished);
@@ -34,12 +31,9 @@ UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, QSerialPortInfo
 UartReceiver::~UartReceiver() {
 	interrupt();
 	m_thread.wait();
-	disconnectEmitter();
 }
 
-Enum::ReceiverType UartReceiver::type() const {
-	return Enum::ReceiverType::Device;
-}
+Enum::ReceiverType UartReceiver::type() const { return Enum::ReceiverType::Uart; }
 
 void UartReceiver::run() {
 	Functional::ColorStream stream;

@@ -76,7 +76,8 @@ SOURCES += \
     gui/tray/system-tray-icon.cpp \
     core/correctors/concretes/flickr-effect-corrector.cpp \
     core/functionals/lambda-thread.cpp \
-    core/receivers/concretes/uart-receiver.cpp
+    core/receivers/concretes/uart-receiver.cpp \
+    core/functionals/debug-notification.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -149,7 +150,8 @@ HEADERS += \
     gui/tray/system-tray-icon.h \
     core/correctors/concretes/flickr-effect-corrector.h \
     core/functionals/lambda-thread.h \
-    core/receivers/concretes/uart-receiver.h
+    core/receivers/concretes/uart-receiver.h \
+    core/functionals/debug-notification.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \

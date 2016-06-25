@@ -12,6 +12,7 @@
 #include <core/networking/broadcast-service.h>
 #include <core/networking/web-socket.h>
 #include <core/networking/web-socket-server.h>
+#include <core/functionals/debug-notification.h>
 #include <core/receivers/concretes/device-manager.h>
 #include <core/receivers/concretes/uart-receiver.h>
 #include <gui/dialogs/about-dialog.h>
@@ -71,6 +72,9 @@ void createDefaultEmitters(EmitterManager &manager) {
 }
 
 int main(int argc, char *argv[]) {
+#ifdef QT_DEBUG
+	static Functional::DebugNotification debug;
+#endif
 	ApplicationInfoContainer info;
 	QApplication application(argc, argv);
 	application.setQuitOnLastWindowClosed(false);
@@ -83,6 +87,11 @@ int main(int argc, char *argv[]) {
 	CorrectorManager correctorManager;
 	ReceiverManager receiverManager;
 	EmitterManager emitterManager(settings);
+#ifdef QT_DEBUG
+	correctorManager.attach(&debug);
+	receiverManager.attach(&debug);
+	emitterManager.attach(&debug);
+#endif
 	emitterManager.load();
 	correctorManager.attach(brightnessCorrector);
 	correctorManager.attach(rgbCorrector);
@@ -91,6 +100,9 @@ int main(int argc, char *argv[]) {
 		createDefaultEmitters(emitterManager);
 
 	receiverManager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
+#ifdef QT_DEBUG
+		receiver->correctorManager()->attach(&debug);
+#endif
 		settings.beginGroup("devices");
 		settings.beginGroup(serialNumber);
 

@@ -29,6 +29,6 @@ void DeviceSetupGeneralTest::initializePage() {
 }
 
 void DeviceSetupGeneralTest::cleanupPage() {
-	m_receiver->connectEmitter(nullptr);
-	m_symulation->connectEmitter(nullptr);
+	m_receiver->disconnectEmitter();
+	m_symulation->disconnectEmitter();
 }

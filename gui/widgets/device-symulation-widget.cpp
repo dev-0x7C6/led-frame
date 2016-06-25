@@ -61,7 +61,7 @@ QString DeviceSymulationWidget::name() const {
 }
 
 Enum::ReceiverType DeviceSymulationWidget::type() const {
-	return Enum::ReceiverType::Device;
+	return Enum::ReceiverType::Uart;
 }
 
 Container::DeviceConfigContainer DeviceSymulationWidget::config() {

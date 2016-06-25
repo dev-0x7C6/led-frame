@@ -5,6 +5,10 @@ QMAKE_CXXFLAGS_RELEASE += -march=native -O3 -pipe -fomit-frame-pointer -ffast-ma
 QMAKE_CFLAGS_DEBUG += -O0 -ggdb3 -g3 -fno-omit-frame-pointer
 QMAKE_CXXFLAGS_DEBUG += -O0 -ggdb3 -g3 -fno-omit-frame-pointer
 QMAKE_RESOURCE_FLAGS += -threshold 0 -compress 9
+#Leak sanitizer
+#QMAKE_CFLAGS_DEBUG += -fsanitize=leak
+#QMAKE_CXXFLAGS_DEBUG += -fsanitize=leak
+#LIBS += -llsan
 #Undefined behavior sanitizer
 #QMAKE_CFLAGS_DEBUG += -fsanitize=undefined
 #QMAKE_CXXFLAGS_DEBUG += -fsanitize=undefined

@@ -17,12 +17,12 @@ void AbstractReceiverManager::attach(IReceiverNotify *notify) {
 }
 
 void AbstractReceiverManager::detach(IReceiverNotify *notify) {
+	for (const auto &receiver : m_receivers)
+		notify->detached(receiver.get());
+
 	m_notifiers.remove_if([notify](const auto &match) {
 		return match == notify;
 	});
-
-	for (const auto &receiver : m_receivers)
-		notify->detached(receiver.get());
 }
 
 const std::list<std::unique_ptr<IReceiver>> &AbstractReceiverManager::list() const {
@@ -46,10 +46,10 @@ void AbstractReceiverManager::attach(std::unique_ptr<IReceiver> &&receiver) {
 }
 
 void AbstractReceiverManager::detach(IReceiver *receiver) {
+	for (const auto &notify : m_notifiers)
+		notify->detached(receiver);
+
 	m_receivers.remove_if([receiver](const auto &match) {
 		return match.get() == receiver;
 	});
-
-	for (const auto &notify : m_notifiers)
-		notify->detached(receiver);
 }
