@@ -11,7 +11,7 @@ constexpr auto ApplicationName = "LedFrame";
 constexpr auto ApplicationCodename = "";
 constexpr int ApplicationVersionMajor = 0;
 constexpr int ApplicationVersionMinor = 8;
-constexpr int ApplicationVersionPatch = 1;
+constexpr int ApplicationVersionPatch = 2;
 }
 
 class ApplicationInfoContainer final : public AbstractContainer {
