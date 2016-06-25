@@ -7,9 +7,9 @@
 namespace Emitter {
 namespace Concrete {
 
-class AnimationEmitter final : public QObject, public Abstract::AbstractEmitter {
+class AnimationEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit AnimationEmitter(QObject *parent = nullptr);
+	explicit AnimationEmitter();
 	virtual ~AnimationEmitter();
 
 	virtual Enum::EmitterType type() const override;

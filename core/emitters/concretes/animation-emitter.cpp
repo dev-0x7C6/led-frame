@@ -4,8 +4,7 @@
 
 using namespace Emitter::Concrete;
 
-AnimationEmitter::AnimationEmitter(QObject *parent)
-		: QObject(parent)
+AnimationEmitter::AnimationEmitter()
 
 {
 	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, this, &AnimationEmitter::process);

@@ -18,6 +18,8 @@ namespace Concrete {
 
 class DeviceReceiver;
 
+namespace Manager {
+
 class ReceiverManager : public QObject, public Receiver::Abstract::AbstractReceiverManager {
 	Q_OBJECT
 public:
@@ -38,5 +40,6 @@ private:
 signals:
 	void afterAttach();
 };
+}
 }
 }

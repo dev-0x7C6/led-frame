@@ -13,8 +13,8 @@ using namespace Emitter::Concrete;
 using namespace Factory;
 using namespace Container;
 
-ScreenEmitter::ScreenEmitter(QObject *parent)
-		: QThread(parent)
+ScreenEmitter::ScreenEmitter()
+		: QThread(nullptr)
 		, Abstract::AbstractEmitter()
 		, m_width(0)
 		, m_height(0)

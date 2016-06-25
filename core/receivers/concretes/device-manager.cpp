@@ -9,6 +9,7 @@
 using namespace Functional;
 using namespace Network;
 using namespace Receiver::Concrete;
+using namespace Receiver::Concrete::Manager;
 
 ReceiverManager::ReceiverManager(QObject *parent)
 		: QObject(parent)
@@ -17,8 +18,7 @@ ReceiverManager::ReceiverManager(QObject *parent)
 	connect(&m_deviceScan, &QTimer::timeout, this, &ReceiverManager::rescan);
 }
 
-ReceiverManager::~ReceiverManager() {
-}
+ReceiverManager::~ReceiverManager() {}
 
 void ReceiverManager::rescan() {
 	Container::DeviceInfoContainer deviceInfo("LedFrame", "LedFrame", 500000);

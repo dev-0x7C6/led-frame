@@ -3,6 +3,7 @@
 #include <core/containers/color-scanline-container.h>
 #include <core/containers/device-config-container.h>
 #include <core/enums/receiver-type-enum.h>
+#include <core/interfaces/inotification-callback.h>
 
 #include <QString>
 

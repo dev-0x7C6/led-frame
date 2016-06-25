@@ -10,7 +10,7 @@ namespace Concrete {
 
 class ScreenEmitter final : public QThread, public Abstract::AbstractEmitter {
 public:
-	explicit ScreenEmitter(QObject *parent = nullptr);
+	explicit ScreenEmitter();
 	virtual ~ScreenEmitter();
 
 	virtual Enum::EmitterType type() const override;

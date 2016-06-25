@@ -29,14 +29,16 @@
 #include <memory>
 
 using namespace Container;
+using namespace Enum;
+
 using namespace Corrector::Concrete;
 using namespace Corrector::Concrete::Manager;
 using namespace Corrector::Factory;
 using namespace Emitter::Concrete;
 using namespace Emitter::Concrete::Manager;
 using namespace Emitter::Factory;
-using namespace Enum;
 using namespace Receiver::Concrete;
+using namespace Receiver::Concrete::Manager;
 
 void createDefaultEmitters(EmitterManager &manager) {
 	auto screens = QGuiApplication::screens();

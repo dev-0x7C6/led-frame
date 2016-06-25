@@ -7,9 +7,9 @@
 namespace Emitter {
 namespace Concrete {
 
-class TestEmitter final : public QObject, public Abstract::AbstractEmitter {
+class TestEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit TestEmitter(QObject *parent = nullptr);
+	explicit TestEmitter();
 	virtual ~TestEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;
