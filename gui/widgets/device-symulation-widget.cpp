@@ -30,7 +30,7 @@ DeviceSymulationWidget::DeviceSymulationWidget(QWidget *parent)
 	p.setBrush(QPalette::Window, QColor::fromRgb(20, 20, 20));
 	setPalette(p);
 	setAutoFillBackground(true);
-	startTimer(1000 / 24);
+	QWidget::startTimer(1000 / 24);
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
 	QWidget *container = QWidget::createWindowContainer(m_view, this);
 	m_view->setColor(QColor::fromRgb(0, 0, 0));

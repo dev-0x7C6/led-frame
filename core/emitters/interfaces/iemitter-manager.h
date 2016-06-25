@@ -1,5 +1,7 @@
 #pragma once
 
+#include <core/interfaces/inotification-callback.h>
+
 #include <list>
 #include <memory>
 
@@ -9,7 +11,7 @@ namespace Interface {
 class IEmitter;
 class IEmitterNotify;
 
-class IEmitterManager {
+class IEmitterManager : public ::Interface::INotificationCallback {
 public:
 	explicit IEmitterManager() = default;
 	virtual ~IEmitterManager() = default;

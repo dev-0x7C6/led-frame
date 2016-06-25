@@ -27,5 +27,6 @@ void WebSocket::attached(const std::shared_ptr<Emitter::Interface::IEmitter> &em
 	m_webSocket->flush();
 }
 
-void WebSocket::detached(const std::shared_ptr<Emitter::Interface::IEmitter> &) {
-}
+// TODO: WebSocket should react when emitter is detached or modified
+void WebSocket::detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) { static_cast<void>(emitter); }
+void WebSocket::modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) { static_cast<void>(emitter); }

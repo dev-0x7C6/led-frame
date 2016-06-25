@@ -21,6 +21,8 @@ public:
 
 	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	virtual void modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+
 	void changed();
 
 private:

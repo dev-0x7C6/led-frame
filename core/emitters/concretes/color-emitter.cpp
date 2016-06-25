@@ -23,9 +23,13 @@ QColor ColorEmitter::color() const {
 }
 
 void ColorEmitter::setColor(const QColor &color) {
+	if (color == m_color)
+		return;
+
 	m_color = color;
 	m_scanline.fill(color.rgb());
 	commit(m_scanline);
+	notify();
 }
 
 void ColorEmitter::onConnect(const uint32_t &) {

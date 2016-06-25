@@ -17,11 +17,16 @@ void AbstractCorrectorManager::detach(ICorrectorNotify *notify) {
 void AbstractCorrectorManager::attach(const std::shared_ptr<ICorrector> &corrector) {
 	auto interface = corrector.get();
 	m_correctors.emplace_back(corrector);
-	std::sort(m_correctors.begin(), m_correctors.end(), [](const auto &a, auto &b) {
+	std::sort(m_correctors.begin(), m_correctors.end(), [](const auto &a, const auto &b) {
 		return (a->priority() > b->priority());
 	});
 
-	QObject::connect(interface, &INotificationCallback::notify, this, &INotificationCallback::notify);
+	connect(interface, &INotificationCallback::notify, [this, interface]() {
+		for (const auto &notify : m_notifiers)
+			notify->modified(interface);
+
+		emit notify();
+	});
 
 	for (const auto &notify : m_notifiers)
 		notify->attached(interface);

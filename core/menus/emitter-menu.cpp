@@ -51,6 +51,10 @@ void EmitterMenu::attached(const std::shared_ptr<IEmitter> &emitter) {
 	m_emitterActionGroup->setExclusive(true);
 }
 
+// TODO: EmitterMenu should reload stuff when emitter is detached or modiffied
+void EmitterMenu::detached(const std::shared_ptr<IEmitter> &emitter) { static_cast<void>(emitter); }
+void EmitterMenu::modified(const std::shared_ptr<IEmitter> &emitter) { static_cast<void>(emitter); }
+
 void EmitterMenu::changed() {
 	QAction *action;
 
@@ -62,7 +66,4 @@ void EmitterMenu::changed() {
 
 	if (action)
 		action->setChecked(true);
-}
-
-void EmitterMenu::detached(const std::shared_ptr<IEmitter> &) {
 }

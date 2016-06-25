@@ -13,7 +13,7 @@
 #include <core/networking/web-socket.h>
 #include <core/networking/web-socket-server.h>
 #include <core/receivers/concretes/device-manager.h>
-#include <core/receivers/concretes/device-thread.h>
+#include <core/receivers/concretes/uart-receiver.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>

@@ -5,7 +5,7 @@
 #include <core/enums/position-enum.h>
 #include <core/functionals/color-stream.h>
 #include <core/functionals/loop-sync.h>
-#include <core/receivers/concretes/device-thread.h>
+#include <core/receivers/concretes/uart-receiver.h>
 
 #include <QElapsedTimer>
 #include <algorithm>
@@ -17,30 +17,31 @@ using namespace Enum;
 using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
 
-DeviceReceiver::DeviceReceiver(std::unique_ptr<DevicePort> &&device, QSerialPortInfo details, QObject *parent)
-		: QThread(parent)
-		, AbstractReceiver()
+UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, QSerialPortInfo details)
+		: AbstractReceiver()
 		, m_device(std::move(device))
 		, m_details(details)
 		, m_interrupt(false)
+		, m_thread([this]() { run(); }, this)
 
 {
-	m_device->moveToThread(this);
-	start();
+
+	m_device->moveToThread(&m_thread);
+	m_thread.start();
+	connect(&m_thread, &QThread::finished, this, &UartReceiver::finished);
 }
 
-DeviceReceiver::~DeviceReceiver() {
+UartReceiver::~UartReceiver() {
 	interrupt();
-	wait();
-	changed(nullptr);
-	connectEmitter(nullptr);
+	m_thread.wait();
+	disconnectEmitter();
 }
 
-Enum::ReceiverType DeviceReceiver::type() const {
+Enum::ReceiverType UartReceiver::type() const {
 	return Enum::ReceiverType::Device;
 }
 
-void DeviceReceiver::run() {
+void UartReceiver::run() {
 	Functional::ColorStream stream;
 	Functional::LoopSync sync;
 	const auto configs = {
@@ -82,14 +83,14 @@ void DeviceReceiver::run() {
 		m_device->close();
 }
 
-QSerialPortInfo DeviceReceiver::details() {
+QSerialPortInfo UartReceiver::details() {
 	return m_details;
 }
 
-void DeviceReceiver::interrupt() {
+void UartReceiver::interrupt() {
 	m_interrupt = true;
 }
 
-Container::DeviceConfigContainer DeviceReceiver::config() {
+Container::DeviceConfigContainer UartReceiver::config() {
 	return m_device->config();
 }

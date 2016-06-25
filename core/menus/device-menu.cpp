@@ -30,6 +30,9 @@ void DeviceMenu::detached(const std::shared_ptr<IEmitter> &emitter) {
 		m_emitterMenu.at(receiver)->detached(emitter);
 }
 
+// TODO: DeviceMenu should reload stuff when emitter is changed
+void DeviceMenu::modified(const std::shared_ptr<IEmitter> &emitter) { static_cast<void>(emitter); }
+
 void DeviceMenu::attached(IReceiver *receiver) {
 	auto action = new QAction(QIcon(":/tray.png"), receiver->name(), nullptr);
 	menu()->insertAction(m_beforeAction, action);

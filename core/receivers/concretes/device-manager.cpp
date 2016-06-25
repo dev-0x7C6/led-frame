@@ -4,17 +4,14 @@
 #include <core/devices/device-port.h>
 #include <core/networking/broadcast-service.h>
 #include <core/receivers/concretes/device-manager.h>
-#include <core/receivers/concretes/device-thread.h>
+#include <core/receivers/concretes/uart-receiver.h>
 
 using namespace Functional;
 using namespace Network;
 using namespace Receiver::Concrete;
 using namespace Receiver::Concrete::Manager;
 
-ReceiverManager::ReceiverManager(QObject *parent)
-		: QObject(parent)
-
-{
+ReceiverManager::ReceiverManager() {
 	connect(&m_deviceScan, &QTimer::timeout, this, &ReceiverManager::rescan);
 }
 
@@ -37,9 +34,9 @@ void ReceiverManager::rescan() {
 		device->setParity(QSerialPort::NoParity);
 		device->setDataBits(QSerialPort::Data8);
 		device->setStopBits(QSerialPort::OneStop);
-		auto thread = std::make_unique<DeviceReceiver>(std::move(device), ports[i]);
+		auto thread = std::make_unique<UartReceiver>(std::move(device), ports[i]);
 		auto interface = thread.get();
-		connect(interface, &DeviceReceiver::finished, this, [this, interface]() {
+		connect(interface, &UartReceiver::finished, this, [this, interface]() {
 			detach(interface);
 		},
 			Qt::QueuedConnection);
@@ -47,7 +44,7 @@ void ReceiverManager::rescan() {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
-		new Network::BroadcastService(thread->name(), 4999, interface);
+		new Network::BroadcastService(thread->name(), 4999, qobject_cast<QThread *>(interface));
 		attach(std::move(thread));
 		emit afterAttach();
 	}

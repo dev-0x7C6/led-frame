@@ -72,10 +72,11 @@ SOURCES += \
     core/receivers/abstracts/abstract-receiver-manager.cpp \
     core/receivers/abstracts/abstract-receiver.cpp \
     core/receivers/concretes/device-manager.cpp \
-    core/receivers/concretes/device-thread.cpp \
     core/correctors/concretes/corrector-manager.cpp \
     gui/tray/system-tray-icon.cpp \
-    core/correctors/concretes/flickr-effect-corrector.cpp
+    core/correctors/concretes/flickr-effect-corrector.cpp \
+    core/functionals/lambda-thread.cpp \
+    core/receivers/concretes/uart-receiver.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -143,11 +144,12 @@ HEADERS += \
     core/receivers/interfaces/ireceiver-notify.h \
     core/receivers/interfaces/ireceiver.h \
     core/receivers/concretes/device-manager.h \
-    core/receivers/concretes/device-thread.h \
     core/interfaces/inotification-callback.h \
     core/correctors/concretes/corrector-manager.h \
     gui/tray/system-tray-icon.h \
-    core/correctors/concretes/flickr-effect-corrector.h
+    core/correctors/concretes/flickr-effect-corrector.h \
+    core/functionals/lambda-thread.h \
+    core/receivers/concretes/uart-receiver.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \

@@ -17,8 +17,6 @@ namespace Widget {
 class DeviceSymulationWidget
 	: public QWidget,
 	  public Receiver::Abstract::AbstractReceiver {
-
-	Q_OBJECT
 public:
 	explicit DeviceSymulationWidget(QWidget *parent = 0);
 	virtual ~DeviceSymulationWidget();

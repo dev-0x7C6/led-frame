@@ -1,4 +1,4 @@
-#include <core/receivers/concretes/device-thread.h>
+#include <core/receivers/concretes/uart-receiver.h>
 #include <core/emitters/factories/emitter-factory.h>
 #include <gui/widgets/device-symulation-widget.h>
 #include <gui/wizards/device-setup-general-test.h>

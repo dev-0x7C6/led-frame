@@ -16,14 +16,14 @@ class DevicePort;
 namespace Receiver {
 namespace Concrete {
 
-class DeviceReceiver;
+class UartReceiver;
 
 namespace Manager {
 
-class ReceiverManager : public QObject, public Receiver::Abstract::AbstractReceiverManager {
+class ReceiverManager : public Receiver::Abstract::AbstractReceiverManager {
 	Q_OBJECT
 public:
-	explicit ReceiverManager(QObject *parent = nullptr);
+	explicit ReceiverManager();
 	virtual ~ReceiverManager();
 
 	void setRegisterDeviceCallback(const std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> &callback);

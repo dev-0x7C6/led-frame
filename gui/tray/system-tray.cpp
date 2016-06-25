@@ -44,25 +44,13 @@ SystemTray::SystemTray(QObject *parent)
 SystemTray::~SystemTray() {
 }
 
-void SystemTray::attached(const std::shared_ptr<IEmitter> &emitter) {
-	m_deviceMenu.attached(emitter);
-}
+void SystemTray::attached(const std::shared_ptr<IEmitter> &emitter) { m_deviceMenu.attached(emitter); }
+void SystemTray::detached(const std::shared_ptr<IEmitter> &emitter) { m_deviceMenu.detached(emitter); }
+void SystemTray::modified(const std::shared_ptr<IEmitter> &emitter) { m_deviceMenu.modified(emitter); }
 
-void SystemTray::detached(const std::shared_ptr<IEmitter> &emitter) {
-	m_deviceMenu.detached(emitter);
-}
-
-void SystemTray::attached(Receiver::Interface::IReceiver *receiver) {
-	m_deviceMenu.attached(receiver);
-}
-
-void SystemTray::detached(Receiver::Interface::IReceiver *receiver) {
-	m_deviceMenu.detached(receiver);
-}
-
-void SystemTray::modified(IReceiver *receiver) {
-	m_deviceMenu.modified(receiver);
-}
+void SystemTray::attached(IReceiver *receiver) { m_deviceMenu.attached(receiver); }
+void SystemTray::detached(IReceiver *receiver) { m_deviceMenu.detached(receiver); }
+void SystemTray::modified(IReceiver *receiver) { m_deviceMenu.modified(receiver); }
 
 void SystemTray::setBrightness(float brightness) {
 	m_brightnessAction->setText(tr("Brightness: %1%").arg(QString::number(std::min(100, static_cast<int>(brightness * 100)))));

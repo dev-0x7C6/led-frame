@@ -1,5 +1,7 @@
 #pragma once
 
+#include <core/interfaces/inotification-callback.h>
+
 #include <memory>
 #include <list>
 
@@ -9,7 +11,7 @@ namespace Interface {
 class IReceiver;
 class IReceiverNotify;
 
-class IReceiverManager {
+class IReceiverManager : public ::Interface::INotificationCallback {
 public:
 	explicit IReceiverManager() = default;
 	virtual ~IReceiverManager() = default;
