@@ -10,6 +10,7 @@ namespace Concrete {
 class ImageEmitter final : public Abstract::AbstractEmitter {
 public:
 	explicit ImageEmitter();
+	explicit ImageEmitter(const QString &filePath);
 	virtual ~ImageEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;
@@ -17,7 +18,7 @@ public:
 
 	QRect fragment(int w, int h, const uint32_t &index);
 
-	void loadFromFile(const QString &path);
+	bool loadFromFile(const QString &filePath);
 
 protected:
 	virtual void onConnect(const uint32_t &count) override;
@@ -25,6 +26,7 @@ protected:
 
 private:
 	QImage m_image;
+	QString m_filePath;
 };
 }
 }

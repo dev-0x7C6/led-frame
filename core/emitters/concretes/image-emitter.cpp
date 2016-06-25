@@ -3,12 +3,17 @@
 
 #include <algorithm>
 
+#include <QFile>
+
 using namespace Container;
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-ImageEmitter::ImageEmitter() {
-	loadFromFile("/home/dev/test.jpg");
+ImageEmitter::ImageEmitter() : ImageEmitter("/home/dev/test.jpg") {}
+
+ImageEmitter::ImageEmitter(const QString &filePath)
+{
+	loadFromFile(filePath);
 }
 
 Enum::EmitterType ImageEmitter::type() const {
@@ -20,7 +25,7 @@ QJsonObject ImageEmitter::parameters() const {
 		{"name", name()},
 		{"type", static_cast<int>(type())},
 		{"description", description(type())},
-		{"parameters", "file://path"}};
+		{"parameters", m_filePath}};
 }
 
 QRect ImageEmitter::fragment(int w, int h, const uint32_t &index) {
@@ -47,8 +52,12 @@ QRect ImageEmitter::fragment(int w, int h, const uint32_t &index) {
 	return {};
 }
 
-void ImageEmitter::loadFromFile(const QString &path) {
-	m_image = QImage(path);
+bool ImageEmitter::loadFromFile(const QString &filePath) {
+	if (!QFile::exists(filePath))
+		return false;
+
+	m_filePath = filePath;
+	m_image = QImage(filePath);
 	Container::ColorScanlineContainer scanline;
 	uint32_t *colors = scanline.data();
 
@@ -78,6 +87,7 @@ void ImageEmitter::loadFromFile(const QString &path) {
 	}
 
 	commit(scanline);
+	return false;
 }
 
 void ImageEmitter::onConnect(const uint32_t &) {
