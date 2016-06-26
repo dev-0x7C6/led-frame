@@ -17,6 +17,7 @@ class IReceiver;
 namespace Emitter {
 namespace Interface {
 
+//TODO: We need internal id implementation for IEmitter
 class IEmitter : public ::Interface::INotificationCallback {
 public:
 	explicit IEmitter() = default;

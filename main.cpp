@@ -130,6 +130,8 @@ int main(int argc, char *argv[]) {
 		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &emitterManager, &receiverManager, &correctorManager](QWebSocket *socket) {
 			auto connection = new Network::WebSocket(socket, &webSocketServer);
 			emitterManager.attach(connection);
+			receiverManager.attach(connection);
+			correctorManager.attach(connection);
 
 			auto broadcastGlobalCorrection = [connection, &brightnessCorrector, &rgbCorrector]() {
 				auto jsonCommand = QJsonObject{

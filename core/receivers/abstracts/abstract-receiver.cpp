@@ -16,6 +16,12 @@ AbstractReceiver::~AbstractReceiver() {
 	disconnectEmitter();
 }
 
+QJsonObject AbstractReceiver::parameters() const {
+	return {
+		{"name", name()},
+		{"connected", isEmitterConnected() ? emitterName() : ""}};
+}
+
 void AbstractReceiver::disconnectEmitter() {
 	if (m_emitter) m_emitter->disconnect();
 }
@@ -31,7 +37,7 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::
 		m_emitter->connect();
 }
 
-bool AbstractReceiver::isEmitterConnected() {
+bool AbstractReceiver::isEmitterConnected() const {
 	return (m_emitter != nullptr);
 }
 
@@ -66,4 +72,8 @@ const Container::ColorScanlineContainer &AbstractReceiver::constData() {
 
 	m_data = m_emitter->data();
 	return m_data;
+}
+
+QString AbstractReceiver::emitterName() const {
+	return m_emitter->name();
 }

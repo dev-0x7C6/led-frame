@@ -11,9 +11,10 @@ public:
 	explicit AbstractReceiver();
 	virtual ~AbstractReceiver();
 
+	virtual QJsonObject parameters() const override;
 	virtual void disconnectEmitter() override;
 	virtual void connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
-	virtual bool isEmitterConnected() override;
+	virtual bool isEmitterConnected() const override;
 	virtual const std::shared_ptr<Emitter::Interface::IEmitter> &connectedEmitter() const override;
 
 	virtual QString name() const override;
@@ -24,6 +25,7 @@ public:
 protected:
 	Container::ColorScanlineContainer &data();
 	const Container::ColorScanlineContainer &constData();
+	QString emitterName() const;
 
 private:
 	Container::ColorScanlineContainer m_data;

@@ -7,6 +7,7 @@
 namespace Corrector {
 namespace Interface {
 
+//TODO: We need internal id implementation for ICorrector
 class ICorrector : public ::Interface::INotificationCallback {
 public:
 	explicit ICorrector() = default;

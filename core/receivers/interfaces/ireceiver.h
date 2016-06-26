@@ -24,6 +24,7 @@ class CorrectorManager;
 namespace Receiver {
 namespace Interface {
 
+//TODO: We need internal id implementation for IReceiver
 class IReceiver : public ::Interface::INotificationCallback {
 public:
 	explicit IReceiver() = default;
@@ -31,10 +32,11 @@ public:
 
 	virtual QString name() const = 0;
 	virtual Enum::ReceiverType type() const = 0;
+	virtual QJsonObject parameters() const = 0;
 
 	virtual void disconnectEmitter() = 0;
 	virtual void connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) = 0;
-	virtual bool isEmitterConnected() = 0;
+	virtual bool isEmitterConnected() const = 0;
 
 	virtual const std::shared_ptr<Emitter::Interface::IEmitter> &connectedEmitter() const = 0;
 
