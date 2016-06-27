@@ -3,6 +3,7 @@
 
 #ifdef X11
 #include <core/functionals/captures/x11-screen-capture.h>
+#include <core/functionals/captures/x11-shm-screen-capture.h>
 #endif
 
 using namespace Enum;
@@ -15,9 +16,10 @@ std::unique_ptr<IScreenCapture> ScreenCaptureFactory::create(const ScreenCapture
 		case ScreenCaptureType::QtScreenCapture:
 			return std::make_unique<QtScreenCapture>();
 #ifdef X11
-
 		case ScreenCaptureType::X11ScreenCapture:
 			return std::make_unique<X11ScreenCapture>();
+		case ScreenCaptureType::X11ShmScreenCapture:
+			return std::make_unique<X11ShmScreenCapture>();
 #endif
 	}
 

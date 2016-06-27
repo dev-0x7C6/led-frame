@@ -6,6 +6,7 @@ enum class ScreenCaptureType {
 	QtScreenCapture,
 #ifdef X11
 	X11ScreenCapture,
+	X11ShmScreenCapture,
 #endif
 };
 }

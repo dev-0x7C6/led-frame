@@ -91,11 +91,11 @@ void ScreenEmitter::run() {
 	Container::ColorScanlineContainer scanline;
 	uint32_t *colors = scanline.data();
 	constexpr int step = 16;
-	//#ifdef X11
-	//auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ScreenCapture);
-	//#else
+#ifdef X11
+	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ScreenCapture);
+#else
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
-	//#endif
+#endif
 	auto screen = QGuiApplication::screens().first()->size();
 	m_width = screen.width();
 	m_height = screen.height();
@@ -117,9 +117,9 @@ void ScreenEmitter::run() {
 				const auto x = area.x() + (j % area.width());
 				const auto y = area.y() + (j / area.width());
 				const auto p = x + (y * w);
-				r += static_cast<uint8_t>(data[p] >> 0x10);
-				g += static_cast<uint8_t>(data[p] >> 0x08);
-				b += static_cast<uint8_t>(data[p] >> 0x00);
+				r += (data[p] >> 0x10) & 0xffu;
+				b += (data[p] >> 0x00) & 0xffu;
+				g += (data[p] >> 0x08) & 0xffu;
 			}
 
 			c /= step;
