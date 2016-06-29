@@ -50,6 +50,10 @@ void UartReceiver::run() {
 	Container::ColorScanlineContainer next;
 	Container::ColorScanlineContainer output;
 
+	prev.fill(0);
+	diff.fill(0);
+	next.fill(0);
+
 	uint32_t frameCounter = 0;
 	while (!m_interrupt && m_device->error() == 0 &&
 		m_device->isDataTerminalReady()) {
