@@ -20,6 +20,7 @@ public:
 
 	inline uint32_t *data(const Enum::Position &position);
 	inline uint32_t *data();
+	inline const uint32_t *constData() const;
 
 	static Enum::Position fromIndexToPosition(const uint32_t &index);
 
@@ -27,7 +28,11 @@ public:
 	void fill(const uint32_t &color);
 	void rotate(const uint32_t &color);
 
-	ColorScanlineContainer &operator=(const ColorScanlineContainer &other);
+	static void interpolate(const ColorScanlineContainer &start, const ColorScanlineContainer &end, double progress, ColorScanlineContainer &out);
+
+	inline ColorScanlineContainer &operator=(const ColorScanlineContainer &other);
+	inline bool operator==(const ColorScanlineContainer &other);
+	inline bool operator!=(const ColorScanlineContainer &other);
 
 private:
 	std::array<uint32_t, scanline_size> m_data;
@@ -39,5 +44,22 @@ uint32_t *ColorScanlineContainer::data(const Enum::Position &position) {
 
 uint32_t *ColorScanlineContainer::data() {
 	return m_data.data();
+}
+
+const uint32_t *ColorScanlineContainer::constData() const {
+	return m_data.data();
+}
+
+ColorScanlineContainer &ColorScanlineContainer::operator=(const ColorScanlineContainer &other) {
+	m_data = other.m_data;
+	return *this;
+}
+
+bool ColorScanlineContainer::operator==(const ColorScanlineContainer &other) {
+	return m_data == other.m_data;
+}
+
+bool ColorScanlineContainer::operator!=(const ColorScanlineContainer &other) {
+	return !operator==(other);
 }
 }

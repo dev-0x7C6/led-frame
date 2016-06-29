@@ -12,10 +12,10 @@ public:
 	virtual ~QtScreenCapture() = default;
 
 	virtual Enum::ScreenCaptureType type() const override;
-	virtual uint32_t width() override;
-	virtual uint32_t height() override;
+	virtual int32_t width() override;
+	virtual int32_t height() override;
 
-	virtual void capture(int x, int y, int w, int h) override;
+	virtual bool capture() override;
 	virtual const uint32_t *data() override;
 
 private:

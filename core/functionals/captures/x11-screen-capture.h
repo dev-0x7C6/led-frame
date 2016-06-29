@@ -1,9 +1,13 @@
 #pragma once
 
 #include <core/interfaces/iscreen-capture.h>
+#include <memory>
 
-#include "X11/Xlib.h"
-#include "X11/Xutil.h"
+namespace Functional {
+namespace Helper {
+class X11Helper;
+}
+}
 
 namespace Functional {
 namespace Capture {
@@ -14,15 +18,13 @@ public:
 	virtual ~X11ScreenCapture();
 
 	virtual Enum::ScreenCaptureType type() const override;
-	virtual uint32_t width() override;
-	virtual uint32_t height() override;
-	virtual void capture(int x, int y, int w, int h) override;
+	virtual int32_t width() override;
+	virtual int32_t height() override;
+	virtual bool capture() override;
 	virtual const uint32_t *data() override;
 
 private:
-	Display *m_display;
-	Window m_root;
-	XImage *m_frame;
+	std::unique_ptr<Functional::Helper::X11Helper> m_helper;
 };
 }
 }

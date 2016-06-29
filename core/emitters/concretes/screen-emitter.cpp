@@ -92,7 +92,7 @@ void ScreenEmitter::run() {
 	uint32_t *colors = scanline.data();
 	constexpr int step = 16;
 #ifdef X11
-	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ScreenCapture);
+	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
 #else
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
 #endif
@@ -101,7 +101,8 @@ void ScreenEmitter::run() {
 	m_height = screen.height();
 
 	do {
-		sc->capture(0, 0, screen.width(), screen.height());
+		//FIXME: this code should set geometry
+		sc->capture();
 		const uint32_t *data = sc->data();
 		const auto w = sc->width();
 		const auto h = sc->height();
@@ -133,6 +134,6 @@ void ScreenEmitter::run() {
 		}
 
 		commit(scanline);
-		loop.wait(30);
+		loop.wait(framerate());
 	} while (!m_interrupted);
 }

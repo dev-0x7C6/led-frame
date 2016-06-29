@@ -6,6 +6,7 @@
 #include <core/functionals/color-stream.h>
 #include <core/functionals/loop-sync.h>
 #include <core/receivers/concretes/uart-receiver.h>
+#include <core/emitters/interfaces/iemitter.h>
 
 #include <QElapsedTimer>
 #include <algorithm>
@@ -43,8 +44,13 @@ void UartReceiver::run() {
 		m_device->config().ribbon(1),
 		m_device->config().ribbon(2),
 		m_device->config().ribbon(3)};
-	Container::ColorScanlineContainer source;
 
+	Container::ColorScanlineContainer prev;
+	Container::ColorScanlineContainer diff;
+	Container::ColorScanlineContainer next;
+	Container::ColorScanlineContainer output;
+
+	uint32_t frameCounter = 0;
 	while (!m_interrupt && m_device->error() == 0 &&
 		m_device->isDataTerminalReady()) {
 		if (!isEmitterConnected()) {
@@ -52,7 +58,23 @@ void UartReceiver::run() {
 			continue;
 		}
 
-		source = data();
+		auto emitterFrameRate = connectedEmitter()->framerate();
+
+		if (emitterFrameRate != 0) {
+			next = data();
+			frameCounter++;
+
+			if (next != diff) {
+				prev = diff;
+				diff = next;
+				frameCounter = 0;
+			}
+
+			auto fateFactor = static_cast<double>(framerate()) / static_cast<double>(emitterFrameRate);
+			Container::ColorScanlineContainer::interpolate(prev, next, std::min(1.0, double(frameCounter) / fateFactor), output);
+		} else {
+			output = data();
+		}
 
 		correctorManager()->push();
 
@@ -61,7 +83,7 @@ void UartReceiver::run() {
 
 			for (int i = 0; i < config.count(); ++i) {
 				auto index = std::min(static_cast<int>(scanline_line - 1), static_cast<int>(i * step));
-				auto color = source.data(config.position())[index];
+				auto color = output.data(config.position())[index];
 				stream.insert(config.colorFormat(), correctorManager()->execute(color));
 			}
 		}
@@ -70,7 +92,7 @@ void UartReceiver::run() {
 
 		stream.write(*m_device);
 		m_device->waitForBytesWritten(-1);
-		sync.wait(90);
+		sync.wait(framerate());
 	};
 
 	if (m_device->isOpen() && m_device->isWritable())

@@ -33,6 +33,7 @@ public:
 	virtual QString name() const = 0;
 	virtual Enum::ReceiverType type() const = 0;
 	virtual QJsonObject parameters() const = 0;
+	virtual uint32_t framerate() const { return 60; }
 
 	virtual void disconnectEmitter() = 0;
 	virtual void connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) = 0;

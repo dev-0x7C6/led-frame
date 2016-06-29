@@ -11,16 +11,17 @@ ScreenCaptureType QtScreenCapture::type() const {
 	return ScreenCaptureType::QtScreenCapture;
 }
 
-uint32_t QtScreenCapture::width() {
+int32_t QtScreenCapture::width() {
 	return m_frame.width();
 }
 
-uint32_t QtScreenCapture::height() {
+int32_t QtScreenCapture::height() {
 	return m_frame.height();
 }
 
-void QtScreenCapture::capture(int x, int y, int w, int h) {
-	m_frame = QGuiApplication::screens().first()->grabWindow(0, x, y, w, h).toImage();
+bool QtScreenCapture::capture() {
+	m_frame = QGuiApplication::screens().first()->grabWindow(0).toImage();
+	return !m_frame.isNull();
 }
 
 const uint32_t *QtScreenCapture::data() {

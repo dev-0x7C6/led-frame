@@ -1,42 +1,24 @@
 #include <core/functionals/captures/x11-screen-capture.h>
 
+#include <QGuiApplication>
+#include <QPixmap>
+#include <QScreen>
+
+#include <core/functionals/captures/x11-helper.h>
+
 using namespace Enum;
 using namespace Functional::Capture;
+using namespace Functional::Helper;
 
-X11ScreenCapture::X11ScreenCapture()
-		: m_frame(nullptr)
+X11ScreenCapture::X11ScreenCapture() : m_helper(std::make_unique<X11Helper>()) {}
+X11ScreenCapture::~X11ScreenCapture() {}
 
-{
-	m_display = XOpenDisplay(nullptr);
-	m_root = DefaultRootWindow(m_display);
-}
+ScreenCaptureType X11ScreenCapture::type() const { return ScreenCaptureType::X11ScreenCapture; }
+int32_t X11ScreenCapture::width() { return m_helper->width(); }
+int32_t X11ScreenCapture::height() { return m_helper->height(); }
+const uint32_t *X11ScreenCapture::data() { return m_helper->data(); }
 
-X11ScreenCapture::~X11ScreenCapture() {
-	if (m_frame)
-		XDestroyImage(m_frame);
+// FIXME: X11ScreenCapture capture hardcoded for 1920x1080
 
-	XCloseDisplay(m_display);
-}
+bool X11ScreenCapture::capture() { return m_helper->capture(0, 0, 1920, 1080); }
 
-ScreenCaptureType X11ScreenCapture::type() const {
-	return ScreenCaptureType::X11ScreenCapture;
-}
-
-uint32_t X11ScreenCapture::width() {
-	return m_frame->width;
-}
-
-uint32_t X11ScreenCapture::height() {
-	return m_frame->height;
-}
-
-void X11ScreenCapture::capture(int x, int y, int w, int h) {
-	if (m_frame)
-		XDestroyImage(m_frame);
-
-	m_frame = XGetImage(m_display, m_root, x, y, w, h, AllPlanes, ZPixmap);
-}
-
-const uint32_t *X11ScreenCapture::data() {
-	return reinterpret_cast<const uint32_t *>(m_frame->data);
-}

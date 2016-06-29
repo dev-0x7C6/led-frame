@@ -8,7 +8,7 @@ enum class CorrectorType {
 	ColorEnhancer,
 	Brightness,
 	RGBChannel,
-	FlickrEffect
+	FlickrEffect,
 };
 
 inline QString name(const CorrectorType &type) {

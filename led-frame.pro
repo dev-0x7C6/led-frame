@@ -17,10 +17,17 @@ CONFIG += console
 include(cflags.pri)
 
 unix {
-        DEFINES += X11
-        LIBS += -lX11 -lXext
-	SOURCES += core/functionals/captures/x11-screen-capture.cpp
-	HEADERS += core/functionals/captures/x11-screen-capture.h
+	DEFINES += X11
+	LIBS += -lX11 -lXext
+	SOURCES += core/functionals/captures/x11-screen-capture.cpp \
+		core/functionals/captures/x11-shm-screen-capture.cpp \
+		core/functionals/captures/x11-helper.cpp \
+		core/functionals/helper/x11-shm-helper.cpp
+
+	HEADERS += core/functionals/captures/x11-screen-capture.h \
+		core/functionals/captures/x11-shm-screen-capture.h \
+		core/functionals/captures/x11-helper.h \
+		core/functionals/helper/x11-shm-helper.h
 }
 
 
@@ -77,8 +84,7 @@ SOURCES += \
     core/correctors/concretes/flickr-effect-corrector.cpp \
     core/functionals/lambda-thread.cpp \
     core/receivers/concretes/uart-receiver.cpp \
-    core/functionals/debug-notification.cpp \
-    core/functionals/captures/x11-shm-screen-capture.cpp
+	core/functionals/debug-notification.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -152,8 +158,7 @@ HEADERS += \
     core/correctors/concretes/flickr-effect-corrector.h \
     core/functionals/lambda-thread.h \
     core/receivers/concretes/uart-receiver.h \
-    core/functionals/debug-notification.h \
-    core/functionals/captures/x11-shm-screen-capture.h
+	core/functionals/debug-notification.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \

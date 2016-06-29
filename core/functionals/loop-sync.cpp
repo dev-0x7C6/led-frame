@@ -10,7 +10,7 @@ LoopSync::LoopSync()
 	m_elapsed.start();
 }
 
-quint64 LoopSync::wait(int hz) {
+quint64 LoopSync::wait(uint32_t hz) {
 	m_runtime = m_elapsed.elapsed();
 	m_alltime += m_runtime;
 	m_elapsed.restart();

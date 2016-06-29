@@ -22,7 +22,6 @@ protected:
 
 private:
 	uint8_t m_currentStep;
-	uint8_t m_maxStep;
 };
 }
 }

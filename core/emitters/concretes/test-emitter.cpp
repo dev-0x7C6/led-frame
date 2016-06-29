@@ -8,7 +8,6 @@ using namespace Enum;
 
 TestEmitter::TestEmitter()
 		: m_currentStep(0)
-		, m_maxStep(19)
 
 {
 	startTimer(750);
@@ -24,9 +23,6 @@ QJsonObject TestEmitter::parameters() const {
 }
 
 void TestEmitter::timerEvent(QTimerEvent *) {
-	if (m_currentStep == m_maxStep)
-		m_currentStep = 0;
-
 	Container::ColorScanlineContainer scanline;
 	scanline.fill(0);
 
@@ -105,6 +101,10 @@ void TestEmitter::timerEvent(QTimerEvent *) {
 
 		case 18:
 			scanline.fill(qRgb(0xff, 0xff, 0xff));
+			break;
+
+		default:
+			m_currentStep = 0;
 			break;
 	}
 

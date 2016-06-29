@@ -9,7 +9,7 @@ public:
 	explicit LoopSync();
 	virtual ~LoopSync() = default;
 
-	quint64 wait(int hz = 100);
+	quint64 wait(uint32_t hz = 100);
 	quint64 loopCount();
 
 private:

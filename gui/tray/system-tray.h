@@ -37,7 +37,6 @@ private:
 	std::function<void()> m_closeRequestCallback;
 
 	QAction *m_brightnessAction;
-	QAction *m_devices;
 	Menu::DeviceMenu m_deviceMenu;
 };
 }
