@@ -21,8 +21,7 @@ void ColorScanlineContainer::rotate(const uint32_t &color) {
 	m_data[scanline_size - 1] = color;
 }
 
-void ColorScanlineContainer::interpolate(const ColorScanlineContainer &start, const ColorScanlineContainer &end, double p, ColorScanlineContainer &out)
-{
+void ColorScanlineContainer::interpolate(const ColorScanlineContainer &start, const ColorScanlineContainer &end, double p, ColorScanlineContainer &out) {
 	for (size_t i = 0; i < scanline_size - 1; ++i) {
 		const uint32_t sc = start.constData()[i];
 		const uint32_t ec = end.constData()[i];

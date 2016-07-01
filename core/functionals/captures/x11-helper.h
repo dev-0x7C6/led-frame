@@ -12,9 +12,7 @@ public:
 	explicit X11Helper();
 	virtual ~X11Helper();
 
-	bool capture(int x, int y, int w, int h);
-	int32_t width() const;
-	int32_t height() const;
+	bool capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h);
 	const uint32_t *data();
 
 private:

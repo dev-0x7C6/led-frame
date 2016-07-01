@@ -16,19 +16,37 @@ using namespace Container;
 ScreenEmitter::ScreenEmitter()
 		: QThread(nullptr)
 		, Abstract::AbstractEmitter()
-		, m_width(0)
-		, m_height(0)
 		, m_interrupted(false)
+		, m_x(0)
+		, m_y(0)
+		, m_w(0)
+		, m_h(0)
 
 {
-	auto screen = QGuiApplication::screens().first()->size();
-	m_width = screen.width();
-	m_height = screen.height();
+	setCaptureArea(0);
 }
 
 ScreenEmitter::~ScreenEmitter() {
 	interrupt();
 	wait();
+}
+
+bool ScreenEmitter::setCaptureArea(const int screen) {
+	auto screens = QGuiApplication::screens();
+	if (screens.size() <= screen)
+		return false;
+
+	auto geometry = QGuiApplication::screens().at(screen)->geometry();
+
+	if (geometry.isValid()) {
+		m_x = geometry.x();
+		m_y = geometry.y();
+		m_w = geometry.width();
+		m_h = geometry.height();
+		return true;
+	}
+
+	return false;
 }
 
 EmitterType ScreenEmitter::type() const {
@@ -40,7 +58,7 @@ QJsonObject ScreenEmitter::parameters() const {
 		{"name", name()},
 		{"type", static_cast<int>(type())},
 		{"description", description(type())},
-		{"parameters", QString::number(m_width) + "x" + QString::number(m_height)}};
+		{"parameters", QString::number(m_w) + "x" + QString::number(m_h)}};
 }
 
 void ScreenEmitter::onConnect(const uint32_t &count) {
@@ -96,16 +114,14 @@ void ScreenEmitter::run() {
 #else
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
 #endif
-	auto screen = QGuiApplication::screens().first()->size();
-	m_width = screen.width();
-	m_height = screen.height();
-
 	do {
-		//FIXME: this code should set geometry
-		sc->capture();
+		const int32_t x = m_x;
+		const int32_t y = m_y;
+		const int32_t w = m_w;
+		const int32_t h = m_h;
+
+		sc->capture(x, y, w, h);
 		const uint32_t *data = sc->data();
-		const auto w = sc->width();
-		const auto h = sc->height();
 
 		for (uint32_t i = 0; i < scanline_size; ++i) {
 			QRect area = fragment(w, h, i);

@@ -13,6 +13,8 @@ public:
 	explicit ScreenEmitter();
 	virtual ~ScreenEmitter();
 
+	bool setCaptureArea(const int screen);
+
 	virtual Enum::EmitterType type() const override;
 	virtual QJsonObject parameters() const override;
 
@@ -27,9 +29,11 @@ private:
 	QRect fragment(int w, int h, const uint32_t &index);
 
 private:
-	std::atomic<int> m_width;
-	std::atomic<int> m_height;
 	std::atomic_bool m_interrupted;
+	std::atomic<int32_t> m_x;
+	std::atomic<int32_t> m_y;
+	std::atomic<int32_t> m_w;
+	std::atomic<int32_t> m_h;
 };
 }
 }

@@ -8,16 +8,13 @@ X11Helper::X11Helper()
 
 X11Helper::~X11Helper() { destroyFrame(); }
 
-bool X11Helper::capture(int x, int y, int w, int h) {
+bool X11Helper::capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h) {
 	destroyFrame();
 	m_frame = XGetImage(m_display, m_window, x, y, w, h, AllPlanes, ZPixmap);
 	return m_frame != nullptr;
 }
 
-int32_t X11Helper::width() const { return m_frame->width; }
-int32_t X11Helper::height() const { return m_frame->height; }
-
-const uint32_t *X11Helper::data() { return reinterpret_cast<uint32_t*>(m_frame->data); }
+const uint32_t *X11Helper::data() { return reinterpret_cast<uint32_t *>(m_frame->data); }
 
 void X11Helper::destroyFrame() {
 	if (m_frame)
