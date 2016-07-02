@@ -9,6 +9,7 @@ namespace Abstract {
 class AbstractCorrector : public Corrector::Interface::ICorrector {
 public:
 	explicit AbstractCorrector(float factor);
+	explicit AbstractCorrector(float factor, uint32_t priority);
 	explicit AbstractCorrector();
 	virtual ~AbstractCorrector() = default;
 

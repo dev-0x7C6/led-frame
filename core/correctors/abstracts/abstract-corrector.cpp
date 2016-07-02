@@ -12,6 +12,11 @@ AbstractCorrector::AbstractCorrector(float factor)
 	m_factor = factor;
 }
 
+AbstractCorrector::AbstractCorrector(float factor, uint32_t priority)
+		: AbstractCorrector(factor) {
+	m_priority = priority;
+}
+
 bool AbstractCorrector::enabled() const { return m_enabled; }
 float AbstractCorrector::factor() const { return m_factor; }
 uint32_t AbstractCorrector::priority() const { return m_priority; }
