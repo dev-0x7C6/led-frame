@@ -136,10 +136,10 @@ int main(int argc, char *argv[]) {
 			auto broadcastGlobalCorrection = [connection, &brightnessCorrector, &rgbCorrector]() {
 				auto jsonCommand = QJsonObject{
 					{"command", "set_global_correction"},
-					{"l", static_cast<double>(brightnessCorrector->factor())},
-					{"r", static_cast<double>(rgbCorrector->redFactor())},
-					{"g", static_cast<double>(rgbCorrector->greenFactor())},
-					{"b", static_cast<double>(rgbCorrector->blueFactor())},
+					{"l", brightnessCorrector->factor()},
+					{"r", rgbCorrector->redFactor()},
+					{"g", rgbCorrector->greenFactor()},
+					{"b", rgbCorrector->blueFactor()},
 				};
 				auto doc = QJsonDocument(jsonCommand);
 				connection->sendTextMessage(doc.toJson());
@@ -154,10 +154,10 @@ int main(int argc, char *argv[]) {
 					auto obj = json.object();
 
 					auto setGlobalCorrection = [&brightnessCorrector, &rgbCorrector](double l, double r, double g, double b) {
-						brightnessCorrector->setFactor(static_cast<float>(l));
-						rgbCorrector->setRedFactor(static_cast<float>(r));
-						rgbCorrector->setGreenFactor(static_cast<float>(g));
-						rgbCorrector->setBlueFactor(static_cast<float>(b));
+						brightnessCorrector->setFactor(l);
+						rgbCorrector->setRedFactor(r);
+						rgbCorrector->setGreenFactor(g);
+						rgbCorrector->setBlueFactor(b);
 					};
 
 					if (obj.value("command") == "set_correction")

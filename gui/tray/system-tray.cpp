@@ -52,7 +52,7 @@ void SystemTray::attached(IReceiver *receiver) { m_deviceMenu.attached(receiver)
 void SystemTray::detached(IReceiver *receiver) { m_deviceMenu.detached(receiver); }
 void SystemTray::modified(IReceiver *receiver) { m_deviceMenu.modified(receiver); }
 
-void SystemTray::setBrightness(float brightness) {
+void SystemTray::setBrightness(double brightness) {
 	m_brightnessAction->setText(tr("Brightness: %1%").arg(QString::number(std::min(100, static_cast<int>(brightness * 100)))));
 	setIcon(SystemTrayIcon::generate(brightness));
 }

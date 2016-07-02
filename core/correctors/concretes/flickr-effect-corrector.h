@@ -10,7 +10,7 @@ public:
 	explicit FlickrEffectCorrector();
 	virtual ~FlickrEffectCorrector() = default;
 
-	virtual Enum::CorrectorType type() override;
+	virtual Enum::CorrectorType type() const override;
 	virtual uint32_t correct(uint32_t color) override;
 	virtual void push() override;
 	virtual void pop() override;

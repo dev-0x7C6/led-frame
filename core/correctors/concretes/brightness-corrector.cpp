@@ -7,15 +7,13 @@ BrightnessCorrector::BrightnessCorrector()
 		: Abstract::AbstractCorrector(0.5) {
 }
 
-CorrectorType BrightnessCorrector::type() {
-	return CorrectorType::Brightness;
-}
+CorrectorType BrightnessCorrector::type() const { return CorrectorType::Brightness; }
 
 uint32_t BrightnessCorrector::correct(uint32_t color) {
 	auto r = static_cast<uint32_t>((color >> 0x10) & 0xffu);
 	auto g = static_cast<uint32_t>((color >> 0x08) & 0xffu);
 	auto b = static_cast<uint32_t>((color >> 0x00) & 0xffu);
-	const float brightness = factor();
+	const double brightness = factor();
 	r *= brightness;
 	g *= brightness;
 	b *= brightness;

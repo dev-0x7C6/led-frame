@@ -10,21 +10,21 @@ public:
 	explicit RGBChannelCorrector();
 	virtual ~RGBChannelCorrector() = default;
 
-	virtual Enum::CorrectorType type() override;
+	virtual Enum::CorrectorType type() const override;
 	virtual uint32_t correct(uint32_t color) override;
 
-	float redFactor() const;
-	float greenFactor() const;
-	float blueFactor() const;
+	double redFactor() const;
+	double greenFactor() const;
+	double blueFactor() const;
 
-	void setRedFactor(float factor);
-	void setGreenFactor(float factor);
-	void setBlueFactor(float factor);
+	void setRedFactor(double factor);
+	void setGreenFactor(double factor);
+	void setBlueFactor(double factor);
 
 private:
-	std::atomic<float> m_rfactor;
-	std::atomic<float> m_gfactor;
-	std::atomic<float> m_bfactor;
+	std::atomic<double> m_rfactor;
+	std::atomic<double> m_gfactor;
+	std::atomic<double> m_bfactor;
 };
 }
 }

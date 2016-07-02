@@ -8,9 +8,15 @@ using namespace Corrector::Interface;
 
 void AbstractCorrectorManager::attach(ICorrectorNotify *notify) {
 	m_notifiers.push_back(notify);
+
+	for (const auto &corrector : m_correctors)
+		notify->attached(corrector.get());
 }
 
 void AbstractCorrectorManager::detach(ICorrectorNotify *notify) {
+	for (const auto &corrector : m_correctors)
+		notify->detached(corrector.get());
+
 	m_notifiers.remove(notify);
 }
 

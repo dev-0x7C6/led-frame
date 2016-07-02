@@ -1,3 +1,4 @@
+#include <core/correctors/interfaces/icorrector.h>
 #include <core/emitters/interfaces/iemitter.h>
 #include <core/networking/web-socket.h>
 #include <core/receivers/interfaces/ireceiver.h>
@@ -6,8 +7,19 @@
 #include <QJsonObject>
 #include <QWebSocket>
 
-using namespace Network;
+using namespace Corrector::Interface;
+using namespace Emitter::Interface;
 using namespace Enum;
+using namespace Network;
+using namespace Receiver::Interface;
+
+template <typename type>
+void WebSocket::send(type *corrector, const QString &command) {
+	auto json = corrector->parameters();
+	json.insert("command", command);
+	auto doc = QJsonDocument(json);
+	sendTextMessage(doc.toJson());
+}
 
 WebSocket::WebSocket(QWebSocket *socket, QObject *parent)
 		: QObject(parent)
@@ -20,30 +32,12 @@ void WebSocket::sendTextMessage(const QString &message) {
 	m_webSocket->flush();
 }
 
-// TODO: WebSocket should react when corrector is attached, dettached or modified
-void WebSocket::attached(Corrector::Interface::ICorrector *corrector) { static_cast<void>(corrector); }
-void WebSocket::detached(Corrector::Interface::ICorrector *corrector) { static_cast<void>(corrector); }
-void WebSocket::modified(Corrector::Interface::ICorrector *corrector) { static_cast<void>(corrector); }
-
-void WebSocket::attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {
-	auto command = emitter->parameters();
-	command.insert("command", "emitter_attached");
-	auto doc = QJsonDocument(command);
-	m_webSocket->sendTextMessage(doc.toJson());
-	m_webSocket->flush();
-}
-
-// TODO: WebSocket should react when emitter is detached or modified
-void WebSocket::detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) { static_cast<void>(emitter); }
-void WebSocket::modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) { static_cast<void>(emitter); }
-
-// TODO: WebSocket should react when receiver is attached or dettached
-void WebSocket::attached(Receiver::Interface::IReceiver *receiver) { static_cast<void>(receiver); }
-void WebSocket::detached(Receiver::Interface::IReceiver *receiver) { static_cast<void>(receiver); }
-void WebSocket::modified(Receiver::Interface::IReceiver *receiver) {
-	auto command = receiver->parameters();
-	command.insert("command", "receiver_modified");
-	auto doc = QJsonDocument(command);
-	m_webSocket->sendTextMessage(doc.toJson());
-	m_webSocket->flush();
-}
+void WebSocket::attached(ICorrector *corrector) { send<std::remove_pointer<decltype(corrector)>::type>(corrector, "corrector_attached"); }
+void WebSocket::detached(ICorrector *corrector) { send<std::remove_pointer<decltype(corrector)>::type>(corrector, "corrector_detached"); }
+void WebSocket::modified(ICorrector *corrector) { send<std::remove_pointer<decltype(corrector)>::type>(corrector, "corrector_modified"); }
+void WebSocket::attached(const std::shared_ptr<IEmitter> &emitter) { send<std::remove_pointer<decltype(emitter.get())>::type>(emitter.get(), "emitter_attached"); }
+void WebSocket::detached(const std::shared_ptr<IEmitter> &emitter) { send<std::remove_pointer<decltype(emitter.get())>::type>(emitter.get(), "emitter_detached"); }
+void WebSocket::modified(const std::shared_ptr<IEmitter> &emitter) { send<std::remove_pointer<decltype(emitter.get())>::type>(emitter.get(), "emitter_modified"); }
+void WebSocket::attached(IReceiver *receiver) { send<std::remove_pointer<decltype(receiver)>::type>(receiver, "receiver_attached"); }
+void WebSocket::detached(IReceiver *receiver) { send<std::remove_pointer<decltype(receiver)>::type>(receiver, "receiver_detached"); }
+void WebSocket::modified(IReceiver *receiver) { send<std::remove_pointer<decltype(receiver)>::type>(receiver, "receiver_modified"); }

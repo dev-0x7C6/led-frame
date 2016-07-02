@@ -37,6 +37,10 @@ public:
 	virtual void modified(Receiver::Interface::IReceiver *receiver) override;
 
 private:
+	template <typename type>
+	void send(type *object, const QString &command);
+
+private:
 	QWebSocket *m_webSocket;
 
 signals:

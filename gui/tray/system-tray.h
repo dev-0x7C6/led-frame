@@ -27,7 +27,7 @@ public:
 	virtual void detached(Receiver::Interface::IReceiver *receiver) override;
 	virtual void modified(Receiver::Interface::IReceiver *receiver) override;
 
-	virtual void setBrightness(float brightness);
+	virtual void setBrightness(double brightness);
 
 	void setAboutRequestCallback(const std::function<void()> &aboutRequestCallback);
 	void setCloseRequestCallback(const std::function<void()> &closeRequestCallback);

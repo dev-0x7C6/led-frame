@@ -6,7 +6,7 @@ FlickrEffectCorrector::FlickrEffectCorrector() {
 	m_enabled = false;
 }
 
-Enum::CorrectorType FlickrEffectCorrector::type() { return Enum::CorrectorType::FlickrEffect; }
+Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::CorrectorType::FlickrEffect; }
 
 uint32_t FlickrEffectCorrector::correct(uint32_t color) { return (m_skip) ? 0 : color; }
 

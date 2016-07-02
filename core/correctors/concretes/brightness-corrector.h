@@ -10,7 +10,7 @@ public:
 	explicit BrightnessCorrector();
 	virtual ~BrightnessCorrector() = default;
 
-	virtual Enum::CorrectorType type() override;
+	virtual Enum::CorrectorType type() const override;
 	virtual uint32_t correct(uint32_t color) override;
 };
 }

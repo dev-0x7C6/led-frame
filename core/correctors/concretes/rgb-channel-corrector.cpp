@@ -9,9 +9,7 @@ RGBChannelCorrector::RGBChannelCorrector()
 		, m_bfactor(1.0) {
 }
 
-CorrectorType RGBChannelCorrector::type() {
-	return CorrectorType::RGBChannel;
-}
+CorrectorType RGBChannelCorrector::type() const { return CorrectorType::RGBChannel; }
 
 uint32_t RGBChannelCorrector::correct(uint32_t color) {
 	auto r = static_cast<uint32_t>((color >> 0x10) & 0xffu);
@@ -30,33 +28,33 @@ uint32_t RGBChannelCorrector::correct(uint32_t color) {
 	return color;
 }
 
-float RGBChannelCorrector::redFactor() const {
+double RGBChannelCorrector::redFactor() const {
 	return m_rfactor;
 }
 
-float RGBChannelCorrector::greenFactor() const {
+double RGBChannelCorrector::greenFactor() const {
 	return m_gfactor;
 }
 
-float RGBChannelCorrector::blueFactor() const {
+double RGBChannelCorrector::blueFactor() const {
 	return m_bfactor;
 }
 
-void RGBChannelCorrector::setRedFactor(float factor) {
+void RGBChannelCorrector::setRedFactor(double factor) {
 	if (m_rfactor != factor) {
 		m_rfactor = factor;
 		notify();
 	}
 }
 
-void RGBChannelCorrector::setGreenFactor(float factor) {
+void RGBChannelCorrector::setGreenFactor(double factor) {
 	if (m_gfactor != factor) {
 		m_gfactor = factor;
 		notify();
 	}
 }
 
-void RGBChannelCorrector::setBlueFactor(float factor) {
+void RGBChannelCorrector::setBlueFactor(double factor) {
 	if (m_bfactor != factor) {
 		m_bfactor = factor;
 		notify();
