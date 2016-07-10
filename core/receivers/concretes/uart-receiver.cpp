@@ -53,10 +53,10 @@ void UartReceiver::run() {
 	prev.fill(0);
 	diff.fill(0);
 	next.fill(0);
+	output.fill(0);
 
 	uint32_t frameCounter = 0;
-	while (!m_interrupt && m_device->error() == 0 &&
-		m_device->isDataTerminalReady()) {
+	while (!m_interrupt && m_device->error() == 0 && m_device->isDataTerminalReady()) {
 		if (!isEmitterConnected()) {
 			sync.wait(10);
 			continue;
@@ -65,7 +65,7 @@ void UartReceiver::run() {
 		auto emitterFrameRate = connectedEmitter()->framerate();
 
 		if (emitterFrameRate != 0) {
-			next = data();
+			next = scanline();
 			frameCounter++;
 
 			if (next != diff) {
@@ -77,7 +77,7 @@ void UartReceiver::run() {
 			auto fateFactor = static_cast<double>(framerate()) / static_cast<double>(emitterFrameRate);
 			Container::ColorScanlineContainer::interpolate(prev, next, std::min(1.0, double(frameCounter) / fateFactor), output);
 		} else {
-			output = data();
+			output = scanline();
 		}
 
 		correctorManager()->push();
@@ -95,8 +95,12 @@ void UartReceiver::run() {
 		correctorManager()->pop();
 
 		stream.write(*m_device);
-		m_device->waitForBytesWritten(-1);
+
+		m_device->flush();
 		sync.wait(framerate());
+
+		if (m_device->bytesToWrite())
+			m_device->waitForBytesWritten(-1);
 	};
 
 	if (m_device->isOpen() && m_device->isWritable())

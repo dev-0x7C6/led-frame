@@ -23,8 +23,7 @@ public:
 	virtual Corrector::Concrete::Manager::CorrectorManager *correctorManager() override;
 
 protected:
-	Container::ColorScanlineContainer &data();
-	const Container::ColorScanlineContainer &constData();
+	Container::ColorScanlineContainer scanline();
 	QString emitterName() const;
 
 private:

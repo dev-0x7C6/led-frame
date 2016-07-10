@@ -17,7 +17,7 @@ public:
 	virtual ~IReceiverManager() = default;
 
 	virtual void attach(IReceiverNotify *notify) = 0;
-	virtual void detach(IReceiverNotify *notify) = 0;
+	virtual void detach(IReceiverNotify * ) = 0;
 
 	virtual const std::list<std::unique_ptr<IReceiver>> &list() const = 0;
 

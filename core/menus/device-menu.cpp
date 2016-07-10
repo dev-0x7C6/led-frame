@@ -1,6 +1,6 @@
-#include <core/receivers/interfaces/ireceiver.h>
 #include <core/menus/device-menu.h>
 #include <core/menus/emitter-menu.h>
+#include <core/receivers/interfaces/ireceiver.h>
 
 #include <QAction>
 #include <QMenu>

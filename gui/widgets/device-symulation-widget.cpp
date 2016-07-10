@@ -205,7 +205,7 @@ void DeviceSymulationWidget::timerEvent(QTimerEvent *) {
 		return;
 
 	Container::DeviceConfigContainer cfg = config();
-	auto source = constData();
+	auto source = scanline();
 	uint32_t counter = 0;
 
 	for (uint8_t i = 0; i < 4; ++i) {

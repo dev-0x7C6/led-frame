@@ -58,21 +58,7 @@ Corrector::Concrete::Manager::CorrectorManager *AbstractReceiver::correctorManag
 	return m_correctorManager.get();
 }
 
-Container::ColorScanlineContainer &AbstractReceiver::data() {
-	if (m_emitter == nullptr)
-		return m_data;
-
-	m_data = m_emitter->data();
-	return m_data;
-}
-
-const Container::ColorScanlineContainer &AbstractReceiver::constData() {
-	if (m_emitter == nullptr)
-		return m_data;
-
-	m_data = m_emitter->data();
-	return m_data;
-}
+Container::ColorScanlineContainer AbstractReceiver::scanline() { return m_emitter->data(); }
 
 QString AbstractReceiver::emitterName() const {
 	return m_emitter->name();
