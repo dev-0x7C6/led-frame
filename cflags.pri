@@ -1,7 +1,7 @@
 QMAKE_CFLAGS += -Werror -Wall -std=c++17
 QMAKE_CXXFLAGS += -Werror -Wall -std=c++17
-QMAKE_CFLAGS_RELEASE += -march=native -Ofast -pipe -fomit-frame-pointer -ffast-math -std=c++17
-QMAKE_CXXFLAGS_RELEASE += -march=native -Ofast -pipe -fomit-frame-pointer -ffast-math -std=c++17
+QMAKE_CFLAGS_RELEASE += -march=native -O2 -pipe -fomit-frame-pointer -ffast-math -std=c++17
+QMAKE_CXXFLAGS_RELEASE += -march=native -O2 -pipe -fomit-frame-pointer -ffast-math -std=c++17
 QMAKE_CFLAGS_DEBUG += -O0 -ggdb3 -g3 -fno-omit-frame-pointer -std=c++17
 QMAKE_CXXFLAGS_DEBUG += -O0 -ggdb3 -g3 -fno-omit-frame-pointer -std=c++17
 QMAKE_RESOURCE_FLAGS += -threshold 0 -compress 9

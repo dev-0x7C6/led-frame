@@ -84,7 +84,8 @@ SOURCES += \
     core/correctors/concretes/flickr-effect-corrector.cpp \
     core/functionals/lambda-thread.cpp \
     core/receivers/concretes/uart-receiver.cpp \
-	core/functionals/debug-notification.cpp
+	core/functionals/debug-notification.cpp \
+    core/functionals/color-functions.cpp
 
 HEADERS += \
 	components/painters/wave-paint-engine.h \
@@ -158,7 +159,8 @@ HEADERS += \
     core/correctors/concretes/flickr-effect-corrector.h \
     core/functionals/lambda-thread.h \
     core/receivers/concretes/uart-receiver.h \
-	core/functionals/debug-notification.h
+	core/functionals/debug-notification.h \
+    core/functionals/color-functions.h
 
 FORMS += \
 	gui/dialogs/about-dialog.ui \
