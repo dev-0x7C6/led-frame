@@ -1,12 +1,16 @@
 #include <gui/tray/system-tray-icon.h>
 
+#include <QApplication>
 #include <QPainter>
+#include <QPalette>
 #include <QRadialGradient>
 
 using namespace Tray;
 
 QIcon SystemTrayIcon::generate(double opacity) {
-	QPixmap source(":/tray.png");
+	auto palette = QApplication::palette();
+	auto color = palette.color(QPalette::Base).toHsl();
+	QPixmap source((color.lightnessF() > 0.5) ? ":/tray.png" : ":/tray-white.png");
 	QPixmap sheet(22, 22);
 	sheet.fill(QColor::fromRgbF(0, 0, 0, 0));
 	QPainter painter(&sheet);

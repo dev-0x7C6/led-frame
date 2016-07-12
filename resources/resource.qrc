@@ -7,5 +7,6 @@
         <file>emitters/color-emitter.svg</file>
         <file>emitters/screen-emitter.png</file>
         <file>emitters/image-emitter.svg</file>
+        <file>tray-white.png</file>
     </qresource>
 </RCC>

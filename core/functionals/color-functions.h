@@ -9,5 +9,4 @@ public:
 	explicit ColorFunctions() = delete;
 	virtual ~ColorFunctions() = delete;
 };
-
 }
