@@ -4,8 +4,9 @@ using namespace Corrector::Abstract;
 
 static std::atomic<int> internalCorrectorId{0};
 
-AbstractCorrector::AbstractCorrector()
-		: m_id(internalCorrectorId++)
+AbstractCorrector::AbstractCorrector(const std::string &parent)
+		: Interface::ICorrector(parent)
+		, m_id(internalCorrectorId++)
 		, m_enabled(true)
 		, m_priority(10)
 		, m_factor(1.0) {
@@ -13,13 +14,13 @@ AbstractCorrector::AbstractCorrector()
 
 int AbstractCorrector::id() const { return m_id; }
 
-AbstractCorrector::AbstractCorrector(double factor)
-		: AbstractCorrector() {
+AbstractCorrector::AbstractCorrector(const std::string &parent, double factor)
+		: AbstractCorrector(parent) {
 	m_factor = factor;
 }
 
-AbstractCorrector::AbstractCorrector(double factor, uint32_t priority)
-		: AbstractCorrector(factor) {
+AbstractCorrector::AbstractCorrector(const std::string &parent, double factor, uint32_t priority)
+		: AbstractCorrector(parent, factor) {
 	m_priority = priority;
 }
 
@@ -31,6 +32,7 @@ QJsonObject AbstractCorrector::parameters() const {
 	return {
 		{"id", static_cast<int>(m_id)},
 		{"type", static_cast<const int>(type())},
+		{"parent", QString::fromStdString(parent())},
 		{"factor", factor()},
 		{"maximumFactor", maximumFactor()},
 		{"minimumFactor", minimumFactor()},

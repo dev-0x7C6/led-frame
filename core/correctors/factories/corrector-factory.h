@@ -10,7 +10,7 @@ public:
 	explicit CorrectorFactory() = delete;
 	virtual ~CorrectorFactory() = delete;
 
-	static std::shared_ptr<Corrector::Interface::ICorrector> create(const Enum::CorrectorType &type);
+	static std::shared_ptr<Corrector::Interface::ICorrector> create(const Enum::CorrectorType &type, const std::string &parent);
 };
 }
 }

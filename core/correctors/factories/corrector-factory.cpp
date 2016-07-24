@@ -9,19 +9,19 @@ using namespace Corrector::Factory;
 using namespace Corrector::Interface;
 using namespace Enum;
 
-std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type) {
+std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type,  const std::string &parent) {
 	switch (type) {
 		case CorrectorType::Brightness:
-			return std::make_shared<BrightnessCorrector>();
+			return std::make_shared<BrightnessCorrector>(parent);
 
 		case CorrectorType::ColorEnhancer:
-			return std::make_shared<ColorEnhancerCorrector>();
+			return std::make_shared<ColorEnhancerCorrector>(parent);
 
 		case CorrectorType::RGBChannel:
-			return std::make_shared<RGBChannelCorrector>();
+			return std::make_shared<RGBChannelCorrector>(parent);
 
 		case CorrectorType::FlickrEffect:
-			return std::make_shared<FlickrEffectCorrector>();
+			return std::make_shared<FlickrEffectCorrector>(parent);
 	}
 
 	return nullptr;

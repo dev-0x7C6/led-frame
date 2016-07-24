@@ -7,7 +7,7 @@ namespace Concrete {
 
 class ColorEnhancerCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit ColorEnhancerCorrector();
+	explicit ColorEnhancerCorrector(const std::string &parent);
 	virtual ~ColorEnhancerCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;

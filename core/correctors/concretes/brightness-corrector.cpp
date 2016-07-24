@@ -3,8 +3,8 @@
 using namespace Enum;
 using namespace Corrector::Concrete;
 
-BrightnessCorrector::BrightnessCorrector()
-		: Abstract::AbstractCorrector(0.5) {
+BrightnessCorrector::BrightnessCorrector(const std::string &parent)
+		: Abstract::AbstractCorrector(parent, 0.5) {
 }
 
 CorrectorType BrightnessCorrector::type() const { return CorrectorType::Brightness; }

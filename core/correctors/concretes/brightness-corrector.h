@@ -7,7 +7,7 @@ namespace Concrete {
 
 class BrightnessCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit BrightnessCorrector();
+	explicit BrightnessCorrector(const std::string &parent);
 	virtual ~BrightnessCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
