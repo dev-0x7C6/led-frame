@@ -2,7 +2,8 @@
 
 using namespace Corrector::Concrete;
 
-FlickrEffectCorrector::FlickrEffectCorrector(const std::string &parent) : Abstract::AbstractCorrector(parent){
+FlickrEffectCorrector::FlickrEffectCorrector(const std::string &parent)
+		: Abstract::AbstractCorrector(parent) {
 	m_enabled = false;
 }
 

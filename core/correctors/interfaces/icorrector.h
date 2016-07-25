@@ -14,7 +14,8 @@ namespace Interface {
 //TODO: We need internal id implementation for ICorrector
 class ICorrector : public ::Interface::INotificationCallback {
 public:
-	explicit ICorrector(const std::string &parent) : m_parent(parent) {};
+	explicit ICorrector(const std::string &parent)
+			: m_parent(parent){};
 	virtual ~ICorrector() = default;
 
 	virtual Enum::CorrectorType type() const = 0;
@@ -39,6 +40,5 @@ public:
 private:
 	std::string m_parent;
 };
-
 }
 }

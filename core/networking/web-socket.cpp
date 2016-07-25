@@ -33,7 +33,8 @@ WebSocket::WebSocket(QWebSocket *socket, QObject *parent)
 
 void WebSocket::sendTextMessage(const QString &message) {
 #ifdef QT_DEBUG
-	std::cout << message.toStdString() << std::endl << std::endl;
+	std::cout << message.toStdString() << std::endl
+			  << std::endl;
 #endif
 	m_webSocket->sendTextMessage(message);
 	m_webSocket->flush();

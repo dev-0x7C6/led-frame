@@ -9,7 +9,7 @@ using namespace Corrector::Factory;
 using namespace Corrector::Interface;
 using namespace Enum;
 
-std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type,  const std::string &parent) {
+std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type, const std::string &parent) {
 	switch (type) {
 		case CorrectorType::Brightness:
 			return std::make_shared<BrightnessCorrector>(parent);

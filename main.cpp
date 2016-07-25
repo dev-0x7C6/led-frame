@@ -169,8 +169,11 @@ int main(int argc, char *argv[]) {
 								continue;
 
 							for (auto &corrector : receiver->correctorManager()->correctorList()) {
-								if (obj.value("corrector").toInt() == static_cast<int>(corrector->type()))
-									corrector->setFactor(obj.value("factor").toDouble());
+								if (obj.value("corrector").toInt() == static_cast<int>(corrector->type())) {
+									const auto factor = obj.value("factor").toDouble();
+									corrector->setFactor(factor);
+									corrector->setEnabled(factor != corrector->minimumFactor());
+								}
 							}
 						}
 					}
