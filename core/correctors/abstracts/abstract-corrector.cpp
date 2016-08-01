@@ -2,7 +2,7 @@
 
 using namespace Corrector::Abstract;
 
-static std::atomic<int> internalCorrectorId{0};
+static std::atomic<uint32_t> internalCorrectorId{0};
 
 AbstractCorrector::AbstractCorrector(const std::string &parent)
 		: Interface::ICorrector(parent)
@@ -12,7 +12,7 @@ AbstractCorrector::AbstractCorrector(const std::string &parent)
 		, m_factor(1.0) {
 }
 
-int AbstractCorrector::id() const { return m_id; }
+uint32_t AbstractCorrector::id() const { return m_id; }
 
 AbstractCorrector::AbstractCorrector(const std::string &parent, double factor)
 		: AbstractCorrector(parent) {
@@ -24,7 +24,7 @@ AbstractCorrector::AbstractCorrector(const std::string &parent, double factor, u
 	m_priority = priority;
 }
 
-bool AbstractCorrector::enabled() const { return m_enabled; }
+bool AbstractCorrector::isEnabled() const { return m_enabled; }
 double AbstractCorrector::factor() const { return m_factor; }
 uint32_t AbstractCorrector::priority() const { return m_priority; }
 
@@ -38,6 +38,9 @@ QJsonObject AbstractCorrector::parameters() const {
 		{"minimumFactor", minimumFactor()},
 	};
 }
+
+void AbstractCorrector::push() {}
+void AbstractCorrector::pop() {}
 
 void AbstractCorrector::setEnabled(bool enabled) {
 	if (m_enabled != enabled) {

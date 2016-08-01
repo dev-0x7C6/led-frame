@@ -7,6 +7,9 @@ BrightnessCorrector::BrightnessCorrector(const std::string &parent)
 		: Abstract::AbstractCorrector(parent, 0.5) {
 }
 
+double BrightnessCorrector::minimumFactor() const { return 0; }
+double BrightnessCorrector::maximumFactor() const { return 1.0; }
+
 CorrectorType BrightnessCorrector::type() const { return CorrectorType::Brightness; }
 
 uint32_t BrightnessCorrector::correct(uint32_t color) {

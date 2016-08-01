@@ -28,7 +28,7 @@ EmitterMenu::EmitterMenu(QAction *parent, Receiver::Interface::IReceiver *receiv
 	for (const auto &corrector : receiver->correctorManager()->correctorList()) {
 		auto action = m_actionCorrectors->menu()->addAction(name(corrector->type()));
 		action->setCheckable(true);
-		action->setChecked(corrector->enabled());
+		action->setChecked(corrector->isEnabled());
 		QObject::connect(action, &QAction::triggered, [&corrector](bool checked) {
 			corrector->setEnabled(checked);
 		});

@@ -11,6 +11,11 @@ RGBChannelCorrector::RGBChannelCorrector(const std::string &parent)
 }
 
 CorrectorType RGBChannelCorrector::type() const { return CorrectorType::RGBChannel; }
+double RGBChannelCorrector::minimumFactor() const { return 0; }
+double RGBChannelCorrector::maximumFactor() const { return 1.0; }
+double RGBChannelCorrector::redFactor() const { return m_rfactor; }
+double RGBChannelCorrector::greenFactor() const { return m_gfactor; }
+double RGBChannelCorrector::blueFactor() const { return m_bfactor; }
 
 uint32_t RGBChannelCorrector::correct(uint32_t color) {
 	auto r = static_cast<uint32_t>((color >> 0x10) & 0xffu);
@@ -27,18 +32,6 @@ uint32_t RGBChannelCorrector::correct(uint32_t color) {
 	color |= g << 0x08;
 	color |= b << 0x00;
 	return color;
-}
-
-double RGBChannelCorrector::redFactor() const {
-	return m_rfactor;
-}
-
-double RGBChannelCorrector::greenFactor() const {
-	return m_gfactor;
-}
-
-double RGBChannelCorrector::blueFactor() const {
-	return m_bfactor;
 }
 
 void RGBChannelCorrector::setRedFactor(double factor) {

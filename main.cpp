@@ -51,24 +51,15 @@ void createDefaultEmitters(EmitterManager &manager) {
 		manager.attach(emitter);
 	}
 
-	auto animation1 = EmitterFactory::create(EmitterType::Animation);
-	auto animation2 = EmitterFactory::create(EmitterType::Animation);
-	auto color1 = EmitterFactory::create(EmitterType::Color);
-	auto color2 = EmitterFactory::create(EmitterType::Color);
-	auto image1 = EmitterFactory::create(EmitterType::Image);
-	auto image2 = EmitterFactory::create(EmitterType::Image);
-	animation1->setName(QObject::tr("Animation #1"));
-	animation2->setName(QObject::tr("Animation #2"));
-	color1->setName(QObject::tr("Color #1"));
-	color2->setName(QObject::tr("Color #2"));
-	image1->setName(QObject::tr("Image #1"));
-	image2->setName(QObject::tr("Image #2"));
-	manager.attach(animation1);
-	manager.attach(animation2);
-	manager.attach(color1);
-	manager.attach(color2);
-	manager.attach(image1);
-	manager.attach(image2);
+	auto animation = EmitterFactory::create(EmitterType::Animation);
+	auto color = EmitterFactory::create(EmitterType::Color);
+	auto image = EmitterFactory::create(EmitterType::Image);
+	animation->setName(QObject::tr("Animation"));
+	color->setName(QObject::tr("Color"));
+	image->setName(QObject::tr("Image"));
+	manager.attach(animation);
+	manager.attach(color);
+	manager.attach(image);
 }
 
 int main(int argc, char *argv[]) {

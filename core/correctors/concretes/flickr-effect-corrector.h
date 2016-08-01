@@ -15,8 +15,8 @@ public:
 	virtual void push() override;
 	virtual void pop() override;
 
-	virtual double minimumFactor() const override { return 0; };
-	virtual double maximumFactor() const override { return 30; };
+	virtual double minimumFactor() const override;
+	virtual double maximumFactor() const override;
 
 private:
 	int m_duration = 0;

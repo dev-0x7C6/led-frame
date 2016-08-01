@@ -3,11 +3,13 @@
 using namespace Corrector::Concrete;
 
 FlickrEffectCorrector::FlickrEffectCorrector(const std::string &parent)
-		: Abstract::AbstractCorrector(parent) {
+		: Abstract::AbstractCorrector(parent, minimumFactor()) {
 	m_enabled = false;
 }
 
 Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::CorrectorType::FlickrEffect; }
+double FlickrEffectCorrector::minimumFactor() const { return 0; }
+double FlickrEffectCorrector::maximumFactor() const { return 30; }
 
 uint32_t FlickrEffectCorrector::correct(uint32_t color) { return (m_skip) ? 0 : color; }
 

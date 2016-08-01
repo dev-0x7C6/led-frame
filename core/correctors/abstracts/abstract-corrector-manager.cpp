@@ -53,7 +53,7 @@ const std::vector<std::shared_ptr<ICorrector>> &AbstractCorrectorManager::correc
 
 uint32_t AbstractCorrectorManager::execute(uint32_t color) {
 	for (const auto &corrector : m_correctors)
-		if (corrector->enabled())
+		if (corrector->isEnabled())
 			color = corrector->correct(color);
 
 	return color;
@@ -61,12 +61,12 @@ uint32_t AbstractCorrectorManager::execute(uint32_t color) {
 
 void AbstractCorrectorManager::push() {
 	for (const auto &corrector : m_correctors)
-		if (corrector->enabled())
+		if (corrector->isEnabled())
 			corrector->push();
 }
 
 void AbstractCorrectorManager::pop() {
 	for (const auto &corrector : m_correctors)
-		if (corrector->enabled())
+		if (corrector->isEnabled())
 			corrector->pop();
 }

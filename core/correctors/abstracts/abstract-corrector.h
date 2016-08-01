@@ -13,13 +13,16 @@ public:
 	explicit AbstractCorrector(const std::string &parent);
 	virtual ~AbstractCorrector() = default;
 
-	virtual int id() const override;
-	virtual bool enabled() const override;
+	virtual uint32_t id() const override;
 	virtual double factor() const override;
 	virtual uint32_t priority() const override;
 	virtual QJsonObject parameters() const override;
 
-	virtual void setEnabled(bool enabled) override;
+	virtual void push() override;
+	virtual void pop() override;
+
+	virtual bool isEnabled() const override;
+	virtual void setEnabled(bool isEnabled) override;
 	virtual void setFactor(double factor) override;
 	virtual void setPriority(uint32_t priority) override;
 
