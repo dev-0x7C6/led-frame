@@ -27,8 +27,16 @@ SystemTray::SystemTray(QObject *parent)
 	m_brightnessAction = mainMenu->addAction("");
 	m_brightnessAction->setEnabled(false);
 	mainMenu->addSeparator();
+	auto settings = mainMenu->addAction("Settings");
+	auto settingsMenu = new QMenu();
+	settings->setMenu(settingsMenu);
+	auto settingsEmitters = settingsMenu->addAction("Emitters");
+	settings->menu()->insertAction(nullptr, settingsEmitters);
+	mainMenu->addSeparator();
 	auto about = mainMenu->addAction("About");
 	auto quit = mainMenu->addAction("&Quit");
+
+	settingsEmitters->setMenu(m_emitterConfigurationMenu.menu());
 
 	connect(about, &QAction::triggered, [this]() {
 		if (m_aboutRequestCallback)
@@ -41,12 +49,22 @@ SystemTray::SystemTray(QObject *parent)
 	});
 }
 
-SystemTray::~SystemTray() {
+SystemTray::~SystemTray() = default;
+
+void SystemTray::attached(const std::shared_ptr<IEmitter> &emitter) {
+	m_deviceMenu.attached(emitter);
+	m_emitterConfigurationMenu.attached(emitter);
 }
 
-void SystemTray::attached(const std::shared_ptr<IEmitter> &emitter) { m_deviceMenu.attached(emitter); }
-void SystemTray::detached(const std::shared_ptr<IEmitter> &emitter) { m_deviceMenu.detached(emitter); }
-void SystemTray::modified(const std::shared_ptr<IEmitter> &emitter) { m_deviceMenu.modified(emitter); }
+void SystemTray::detached(const std::shared_ptr<IEmitter> &emitter) {
+	m_deviceMenu.detached(emitter);
+	m_emitterConfigurationMenu.detached(emitter);
+}
+
+void SystemTray::modified(const std::shared_ptr<IEmitter> &emitter) {
+	m_deviceMenu.modified(emitter);
+	m_emitterConfigurationMenu.modified(emitter);
+}
 
 void SystemTray::attached(IReceiver *receiver) { m_deviceMenu.attached(receiver); }
 void SystemTray::detached(IReceiver *receiver) { m_deviceMenu.detached(receiver); }

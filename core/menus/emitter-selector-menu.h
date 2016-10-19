@@ -11,13 +11,13 @@ class QActionGroup;
 
 namespace Menu {
 
-class EmitterMenu final
+class EmitterSelectorMenu final
 	: public Emitter::Interface::IEmitterNotify
 
 {
 public:
-	explicit EmitterMenu(QAction *parent, Receiver::Interface::IReceiver *receiver);
-	virtual ~EmitterMenu() = default;
+	explicit EmitterSelectorMenu(QAction *parent, Receiver::Interface::IReceiver *receiver);
+	virtual ~EmitterSelectorMenu() = default;
 
 	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;

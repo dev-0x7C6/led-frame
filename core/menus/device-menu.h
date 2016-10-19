@@ -13,7 +13,7 @@ class QAction;
 
 namespace Menu {
 
-class EmitterMenu;
+class EmitterSelectorMenu;
 
 class DeviceMenu final
 	: public Emitter::Interface::IEmitterNotify,
@@ -42,7 +42,7 @@ private:
 	std::set<std::shared_ptr<Emitter::Interface::IEmitter>> m_emitters;
 	std::list<Receiver::Interface::IReceiver *> m_receivers;
 	std::map<Receiver::Interface::IReceiver *, QAction *> m_map;
-	std::map<Receiver::Interface::IReceiver *, std::unique_ptr<EmitterMenu>> m_emitterMenu;
+	std::map<Receiver::Interface::IReceiver *, std::unique_ptr<EmitterSelectorMenu>> m_emitterMenu;
 	QAction *m_beforeAction;
 	QMenu *m_menu;
 };

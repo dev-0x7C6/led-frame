@@ -2,6 +2,7 @@
 
 #include <core/receivers/interfaces/ireceiver-notify.h>
 #include <core/menus/device-menu.h>
+#include <core/menus/emitter-configuration-menu.h>
 
 #include <QSystemTrayIcon>
 #include <functional>
@@ -38,5 +39,6 @@ private:
 
 	QAction *m_brightnessAction;
 	Menu::DeviceMenu m_deviceMenu;
+	Menu::EmitterConfigurationMenu m_emitterConfigurationMenu;
 };
 }

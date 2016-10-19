@@ -1,6 +1,6 @@
 #include <core/correctors/concretes/corrector-manager.h>
 #include <core/emitters/interfaces/iemitter.h>
-#include <core/menus/emitter-menu.h>
+#include <core/menus/emitter-selector-menu.h>
 #include <core/receivers/interfaces/ireceiver.h>
 
 #include <QMenu>
@@ -12,7 +12,7 @@ using namespace Emitter::Interface;
 using namespace Receiver::Interface;
 using namespace Menu;
 
-EmitterMenu::EmitterMenu(QAction *parent, Receiver::Interface::IReceiver *receiver)
+EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::IReceiver *receiver)
 		: m_parent(parent)
 		, m_receiver(receiver)
 		, m_emitterActionGroup(new QActionGroup(nullptr))
@@ -35,7 +35,7 @@ EmitterMenu::EmitterMenu(QAction *parent, Receiver::Interface::IReceiver *receiv
 	}
 }
 
-void EmitterMenu::attached(const std::shared_ptr<IEmitter> &emitter) {
+void EmitterSelectorMenu::attached(const std::shared_ptr<IEmitter> &emitter) {
 	auto action = m_actionEmitters->menu()->addAction(emitter->name());
 	action->setIcon(icon(emitter->type()));
 	m_map.insert({emitter.get(), action});
@@ -52,10 +52,10 @@ void EmitterMenu::attached(const std::shared_ptr<IEmitter> &emitter) {
 }
 
 // TODO: EmitterMenu should reload stuff when emitter is detached or modiffied
-void EmitterMenu::detached(const std::shared_ptr<IEmitter> &emitter) { static_cast<void>(emitter); }
-void EmitterMenu::modified(const std::shared_ptr<IEmitter> &emitter) { static_cast<void>(emitter); }
+void EmitterSelectorMenu::detached(const std::shared_ptr<IEmitter> &emitter) { static_cast<void>(emitter); }
+void EmitterSelectorMenu::modified(const std::shared_ptr<IEmitter> &emitter) { static_cast<void>(emitter); }
 
-void EmitterMenu::changed() {
+void EmitterSelectorMenu::changed() {
 	QAction *action;
 
 	try {

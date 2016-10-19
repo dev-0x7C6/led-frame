@@ -155,8 +155,10 @@ set(sources
 	core/interfaces/iscreen-capture.h
 	core/menus/device-menu.cpp
 	core/menus/device-menu.h
-	core/menus/emitter-menu.cpp
-	core/menus/emitter-menu.h
+	core/menus/emitter-configuration-menu.cpp
+	core/menus/emitter-configuration-menu.h
+	core/menus/emitter-selector-menu.cpp
+	core/menus/emitter-selector-menu.h
 	gui/dialogs/about-dialog.cpp
 	gui/dialogs/about-dialog.h
 	gui/dialogs/about-dialog.ui

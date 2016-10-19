@@ -1,5 +1,5 @@
 #include <core/menus/device-menu.h>
-#include <core/menus/emitter-menu.h>
+#include <core/menus/emitter-selector-menu.h>
 #include <core/receivers/interfaces/ireceiver.h>
 
 #include <QAction>
@@ -38,7 +38,7 @@ void DeviceMenu::attached(IReceiver *receiver) {
 	menu()->insertAction(m_beforeAction, action);
 	m_map.insert({receiver, action});
 	m_receivers.push_back(receiver);
-	m_emitterMenu.emplace(receiver, std::make_unique<EmitterMenu>(action, receiver));
+	m_emitterMenu.emplace(receiver, std::make_unique<EmitterSelectorMenu>(action, receiver));
 
 	for (const auto &emitter : m_emitters)
 		m_emitterMenu.at(receiver)->attached(emitter);
