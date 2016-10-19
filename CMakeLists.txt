@@ -7,15 +7,21 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 8)
+set(VERSION_PATCH 5)
+
+configure_file(config.h.in config.h)
+
 find_package(Qt5Core)
-find_package(Qt5SerialPort)
-find_package(Qt5Network)
 find_package(Qt5DBus)
-find_package(Qt5Widgets)
-find_package(Qt5Svg)
 find_package(Qt5Gui)
+find_package(Qt5Network)
 find_package(Qt5Quick)
+find_package(Qt5SerialPort)
+find_package(Qt5Svg)
 find_package(Qt5WebSockets)
+find_package(Qt5Widgets)
 find_package(Qt5Xml)
 
 include_directories(

@@ -1,17 +1,18 @@
 #pragma once
 
-#include <core/containers/abstract-container.h>
-
 #include <QString>
+
+#include "config.h"
+#include <core/containers/abstract-container.h>
 
 namespace Container {
 
 namespace Const {
 constexpr auto ApplicationName = "LedFrame";
 constexpr auto ApplicationCodename = "";
-constexpr int ApplicationVersionMajor = 0;
-constexpr int ApplicationVersionMinor = 8;
-constexpr int ApplicationVersionPatch = 4;
+constexpr int ApplicationVersionMajor = VERSION_MAJOR;
+constexpr int ApplicationVersionMinor = VERSION_MINOR;
+constexpr int ApplicationVersionPatch = VERSION_PATCH;
 }
 
 class ApplicationInfoContainer final : public AbstractContainer {
