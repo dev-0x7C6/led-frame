@@ -165,6 +165,8 @@ set(sources
 	gui/dialogs/alc-screen-configure-dialog.cpp
 	gui/dialogs/alc-screen-configure-dialog.h
 	gui/dialogs/alc-screen-configure-dialog.ui
+	gui/widgets/corrector-settings-dialog.h
+	gui/widgets/corrector-settings-dialog.cpp
 	gui/tray/system-tray.cpp
 	gui/tray/system-tray.h
 	gui/widgets/alc-color-correction-widget.cpp
@@ -193,13 +195,13 @@ endif (UNIX)
 
 target_link_libraries(led-frame
 	Qt5::Core
-	Qt5::Gui
-	Qt5::Widgets
-	Qt5::SerialPort
-	Qt5::WebSockets
-	Qt5::Svg
-	Qt5::Quick
 	Qt5::DBus
+	Qt5::Gui
+	Qt5::Quick
+	Qt5::SerialPort
+	Qt5::Svg
+	Qt5::WebSockets
+	Qt5::Widgets
 	${x11-libs}
 )
 

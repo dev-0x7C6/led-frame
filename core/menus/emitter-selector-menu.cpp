@@ -3,14 +3,18 @@
 #include <core/menus/emitter-selector-menu.h>
 #include <core/receivers/interfaces/ireceiver.h>
 
+#include "gui/widgets/corrector-settings-dialog.h"
+
 #include <QMenu>
 #include <QAction>
 #include <QObject>
 #include <QActionGroup>
+#include <QDebug>
 
 using namespace Emitter::Interface;
 using namespace Receiver::Interface;
 using namespace Menu;
+using namespace Widget;
 
 EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::IReceiver *receiver)
 		: m_parent(parent)
@@ -27,10 +31,25 @@ EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::I
 
 	for (const auto &corrector : receiver->correctorManager()->correctorList()) {
 		auto action = m_actionCorrectors->menu()->addAction(name(corrector->type()));
-		action->setCheckable(true);
-		action->setChecked(corrector->isEnabled());
-		QObject::connect(action, &QAction::triggered, [&corrector](bool checked) {
+		auto menu = new QMenu;
+		auto toggle = menu->addAction("Active");
+		auto configure = menu->addAction("Configure");
+		action->setMenu(menu);
+		toggle->setCheckable(true);
+		toggle->setChecked(corrector->isEnabled());
+		QObject::connect(toggle, &QAction::triggered, [&corrector, toggle](bool checked) {
 			corrector->setEnabled(checked);
+			toggle->setText(checked ? "Active" : "Inactive");
+		});
+
+		QObject::connect(configure, &QAction::triggered, [&corrector](bool) {
+			CorrectorSettingsDialog dialog(corrector->factor() / corrector->maximumFactor(), nullptr);
+			dialog.setWindowTitle("Corrector: " + name(corrector->type()) + "");
+			QObject::connect(&dialog, &CorrectorSettingsDialog::valueChanged, [&corrector](int value) {
+				corrector->setFactor(CorrectorSettingsDialog::factor(value) * corrector->maximumFactor());
+				qDebug() << corrector->maximumFactor();
+			});
+			dialog.exec();
 		});
 	}
 }
