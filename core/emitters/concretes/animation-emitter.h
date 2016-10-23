@@ -13,7 +13,6 @@ public:
 	virtual ~AnimationEmitter();
 
 	virtual Enum::EmitterType type() const override;
-	virtual QJsonObject parameters() const override;
 
 protected:
 	void process(const QVariant &value);

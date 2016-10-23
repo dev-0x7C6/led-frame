@@ -16,7 +16,6 @@ public:
 	bool setCaptureArea(const int screen);
 
 	virtual Enum::EmitterType type() const override;
-	virtual QJsonObject parameters() const override;
 
 protected:
 	void interrupt();

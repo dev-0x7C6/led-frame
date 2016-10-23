@@ -18,10 +18,6 @@ EmitterType TestEmitter::type() const {
 	return EmitterType::Test;
 }
 
-QJsonObject TestEmitter::parameters() const {
-	return {};
-}
-
 void TestEmitter::timerEvent(QTimerEvent *) {
 	Container::ColorScanlineContainer scanline;
 	scanline.fill(0);

@@ -30,14 +30,6 @@ Enum::EmitterType AnimationEmitter::type() const {
 	return Enum::EmitterType::Animation;
 }
 
-QJsonObject AnimationEmitter::parameters() const {
-	return {
-		{"name", name()},
-		{"type", static_cast<int>(type())},
-		{"description", description(type())},
-		{"parameters", "color rotation, " + QString::number(m_animation.duration()) + "ms"}};
-}
-
 void AnimationEmitter::onConnect(const uint32_t &count) {
 	if (m_animation.state() != QAbstractAnimation::Running && count > 0)
 		m_animation.start();

@@ -53,14 +53,6 @@ EmitterType ScreenEmitter::type() const {
 	return EmitterType::Screen;
 }
 
-QJsonObject ScreenEmitter::parameters() const {
-	return {
-		{"name", name()},
-		{"type", static_cast<int>(type())},
-		{"description", description(type())},
-		{"parameters", QString::number(m_w) + "x" + QString::number(m_h)}};
-}
-
 void ScreenEmitter::onConnect(const uint32_t &count) {
 	if (!isRunning() && count > 0) {
 		m_interrupted = false;

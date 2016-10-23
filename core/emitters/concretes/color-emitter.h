@@ -13,7 +13,6 @@ public:
 	virtual ~ColorEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;
-	virtual QJsonObject parameters() const override;
 	virtual uint32_t framerate() const override { return 1; }
 
 	QColor color() const;

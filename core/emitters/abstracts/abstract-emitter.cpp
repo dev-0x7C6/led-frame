@@ -11,6 +11,14 @@ AbstractEmitter::AbstractEmitter()
 	m_data.fill(0);
 }
 
+QJsonObject AbstractEmitter::parameters() const {
+	return {
+		{"emitter_name", name()},
+		{"emitter_id", id()},
+		{"emitter_type", static_cast<const int>(type())},
+		{"emitter_description", description(type())}};
+}
+
 void AbstractEmitter::commit(const Container::ColorScanlineContainer &scanline) {
 	std::lock_guard<std::mutex> _(m_mutex);
 	m_data = scanline;

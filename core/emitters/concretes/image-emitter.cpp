@@ -20,14 +20,6 @@ Enum::EmitterType ImageEmitter::type() const {
 	return Enum::EmitterType::Image;
 }
 
-QJsonObject ImageEmitter::parameters() const {
-	return {
-		{"name", name()},
-		{"type", static_cast<int>(type())},
-		{"description", description(type())},
-		{"parameters", m_filePath}};
-}
-
 QRect ImageEmitter::fragment(int w, int h, const uint32_t &index) {
 	auto l = static_cast<int>(scanline_line);
 	auto i = static_cast<int>(index) % l;
