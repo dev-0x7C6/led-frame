@@ -95,6 +95,7 @@ set(sources
 	core/functionals/lambda-thread.cpp
 	core/functionals/lambda-thread.h
 	core/interfaces/inotification-callback.h
+	core/interfaces/inotification-callback.cpp
 	core/networking/broadcast-service.cpp
 	core/networking/broadcast-service.h
 	core/networking/web-socket.cpp

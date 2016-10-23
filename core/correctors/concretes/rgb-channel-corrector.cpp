@@ -3,8 +3,8 @@
 using namespace Enum;
 using namespace Corrector::Concrete;
 
-RGBChannelCorrector::RGBChannelCorrector(const std::string &parent)
-		: Abstract::AbstractCorrector(parent)
+RGBChannelCorrector::RGBChannelCorrector(const int owner)
+		: Abstract::AbstractCorrector(owner)
 		, m_rfactor(1.0)
 		, m_gfactor(1.0)
 		, m_bfactor(1.0) {

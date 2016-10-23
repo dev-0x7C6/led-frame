@@ -6,8 +6,7 @@
 using namespace Widget;
 
 CorrectorSettingsDialog::CorrectorSettingsDialog(double factor, QWidget *parent)
-	: QDialog(parent)
-{
+		: QDialog(parent) {
 	auto layout = new QHBoxLayout;
 	auto slider = new QSlider(Qt::Horizontal, this);
 	slider->setMinimum(min());
@@ -21,4 +20,3 @@ CorrectorSettingsDialog::CorrectorSettingsDialog(double factor, QWidget *parent)
 	setLayout(layout);
 	connect(slider, &QSlider::valueChanged, this, &CorrectorSettingsDialog::valueChanged);
 }
-

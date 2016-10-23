@@ -7,7 +7,7 @@ namespace Concrete {
 
 class FlickrEffectCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit FlickrEffectCorrector(const std::string &parent);
+	explicit FlickrEffectCorrector(const int owner);
 	virtual ~FlickrEffectCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;

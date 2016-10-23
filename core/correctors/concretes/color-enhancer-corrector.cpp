@@ -4,8 +4,8 @@
 using namespace Enum;
 using namespace Corrector::Concrete;
 
-ColorEnhancerCorrector::ColorEnhancerCorrector(const std::string &parent)
-		: Abstract::AbstractCorrector(parent, 1.5, 20) {
+ColorEnhancerCorrector::ColorEnhancerCorrector(const int owner)
+		: Abstract::AbstractCorrector(owner, 1.5, 20) {
 }
 
 Enum::CorrectorType ColorEnhancerCorrector::type() const { return CorrectorType::ColorEnhancer; }

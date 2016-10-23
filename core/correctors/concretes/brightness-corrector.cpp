@@ -3,8 +3,8 @@
 using namespace Enum;
 using namespace Corrector::Concrete;
 
-BrightnessCorrector::BrightnessCorrector(const std::string &parent)
-		: Abstract::AbstractCorrector(parent, 0.5) {
+BrightnessCorrector::BrightnessCorrector(const int owner)
+		: Abstract::AbstractCorrector(owner, 0.5) {
 }
 
 double BrightnessCorrector::minimumFactor() const { return 0; }

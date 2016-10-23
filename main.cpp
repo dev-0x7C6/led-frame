@@ -73,8 +73,8 @@ int main(int argc, char *argv[]) {
 	application.setApplicationVersion(info.versionToString());
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
 	QSettings settings(info.applicationName(), info.applicationName());
-	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness, "");
-	auto rgbCorrector = std::make_shared<RGBChannelCorrector>("");
+	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness, -1);
+	auto rgbCorrector = std::make_shared<RGBChannelCorrector>(-1);
 	CorrectorManager correctorManager;
 	ReceiverManager receiverManager;
 	EmitterManager emitterManager(settings);
@@ -111,8 +111,8 @@ int main(int argc, char *argv[]) {
 		settings.sync();
 		receiver->correctorManager()->attach(brightnessCorrector);
 		receiver->correctorManager()->attach(rgbCorrector);
-		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::FlickrEffect, receiver->name().toStdString()));
-		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer, receiver->name().toStdString()));
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::FlickrEffect, receiver->id()));
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer, receiver->id()));
 		return true;
 	});
 

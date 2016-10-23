@@ -6,21 +6,17 @@
 
 #include <QJsonObject>
 
-#include <string>
-
 namespace Corrector {
 namespace Interface {
 
 //TODO: We need internal id implementation for ICorrector
 class ICorrector : public ::Interface::INotificationCallback {
 public:
-	explicit ICorrector(const std::string &parent)
-			: m_parent(parent) {}
+	explicit ICorrector(const int owner)
+			: m_owner(owner) {}
 	virtual ~ICorrector() = default;
 
 	virtual Enum::CorrectorType type() const = 0;
-
-	virtual uint32_t id() const = 0;
 
 	virtual double factor() const = 0;
 	virtual double minimumFactor() const = 0;
@@ -30,7 +26,7 @@ public:
 	virtual uint32_t priority() const = 0;
 
 	virtual QJsonObject parameters() const = 0;
-	virtual std::string parent() const { return m_parent; }
+	virtual int owner() const { return m_owner; }
 
 	virtual void push() = 0;
 	virtual void pop() = 0;
@@ -41,7 +37,7 @@ public:
 	virtual void setPriority(uint32_t priority) = 0;
 
 private:
-	std::string m_parent;
+	const int m_owner;
 };
 }
 }

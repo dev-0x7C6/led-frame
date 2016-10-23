@@ -7,7 +7,7 @@ namespace Concrete {
 
 class RGBChannelCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit RGBChannelCorrector(const std::string &parent);
+	explicit RGBChannelCorrector(const int owner);
 	virtual ~RGBChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
