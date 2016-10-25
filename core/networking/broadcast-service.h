@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <QObject>
 
 class QUdpSocket;
@@ -9,18 +10,18 @@ namespace Network {
 class BroadcastService final : public QObject {
 	Q_OBJECT
 public:
-	explicit BroadcastService(const QString &deviceName, const uint16_t &port = 4999, QObject *parent = nullptr);
-	virtual ~BroadcastService() = default;
+	explicit BroadcastService(const int deviceId, const QString &deviceName, const uint16_t &port = 4999, QObject *parent = nullptr);
+	virtual ~BroadcastService();
 
 	uint16_t servicePort() const;
-	void setServicePort(const uint16_t &servicePort);
 
 protected:
-	void timeout();
+	virtual void timerEvent(QTimerEvent *event) override;
 
 private:
-	QUdpSocket *m_socket;
-	QString m_deviceName;
-	uint16_t m_servicePort;
+	std::unique_ptr<QUdpSocket> m_socket;
+	int m_deviceId;
+	const QString m_deviceName;
+	const uint16_t m_servicePort;
 };
 }

@@ -1,6 +1,5 @@
 #include <core/networking/broadcast-service.h>
 
-#include <QTimer>
 #include <QUdpSocket>
 #include <QNetworkInterface>
 #include <QJsonObject>
@@ -9,19 +8,25 @@
 
 using namespace Network;
 
-BroadcastService::BroadcastService(const QString &deviceName, const uint16_t &port, QObject *parent)
+BroadcastService::BroadcastService(const int deviceId, const QString &deviceName, const uint16_t &port, QObject *parent)
 		: QObject(parent)
-		, m_socket(new QUdpSocket)
+		, m_socket(std::make_unique<QUdpSocket>())
+		, m_deviceId(deviceId)
 		, m_deviceName(deviceName)
 		, m_servicePort(port)
 
 {
-	auto timer = new QTimer(this);
-	connect(timer, &QTimer::timeout, this, &BroadcastService::timeout);
-	timer->start(3000);
+	startTimer(3000);
 }
 
-void BroadcastService::timeout() {
+BroadcastService::~BroadcastService() = default;
+
+uint16_t BroadcastService::servicePort() const {
+	return m_servicePort;
+}
+
+void BroadcastService::timerEvent(QTimerEvent *event) {
+	static_cast<void>(event);
 	auto interfaces = QNetworkInterface::allInterfaces();
 	QHostAddress host;
 
@@ -44,18 +49,13 @@ void BroadcastService::timeout() {
 
 	QJsonObject object{
 		{"computer", QHostInfo::localHostName()},
+		{"id", m_deviceId},
 		{"device", m_deviceName},
 		{"host", host.toString()},
-		{"port", QString::number(m_servicePort)}};
+		{"port", QString::number(m_servicePort)},
+	};
+
 	QJsonDocument document(object);
 	QByteArray datagram = document.toJson();
 	m_socket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, 45454);
-}
-
-uint16_t BroadcastService::servicePort() const {
-	return m_servicePort;
-}
-
-void BroadcastService::setServicePort(const uint16_t &servicePort) {
-	m_servicePort = servicePort;
 }

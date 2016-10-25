@@ -44,7 +44,7 @@ void ReceiverManager::rescan() {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
-		new Network::BroadcastService(thread->name(), 4999, qobject_cast<QThread *>(interface));
+		new Network::BroadcastService(thread->id(), thread->name(), 4999, qobject_cast<QThread *>(interface));
 		attach(std::move(thread));
 		emit afterAttach();
 	}
