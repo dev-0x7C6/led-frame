@@ -34,7 +34,7 @@ void WebSocket::send(const QString &message) {
 	m_webSocket->flush();
 }
 
-// documentation/protocol/notification
+// documentation/protocol/notification.md
 
 void WebSocket::attached(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, corrector)); }
 void WebSocket::detached(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, corrector)); }

@@ -9,7 +9,7 @@
 using namespace Network::Protocol;
 
 constexpr auto JSON_PROTOCOL_VERSION = 1;
-constexpr auto JSON_DATAGRAM_FIELD = "data";
+constexpr auto JSON_DATAGRAM_FIELD = "datagram";
 
 QJsonObject JsonProtocolHelper::header(const ProtocolMessage message, const ProtocolEvent event, const ProtocolSource source) {
 	return {
@@ -54,7 +54,7 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const Receiv
 		{"id", receiver->id()},
 		{"type", static_cast<int>(receiver->type())},
 		{"name", receiver->name()},
-		{"emitter", receiver->connectedEmitter()->id()},
+		{"emitter", receiver->connectedEmitterId()},
 	};
 
 	json.insert(JSON_DATAGRAM_FIELD, datagram);

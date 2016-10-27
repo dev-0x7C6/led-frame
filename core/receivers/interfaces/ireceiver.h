@@ -37,6 +37,7 @@ public:
 	virtual void disconnectEmitter() = 0;
 	virtual void connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) = 0;
 	virtual bool isEmitterConnected() const = 0;
+	virtual int connectedEmitterId() const = 0;
 
 	virtual const std::shared_ptr<Emitter::Interface::IEmitter> &connectedEmitter() const = 0;
 

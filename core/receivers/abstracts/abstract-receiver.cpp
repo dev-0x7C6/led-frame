@@ -39,6 +39,13 @@ const std::shared_ptr<Emitter::Interface::IEmitter> &AbstractReceiver::connected
 	return m_emitter;
 }
 
+int AbstractReceiver::connectedEmitterId() const {
+	if (m_emitter)
+		return m_emitter->id();
+
+	return -1;
+}
+
 QString AbstractReceiver::name() const {
 	return m_name;
 }
