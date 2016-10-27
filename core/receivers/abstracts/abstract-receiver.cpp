@@ -16,13 +16,6 @@ AbstractReceiver::~AbstractReceiver() {
 	disconnectEmitter();
 }
 
-QJsonObject AbstractReceiver::parameters() const {
-	return {
-		{"receiver_name", name()},
-		{"receiver_id", id()},
-		{"receiver_emitter_connected", isEmitterConnected() ? m_emitter->id() : -1}};
-}
-
 void AbstractReceiver::disconnectEmitter() {
 	if (m_emitter) m_emitter->disconnect();
 }

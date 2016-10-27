@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
 					{"b", rgbCorrector->blueFactor()},
 				};
 				auto doc = QJsonDocument(jsonCommand);
-				connection->sendTextMessage(doc.toJson());
+				connection->send(doc.toJson());
 			};
 
 			correctorManager.callback(connection, broadcastGlobalCorrection);

@@ -23,17 +23,6 @@ bool AbstractCorrector::isEnabled() const { return m_enabled; }
 double AbstractCorrector::factor() const { return m_factor; }
 uint32_t AbstractCorrector::priority() const { return m_priority; }
 
-QJsonObject AbstractCorrector::parameters() const {
-	return {
-		{"corrector_id", id()},
-		{"corrector_type", static_cast<const int>(type())},
-		{"corrector_owner", owner()},
-		{"corrector_factor_current", factor()},
-		{"corrector_factor_min", maximumFactor()},
-		{"corrector_factor_max", minimumFactor()},
-	};
-}
-
 void AbstractCorrector::push() {}
 void AbstractCorrector::pop() {}
 

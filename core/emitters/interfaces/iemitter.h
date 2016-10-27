@@ -17,7 +17,6 @@ class IReceiver;
 namespace Emitter {
 namespace Interface {
 
-//TODO: We need internal id implementation for IEmitter
 class IEmitter : public ::Interface::INotificationCallback {
 public:
 	explicit IEmitter() = default;
@@ -27,8 +26,6 @@ public:
 	virtual Enum::EmitterType type() const = 0;
 
 	virtual uint32_t framerate() const { return 24; }
-
-	virtual QJsonObject parameters() const = 0;
 
 	virtual void commit(const Container::ColorScanlineContainer &scanline) = 0;
 	virtual Container::ColorScanlineContainer data() = 0;

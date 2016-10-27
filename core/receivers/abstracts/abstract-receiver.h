@@ -11,7 +11,6 @@ public:
 	explicit AbstractReceiver();
 	virtual ~AbstractReceiver();
 
-	virtual QJsonObject parameters() const override;
 	virtual void disconnectEmitter() override;
 	virtual void connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	virtual bool isEmitterConnected() const override;

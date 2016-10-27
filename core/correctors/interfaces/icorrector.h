@@ -4,12 +4,9 @@
 #include <core/interfaces/inotification-callback.h>
 #include <core/enums/corrector-type.h>
 
-#include <QJsonObject>
-
 namespace Corrector {
 namespace Interface {
 
-//TODO: We need internal id implementation for ICorrector
 class ICorrector : public ::Interface::INotificationCallback {
 public:
 	explicit ICorrector(const int owner)
@@ -25,8 +22,7 @@ public:
 	virtual uint32_t correct(uint32_t color) = 0;
 	virtual uint32_t priority() const = 0;
 
-	virtual QJsonObject parameters() const = 0;
-	virtual int owner() const { return m_owner; }
+	virtual int owner() const { return m_owner; };
 
 	virtual void push() = 0;
 	virtual void pop() = 0;

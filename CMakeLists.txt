@@ -94,10 +94,12 @@ set(sources
 	core/functionals/color-functions.h
 	core/functionals/lambda-thread.cpp
 	core/functionals/lambda-thread.h
-	core/interfaces/inotification-callback.h
 	core/interfaces/inotification-callback.cpp
+	core/interfaces/inotification-callback.h
 	core/networking/broadcast-service.cpp
 	core/networking/broadcast-service.h
+	core/networking/protocols/json-protocol.cpp
+	core/networking/protocols/json-protocol.h
 	core/networking/web-socket.cpp
 	core/networking/web-socket.h
 	core/networking/web-socket-server.cpp

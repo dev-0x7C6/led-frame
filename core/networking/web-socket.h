@@ -22,7 +22,7 @@ public:
 	explicit WebSocket(QWebSocket *socket, QObject *parent = nullptr);
 	virtual ~WebSocket() = default;
 
-	void sendTextMessage(const QString &message);
+	void send(const QString &message);
 
 	virtual void attached(Corrector::Interface::ICorrector *corrector) override;
 	virtual void detached(Corrector::Interface::ICorrector *corrector) override;
@@ -35,10 +35,6 @@ public:
 	virtual void attached(Receiver::Interface::IReceiver *receiver) override;
 	virtual void detached(Receiver::Interface::IReceiver *receiver) override;
 	virtual void modified(Receiver::Interface::IReceiver *receiver) override;
-
-private:
-	template <typename type>
-	void send(type *object, const QString &command);
 
 private:
 	QWebSocket *m_webSocket;

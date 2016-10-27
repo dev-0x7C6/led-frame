@@ -24,7 +24,6 @@ class CorrectorManager;
 namespace Receiver {
 namespace Interface {
 
-//TODO: We need internal id implementation for IReceiver
 class IReceiver : public ::Interface::INotificationCallback {
 public:
 	explicit IReceiver() = default;
@@ -32,7 +31,7 @@ public:
 
 	virtual QString name() const = 0;
 	virtual Enum::ReceiverType type() const = 0;
-	virtual QJsonObject parameters() const = 0;
+
 	virtual uint32_t framerate() const { return 90; }
 
 	virtual void disconnectEmitter() = 0;

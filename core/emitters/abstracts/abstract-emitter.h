@@ -15,8 +15,6 @@ public:
 	explicit AbstractEmitter();
 	virtual ~AbstractEmitter() = default;
 
-	virtual QJsonObject parameters() const override;
-
 	virtual void commit(const Container::ColorScanlineContainer &scanline) override;
 	virtual Container::ColorScanlineContainer data() override;
 

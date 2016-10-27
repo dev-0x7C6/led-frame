@@ -15,7 +15,6 @@ public:
 
 	virtual double factor() const override;
 	virtual uint32_t priority() const override;
-	virtual QJsonObject parameters() const override;
 
 	virtual void push() override;
 	virtual void pop() override;
