@@ -21,4 +21,13 @@ inline QString name(const CorrectorType &type) {
 
 	return {};
 }
+
+constexpr auto value(const CorrectorType type) {
+	switch (type) {
+		case CorrectorType::ColorEnhancer: return "color_enhancer";
+		case CorrectorType::Brightness: return "brightness";
+		case CorrectorType::RGBChannel: return "rgbchannel";
+		case CorrectorType::FlickrEffect: return "flickr_effect";
+	}
+}
 }

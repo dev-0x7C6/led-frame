@@ -24,7 +24,7 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const Correc
 	auto json = header(ProtocolMessage::Notification, event, ProtocolSource::Corrector);
 	const QJsonObject datagram{
 		{"id", corrector->id()},
-		{"type", static_cast<int>(corrector->type())},
+		{"type", value(corrector->type())},
 		{"owner", corrector->owner()},
 		{"factor", corrector->factor()},
 		{"min", corrector->minimumFactor()},
@@ -39,7 +39,7 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const Emitte
 	auto json = header(ProtocolMessage::Notification, event, ProtocolSource::Emitter);
 	const QJsonObject datagram{
 		{"id", emitter->id()},
-		{"type", static_cast<int>(emitter->type())},
+		{"type", value(emitter->type())},
 		{"name", emitter->name()},
 		{"description", ""},
 	};
@@ -52,7 +52,7 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const Receiv
 	auto json = header(ProtocolMessage::Notification, event, ProtocolSource::Receiver);
 	const QJsonObject datagram{
 		{"id", receiver->id()},
-		{"type", static_cast<int>(receiver->type())},
+		{"type", value(receiver->type())},
 		{"name", receiver->name()},
 		{"emitter", receiver->connectedEmitterId()},
 	};
