@@ -42,9 +42,9 @@
 *content in header:*
 ```javascript
 {
-	"data": {
+	"datagram": {
 		"id": int, // unique id
-		"type": int, // type (animation, color, display and etc.)
+		"type": string, // type (animation, color, display and etc.)
 		"name": string, // user nickname
 		"description": string, // details and etc.
 	}
@@ -55,9 +55,9 @@
 *content in header:*
 ```javascript
 {
-	"data": {
+	"datagram": {
 		"id": int, // unique id (of receiver aka device)
-		"type": int, // type (uart device)
+		"type": string, // type (uart device)
 		"name": string, // user nickname
 		"emitter": int, // id of emitter that is connected to receiver
 	}
@@ -68,10 +68,10 @@
 *content in header:*
 ```javascript
 {
-	"data": {
+	"datagram": {
 		"id": int, // unique id
-		"type": int, // type (brightness, rgb correction and etc.)
-		"receiver": int, // id of receiver that is using corrector
+		"type": string, // type (brightness, rgb correction and etc.)
+		"owner": int, // id of receiver that is using corrector
 		"factor": double, // value of correction
 		"min":double, // minimal value
 		"max": double, // maximum value
@@ -88,10 +88,10 @@
 	"event": "attached"
 	"source": "corrector"
 
-	"data": {
+	"datagram": {
 		"id": 15,
-		"type": 1,
-		"receiver": 3,
+		"type": "brightness",
+		"owner": 3,
 		"factor": 3.0,
 		"min": 1.0,
 		"max": 6.0,
