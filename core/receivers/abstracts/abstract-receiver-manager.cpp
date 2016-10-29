@@ -25,6 +25,14 @@ void AbstractReceiverManager::detach(IReceiverNotify *notify) {
 	});
 }
 
+IReceiver *AbstractReceiverManager::findById(const int id) const {
+	for (const auto &receiver : m_receivers)
+		if (receiver->id() == id)
+			return receiver.get();
+
+	return nullptr;
+}
+
 const std::list<std::unique_ptr<IReceiver>> &AbstractReceiverManager::list() const {
 	return m_receivers;
 }

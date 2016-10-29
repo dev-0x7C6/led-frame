@@ -172,6 +172,16 @@ int main(int argc, char *argv[]) {
 					if (obj.value("command") == "set_correction")
 						setGlobalCorrection(obj.value("l").toDouble(), obj.value("r").toDouble(), obj.value("g").toDouble(), obj.value("b").toDouble());
 
+					if (obj.value("message") == "command" && obj.value("event") == "set_emitter") {
+						auto receiver = receiverManager.findById(obj.value("receiver").toInt());
+
+						if (receiver) {
+							auto emitter = emitterManager.findById(obj.value("emitter").toInt());
+							if (emitter)
+								receiver->connectEmitter(emitter);
+						}
+					}
+
 					if (obj.value("command") == "set_emitter") {
 						auto deviceId = obj.value("device").toString();
 						auto emitterId = obj.value("emitter").toString();

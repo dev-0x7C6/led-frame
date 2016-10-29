@@ -17,7 +17,8 @@ public:
 	virtual void attach(Emitter::Interface::IEmitterNotify *notify) override;
 	virtual void detach(Emitter::Interface::IEmitterNotify *notify) override;
 
-	virtual const std::list<std::shared_ptr<Emitter::Interface::IEmitter>> &list() const override;
+	virtual std::shared_ptr<Interface::IEmitter> findById(const int id) const override;
+	virtual const std::list<std::shared_ptr<Interface::IEmitter>> &list() const override;
 
 private:
 	std::list<std::shared_ptr<Emitter::Interface::IEmitter>> m_emitters;
