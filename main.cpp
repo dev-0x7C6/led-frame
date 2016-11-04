@@ -181,21 +181,6 @@ int main(int argc, char *argv[]) {
 								receiver->connectEmitter(emitter);
 						}
 					}
-
-					if (obj.value("command") == "set_emitter") {
-						auto deviceId = obj.value("device").toString();
-						auto emitterId = obj.value("emitter").toString();
-						Receiver::Interface::IReceiver *receiver = nullptr;
-
-						for (const auto &device : receiverManager.list())
-							if (device->name() == deviceId)
-								receiver = device.get();
-
-						if (receiver)
-							for (const auto &emitter : emitterManager.list())
-								if (emitter->name() == emitterId)
-									receiver->connectEmitter(emitter);
-					}
 				});
 		});
 

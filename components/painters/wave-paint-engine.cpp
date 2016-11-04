@@ -102,24 +102,9 @@ void WavePaintEngine::resize(const QSize &size) {
 	}
 }
 
-#include <QtDebug>
-
 void WavePaintEngine::update() {
 	if (!m_animationEnabled)
 		return;
-
-	m_shift += m_parent->width() / 200;
-
-	for (uint32_t i = 0; i < scanline_line; ++i) {
-		double step = m_parent->width() / static_cast<double>(scanline_line);
-		double hue = static_cast<double>(m_shift + (step * i)) / m_pixmap.width() * 2;
-
-		if (hue > 1.0)
-			hue = hue - 1.0;
-	}
-
-	if (m_shift > m_pixmap.width() / 2)
-		m_shift = 0;
 
 	m_parent->update();
 }

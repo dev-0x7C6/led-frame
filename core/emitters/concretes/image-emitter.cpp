@@ -69,9 +69,12 @@ bool ImageEmitter::loadFromFile(const QString &filePath) {
 			b += static_cast<uint8_t>(rgb >> 0x00);
 		}
 
-		r /= static_cast<uint64_t>(c);
-		g /= static_cast<uint64_t>(c);
-		b /= static_cast<uint64_t>(c);
+		if (c > 0) {
+			r /= static_cast<uint64_t>(c);
+			g /= static_cast<uint64_t>(c);
+			b /= static_cast<uint64_t>(c);
+		}
+
 		r = std::min(static_cast<uint64_t>(255), r);
 		g = std::min(static_cast<uint64_t>(255), g);
 		b = std::min(static_cast<uint64_t>(255), b);

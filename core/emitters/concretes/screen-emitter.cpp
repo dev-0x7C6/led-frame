@@ -131,10 +131,13 @@ void ScreenEmitter::run() {
 				g += (data[p] >> 0x08) & 0xffu;
 			}
 
-			c /= step;
-			r /= static_cast<uint64_t>(c);
-			g /= static_cast<uint64_t>(c);
-			b /= static_cast<uint64_t>(c);
+			if (c > 0) {
+				c /= step;
+				r /= static_cast<uint64_t>(c);
+				g /= static_cast<uint64_t>(c);
+				b /= static_cast<uint64_t>(c);
+			}
+
 			r = std::min(static_cast<uint64_t>(255), r);
 			g = std::min(static_cast<uint64_t>(255), g);
 			b = std::min(static_cast<uint64_t>(255), b);
