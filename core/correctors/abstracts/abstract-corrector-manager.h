@@ -21,7 +21,8 @@ public:
 	virtual void attach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
 	virtual void detach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
 
-	virtual const std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> &correctorList() const override;
+	virtual std::shared_ptr<Interface::ICorrector> find(const int id) const override;
+	virtual const std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> &list() const override;
 
 	virtual uint32_t execute(uint32_t color) override;
 	virtual void push() override;

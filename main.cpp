@@ -159,7 +159,7 @@ int main(int argc, char *argv[]) {
 							if (receiver->name() != obj.value("device").toString())
 								continue;
 
-							for (auto &corrector : receiver->correctorManager()->correctorList()) {
+							for (auto &corrector : receiver->correctorManager()->list()) {
 								if (obj.value("corrector").toInt() == static_cast<int>(corrector->type())) {
 									const auto factor = obj.value("factor").toDouble();
 									corrector->setFactor(factor);
@@ -172,14 +172,33 @@ int main(int argc, char *argv[]) {
 					if (obj.value("command") == "set_correction")
 						setGlobalCorrection(obj.value("l").toDouble(), obj.value("r").toDouble(), obj.value("g").toDouble(), obj.value("b").toDouble());
 
-					if (obj.value("message") == "command" && obj.value("event") == "set_emitter") {
-						auto receiver = receiverManager.findById(obj.value("receiver").toInt());
+					if (obj.value("message") == "command" && obj.value("event") == "set_corrector") {
+						auto receiver = receiverManager.find(obj.value("receiver").toInt());
 
-						if (receiver) {
-							auto emitter = emitterManager.findById(obj.value("emitter").toInt());
-							if (emitter)
-								receiver->connectEmitter(emitter);
-						}
+						if (!receiver)
+							return;
+
+						auto corrector = receiver->correctorManager()->find(obj.value("corrector").toInt());
+
+						if (!corrector)
+							return;
+
+						corrector->setFactor(obj.value("factor").toDouble());
+						corrector->setEnabled(obj.value("enabled").toBool());
+					}
+
+					if (obj.value("message") == "command" && obj.value("event") == "set_emitter") {
+						auto receiver = receiverManager.find(obj.value("receiver").toInt());
+
+						if (!receiver)
+							return;
+
+						auto emitter = emitterManager.find(obj.value("emitter").toInt());
+
+						if (!emitter)
+							return;
+
+						receiver->connectEmitter(emitter);
 					}
 				});
 		});

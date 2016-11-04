@@ -50,7 +50,7 @@ void AbstractEmitterManager::detach(IEmitterNotify *notify) {
 		notify->detached(emitter);
 }
 
-std::shared_ptr<IEmitter> AbstractEmitterManager::findById(const int id) const {
+std::shared_ptr<IEmitter> AbstractEmitterManager::find(const int id) const {
 	for (const auto &emitter : m_emitters)
 		if (emitter->id() == id)
 			return emitter;

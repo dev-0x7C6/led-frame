@@ -29,7 +29,7 @@ EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::I
 	m_actionEmitters->setMenu(new QMenu);
 	m_actionCorrectors->setMenu(new QMenu);
 
-	for (const auto &corrector : receiver->correctorManager()->correctorList()) {
+	for (const auto &corrector : receiver->correctorManager()->list()) {
 		auto action = m_actionCorrectors->menu()->addAction(name(corrector->type()));
 		auto menu = new QMenu;
 		auto toggle = menu->addAction("Active");

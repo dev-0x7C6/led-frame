@@ -19,7 +19,7 @@ public:
 	virtual void attach(IReceiverNotify *notify) = 0;
 	virtual void detach(IReceiverNotify *notify) = 0;
 
-	virtual Receiver::Interface::IReceiver *findById(const int id) const = 0;
+	virtual Receiver::Interface::IReceiver *find(const int id) const = 0;
 	virtual const std::list<std::unique_ptr<IReceiver>> &list() const = 0;
 
 protected:

@@ -22,7 +22,7 @@ public:
 	virtual void attach(IEmitterNotify *notify) = 0;
 	virtual void detach(IEmitterNotify *notify) = 0;
 
-	virtual std::shared_ptr<Interface::IEmitter> findById(const int id) const = 0;
+	virtual std::shared_ptr<Interface::IEmitter> find(const int id) const = 0;
 	virtual const std::list<std::shared_ptr<IEmitter>> &list() const = 0;
 
 	virtual void load() = 0;

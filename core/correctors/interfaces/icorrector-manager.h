@@ -22,7 +22,8 @@ public:
 	virtual void attach(const std::shared_ptr<ICorrector> &corrector) = 0;
 	virtual void detach(const std::shared_ptr<ICorrector> &corrector) = 0;
 
-	virtual const std::vector<std::shared_ptr<ICorrector>> &correctorList() const = 0;
+	virtual std::shared_ptr<ICorrector> find(const int id) const = 0;
+	virtual const std::vector<std::shared_ptr<ICorrector>> &list() const = 0;
 
 	virtual uint32_t execute(uint32_t color) = 0;
 	virtual void push() = 0;
