@@ -1,37 +1,36 @@
-#include <QApplication>
-
 #include <core/containers/application-info-container.h>
 #include <core/correctors/concretes/brightness-corrector.h>
-#include <core/correctors/concretes/corrector-manager.h>
 #include <core/correctors/concretes/corrector-manager.h>
 #include <core/correctors/concretes/rgb-channel-corrector.h>
 #include <core/correctors/factories/corrector-factory.h>
 #include <core/emitters/concretes/emitter-manager.h>
 #include <core/emitters/concretes/screen-emitter.h>
 #include <core/emitters/factories/emitter-factory.h>
+#include <core/functionals/debug-notification.h>
 #include <core/networking/broadcast-service.h>
 #include <core/networking/web-socket.h>
 #include <core/networking/web-socket-server.h>
-#include <core/functionals/debug-notification.h>
 #include <core/receivers/concretes/device-manager.h>
 #include <core/receivers/concretes/uart-receiver.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
+#include "core/managers/main-manager.h"
 
+#include <QApplication>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
 #include <QScreen>
 #include <QSettings>
-#include <QJsonArray>
 #include <QWebSocket>
 
 #include <memory>
 
 using namespace Container;
 using namespace Enum;
-
+using namespace Manager;
 using namespace Corrector::Concrete;
 using namespace Corrector::Concrete::Manager;
 using namespace Corrector::Factory;
@@ -63,9 +62,6 @@ void createDefaultEmitters(EmitterManager &manager) {
 }
 
 int main(int argc, char *argv[]) {
-#ifdef QT_DEBUG
-	static Functional::DebugNotification debug;
-#endif
 	ApplicationInfoContainer info;
 	QApplication application(argc, argv);
 	application.setQuitOnLastWindowClosed(false);
@@ -75,24 +71,23 @@ int main(int argc, char *argv[]) {
 	QSettings settings(info.applicationName(), info.applicationName());
 	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness, -1);
 	auto rgbCorrector = std::make_shared<RGBChannelCorrector>(-1);
-	CorrectorManager correctorManager;
-	ReceiverManager receiverManager;
-	EmitterManager emitterManager(settings);
+
+	MainManager manager;
+
 #ifdef QT_DEBUG
-	correctorManager.attach(&debug);
-	receiverManager.attach(&debug);
-	emitterManager.attach(&debug);
+	static Functional::DebugNotification notificationDebugger;
+	manager.attach(notificationDebugger);
 #endif
-	emitterManager.load();
-	correctorManager.attach(brightnessCorrector);
-	correctorManager.attach(rgbCorrector);
+	manager.emitters().load();
+	manager.correctors().attach(brightnessCorrector);
+	manager.correctors().attach(rgbCorrector);
 
-	if (emitterManager.isFirstRun())
-		createDefaultEmitters(emitterManager);
+	if (manager.emitters().isFirstRun())
+		createDefaultEmitters(manager.emitters());
 
-	receiverManager.setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
+	manager.receivers().setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
 #ifdef QT_DEBUG
-		receiver->correctorManager()->attach(&debug);
+		receiver->correctorManager()->attach(&notificationDebugger);
 #endif
 		settings.beginGroup("devices");
 		settings.beginGroup(serialNumber);
@@ -118,13 +113,11 @@ int main(int argc, char *argv[]) {
 
 	Network::WebSocketServer webSocketServer;
 	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection,
-		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &emitterManager, &receiverManager, &correctorManager](QWebSocket *socket) {
+		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &manager](QWebSocket *socket) {
 			auto connection = new Network::WebSocket(socket, &webSocketServer);
-			emitterManager.attach(connection);
-			receiverManager.attach(connection);
-			correctorManager.attach(connection);
+			manager.attach(*connection);
 
-			for (const auto &receiver : receiverManager.list())
+			for (const auto &receiver : manager.receivers().list())
 				receiver->correctorManager()->attach(connection);
 
 			auto broadcastGlobalCorrection = [connection, &brightnessCorrector, &rgbCorrector]() {
@@ -139,11 +132,11 @@ int main(int argc, char *argv[]) {
 				connection->send(doc.toJson());
 			};
 
-			correctorManager.callback(connection, broadcastGlobalCorrection);
+			manager.correctors().callback(connection, broadcastGlobalCorrection);
 			broadcastGlobalCorrection();
 
 			QObject::connect(connection, &Network::WebSocket::textMessageReceived,
-				[&brightnessCorrector, &rgbCorrector, &emitterManager, &receiverManager, &correctorManager](const QString &message) {
+				[&brightnessCorrector, &rgbCorrector, &manager](const QString &message) {
 					auto json = QJsonDocument::fromJson(message.toUtf8());
 					auto obj = json.object();
 
@@ -154,26 +147,11 @@ int main(int argc, char *argv[]) {
 						rgbCorrector->setBlueFactor(b);
 					};
 
-					if (obj.value("command") == "set_corrector") {
-						for (const auto &receiver : receiverManager.list()) {
-							if (receiver->name() != obj.value("device").toString())
-								continue;
-
-							for (auto &corrector : receiver->correctorManager()->list()) {
-								if (obj.value("corrector").toInt() == static_cast<int>(corrector->type())) {
-									const auto factor = obj.value("factor").toDouble();
-									corrector->setFactor(factor);
-									corrector->setEnabled(factor != corrector->minimumFactor());
-								}
-							}
-						}
-					}
-
 					if (obj.value("command") == "set_correction")
 						setGlobalCorrection(obj.value("l").toDouble(), obj.value("r").toDouble(), obj.value("g").toDouble(), obj.value("b").toDouble());
 
 					if (obj.value("message") == "command" && obj.value("event") == "set_corrector") {
-						auto receiver = receiverManager.find(obj.value("receiver").toInt());
+						auto receiver = manager.receivers().find(obj.value("receiver").toInt());
 
 						if (!receiver)
 							return;
@@ -188,12 +166,12 @@ int main(int argc, char *argv[]) {
 					}
 
 					if (obj.value("message") == "command" && obj.value("event") == "set_emitter") {
-						auto receiver = receiverManager.find(obj.value("receiver").toInt());
+						auto receiver = manager.receivers().find(obj.value("receiver").toInt());
 
 						if (!receiver)
 							return;
 
-						auto emitter = emitterManager.find(obj.value("emitter").toInt());
+						auto emitter = manager.emitters().find(obj.value("emitter").toInt());
 
 						if (!emitter)
 							return;
@@ -205,10 +183,9 @@ int main(int argc, char *argv[]) {
 
 	Tray::SystemTray tray;
 	tray.setBrightness(brightnessCorrector->factor());
-	emitterManager.attach(&tray);
-	receiverManager.attach(&tray);
+	manager.attach(tray);
 
-	correctorManager.callback(&tray, [&tray, &brightnessCorrector]() { tray.setBrightness(brightnessCorrector->factor()); });
+	manager.correctors().callback(&tray, [&tray, &brightnessCorrector]() { tray.setBrightness(brightnessCorrector->factor()); });
 
 	tray.setAboutRequestCallback([] {
 		static bool dialogGuardVisible = false;
@@ -224,8 +201,6 @@ int main(int argc, char *argv[]) {
 
 	tray.setCloseRequestCallback([&application] { application.quit(); });
 
-	receiverManager.run();
-	int result = application.exec();
-	emitterManager.save();
-	return result;
+	manager.run();
+	return application.exec();
 }

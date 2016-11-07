@@ -66,6 +66,10 @@ void SystemTray::modified(const std::shared_ptr<IEmitter> &emitter) {
 	m_emitterConfigurationMenu.modified(emitter);
 }
 
+void SystemTray::attached(Corrector::Interface::ICorrector *corrector) { static_cast<void>(corrector); }
+void SystemTray::detached(Corrector::Interface::ICorrector *corrector) { static_cast<void>(corrector); }
+void SystemTray::modified(Corrector::Interface::ICorrector *corrector) { static_cast<void>(corrector); }
+
 void SystemTray::attached(IReceiver *receiver) { m_deviceMenu.attached(receiver); }
 void SystemTray::detached(IReceiver *receiver) { m_deviceMenu.detached(receiver); }
 void SystemTray::modified(IReceiver *receiver) { m_deviceMenu.modified(receiver); }

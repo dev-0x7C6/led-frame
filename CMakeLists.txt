@@ -49,7 +49,24 @@ if (UNIX)
 endif (UNIX)
 
 set(sources
+	components/painters/wave-paint-engine.cpp
 	components/painters/wave-paint-engine.h
+	components/widgets/decorated-dialog.cpp
+	components/widgets/decorated-dialog.h
+	core/containers/abstract-container.cpp
+	core/containers/abstract-container.h
+	core/containers/application-info-container.cpp
+	core/containers/application-info-container.h
+	core/containers/color-correction-container.cpp
+	core/containers/color-correction-container.h
+	core/containers/color-scanline-container.cpp
+	core/containers/color-scanline-container.h
+	core/containers/device-config-container.cpp
+	core/containers/device-config-container.h
+	core/containers/device-info-container.cpp
+	core/containers/device-info-container.h
+	core/containers/led-ribbon-config-container.cpp
+	core/containers/led-ribbon-config-container.h
 	core/correctors/abstracts/abstract-corrector.cpp
 	core/correctors/abstracts/abstract-corrector.h
 	core/correctors/abstracts/abstract-corrector-manager.cpp
@@ -69,6 +86,8 @@ set(sources
 	core/correctors/interfaces/icorrector.h
 	core/correctors/interfaces/icorrector-manager.h
 	core/correctors/interfaces/icorrector-notify.h
+	core/devices/device-port.cpp
+	core/devices/device-port.h
 	core/emitters/abstracts/abstract-emitter.cpp
 	core/emitters/abstracts/abstract-emitter.h
 	core/emitters/abstracts/abstract-emitter-manager.cpp
@@ -90,12 +109,41 @@ set(sources
 	core/emitters/interfaces/iemitter.h
 	core/emitters/interfaces/iemitter-manager.h
 	core/emitters/interfaces/iemitter-notify.h
+	core/enums/color-format-enum.h
+	core/enums/color-type-enum.h
+	core/enums/container-type-enum.h
+	core/enums/corrector-type.h
+	core/enums/direction.h
+	core/enums/emitter-type-enum.h
+	core/enums/position-enum.h
+	core/enums/receiver-type-enum.h
+	core/enums/screen-capture-type.h
+	core/factories/screen-capture-factory.cpp
+	core/factories/screen-capture-factory.h
+	core/functionals/captures/qt-screen-capture.cpp
+	core/functionals/captures/qt-screen-capture.h
 	core/functionals/color-functions.cpp
 	core/functionals/color-functions.h
+	core/functionals/color-stream.cpp
+	core/functionals/color-stream.h
+	core/functionals/debug-notification.cpp
+	core/functionals/debug-notification.h
 	core/functionals/lambda-thread.cpp
 	core/functionals/lambda-thread.h
+	core/functionals/loop-sync.cpp
+	core/functionals/loop-sync.h
+	core/interfaces/imulti-notifier.h
 	core/interfaces/inotification-callback.cpp
 	core/interfaces/inotification-callback.h
+	core/interfaces/iscreen-capture.h
+	core/managers/main-manager.cpp
+	core/managers/main-manager.h
+	core/menus/device-menu.cpp
+	core/menus/device-menu.h
+	core/menus/emitter-configuration-menu.cpp
+	core/menus/emitter-configuration-menu.h
+	core/menus/emitter-selector-menu.cpp
+	core/menus/emitter-selector-menu.h
 	core/networking/broadcast-service.cpp
 	core/networking/broadcast-service.h
 	core/networking/protocols/json-protocol.cpp
@@ -115,67 +163,22 @@ set(sources
 	core/receivers/interfaces/ireceiver.h
 	core/receivers/interfaces/ireceiver-manager.h
 	core/receivers/interfaces/ireceiver-notify.h
-	gui/tray/system-tray-icon.cpp
-	gui/tray/system-tray-icon.h
-	components/painters/wave-paint-engine.cpp
-	components/widgets/decorated-dialog.cpp
-	components/widgets/decorated-dialog.h
-	core/containers/abstract-container.cpp
-	core/containers/abstract-container.h
-	core/containers/application-info-container.cpp
-	core/containers/application-info-container.h
-	core/containers/color-correction-container.cpp
-	core/containers/color-correction-container.h
-	core/containers/color-scanline-container.cpp
-	core/containers/color-scanline-container.h
-	core/containers/device-config-container.cpp
-	core/containers/device-config-container.h
-	core/containers/device-info-container.cpp
-	core/containers/device-info-container.h
-	core/containers/led-ribbon-config-container.cpp
-	core/containers/led-ribbon-config-container.h
-	core/devices/device-port.cpp
-	core/devices/device-port.h
-	core/enums/color-format-enum.h
-	core/enums/color-type-enum.h
-	core/enums/container-type-enum.h
-	core/enums/corrector-type.h
-	core/enums/direction.h
-	core/enums/emitter-type-enum.h
-	core/enums/position-enum.h
-	core/enums/receiver-type-enum.h
-	core/enums/screen-capture-type.h
-	core/factories/screen-capture-factory.cpp
-	core/factories/screen-capture-factory.h
-	core/functionals/captures/qt-screen-capture.cpp
-	core/functionals/captures/qt-screen-capture.h
-	core/functionals/color-stream.cpp
-	core/functionals/color-stream.h
-	core/functionals/debug-notification.cpp
-	core/functionals/debug-notification.h
-	core/functionals/loop-sync.cpp
-	core/functionals/loop-sync.h
-	core/interfaces/iscreen-capture.h
-	core/menus/device-menu.cpp
-	core/menus/device-menu.h
-	core/menus/emitter-configuration-menu.cpp
-	core/menus/emitter-configuration-menu.h
-	core/menus/emitter-selector-menu.cpp
-	core/menus/emitter-selector-menu.h
 	gui/dialogs/about-dialog.cpp
 	gui/dialogs/about-dialog.h
 	gui/dialogs/about-dialog.ui
 	gui/dialogs/alc-screen-configure-dialog.cpp
 	gui/dialogs/alc-screen-configure-dialog.h
 	gui/dialogs/alc-screen-configure-dialog.ui
-	gui/widgets/corrector-settings-dialog.h
-	gui/widgets/corrector-settings-dialog.cpp
 	gui/tray/system-tray.cpp
 	gui/tray/system-tray.h
+	gui/tray/system-tray-icon.cpp
+	gui/tray/system-tray-icon.h
 	gui/widgets/alc-color-correction-widget.cpp
 	gui/widgets/alc-color-correction-widget.h
 	gui/widgets/alc-color-correction-widget.ui
 	gui/widgets/alc-emitter-widget.ui
+	gui/widgets/corrector-settings-dialog.cpp
+	gui/widgets/corrector-settings-dialog.h
 	gui/widgets/device-symulation-widget.cpp
 	gui/widgets/device-symulation-widget.h
 	gui/wizards/device-setup-general-test.cpp

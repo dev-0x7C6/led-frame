@@ -1,17 +1,17 @@
-#include <core/functionals/debug-notification.h>
-#include <core/correctors/interfaces/icorrector.h>
-#include <core/emitters/interfaces/iemitter.h>
-#include <core/receivers/interfaces/ireceiver.h>
+#include "core/correctors/interfaces/icorrector.h"
+#include "core/emitters/interfaces/iemitter.h"
+#include "core/functionals/debug-notification.h"
+#include "core/receivers/interfaces/ireceiver.h"
 
-#include <iostream>
-#include <string>
-#include <sstream>
 #include <cstdint>
 #include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <string>
 
-using namespace Functional;
 using namespace Corrector::Interface;
 using namespace Emitter::Interface;
+using namespace Functional;
 using namespace Receiver::Interface;
 
 namespace {

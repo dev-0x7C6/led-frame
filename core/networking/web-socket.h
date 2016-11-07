@@ -1,8 +1,6 @@
 #pragma once
 
-#include <core/emitters/interfaces/iemitter-notify.h>
-#include <core/receivers/interfaces/ireceiver-notify.h>
-#include <core/correctors/interfaces/icorrector-notify.h>
+#include "core/interfaces/imulti-notifier.h"
 
 #include <QObject>
 
@@ -10,13 +8,7 @@ class QWebSocket;
 
 namespace Network {
 
-class WebSocket
-	: public QObject,
-	  public Emitter::Interface::IEmitterNotify,
-	  public Corrector::Interface::ICorrectorNotify,
-	  public Receiver::Interface::IReceiverNotify
-
-{
+class WebSocket : public QObject, public Interface::IMultiNotifier {
 	Q_OBJECT
 public:
 	explicit WebSocket(QWebSocket *socket, QObject *parent = nullptr);

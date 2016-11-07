@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/receivers/interfaces/ireceiver-notify.h>
 #include <core/menus/device-menu.h>
 #include <core/menus/emitter-configuration-menu.h>
+#include "core/interfaces/imulti-notifier.h"
 
 #include <QSystemTrayIcon>
 #include <functional>
@@ -12,10 +12,7 @@ class QMenu;
 
 namespace Tray {
 
-class SystemTray final
-	: public QSystemTrayIcon,
-	  public Receiver::Interface::IReceiverNotify,
-	  public Emitter::Interface::IEmitterNotify {
+class SystemTray final : public QSystemTrayIcon, public Interface::IMultiNotifier {
 public:
 	explicit SystemTray(QObject *parent = nullptr);
 	virtual ~SystemTray();
@@ -23,6 +20,10 @@ public:
 	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	virtual void modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+
+	virtual void attached(Corrector::Interface::ICorrector *corrector) override;
+	virtual void detached(Corrector::Interface::ICorrector *corrector) override;
+	virtual void modified(Corrector::Interface::ICorrector *corrector) override;
 
 	virtual void attached(Receiver::Interface::IReceiver *receiver) override;
 	virtual void detached(Receiver::Interface::IReceiver *receiver) override;

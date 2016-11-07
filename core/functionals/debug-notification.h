@@ -1,17 +1,10 @@
 #pragma once
 
-#include <core/correctors/interfaces/icorrector-notify.h>
-#include <core/emitters/interfaces/iemitter-notify.h>
-#include <core/receivers/interfaces/ireceiver-notify.h>
+#include "core/interfaces/imulti-notifier.h"
 
 namespace Functional {
 
-class DebugNotification
-	: public Corrector::Interface::ICorrectorNotify,
-	  public Emitter::Interface::IEmitterNotify,
-	  public Receiver::Interface::IReceiverNotify
-
-{
+class DebugNotification final : public Interface::IMultiNotifier {
 public:
 	explicit DebugNotification() = default;
 	virtual ~DebugNotification() = default;
