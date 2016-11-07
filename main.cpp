@@ -1,7 +1,5 @@
 #include <core/containers/application-info-container.h>
-#include <core/correctors/concretes/brightness-corrector.h>
 #include <core/correctors/concretes/corrector-manager.h>
-#include <core/correctors/concretes/rgb-channel-corrector.h>
 #include <core/correctors/factories/corrector-factory.h>
 #include <core/emitters/concretes/emitter-manager.h>
 #include <core/emitters/concretes/screen-emitter.h>
@@ -69,8 +67,6 @@ int main(int argc, char *argv[]) {
 	application.setApplicationVersion(info.versionToString());
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
 	QSettings settings(info.applicationName(), info.applicationName());
-	auto brightnessCorrector = CorrectorFactory::create(CorrectorType::Brightness, -1);
-	auto rgbCorrector = std::make_shared<RGBChannelCorrector>(-1);
 
 	MainManager manager;
 
@@ -79,13 +75,11 @@ int main(int argc, char *argv[]) {
 	manager.attach(notificationDebugger);
 #endif
 	manager.emitters().load();
-	manager.correctors().attach(brightnessCorrector);
-	manager.correctors().attach(rgbCorrector);
 
 	if (manager.emitters().isFirstRun())
 		createDefaultEmitters(manager.emitters());
 
-	manager.receivers().setRegisterDeviceCallback([&settings, &brightnessCorrector, &rgbCorrector](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
+	manager.receivers().setRegisterDeviceCallback([&settings, &manager](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
 #ifdef QT_DEBUG
 		receiver->correctorManager()->attach(&notificationDebugger);
 #endif
@@ -104,29 +98,37 @@ int main(int argc, char *argv[]) {
 		settings.endGroup();
 		settings.endGroup();
 		settings.sync();
-		receiver->correctorManager()->attach(brightnessCorrector);
-		receiver->correctorManager()->attach(rgbCorrector);
-		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::FlickrEffect, receiver->id()));
-		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer, receiver->id()));
+
+		for (const auto &corrector : manager.correctors().list())
+			receiver->correctorManager()->attach(corrector);
+
+		const auto id = receiver->id();
+
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::Brightness, id));
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::RedChannel, id));
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::GreenChannel, id));
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::BlueChannel, id));
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::FlickrEffect, id));
+		receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer, id));
 		return true;
 	});
 
 	Network::WebSocketServer webSocketServer;
 	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection,
-		[&brightnessCorrector, &rgbCorrector, &webSocketServer, &manager](QWebSocket *socket) {
+		[&webSocketServer, &manager](QWebSocket *socket) {
 			auto connection = new Network::WebSocket(socket, &webSocketServer);
 			manager.attach(*connection);
 
 			for (const auto &receiver : manager.receivers().list())
 				receiver->correctorManager()->attach(connection);
 
-			auto broadcastGlobalCorrection = [connection, &brightnessCorrector, &rgbCorrector]() {
+			auto broadcastGlobalCorrection = [connection, &manager]() {
 				auto jsonCommand = QJsonObject{
 					{"command", "set_global_correction"},
-					{"l", brightnessCorrector->factor()},
-					{"r", rgbCorrector->redFactor()},
-					{"g", rgbCorrector->greenFactor()},
-					{"b", rgbCorrector->blueFactor()},
+					{"l", manager.globalBrightnessCorrection()->factor()},
+					{"r", manager.globalRedCorrection()->factor()},
+					{"g", manager.globalGreenCorrection()->factor()},
+					{"b", manager.globalBlueCorrection()->factor()},
 				};
 				auto doc = QJsonDocument(jsonCommand);
 				connection->send(doc.toJson());
@@ -136,15 +138,15 @@ int main(int argc, char *argv[]) {
 			broadcastGlobalCorrection();
 
 			QObject::connect(connection, &Network::WebSocket::textMessageReceived,
-				[&brightnessCorrector, &rgbCorrector, &manager](const QString &message) {
+				[&manager](const QString &message) {
 					auto json = QJsonDocument::fromJson(message.toUtf8());
 					auto obj = json.object();
 
-					auto setGlobalCorrection = [&brightnessCorrector, &rgbCorrector](double l, double r, double g, double b) {
-						brightnessCorrector->setFactor(l);
-						rgbCorrector->setRedFactor(r);
-						rgbCorrector->setGreenFactor(g);
-						rgbCorrector->setBlueFactor(b);
+					auto setGlobalCorrection = [&manager](double l, double r, double g, double b) {
+						manager.globalBrightnessCorrection()->setFactor(l);
+						manager.globalRedCorrection()->setFactor(r);
+						manager.globalGreenCorrection()->setFactor(g);
+						manager.globalBlueCorrection()->setFactor(b);
 					};
 
 					if (obj.value("command") == "set_correction")
@@ -182,10 +184,10 @@ int main(int argc, char *argv[]) {
 		});
 
 	Tray::SystemTray tray;
-	tray.setBrightness(brightnessCorrector->factor());
+	tray.setBrightness(manager.globalBrightnessCorrection()->factor());
 	manager.attach(tray);
 
-	manager.correctors().callback(&tray, [&tray, &brightnessCorrector]() { tray.setBrightness(brightnessCorrector->factor()); });
+	manager.correctors().callback(&tray, [&tray, &manager]() { tray.setBrightness(manager.globalBrightnessCorrection()->factor()); });
 
 	tray.setAboutRequestCallback([] {
 		static bool dialogGuardVisible = false;

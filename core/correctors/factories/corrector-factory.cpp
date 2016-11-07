@@ -14,7 +14,9 @@ std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type, 
 		case CorrectorType::Brightness: return std::make_shared<BrightnessCorrector>(owner);
 		case CorrectorType::ColorEnhancer: return std::make_shared<ColorEnhancerCorrector>(owner);
 		case CorrectorType::FlickrEffect: return std::make_shared<FlickrEffectCorrector>(owner);
-		case CorrectorType::RGBChannel: return std::make_shared<RGBChannelCorrector>(owner);
+		case CorrectorType::RedChannel: return std::make_shared<RedChannelCorrector>(owner);
+		case CorrectorType::GreenChannel: return std::make_shared<GreenChannelCorrector>(owner);
+		case CorrectorType::BlueChannel: return std::make_shared<BlueChannelCorrector>(owner);
 	}
 
 	return nullptr;

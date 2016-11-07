@@ -13,8 +13,8 @@ public:
 	virtual Enum::CorrectorType type() const override;
 	virtual uint32_t correct(uint32_t color) override;
 
-	virtual double minimumFactor() const override { return 1; };
-	virtual double maximumFactor() const override { return 6; };
+	virtual double minimumFactor() const override { return 1; }
+	virtual double maximumFactor() const override { return 6; }
 };
 }
 }

@@ -5,29 +5,46 @@
 namespace Corrector {
 namespace Concrete {
 
-class RGBChannelCorrector final : public Abstract::AbstractCorrector {
+constexpr auto RGB_CORRECTION_MIN_VALUE = 0.0;
+constexpr auto RGB_CORRECTION_MAX_VALUE = 1.0;
+
+class RedChannelCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit RGBChannelCorrector(const int owner);
-	virtual ~RGBChannelCorrector() = default;
+	explicit RedChannelCorrector(const int owner);
+	virtual ~RedChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
 	virtual uint32_t correct(uint32_t color) override;
 
-	virtual double minimumFactor() const override;
-	virtual double maximumFactor() const override;
-
-	double redFactor() const;
-	double greenFactor() const;
-	double blueFactor() const;
-
-	void setRedFactor(double factor);
-	void setGreenFactor(double factor);
-	void setBlueFactor(double factor);
-
-private:
-	std::atomic<double> m_rfactor;
-	std::atomic<double> m_gfactor;
-	std::atomic<double> m_bfactor;
+	virtual double minimumFactor() const override { return RGB_CORRECTION_MIN_VALUE; }
+	virtual double maximumFactor() const override { return RGB_CORRECTION_MAX_VALUE; }
 };
+
+class GreenChannelCorrector final : public Abstract::AbstractCorrector {
+public:
+	explicit GreenChannelCorrector(const int owner);
+	virtual ~GreenChannelCorrector() = default;
+
+	virtual Enum::CorrectorType type() const override;
+	virtual uint32_t correct(uint32_t color) override;
+
+	virtual double minimumFactor() const override { return RGB_CORRECTION_MIN_VALUE; }
+	virtual double maximumFactor() const override { return RGB_CORRECTION_MAX_VALUE; }
+};
+
+
+class BlueChannelCorrector final : public Abstract::AbstractCorrector {
+public:
+	explicit BlueChannelCorrector(const int owner);
+	virtual ~BlueChannelCorrector() = default;
+
+	virtual Enum::CorrectorType type() const override;
+	virtual uint32_t correct(uint32_t color) override;
+
+	virtual double minimumFactor() const override { return RGB_CORRECTION_MIN_VALUE; }
+	virtual double maximumFactor() const override { return RGB_CORRECTION_MAX_VALUE; }
+};
+
+
 }
 }
