@@ -6,7 +6,7 @@ using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
 BrightnessCorrector::BrightnessCorrector(const int owner)
-		: Abstract::AbstractCorrector(owner, 0.5) {
+		: Abstract::AbstractCorrector(owner, 1.0) {
 }
 
 double BrightnessCorrector::minimumFactor() const { return 0; }

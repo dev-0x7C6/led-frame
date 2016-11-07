@@ -50,7 +50,6 @@ EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::I
 			dialog.setWindowTitle("Corrector: " + name(corrector->type()) + "");
 			QObject::connect(&dialog, &CorrectorSettingsDialog::valueChanged, [&corrector](int value) {
 				corrector->setFactor(CorrectorSettingsDialog::factor(value) * corrector->maximumFactor());
-				qDebug() << corrector->maximumFactor();
 			});
 			dialog.exec();
 		});

@@ -22,10 +22,24 @@ MainManager::MainManager()
 	m_correctorManager.attach(m_globalRedCorrection);
 	m_correctorManager.attach(m_globalGreenCorrection);
 	m_correctorManager.attach(m_globalBlueCorrection);
+
+	m_settings.beginGroup("GlobalCorrectors");
+	m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", 0.5).toDouble());
+	m_globalRedCorrection->setFactor(m_settings.value("red", 1.0).toDouble());
+	m_globalGreenCorrection->setFactor(m_settings.value("green", 0.95).toDouble());
+	m_globalBlueCorrection->setFactor(m_settings.value("blue", 0.9).toDouble());
+	m_settings.endGroup();
 }
 
 MainManager::~MainManager() {
 	m_emitterManager.save();
+
+	m_settings.beginGroup("GlobalCorrectors");
+	m_settings.setValue("brightness", m_globalBrightnessCorrection->factor());
+	m_settings.setValue("red", m_globalRedCorrection->factor());
+	m_settings.setValue("green", m_globalGreenCorrection->factor());
+	m_settings.setValue("blue", m_globalBlueCorrection->factor());
+	m_settings.endGroup();
 }
 
 void MainManager::run() {
