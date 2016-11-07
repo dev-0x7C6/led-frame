@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 8)
-set(VERSION_PATCH 5)
+set(VERSION_PATCH 6)
 
 configure_file(config.h.in config.h)
 
