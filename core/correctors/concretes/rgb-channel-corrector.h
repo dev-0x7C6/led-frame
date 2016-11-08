@@ -32,7 +32,6 @@ public:
 	virtual double maximumFactor() const override { return RGB_CORRECTION_MAX_VALUE; }
 };
 
-
 class BlueChannelCorrector final : public Abstract::AbstractCorrector {
 public:
 	explicit BlueChannelCorrector(const int owner);
@@ -44,7 +43,5 @@ public:
 	virtual double minimumFactor() const override { return RGB_CORRECTION_MIN_VALUE; }
 	virtual double maximumFactor() const override { return RGB_CORRECTION_MAX_VALUE; }
 };
-
-
 }
 }

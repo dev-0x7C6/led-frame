@@ -47,8 +47,7 @@ void AbstractCorrectorManager::detach(const std::shared_ptr<ICorrector> &correct
 	std::remove_if(m_correctors.begin(), m_correctors.end(), [&corrector](const auto &value) { return value == corrector; });
 }
 
-std::shared_ptr<ICorrector> AbstractCorrectorManager::find(const int id) const
-{
+std::shared_ptr<ICorrector> AbstractCorrectorManager::find(const int id) const {
 	for (const auto &corrector : m_correctors)
 		if (corrector->id() == id)
 			return corrector;

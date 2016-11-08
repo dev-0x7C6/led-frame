@@ -14,6 +14,7 @@
 #include <gui/tray/system-tray.h>
 #include <gui/wizards/device-setup-wizard.h>
 #include "core/managers/main-manager.h"
+#include "core/functionals/remote-controller.h"
 
 #include <QApplication>
 #include <QJsonArray>
@@ -29,6 +30,7 @@
 using namespace Container;
 using namespace Enum;
 using namespace Manager;
+using namespace Functional;
 using namespace Corrector::Concrete;
 using namespace Corrector::Concrete::Manager;
 using namespace Corrector::Factory;
@@ -69,12 +71,12 @@ int main(int argc, char *argv[]) {
 	QSettings settings(info.applicationName(), info.applicationName());
 
 	MainManager manager;
+	RemoteController controller(manager);
 
 #ifdef QT_DEBUG
 	static Functional::DebugNotification notificationDebugger;
 	manager.attach(notificationDebugger);
 #endif
-	manager.emitters().load();
 
 	if (manager.emitters().isFirstRun())
 		createDefaultEmitters(manager.emitters());
@@ -115,7 +117,7 @@ int main(int argc, char *argv[]) {
 
 	Network::WebSocketServer webSocketServer;
 	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection,
-		[&webSocketServer, &manager](QWebSocket *socket) {
+		[&webSocketServer, &manager, &controller](QWebSocket *socket) {
 			auto connection = new Network::WebSocket(socket, &webSocketServer);
 			manager.attach(*connection);
 
@@ -138,7 +140,7 @@ int main(int argc, char *argv[]) {
 			broadcastGlobalCorrection();
 
 			QObject::connect(connection, &Network::WebSocket::textMessageReceived,
-				[&manager](const QString &message) {
+				[&manager, &controller](const QString &message) {
 					auto json = QJsonDocument::fromJson(message.toUtf8());
 					auto obj = json.object();
 
@@ -152,34 +154,12 @@ int main(int argc, char *argv[]) {
 					if (obj.value("command") == "set_correction")
 						setGlobalCorrection(obj.value("l").toDouble(), obj.value("r").toDouble(), obj.value("g").toDouble(), obj.value("b").toDouble());
 
-					if (obj.value("message") == "command" && obj.value("event") == "set_corrector") {
-						auto receiver = manager.receivers().find(obj.value("receiver").toInt());
+					if (obj.value("message") == "command" && obj.value("event") == "set_corrector")
+						controller.changeCorrector(obj.value("receiver").toInt(), obj.value("corrector").toInt(), obj.value("factor").toDouble(),
+							obj.value("enabled").toBool());
 
-						if (!receiver)
-							return;
-
-						auto corrector = receiver->correctorManager()->find(obj.value("corrector").toInt());
-
-						if (!corrector)
-							return;
-
-						corrector->setFactor(obj.value("factor").toDouble());
-						corrector->setEnabled(obj.value("enabled").toBool());
-					}
-
-					if (obj.value("message") == "command" && obj.value("event") == "set_emitter") {
-						auto receiver = manager.receivers().find(obj.value("receiver").toInt());
-
-						if (!receiver)
-							return;
-
-						auto emitter = manager.emitters().find(obj.value("emitter").toInt());
-
-						if (!emitter)
-							return;
-
-						receiver->connectEmitter(emitter);
-					}
+					if (obj.value("message") == "command" && obj.value("event") == "set_emitter")
+						controller.changeEmitter(obj.value("receiver").toInt(), obj.value("emitter").toInt());
 				});
 		});
 
