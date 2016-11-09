@@ -115,53 +115,7 @@ int main(int argc, char *argv[]) {
 		return true;
 	});
 
-	Network::WebSocketServer webSocketServer;
-	QObject::connect(&webSocketServer, &Network::WebSocketServer::signalIncommingConnection,
-		[&webSocketServer, &manager, &controller](QWebSocket *socket) {
-			auto connection = new Network::WebSocket(socket, &webSocketServer);
-			manager.attach(*connection);
-
-			for (const auto &receiver : manager.receivers().list())
-				receiver->correctorManager()->attach(connection);
-
-			auto broadcastGlobalCorrection = [connection, &manager]() {
-				auto jsonCommand = QJsonObject{
-					{"command", "set_global_correction"},
-					{"l", manager.globalBrightnessCorrection()->factor()},
-					{"r", manager.globalRedCorrection()->factor()},
-					{"g", manager.globalGreenCorrection()->factor()},
-					{"b", manager.globalBlueCorrection()->factor()},
-				};
-				auto doc = QJsonDocument(jsonCommand);
-				connection->send(doc.toJson());
-			};
-
-			manager.correctors().callback(connection, broadcastGlobalCorrection);
-			broadcastGlobalCorrection();
-
-			QObject::connect(connection, &Network::WebSocket::textMessageReceived,
-				[&manager, &controller](const QString &message) {
-					auto json = QJsonDocument::fromJson(message.toUtf8());
-					auto obj = json.object();
-
-					auto setGlobalCorrection = [&manager](double l, double r, double g, double b) {
-						manager.globalBrightnessCorrection()->setFactor(l);
-						manager.globalRedCorrection()->setFactor(r);
-						manager.globalGreenCorrection()->setFactor(g);
-						manager.globalBlueCorrection()->setFactor(b);
-					};
-
-					if (obj.value("command") == "set_correction")
-						setGlobalCorrection(obj.value("l").toDouble(), obj.value("r").toDouble(), obj.value("g").toDouble(), obj.value("b").toDouble());
-
-					if (obj.value("message") == "command" && obj.value("event") == "set_corrector")
-						controller.changeCorrector(obj.value("receiver").toInt(), obj.value("corrector").toInt(), obj.value("factor").toDouble(),
-							obj.value("enabled").toBool());
-
-					if (obj.value("message") == "command" && obj.value("event") == "set_emitter")
-						controller.changeEmitter(obj.value("receiver").toInt(), obj.value("emitter").toInt());
-				});
-		});
+	Network::WebSocketConnectionManager webSocketServer(manager, controller);
 
 	Tray::SystemTray tray;
 	tray.setBrightness(manager.globalBrightnessCorrection()->factor());

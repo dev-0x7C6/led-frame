@@ -1,21 +1,22 @@
 #pragma once
 
 #include "core/interfaces/imulti-notifier.h"
+#include "core/interfaces/iremote-controller.h"
 
 #include <QObject>
+#include <memory>
 
 class QWebSocket;
 
 namespace Network {
 
-class WebSocket : public QObject, public Interface::IMultiNotifier {
+class WebSocketConnection : public QObject, public Interface::IMultiNotifier {
 	Q_OBJECT
 public:
-	explicit WebSocket(QWebSocket *socket, QObject *parent = nullptr);
-	virtual ~WebSocket() = default;
+	explicit WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket, QObject *parent = nullptr);
+	virtual ~WebSocketConnection();
 
-	void send(const QString &message);
-
+protected:
 	virtual void attached(Corrector::Interface::ICorrector *corrector) override;
 	virtual void detached(Corrector::Interface::ICorrector *corrector) override;
 	virtual void modified(Corrector::Interface::ICorrector *corrector) override;
@@ -28,10 +29,15 @@ public:
 	virtual void detached(Receiver::Interface::IReceiver *receiver) override;
 	virtual void modified(Receiver::Interface::IReceiver *receiver) override;
 
+protected:
+	void recv(const QString &message);
+	void send(const QString &message);
+
 private:
-	QWebSocket *m_webSocket;
+	Interface::IRemoteController &m_remoteController;
+	std::unique_ptr<QWebSocket> m_socket;
 
 signals:
-	void textMessageReceived(const QString &message);
+	void textMessageReceived(const QString &in);
 };
 }

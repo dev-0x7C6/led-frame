@@ -19,31 +19,58 @@ using namespace Enum;
 using namespace Network;
 using namespace Receiver::Interface;
 
-WebSocket::WebSocket(QWebSocket *socket, QObject *parent)
+WebSocketConnection::WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket, QObject *parent)
 		: QObject(parent)
-		, m_webSocket(socket) {
-	connect(m_webSocket, &QWebSocket::textMessageReceived, this, &WebSocket::textMessageReceived);
+		, m_remoteController(remoteController)
+		, m_socket(std::move(socket)) {
+	connect(m_socket.get(), &QWebSocket::textMessageReceived, this, &WebSocketConnection::recv);
 }
 
-void WebSocket::send(const QString &message) {
+WebSocketConnection::~WebSocketConnection() = default;
+
+// documentation/protocol/notification.md
+
+void WebSocketConnection::attached(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, corrector)); }
+void WebSocketConnection::detached(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, corrector)); }
+void WebSocketConnection::modified(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, corrector)); }
+
+void WebSocketConnection::attached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, emitter.get())); }
+void WebSocketConnection::detached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, emitter.get())); }
+void WebSocketConnection::modified(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, emitter.get())); }
+
+void WebSocketConnection::attached(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, receiver)); }
+void WebSocketConnection::detached(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, receiver)); }
+void WebSocketConnection::modified(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, receiver)); }
+
+void WebSocketConnection::send(const QString &message) {
 #ifdef QT_DEBUG
 	std::cout << message.toStdString() << std::endl
 			  << std::endl;
 #endif
-	m_webSocket->sendTextMessage(message);
-	m_webSocket->flush();
+	m_socket->sendTextMessage(message);
+	m_socket->flush();
 }
 
-// documentation/protocol/notification.md
+void WebSocketConnection::recv(const QString &in) {
+	auto json = QJsonDocument::fromJson(in.toUtf8());
+	auto obj = json.object();
 
-void WebSocket::attached(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, corrector)); }
-void WebSocket::detached(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, corrector)); }
-void WebSocket::modified(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, corrector)); }
+	const auto message = obj.value("message").toString();
+	const auto event = obj.value("event");
 
-void WebSocket::attached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, emitter.get())); }
-void WebSocket::detached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, emitter.get())); }
-void WebSocket::modified(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, emitter.get())); }
+	if (message == "command") {
+		if (event == "set_corrector") {
+			const auto receiverId = obj.value("receiver").toInt();
+			const auto correctorId = obj.value("corrector").toInt();
+			const auto factor = obj.value("factor").toDouble();
+			const auto enabled = obj.value("enabled").toBool();
+			m_remoteController.changeCorrector(receiverId, correctorId, factor, enabled);
+		}
 
-void WebSocket::attached(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, receiver)); }
-void WebSocket::detached(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, receiver)); }
-void WebSocket::modified(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, receiver)); }
+		if (event == "set_emitter") {
+			const auto receiverId = obj.value("receiver").toInt();
+			const auto emitterId = obj.value("emitter").toInt();
+			m_remoteController.changeEmitter(receiverId, emitterId);
+		}
+	}
+}

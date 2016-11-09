@@ -24,8 +24,21 @@ bool RemoteController::changeEmitter(int receiverId, int emitterId) {
 bool RemoteController::changeCorrector(int receiverId, int correctorId, double factor, bool enabled) {
 	auto receiver = m_mainManager.receivers().find(receiverId);
 
-	if (!receiver)
+	if (!receiver) {
+
+		if (receiverId == -1) {
+			auto corrector = m_mainManager.correctors().find(correctorId);
+
+			if (!corrector)
+				return false;
+
+			corrector->setFactor(factor);
+			corrector->setEnabled(enabled);
+			return true;
+		}
+
 		return false;
+	}
 
 	auto corrector = receiver->correctorManager()->find(correctorId);
 
@@ -34,4 +47,5 @@ bool RemoteController::changeCorrector(int receiverId, int correctorId, double f
 
 	corrector->setFactor(factor);
 	corrector->setEnabled(enabled);
+	return true;
 }

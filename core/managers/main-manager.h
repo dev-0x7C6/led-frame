@@ -4,6 +4,7 @@
 #include "core/correctors/interfaces/icorrector.h"
 #include "core/emitters/concretes/emitter-manager.h"
 #include "core/interfaces/imulti-notifier.h"
+#include "core/interfaces/imulti-notifier-manager.h"
 #include "core/receivers/concretes/device-manager.h"
 
 #include <QSettings>
@@ -12,13 +13,14 @@
 
 namespace Manager {
 
-class MainManager {
+class MainManager final : public Interface::IMutliNotifierManager {
 public:
 	explicit MainManager();
 	virtual ~MainManager();
 
 	void run();
-	void attach(Interface::IMultiNotifier &notifier);
+	virtual void attach(Interface::IMultiNotifier &notifier) override;
+	virtual void detach(Interface::IMultiNotifier &notifier) override;
 
 	Emitter::Concrete::Manager::EmitterManager &emitters();
 	Corrector::Concrete::Manager::CorrectorManager &correctors();

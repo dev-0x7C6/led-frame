@@ -122,7 +122,6 @@ set(sources
 	core/factories/screen-capture-factory.h
 	core/functionals/captures/qt-screen-capture.cpp
 	core/functionals/captures/qt-screen-capture.h
-	core/functionals/color-functions.cpp
 	core/functionals/color-functions.h
 	core/functionals/color-stream.cpp
 	core/functionals/color-stream.h
@@ -138,6 +137,7 @@ set(sources
 	core/interfaces/inotification-callback.cpp
 	core/interfaces/inotification-callback.h
 	core/interfaces/iscreen-capture.h
+	core/interfaces/imulti-notifier-manager.h
 	core/managers/main-manager.cpp
 	core/managers/main-manager.h
 	core/menus/device-menu.cpp

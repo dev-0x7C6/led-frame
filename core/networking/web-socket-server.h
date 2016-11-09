@@ -1,5 +1,8 @@
 #pragma once
 
+#include "core/interfaces/imulti-notifier-manager.h"
+#include "core/interfaces/iremote-controller.h"
+
 #include <QObject>
 
 class QWebSocket;
@@ -7,16 +10,21 @@ class QWebSocketServer;
 
 namespace Network {
 
-class WebSocketServer final : public QObject {
+class WebSocketConnectionManager final : public QObject {
 	Q_OBJECT
 public:
-	explicit WebSocketServer(const uint16_t &port = 4999, QObject *parent = nullptr);
-	virtual ~WebSocketServer() = default;
+	explicit WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const uint16_t &port = 4999, QObject *parent = nullptr);
+	virtual ~WebSocketConnectionManager() = default;
 
 	bool isListening() const;
 	uint16_t port() const;
 
+protected:
+	void incommingConnection();
+
 private:
+	Interface::IMutliNotifierManager &m_notifier;
+	Interface::IRemoteController &m_remoteController;
 	QWebSocketServer *m_webSocketServer;
 
 signals:
