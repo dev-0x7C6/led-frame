@@ -118,10 +118,10 @@ int main(int argc, char *argv[]) {
 	Network::WebSocketConnectionManager webSocketServer(manager, controller);
 
 	Tray::SystemTray tray;
-	tray.setBrightness(manager.globalBrightnessCorrection()->factor());
+	//tray.setBrightness(manager.globalBrightnessCorrection()->factor());
 	manager.attach(tray);
 
-	manager.correctors().callback(&tray, [&tray, &manager]() { tray.setBrightness(manager.globalBrightnessCorrection()->factor()); });
+//	manager.correctors().callback(&tray, [&tray, &manager]() { tray.setBrightness(manager.globalBrightnessCorrection()->factor()); });
 
 	tray.setAboutRequestCallback([] {
 		static bool dialogGuardVisible = false;

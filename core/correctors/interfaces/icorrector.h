@@ -22,7 +22,8 @@ public:
 	virtual uint32_t correct(uint32_t color) = 0;
 	virtual uint32_t priority() const = 0;
 
-	virtual int owner() const { return m_owner; };
+	virtual int owner() const { return m_owner; }
+	inline bool isGlobal() const { return m_owner == -1; }
 
 	virtual void push() = 0;
 	virtual void pop() = 0;
