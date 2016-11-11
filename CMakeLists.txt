@@ -193,6 +193,7 @@ set(sources
 	gui/wizards/device-setup-wizard.h
 	main.cpp
 	resources/resource.qrc
+	qml.qrc
 )
 
 add_executable(led-frame ${sources} ${x11-sources})
