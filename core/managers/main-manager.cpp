@@ -2,11 +2,19 @@
 
 #include "core/correctors/factories/corrector-factory.h"
 #include "core/containers/application-info-container.h"
+#include "core/functionals/debug-notification.h"
+#include "gui/wizards/device-setup-wizard.h"
+
+#include <QMessageBox>
 
 using namespace Manager;
 using namespace Container::Const;
 using namespace Corrector::Factory;
 using namespace Enum;
+
+#ifdef QT_DEBUG
+static Functional::DebugNotification notificationDebugger;
+#endif
 
 MainManager::MainManager()
 		: m_settings(ApplicationName, ApplicationName)
@@ -29,6 +37,14 @@ MainManager::MainManager()
 	m_globalGreenCorrection->setFactor(m_settings.value("green", 0.95).toDouble());
 	m_globalBlueCorrection->setFactor(m_settings.value("blue", 0.9).toDouble());
 	m_settings.endGroup();
+
+#ifdef QT_DEBUG
+	attach(notificationDebugger);
+#endif
+
+	receivers().setRegisterDeviceCallback([this](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) -> bool {
+		return registerDevice(receiver, serialNumber);
+	});
 }
 
 MainManager::~MainManager() {
@@ -77,3 +93,36 @@ std::shared_ptr<Corrector::Interface::ICorrector> &MainManager::globalBrightness
 std::shared_ptr<Corrector::Interface::ICorrector> &MainManager::globalRedCorrection() { return m_globalRedCorrection; }
 std::shared_ptr<Corrector::Interface::ICorrector> &MainManager::globalGreenCorrection() { return m_globalGreenCorrection; }
 std::shared_ptr<Corrector::Interface::ICorrector> &MainManager::globalBlueCorrection() { return m_globalBlueCorrection; }
+
+bool MainManager::registerDevice(Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
+#ifdef QT_DEBUG
+	receiver->correctorManager()->attach(&notificationDebugger);
+#endif
+	m_settings.beginGroup("devices");
+	m_settings.beginGroup(serialNumber);
+
+	if (m_settings.value("name", "").toString().isEmpty()) {
+		QMessageBox::information(nullptr, QObject::tr("Led frame detected"), QObject::tr("Detected new led frame device, application will run setup wizard."), QMessageBox::Ok);
+		Wizard::DeviceSetupWizard wizard(receiver);
+		wizard.exec();
+		receiver->setName(wizard.field("deviceName").toString());
+		m_settings.setValue("name", wizard.field("deviceName").toString());
+	} else
+		receiver->setName(m_settings.value("name", "").toString());
+
+	m_settings.endGroup();
+	m_settings.endGroup();
+	m_settings.sync();
+
+	for (const auto &corrector : correctors().list())
+		receiver->correctorManager()->attach(corrector);
+
+	const auto id = receiver->id();
+	receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::Brightness, id));
+	receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::RedChannel, id));
+	receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::GreenChannel, id));
+	receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::BlueChannel, id));
+	receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::FlickrEffect, id));
+	receiver->correctorManager()->attach(CorrectorFactory::create(CorrectorType::ColorEnhancer, id));
+	return true;
+}

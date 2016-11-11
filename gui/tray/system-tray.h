@@ -6,6 +6,7 @@
 
 #include <QSystemTrayIcon>
 #include <functional>
+#include <memory>
 
 class QAction;
 class QMenu;
@@ -38,6 +39,7 @@ protected:
 private:
 	std::function<void()> m_aboutRequestCallback;
 	std::function<void()> m_closeRequestCallback;
+	std::unique_ptr<QMenu> m_mainMenu;
 
 	QAction *m_brightnessAction;
 	Menu::DeviceMenu m_deviceMenu;

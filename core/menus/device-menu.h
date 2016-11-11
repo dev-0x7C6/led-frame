@@ -43,6 +43,7 @@ private:
 	std::list<Receiver::Interface::IReceiver *> m_receivers;
 	std::map<Receiver::Interface::IReceiver *, QAction *> m_map;
 	std::map<Receiver::Interface::IReceiver *, std::unique_ptr<EmitterSelectorMenu>> m_emitterMenu;
+	std::list<std::unique_ptr<QAction>> m_actions;
 	QAction *m_beforeAction;
 	QMenu *m_menu;
 };

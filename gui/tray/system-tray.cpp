@@ -14,28 +14,28 @@ using namespace Tray;
 
 SystemTray::SystemTray(QObject *parent)
 		: QSystemTrayIcon(parent)
+		, m_mainMenu(std::make_unique<QMenu>())
 
 {
-	auto mainMenu = new QMenu();
 	setIcon(SystemTrayIcon::generate(1.0));
-	setContextMenu(mainMenu);
+	setContextMenu(m_mainMenu.get());
 	show();
-	mainMenu->addAction("Devices")->setEnabled(false);
-	mainMenu->addSeparator();
-	m_deviceMenu.setBeforeAction(mainMenu->addSeparator());
-	m_deviceMenu.setMenu(mainMenu);
-	mainMenu->addSeparator();
-	m_brightnessAction = mainMenu->addAction("");
+	m_mainMenu->addAction("Devices")->setEnabled(false);
+	m_mainMenu->addSeparator();
+	m_deviceMenu.setBeforeAction(m_mainMenu->addSeparator());
+	m_deviceMenu.setMenu(m_mainMenu.get());
+	m_mainMenu->addSeparator();
+	m_brightnessAction = m_mainMenu->addAction("");
 	m_brightnessAction->setEnabled(false);
-	mainMenu->addSeparator();
-	auto settings = mainMenu->addAction("Settings");
+	m_mainMenu->addSeparator();
+	auto settings = m_mainMenu->addAction("Settings");
 	auto settingsMenu = new QMenu();
 	settings->setMenu(settingsMenu);
 	auto settingsEmitters = settingsMenu->addAction("Emitters");
 	settings->menu()->insertAction(nullptr, settingsEmitters);
-	mainMenu->addSeparator();
-	auto about = mainMenu->addAction("About");
-	auto quit = mainMenu->addAction("&Quit");
+	m_mainMenu->addSeparator();
+	auto about = m_mainMenu->addAction("About");
+	auto quit = m_mainMenu->addAction("&Quit");
 
 	settingsEmitters->setMenu(m_emitterConfigurationMenu.menu());
 

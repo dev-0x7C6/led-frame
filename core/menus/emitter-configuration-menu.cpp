@@ -13,8 +13,9 @@ EmitterConfigurationMenu::EmitterConfigurationMenu()
 EmitterConfigurationMenu::~EmitterConfigurationMenu() = default;
 
 void EmitterConfigurationMenu::attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {
-	auto action = new QAction(emitter->name());
-	m_menu->addAction(action);
+	auto action = std::make_unique<QAction>(emitter->name());
+	action->setProperty("id", emitter->id());
+	m_menu->addAction(action.get());
 }
 
 void EmitterConfigurationMenu::detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {

@@ -95,12 +95,10 @@ void UartReceiver::run() {
 		correctorManager()->pop();
 
 		stream.write(*m_device);
-
-		m_device->flush();
-		sync.wait(framerate());
-
 		if (m_device->bytesToWrite())
 			m_device->waitForBytesWritten(-1);
+
+		sync.wait(framerate());
 	};
 
 	if (m_device->isOpen() && m_device->isWritable())

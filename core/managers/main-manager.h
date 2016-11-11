@@ -31,6 +31,9 @@ public:
 	std::shared_ptr<Corrector::Interface::ICorrector> &globalGreenCorrection();
 	std::shared_ptr<Corrector::Interface::ICorrector> &globalBlueCorrection();
 
+protected:
+	bool registerDevice(Receiver::Interface::IReceiver *receiver, const QString &serialNumber);
+
 private:
 	QSettings m_settings;
 

@@ -45,5 +45,7 @@ constexpr auto value(const EmitterType type) {
 		case EmitterType::Screen: return "display";
 		case EmitterType::Test: return "";
 	}
+
+	return "";
 }
 }

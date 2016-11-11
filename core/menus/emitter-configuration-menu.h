@@ -3,6 +3,7 @@
 #include <core/emitters/interfaces/iemitter-notify.h>
 
 #include <memory>
+#include <list>
 
 class QAction;
 class QMenu;
@@ -22,5 +23,6 @@ public:
 
 private:
 	std::unique_ptr<QMenu> m_menu;
+	std::list<std::unique_ptr<QAction>> m_actions;
 };
 }

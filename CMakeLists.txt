@@ -196,6 +196,8 @@ set(sources
 	qml.qrc
 )
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror -fsanitize=undefined")
+
 add_executable(led-frame ${sources} ${x11-sources})
 
 if (UNIX)

@@ -35,5 +35,7 @@ constexpr auto value(const CorrectorType type) {
 		case CorrectorType::BlueChannel: return "blue_channel";
 		case CorrectorType::FlickrEffect: return "flickr_effect";
 	}
+
+	return "";
 }
 }

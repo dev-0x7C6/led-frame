@@ -27,6 +27,8 @@ constexpr auto name(const ProtocolMessage message) {
 	switch (message) {
 		case ProtocolMessage::Notification: return "notification";
 	}
+
+	return "";
 };
 
 constexpr auto name(const ProtocolEvent event) {
@@ -35,6 +37,8 @@ constexpr auto name(const ProtocolEvent event) {
 		case ProtocolEvent::Detached: return "detached";
 		case ProtocolEvent::Modified: return "modified";
 	}
+
+	return "";
 };
 
 constexpr auto name(const ProtocolSource source) {
@@ -43,6 +47,8 @@ constexpr auto name(const ProtocolSource source) {
 		case ProtocolSource::Emitter: return "emitter";
 		case ProtocolSource::Receiver: return "receiver";
 	}
+
+	return "";
 }
 
 class JsonProtocolHelper final {
