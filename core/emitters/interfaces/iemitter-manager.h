@@ -16,8 +16,8 @@ public:
 	explicit IEmitterManager() = default;
 	virtual ~IEmitterManager() = default;
 
-	virtual void attach(std::shared_ptr<IEmitter> &emitter) = 0;
-	virtual void detach(std::shared_ptr<IEmitter> &emitter) = 0;
+	virtual void attach(const std::shared_ptr<IEmitter> &emitter) = 0;
+	virtual void detach(const std::shared_ptr<IEmitter> &emitter) = 0;
 
 	virtual void attach(IEmitterNotify *notify) = 0;
 	virtual void detach(IEmitterNotify *notify) = 0;

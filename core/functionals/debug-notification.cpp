@@ -79,3 +79,8 @@ void DebugNotification::detached(Corrector::Interface::ICorrector *corrector) {
 void DebugNotification::modified(Corrector::Interface::ICorrector *corrector) {
 	std::cout << corrector_dbg(corrector, "modified") << std::endl;
 }
+
+DebugNotification &DebugNotification::instance() {
+	static DebugNotification object;
+	return object;
+}

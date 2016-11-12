@@ -6,7 +6,7 @@
 using namespace Emitter::Abstract;
 using namespace Emitter::Interface;
 
-void AbstractEmitterManager::attach(std::shared_ptr<IEmitter> &emitter) {
+void AbstractEmitterManager::attach(const std::shared_ptr<IEmitter> &emitter) {
 	auto interface = emitter.get();
 	m_emitters.push_back(emitter);
 
@@ -21,7 +21,7 @@ void AbstractEmitterManager::attach(std::shared_ptr<IEmitter> &emitter) {
 		notify->attached(emitter);
 }
 
-void AbstractEmitterManager::detach(std::shared_ptr<IEmitter> &emitter) {
+void AbstractEmitterManager::detach(const std::shared_ptr<IEmitter> &emitter) {
 	for (const auto &notify : m_notifiers)
 		notify->detached(emitter);
 

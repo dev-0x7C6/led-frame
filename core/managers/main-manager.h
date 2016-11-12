@@ -7,15 +7,16 @@
 #include "core/interfaces/imulti-notifier-manager.h"
 #include "core/receivers/concretes/device-manager.h"
 
-#include <QSettings>
 #include <memory>
 #include <list>
+
+class QSettings;
 
 namespace Manager {
 
 class MainManager final : public Interface::IMutliNotifierManager {
 public:
-	explicit MainManager();
+	explicit MainManager(QSettings &settings);
 	virtual ~MainManager();
 
 	void run();
@@ -31,11 +32,8 @@ public:
 	std::shared_ptr<Corrector::Interface::ICorrector> &globalGreenCorrection();
 	std::shared_ptr<Corrector::Interface::ICorrector> &globalBlueCorrection();
 
-protected:
-	bool registerDevice(Receiver::Interface::IReceiver *receiver, const QString &serialNumber);
-
 private:
-	QSettings m_settings;
+	QSettings &m_settings;
 
 private:
 	std::shared_ptr<Corrector::Interface::ICorrector> m_globalBrightnessCorrection;

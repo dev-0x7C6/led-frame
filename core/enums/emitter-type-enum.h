@@ -2,6 +2,7 @@
 
 #include <QIcon>
 #include <QString>
+#include <QObject>
 
 namespace Enum {
 
@@ -31,6 +32,18 @@ inline QString description(const EmitterType &type) {
 		case EmitterType::Color: return "Color";
 		case EmitterType::Image: return "Image";
 		case EmitterType::Screen: return "Screen capture";
+		case EmitterType::Test: return {};
+	}
+
+	return {};
+}
+
+inline QString translate(const EmitterType &type) {
+	switch (type) {
+		case EmitterType::Animation: return QObject::tr("Animation");
+		case EmitterType::Color: return QObject::tr("Color");
+		case EmitterType::Image: return QObject::tr("Image");
+		case EmitterType::Screen: return QObject::tr("Display");
 		case EmitterType::Test: return {};
 	}
 
