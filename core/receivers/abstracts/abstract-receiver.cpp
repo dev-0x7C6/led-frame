@@ -3,6 +3,7 @@
 #include <core/correctors/concretes/corrector-manager.h>
 
 #include <memory>
+#include <atomic>
 
 using namespace Receiver::Abstract;
 using namespace Corrector::Concrete::Manager;
@@ -24,7 +25,7 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::
 	if (m_emitter == emitter) return;
 	disconnectEmitter();
 
-	m_emitter = emitter;
+	std::atomic_exchange(&m_emitter, emitter);
 	emit notify();
 
 	if (m_emitter)
@@ -32,11 +33,11 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::
 }
 
 bool AbstractReceiver::isEmitterConnected() const {
-	return (m_emitter != nullptr);
+	return std::atomic_load(&m_emitter) != nullptr;
 }
 
-const std::shared_ptr<Emitter::Interface::IEmitter> &AbstractReceiver::connectedEmitter() const {
-	return m_emitter;
+std::shared_ptr<Emitter::Interface::IEmitter> AbstractReceiver::connectedEmitter() const {
+	return std::atomic_load(&m_emitter);
 }
 
 int AbstractReceiver::connectedEmitterId() const {
@@ -58,8 +59,6 @@ void AbstractReceiver::setName(const QString &name) {
 Corrector::Concrete::Manager::CorrectorManager *AbstractReceiver::correctorManager() {
 	return m_correctorManager.get();
 }
-
-Container::ColorScanlineContainer AbstractReceiver::scanline() { return m_emitter->data(); }
 
 QString AbstractReceiver::emitterName() const {
 	return m_emitter->name();

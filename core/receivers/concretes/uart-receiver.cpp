@@ -62,10 +62,11 @@ void UartReceiver::run() {
 			continue;
 		}
 
-		auto emitterFrameRate = connectedEmitter()->framerate();
+		const auto emitter = connectedEmitter();
+		const auto emitterFramerate = emitter->framerate();
 
-		if (emitterFrameRate != 0) {
-			next = scanline();
+		if (emitterFramerate != 0) {
+			next = emitter->data();
 			frameCounter++;
 
 			if (next != diff) {
@@ -74,10 +75,10 @@ void UartReceiver::run() {
 				frameCounter = 0;
 			}
 
-			auto fateFactor = static_cast<double>(framerate()) / static_cast<double>(emitterFrameRate);
+			auto fateFactor = static_cast<double>(framerate()) / static_cast<double>(emitterFramerate);
 			Container::ColorScanlineContainer::interpolate(prev, next, std::min(1.0, double(frameCounter) / fateFactor), output);
 		} else {
-			output = scanline();
+			output = emitter->data();
 		}
 
 		correctorManager()->push();

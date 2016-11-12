@@ -14,7 +14,7 @@ public:
 	virtual void disconnectEmitter() override;
 	virtual void connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	virtual bool isEmitterConnected() const override;
-	virtual const std::shared_ptr<Emitter::Interface::IEmitter> &connectedEmitter() const override;
+	virtual std::shared_ptr<Emitter::Interface::IEmitter> connectedEmitter() const override;
 	virtual int connectedEmitterId() const override;
 
 	virtual QString name() const override;
@@ -23,7 +23,6 @@ public:
 	virtual Corrector::Concrete::Manager::CorrectorManager *correctorManager() override;
 
 protected:
-	Container::ColorScanlineContainer scanline();
 	QString emitterName() const;
 
 private:

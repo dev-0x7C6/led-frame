@@ -2,6 +2,7 @@
 #include <core/containers/device-config-container.h>
 #include <core/containers/led-ribbon-config-container.h>
 #include <gui/widgets/device-symulation-widget.h>
+#include "core/emitters/interfaces/iemitter.h"
 
 #include <QBoxLayout>
 #include <QElapsedTimer>
@@ -204,8 +205,10 @@ void DeviceSymulationWidget::timerEvent(QTimerEvent *) {
 	if (!isEmitterConnected())
 		return;
 
+	auto emitter = connectedEmitter();
+
 	Container::DeviceConfigContainer cfg = config();
-	auto source = scanline();
+	auto source = emitter->data();
 	uint32_t counter = 0;
 
 	for (uint8_t i = 0; i < 4; ++i) {
