@@ -6,6 +6,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
+
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 8)
@@ -134,12 +139,14 @@ set(sources
 	core/functionals/remote-controller.cpp
 	core/functionals/remote-controller.h
 	core/interfaces/imulti-notifier.h
+	core/interfaces/imulti-notifier-manager.h
 	core/interfaces/inotification-callback.cpp
 	core/interfaces/inotification-callback.h
 	core/interfaces/iscreen-capture.h
-	core/interfaces/imulti-notifier-manager.h
 	core/managers/main-manager.cpp
 	core/managers/main-manager.h
+	core/managers/session-manager.cpp
+	core/managers/session-manager.h
 	core/menus/device-menu.cpp
 	core/menus/device-menu.h
 	core/menus/emitter-configuration-menu.cpp
@@ -192,17 +199,18 @@ set(sources
 	gui/wizards/device-setup-wizard.cpp
 	gui/wizards/device-setup-wizard.h
 	main.cpp
-	resources/resource.qrc
 	qml.qrc
+	resources/resource.qrc
 )
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror -fsanitize=undefined")
 
 add_executable(led-frame ${sources} ${x11-sources})
 
 if (UNIX)
 	target_compile_definitions(led-frame PRIVATE X11)
 endif (UNIX)
+
+target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
+target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 target_link_libraries(led-frame
 	Qt5::Core
