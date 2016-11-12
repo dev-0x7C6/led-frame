@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror")
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 8)
-set(VERSION_PATCH 6)
+set(VERSION_PATCH 7)
 
 configure_file(config.h.in config.h)
 
