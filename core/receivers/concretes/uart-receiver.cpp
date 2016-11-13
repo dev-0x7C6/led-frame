@@ -72,6 +72,7 @@ void UartReceiver::run() {
 			firstFrame = false;
 			output = emitter->data();
 			fade(worker, [&emitter]() { return emitter->data(); });
+			output = emitter->data();
 			prev = output;
 			diff = output;
 			next = output;
