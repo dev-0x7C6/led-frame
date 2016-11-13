@@ -27,18 +27,13 @@ class UartWorker;
 class UartReceiver : public Receiver::Abstract::AbstractReceiver {
 	Q_OBJECT
 public:
-	explicit UartReceiver(std::unique_ptr<Functional::DevicePort> &&device, QSerialPortInfo details);
+	explicit UartReceiver(std::unique_ptr<Functional::DevicePort> &&device);
 	virtual ~UartReceiver();
 
 	virtual Enum::ReceiverType type() const override;
-
-	QSerialPortInfo details();
 	void interrupt();
 
 	virtual Container::DeviceConfigContainer config() override;
-
-protected:
-	void fade(UartWorker &worker, std::function<Container::ColorScanlineContainer()> getFrame, const bool in = true);
 
 protected:
 	void run();

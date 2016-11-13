@@ -7,9 +7,6 @@
 #include <core/functionals/loop-sync.h>
 #include <core/receivers/concretes/uart-receiver.h>
 #include <core/emitters/interfaces/iemitter.h>
-#include "core/correctors/factories/corrector-factory.h"
-#include "core/correctors/interfaces/icorrector.h"
-
 #include "core/receivers/concretes/uart-worker.h"
 
 #include <QElapsedTimer>
@@ -21,12 +18,10 @@ using namespace Functional;
 using namespace Enum;
 using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
-using namespace Corrector::Factory;
 
-UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, QSerialPortInfo details)
+UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device)
 		: AbstractReceiver()
 		, m_device(std::move(device))
-		, m_details(details)
 		, m_interrupt(false)
 		, m_thread([this]() { run(); }, this) {
 	m_device->moveToThread(&m_thread);
@@ -71,7 +66,7 @@ void UartReceiver::run() {
 		if (firstFrame) {
 			firstFrame = false;
 			output = emitter->data();
-			fade(worker, [&emitter]() { return emitter->data(); });
+			worker.fade([&emitter]() { return emitter->data(); });
 			output = emitter->data();
 			prev = output;
 			diff = output;
@@ -103,28 +98,11 @@ void UartReceiver::run() {
 		const auto emitter = connectedEmitter();
 
 		if (emitter)
-			fade(worker, [&emitter]() { return emitter->data(); }, false);
+			worker.fade([&emitter]() { return emitter->data(); }, false);
 
 		m_device->close();
 	}
 }
-
-void UartReceiver::fade(UartWorker &worker, std::function<Container::ColorScanlineContainer()> getFrame, const bool in) {
-	Functional::LoopSync loopSync;
-	auto fadeCorrector = CorrectorFactory::create(CorrectorType::Brightness, -2);
-	fadeCorrector->setFactor(0);
-	correctorManager().attach(fadeCorrector);
-
-	for (auto i = 0.0; i < 1.0; i += (1.0 / static_cast<double>(m_uartFramerate))) {
-		fadeCorrector->setFactor((in) ? i : 1.0 - i);
-		worker.write(getFrame());
-		loopSync.wait(m_uartFramerate);
-	}
-
-	correctorManager().detach(fadeCorrector);
-}
-
-QSerialPortInfo UartReceiver::details() { return m_details; }
 
 void UartReceiver::interrupt() { m_interrupt = true; }
 

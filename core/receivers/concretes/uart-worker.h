@@ -17,12 +17,14 @@ public:
 		Corrector::Concrete::CorrectorManager &correctorManager,
 		std::unique_ptr<Functional::DevicePort> &device);
 
+	void fade(std::function<Container::ColorScanlineContainer()> getFrame, const bool in = true);
 	void write(const Container::ColorScanlineContainer &scanline);
 
 private:
 	const std::vector<Container::LedRibbonConfigContainer> m_ribbon;
 	Corrector::Concrete::CorrectorManager &m_correctorManager;
 	std::unique_ptr<Functional::DevicePort> &m_device;
+	const uint32_t m_uartFramerate = 90;
 
 	Functional::ColorStream m_stream;
 };

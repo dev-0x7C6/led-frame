@@ -33,7 +33,7 @@ void ReceiverManager::rescan() {
 		device->setParity(QSerialPort::NoParity);
 		device->setDataBits(QSerialPort::Data8);
 		device->setStopBits(QSerialPort::OneStop);
-		auto thread = std::make_unique<UartReceiver>(std::move(device), ports[i]);
+		auto thread = std::make_unique<UartReceiver>(std::move(device));
 		auto interface = thread.get();
 		connect(interface, &UartReceiver::finished, this, [this, interface]() {
 			detach(interface);

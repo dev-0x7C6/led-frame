@@ -1,7 +1,13 @@
 #include "uart-worker.h"
 
+#include "core/correctors/factories/corrector-factory.h"
+#include "core/correctors/interfaces/icorrector.h"
+#include "core/functionals/loop-sync.h"
+
+using namespace Enum;
 using namespace Container;
 using namespace Receiver::Concrete;
+using namespace Corrector::Factory;
 
 UartWorker::UartWorker(const std::vector<Container::LedRibbonConfigContainer> ribbon,
 	Corrector::Concrete::CorrectorManager &correctorManager,
@@ -11,6 +17,21 @@ UartWorker::UartWorker(const std::vector<Container::LedRibbonConfigContainer> ri
 		, m_device(device)
 
 {
+}
+
+void UartWorker::fade(std::function<ColorScanlineContainer()> getFrame, const bool in) {
+	Functional::LoopSync loopSync;
+	auto fadeCorrector = CorrectorFactory::create(CorrectorType::Brightness, -2);
+	fadeCorrector->setFactor(0);
+	m_correctorManager.attach(fadeCorrector);
+
+	for (auto i = 0.0; i < 1.0; i += (1.0 / static_cast<double>(m_uartFramerate))) {
+		fadeCorrector->setFactor((in) ? i : 1.0 - i);
+		write(getFrame());
+		loopSync.wait(m_uartFramerate);
+	}
+
+	m_correctorManager.detach(fadeCorrector);
 }
 
 void UartWorker::write(const ColorScanlineContainer &scanline) {
