@@ -15,9 +15,7 @@ class IEmitter;
 
 namespace Corrector {
 namespace Concrete {
-namespace Manager {
 class CorrectorManager;
-}
 }
 }
 
@@ -44,7 +42,7 @@ public:
 	virtual Container::DeviceConfigContainer config() = 0;
 	virtual void setName(const QString &name) = 0;
 
-	virtual Corrector::Concrete::Manager::CorrectorManager *correctorManager() = 0;
+	virtual Corrector::Concrete::CorrectorManager &correctorManager() = 0;
 };
 }
 }

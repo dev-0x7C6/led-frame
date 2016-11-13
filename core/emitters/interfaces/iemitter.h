@@ -4,9 +4,9 @@
 #include <core/enums/emitter-type-enum.h>
 #include <core/interfaces/inotification-callback.h>
 
+#include <atomic>
 #include <memory>
 #include <QString>
-#include <QJsonObject>
 
 namespace Interface {
 namespace Receiver {
@@ -27,6 +27,7 @@ public:
 
 	virtual uint32_t framerate() const { return 24; }
 
+	virtual bool isFirstFrameReady() const { return m_firstFrameReady; }
 	virtual void commit(const Container::ColorScanlineContainer &scanline) = 0;
 	virtual Container::ColorScanlineContainer data() = 0;
 
@@ -36,6 +37,9 @@ public:
 	virtual void disconnect() = 0;
 
 	virtual uint32_t connectionCount() = 0;
+
+protected:
+	std::atomic<bool> m_firstFrameReady{false};
 };
 }
 }

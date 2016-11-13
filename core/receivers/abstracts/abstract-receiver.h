@@ -1,6 +1,7 @@
 #pragma once
 
-#include <core/receivers/interfaces/ireceiver.h>
+#include "core/receivers/interfaces/ireceiver.h"
+#include "core/correctors/concretes/corrector-manager.h"
 #include <QString>
 
 namespace Receiver {
@@ -20,14 +21,14 @@ public:
 	virtual QString name() const override;
 	virtual void setName(const QString &name) override;
 
-	virtual Corrector::Concrete::Manager::CorrectorManager *correctorManager() override;
+	virtual Corrector::Concrete::CorrectorManager &correctorManager() override;
 
 protected:
 	QString emitterName() const;
 
 private:
 	Container::ColorScanlineContainer m_data;
-	std::unique_ptr<Corrector::Concrete::Manager::CorrectorManager> m_correctorManager;
+	Corrector::Concrete::CorrectorManager m_correctorManager;
 	std::shared_ptr<Emitter::Interface::IEmitter> m_emitter;
 	QString m_name;
 };

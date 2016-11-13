@@ -18,8 +18,6 @@ namespace Concrete {
 
 class UartReceiver;
 
-namespace Manager {
-
 class ReceiverManager : public Receiver::Abstract::AbstractReceiverManager {
 	Q_OBJECT
 public:
@@ -40,6 +38,5 @@ private:
 signals:
 	void afterAttach();
 };
-}
 }
 }

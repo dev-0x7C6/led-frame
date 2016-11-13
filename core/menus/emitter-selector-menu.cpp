@@ -29,7 +29,7 @@ EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::I
 	m_actionEmitters->setMenu(new QMenu);
 	m_actionCorrectors->setMenu(new QMenu);
 
-	for (const auto &corrector : receiver->correctorManager()->list()) {
+	for (const auto &corrector : receiver->correctorManager().list()) {
 		if (corrector->owner() == -1)
 			continue;
 

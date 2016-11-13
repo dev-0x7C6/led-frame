@@ -5,11 +5,13 @@
 using namespace Emitter::Concrete;
 
 AnimationEmitter::AnimationEmitter()
+		: Abstract::AbstractEmitter()
 
 {
+	const auto start = QColor::fromRgbF(1, 0, 0);
 	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, this, &AnimationEmitter::process);
 	m_animation.setKeyValues(QVariantAnimation::KeyValues());
-	m_animation.setKeyValueAt(0.000, QColor::fromRgbF(1, 0, 0));
+	m_animation.setKeyValueAt(0.000, start);
 	m_animation.setKeyValueAt(0.200, QColor::fromRgbF(0, 0, 1));
 	m_animation.setKeyValueAt(0.400, QColor::fromRgbF(0, 1, 1));
 	m_animation.setKeyValueAt(0.600, QColor::fromRgbF(0, 1, 0));
@@ -18,7 +20,8 @@ AnimationEmitter::AnimationEmitter()
 	m_animation.setDuration(5000);
 	m_animation.setLoopCount(-1);
 	m_animation.start();
-	m_colors.fill(0);
+	m_colors.fill(start.rgba());
+	commit(m_colors);
 }
 
 AnimationEmitter::~AnimationEmitter() {

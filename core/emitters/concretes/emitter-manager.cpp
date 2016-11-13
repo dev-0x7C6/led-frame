@@ -1,7 +1,7 @@
 #include <core/emitters/concretes/emitter-manager.h>
 #include <QSettings>
 
-using namespace Emitter::Concrete::Manager;
+using namespace Emitter::Concrete;
 
 EmitterManager::EmitterManager(QSettings &settings)
 		: m_settings(settings)

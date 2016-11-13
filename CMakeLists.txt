@@ -80,7 +80,6 @@ set(sources
 	core/correctors/concretes/brightness-corrector.h
 	core/correctors/concretes/color-enhancer-corrector.cpp
 	core/correctors/concretes/color-enhancer-corrector.h
-	core/correctors/concretes/corrector-manager.cpp
 	core/correctors/concretes/corrector-manager.h
 	core/correctors/concretes/flickr-effect-corrector.cpp
 	core/correctors/concretes/flickr-effect-corrector.h
@@ -169,6 +168,8 @@ set(sources
 	core/receivers/concretes/device-manager.h
 	core/receivers/concretes/uart-receiver.cpp
 	core/receivers/concretes/uart-receiver.h
+	core/receivers/concretes/uart-worker.cpp
+	core/receivers/concretes/uart-worker.h
 	core/receivers/interfaces/ireceiver.h
 	core/receivers/interfaces/ireceiver-manager.h
 	core/receivers/interfaces/ireceiver-notify.h

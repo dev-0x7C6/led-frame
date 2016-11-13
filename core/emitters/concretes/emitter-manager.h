@@ -6,7 +6,6 @@ class QSettings;
 
 namespace Emitter {
 namespace Concrete {
-namespace Manager {
 
 class EmitterManager final : public Abstract::AbstractEmitterManager {
 public:
@@ -22,6 +21,5 @@ private:
 	QSettings &m_settings;
 	bool m_firstRun;
 };
-}
 }
 }

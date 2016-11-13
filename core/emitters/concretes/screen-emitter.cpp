@@ -2,6 +2,7 @@
 #include <core/emitters/concretes/screen-emitter.h>
 #include <core/factories/screen-capture-factory.h>
 #include <core/functionals/loop-sync.h>
+#include "core/functionals/color-functions.h"
 
 #include <QGuiApplication>
 #include <QScreen>
@@ -12,6 +13,7 @@ using namespace Enum;
 using namespace Emitter::Concrete;
 using namespace Factory;
 using namespace Container;
+using namespace Functional::Color;
 
 ScreenEmitter::ScreenEmitter()
 		: QThread(nullptr)
@@ -118,30 +120,26 @@ void ScreenEmitter::run() {
 		for (uint32_t i = 0; i < scanline_size; ++i) {
 			QRect area = fragment(w, h, i);
 			int c = area.width() * area.height();
-			uint64_t r = 0;
-			uint64_t g = 0;
-			uint64_t b = 0;
+			uint32_t r = 0;
+			uint32_t g = 0;
+			uint32_t b = 0;
 
 			for (int j = 0; j < c; j += step) {
 				const auto x = area.x() + (j % area.width());
 				const auto y = area.y() + (j / area.width());
 				const auto p = x + (y * w);
-				r += (data[p] >> 0x10) & 0xffu;
-				b += (data[p] >> 0x00) & 0xffu;
-				g += (data[p] >> 0x08) & 0xffu;
+				r += getR(data[p]);
+				b += getB(data[p]);
+				g += getG(data[p]);
 			}
 
 			if (c > 0) {
 				c /= step;
-				r /= static_cast<uint64_t>(c);
-				g /= static_cast<uint64_t>(c);
-				b /= static_cast<uint64_t>(c);
+				r /= static_cast<decltype(r)>(c);
+				g /= static_cast<decltype(g)>(c);
+				b /= static_cast<decltype(b)>(c);
 			}
-
-			r = std::min(static_cast<uint64_t>(255), r);
-			g = std::min(static_cast<uint64_t>(255), g);
-			b = std::min(static_cast<uint64_t>(255), b);
-			colors[i] = qRgb(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
+			colors[i] = rgb(r, g, b);
 		}
 
 		commit(scanline);

@@ -59,7 +59,7 @@ void MainManager::attach(Interface::IMultiNotifier &notifier) {
 	m_receiverManager.attach(&notifier);
 
 	for (const auto &receiver : m_receiverManager.list())
-		receiver->correctorManager()->attach(&notifier);
+		receiver->correctorManager().attach(&notifier);
 }
 
 void MainManager::detach(Interface::IMultiNotifier &notifier) {
@@ -68,15 +68,15 @@ void MainManager::detach(Interface::IMultiNotifier &notifier) {
 	m_receiverManager.detach(&notifier);
 }
 
-Emitter::Concrete::Manager::EmitterManager &MainManager::emitters() {
+Emitter::Concrete::EmitterManager &MainManager::emitters() {
 	return m_emitterManager;
 }
 
-Corrector::Concrete::Manager::CorrectorManager &MainManager::correctors() {
+Corrector::Concrete::CorrectorManager &MainManager::correctors() {
 	return m_correctorManager;
 }
 
-Receiver::Concrete::Manager::ReceiverManager &MainManager::receivers() {
+Receiver::Concrete::ReceiverManager &MainManager::receivers() {
 	return m_receiverManager;
 }
 

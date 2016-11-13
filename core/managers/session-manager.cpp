@@ -48,7 +48,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 
 bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
 #ifdef QT_DEBUG
-	receiver->correctorManager()->attach(&Functional::DebugNotification::instance());
+	receiver->correctorManager().attach(&Functional::DebugNotification::instance());
 #endif
 	m_settings.beginGroup("devices");
 	m_settings.beginGroup(serialNumber);
@@ -86,7 +86,7 @@ bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, co
 void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiver) {
 
 	for (const auto &corrector : m_mainManager.correctors().list())
-		receiver->correctorManager()->attach(corrector);
+		receiver->correctorManager().attach(corrector);
 
 	const auto id = receiver->id();
 
@@ -105,7 +105,7 @@ void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiv
 		m_settings.beginGroup(value(corrector->type()));
 		corrector->setFactor(m_settings.value("factor", corrector->factor()).toDouble());
 		corrector->setEnabled(m_settings.value("enabled", corrector->isEnabled()).toBool());
-		receiver->correctorManager()->attach(corrector);
+		receiver->correctorManager().attach(corrector);
 		m_settings.endGroup();
 	};
 
@@ -122,7 +122,7 @@ SessionManager::~SessionManager() {
 			m_settings.setValue("emitter", name);
 		}
 
-		for (const auto &corrector : receiver->correctorManager()->list()) {
+		for (const auto &corrector : receiver->correctorManager().list()) {
 			if (corrector->isGlobal())
 				continue;
 

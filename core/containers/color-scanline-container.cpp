@@ -1,6 +1,14 @@
 #include <core/containers/color-scanline-container.h>
+#include "core/functionals/color-functions.h"
+
+#include <algorithm>
 
 using namespace Container;
+using namespace Functional::Color;
+
+ColorScanlineContainer::ColorScanlineContainer(const uint32_t fillColor) {
+	fill(fillColor);
+}
 
 Enum::ContainerType ColorScanlineContainer::type() const {
 	return Enum::ContainerType::ColorScanline;
@@ -10,37 +18,29 @@ Enum::Position ColorScanlineContainer::fromIndexToPosition(const uint32_t &index
 	return static_cast<Enum::Position>(index / scanline_line);
 }
 
+void ColorScanlineContainer::clear() {
+	m_data.fill(0u);
+}
+
 void ColorScanlineContainer::fill(const uint32_t &color) {
 	m_data.fill(color);
 }
 
 void ColorScanlineContainer::rotate(const uint32_t &color) {
-	for (size_t i = 0; i < m_data.size() - 1; ++i)
-		m_data[i] = m_data[i + 1];
-
+	std::rotate(m_data.begin(), m_data.begin() + 1, m_data.end());
 	m_data[scanline_size - 1] = color;
 }
 
 void ColorScanlineContainer::interpolate(const ColorScanlineContainer &start, const ColorScanlineContainer &end, double p, ColorScanlineContainer &out) {
 	for (size_t i = 0; i < scanline_size - 1; ++i) {
-		const uint32_t sc = start.constData()[i];
-		const uint32_t ec = end.constData()[i];
-		auto sr = static_cast<uint32_t>((sc >> 0x10) & 0xffu);
-		auto sg = static_cast<uint32_t>((sc >> 0x08) & 0xffu);
-		auto sb = static_cast<uint32_t>((sc >> 0x00) & 0xffu);
-		auto er = static_cast<uint32_t>((ec >> 0x10) & 0xffu);
-		auto eg = static_cast<uint32_t>((ec >> 0x08) & 0xffu);
-		auto eb = static_cast<uint32_t>((ec >> 0x00) & 0xffu);
+		const auto start_color = start.constData()[i];
+		const auto end_color = end.constData()[i];
 
-		auto out_r = std::min(0xffu, static_cast<uint32_t>(er * p + (sr * (1.0 - p))));
-		auto out_g = std::min(0xffu, static_cast<uint32_t>(eg * p + (sg * (1.0 - p))));
-		auto out_b = std::min(0xffu, static_cast<uint32_t>(eb * p + (sb * (1.0 - p))));
+		auto r = static_cast<uint32_t>(getR(end_color) * p + (getR(start_color) * (1.0 - p)));
+		auto g = static_cast<uint32_t>(getG(end_color) * p + (getG(start_color) * (1.0 - p)));
+		auto b = static_cast<uint32_t>(getB(end_color) * p + (getB(start_color) * (1.0 - p)));
 
-		uint32_t color = 0;
-		color |= out_r << 0x10;
-		color |= out_g << 0x08;
-		color |= out_b << 0x00;
-		out.data()[i] = color;
+		out.data()[i] = rgb(r, g, b);
 	}
 }
 

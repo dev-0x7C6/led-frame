@@ -1,7 +1,4 @@
 #include <core/containers/application-info-container.h>
-#include <core/emitters/concretes/emitter-manager.h>
-#include <core/emitters/concretes/screen-emitter.h>
-#include <core/emitters/factories/emitter-factory.h>
 #include <core/networking/web-socket-server.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
@@ -20,12 +17,8 @@ using namespace Functional;
 using namespace Manager;
 
 using namespace Corrector::Concrete;
-using namespace Corrector::Concrete::Manager;
 using namespace Emitter::Concrete;
-using namespace Emitter::Concrete::Manager;
-using namespace Emitter::Factory;
 using namespace Receiver::Concrete;
-using namespace Receiver::Concrete::Manager;
 
 int main(int argc, char *argv[]) {
 	ApplicationInfoContainer info;
@@ -36,11 +29,9 @@ int main(int argc, char *argv[]) {
 	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
 
 	QSettings settings(info.applicationName(), info.applicationName());
-
 	MainManager manager(settings);
 	SessionManager session(settings, manager);
 	RemoteController controller(manager);
-
 	Network::WebSocketConnectionManager webSocketServer(manager, controller);
 
 	Tray::SystemTray tray;

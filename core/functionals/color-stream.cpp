@@ -1,8 +1,11 @@
-#include <core/functionals/color-stream.h>
+#include "color-stream.h"
+#include "color-functions.h"
+
 #include <QIODevice>
 
 using namespace Enum;
 using namespace Functional;
+using namespace Functional::Color;
 
 ColorStream::ColorStream()
 		: m_seek(0) {}
@@ -24,49 +27,49 @@ void ColorStream::write(QIODevice &device) {
 }
 
 void ColorStream::writeRGB(uint32_t color) {
-	const auto seek = m_seek;
-	m_buffer[seek + 0] = color >> 0x10 & 0xffu; // r
-	m_buffer[seek + 1] = color >> 0x08 & 0xffu; // g
-	m_buffer[seek + 2] = color >> 0x00 & 0xffu; // b
-	m_seek += 3;
+	auto seek = m_seek;
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
+	m_seek = seek;
 }
 
 void ColorStream::writeRBG(uint32_t color) {
-	const auto seek = m_seek;
-	m_buffer[seek + 0] = color >> 0x10 & 0xffu; // r
-	m_buffer[seek + 1] = color >> 0x00 & 0xffu; // b
-	m_buffer[seek + 2] = color >> 0x08 & 0xffu; // g
-	m_seek += 3;
+	auto seek = m_seek;
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
+	m_seek = seek;
 }
 
 void ColorStream::writeGRB(uint32_t color) {
-	const auto seek = m_seek;
-	m_buffer[seek + 0] = color >> 0x08 & 0xffu; // g
-	m_buffer[seek + 1] = color >> 0x10 & 0xffu; // r
-	m_buffer[seek + 2] = color >> 0x00 & 0xffu; // b
-	m_seek += 3;
+	auto seek = m_seek;
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
+	m_seek = seek;
 }
 
 void ColorStream::writeGBR(uint32_t color) {
-	const auto seek = m_seek;
-	m_buffer[seek + 0] = color >> 0x08 & 0xffu; // g
-	m_buffer[seek + 1] = color >> 0x00 & 0xffu; // b
-	m_buffer[seek + 2] = color >> 0x10 & 0xffu; // r
-	m_seek += 3;
+	auto seek = m_seek;
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
+	m_seek = seek;
 }
 
 void ColorStream::writeBRG(uint32_t color) {
-	const auto seek = m_seek;
-	m_buffer[seek + 0] = color >> 0x00 & 0xffu; // b
-	m_buffer[seek + 1] = color >> 0x10 & 0xffu; // r
-	m_buffer[seek + 2] = color >> 0x08 & 0xffu; // g
-	m_seek += 3;
+	auto seek = m_seek;
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
+	m_seek = seek;
 }
 
 void ColorStream::writeBGR(uint32_t color) {
-	const auto seek = m_seek;
-	m_buffer[seek + 0] = color >> 0x00 & 0xffu; // b
-	m_buffer[seek + 1] = color >> 0x08 & 0xffu; // g
-	m_buffer[seek + 2] = color >> 0x10 & 0xffu; // r
-	m_seek += 3;
+	auto seek = m_seek;
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
+	m_seek = seek;
 }

@@ -40,7 +40,7 @@ bool RemoteController::changeCorrector(int receiverId, int correctorId, double f
 		return false;
 	}
 
-	auto corrector = receiver->correctorManager()->find(correctorId);
+	auto corrector = receiver->correctorManager().find(correctorId);
 
 	if (!corrector)
 		return false;

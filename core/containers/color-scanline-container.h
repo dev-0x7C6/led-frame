@@ -14,6 +14,7 @@ constexpr uint32_t scanline_line = 32;
 class ColorScanlineContainer final : public AbstractContainer {
 public:
 	explicit ColorScanlineContainer() = default;
+	explicit ColorScanlineContainer(const uint32_t fillColor);
 	virtual ~ColorScanlineContainer() = default;
 
 	virtual Enum::ContainerType type() const override;
@@ -21,9 +22,11 @@ public:
 	inline uint32_t *data(const Enum::Position &position);
 	inline uint32_t *data();
 	inline const uint32_t *constData() const;
+	inline const uint32_t *constData(const Enum::Position &position) const;
 
 	static Enum::Position fromIndexToPosition(const uint32_t &index);
 
+	void clear();
 	void fill(const Enum::Position &position, const uint32_t &color);
 	void fill(const uint32_t &color);
 	void rotate(const uint32_t &color);
@@ -48,6 +51,10 @@ uint32_t *ColorScanlineContainer::data() {
 
 const uint32_t *ColorScanlineContainer::constData() const {
 	return m_data.data();
+}
+
+const uint32_t *ColorScanlineContainer::constData(const Enum::Position &position) const {
+	return m_data.data() + (static_cast<uint32_t>(position) * scanline_line);
 }
 
 ColorScanlineContainer &ColorScanlineContainer::operator=(const ColorScanlineContainer &other) {

@@ -6,10 +6,9 @@
 #include <atomic>
 
 using namespace Receiver::Abstract;
-using namespace Corrector::Concrete::Manager;
+using namespace Corrector::Concrete;
 
-AbstractReceiver::AbstractReceiver()
-		: m_correctorManager(std::make_unique<CorrectorManager>()) {
+AbstractReceiver::AbstractReceiver() {
 	m_data.fill(0);
 }
 
@@ -56,8 +55,8 @@ void AbstractReceiver::setName(const QString &name) {
 	//TODO: We should notify when name is changed
 }
 
-Corrector::Concrete::Manager::CorrectorManager *AbstractReceiver::correctorManager() {
-	return m_correctorManager.get();
+Corrector::Concrete::CorrectorManager &AbstractReceiver::correctorManager() {
+	return m_correctorManager;
 }
 
 QString AbstractReceiver::emitterName() const {

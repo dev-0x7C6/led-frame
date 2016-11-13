@@ -23,9 +23,9 @@ public:
 	virtual void attach(Interface::IMultiNotifier &notifier) override;
 	virtual void detach(Interface::IMultiNotifier &notifier) override;
 
-	Emitter::Concrete::Manager::EmitterManager &emitters();
-	Corrector::Concrete::Manager::CorrectorManager &correctors();
-	Receiver::Concrete::Manager::ReceiverManager &receivers();
+	Emitter::Concrete::EmitterManager &emitters();
+	Corrector::Concrete::CorrectorManager &correctors();
+	Receiver::Concrete::ReceiverManager &receivers();
 
 	std::shared_ptr<Corrector::Interface::ICorrector> &globalBrightnessCorrection();
 	std::shared_ptr<Corrector::Interface::ICorrector> &globalRedCorrection();
@@ -42,8 +42,8 @@ private:
 	std::shared_ptr<Corrector::Interface::ICorrector> m_globalBlueCorrection;
 
 private:
-	Emitter::Concrete::Manager::EmitterManager m_emitterManager;
-	Corrector::Concrete::Manager::CorrectorManager m_correctorManager;
-	Receiver::Concrete::Manager::ReceiverManager m_receiverManager;
+	Emitter::Concrete::EmitterManager m_emitterManager;
+	Corrector::Concrete::CorrectorManager m_correctorManager;
+	Receiver::Concrete::ReceiverManager m_receiverManager;
 };
 }

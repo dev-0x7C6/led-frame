@@ -5,6 +5,7 @@
 #include "core/receivers/interfaces/ireceiver.h"
 
 #include <QJsonDocument>
+#include <QJsonObject>
 
 using namespace Network::Protocol;
 

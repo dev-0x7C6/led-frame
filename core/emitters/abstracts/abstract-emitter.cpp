@@ -14,6 +14,7 @@ AbstractEmitter::AbstractEmitter()
 void AbstractEmitter::commit(const Container::ColorScanlineContainer &scanline) {
 	std::lock_guard<std::mutex> _(m_mutex);
 	m_data = scanline;
+	m_firstFrameReady = true;
 }
 
 Container::ColorScanlineContainer AbstractEmitter::data() {

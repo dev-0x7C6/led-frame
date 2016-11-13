@@ -9,7 +9,6 @@
 using namespace Functional;
 using namespace Network;
 using namespace Receiver::Concrete;
-using namespace Receiver::Concrete::Manager;
 
 ReceiverManager::ReceiverManager() {
 	connect(&m_deviceScan, &QTimer::timeout, this, &ReceiverManager::rescan);
