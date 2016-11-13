@@ -11,10 +11,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
 
-
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 8)
-set(VERSION_PATCH 7)
+set(VERSION_PATCH 8)
 
 configure_file(config.h.in config.h)
 
