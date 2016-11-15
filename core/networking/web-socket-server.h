@@ -14,7 +14,7 @@ class WebSocketConnectionManager final : public QObject {
 	Q_OBJECT
 public:
 	explicit WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const uint16_t &port = 4999, QObject *parent = nullptr);
-	virtual ~WebSocketConnectionManager() = default;
+	~WebSocketConnectionManager() override = default;
 
 	bool isListening() const;
 	uint16_t port() const;

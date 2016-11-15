@@ -12,6 +12,6 @@ class IMultiNotifier
 	  public ::Receiver::Interface::IReceiverNotify {
 public:
 	explicit IMultiNotifier() = default;
-	virtual ~IMultiNotifier() = default;
+	~IMultiNotifier() override = default;
 };
 }

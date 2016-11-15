@@ -13,11 +13,11 @@ namespace Menu {
 class EmitterConfigurationMenu final : public Emitter::Interface::IEmitterNotify {
 public:
 	explicit EmitterConfigurationMenu();
-	virtual ~EmitterConfigurationMenu();
+	~EmitterConfigurationMenu() override;
 
-	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
-	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
-	virtual void modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	void modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 
 	inline QMenu *menu() { return m_menu.get(); }
 

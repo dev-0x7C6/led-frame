@@ -14,7 +14,7 @@ class IEmitterNotify;
 class IEmitterManager : public ::Interface::INotificationCallback {
 public:
 	explicit IEmitterManager() = default;
-	virtual ~IEmitterManager() = default;
+	~IEmitterManager() override = default;
 
 	virtual void attach(const std::shared_ptr<IEmitter> &emitter) = 0;
 	virtual void detach(const std::shared_ptr<IEmitter> &emitter) = 0;

@@ -18,9 +18,9 @@ constexpr int ApplicationVersionPatch = VERSION_PATCH;
 class ApplicationInfoContainer final : public AbstractContainer {
 public:
 	explicit ApplicationInfoContainer();
-	virtual ~ApplicationInfoContainer() = default;
+	~ApplicationInfoContainer() override = default;
 
-	virtual Enum::ContainerType type() const override;
+	Enum::ContainerType type() const override;
 
 	int applicationVersionMajor() const;
 	int applicationVersionMinor() const;

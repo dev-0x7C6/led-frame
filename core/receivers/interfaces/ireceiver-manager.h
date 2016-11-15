@@ -14,7 +14,7 @@ class IReceiverNotify;
 class IReceiverManager : public ::Interface::INotificationCallback {
 public:
 	explicit IReceiverManager() = default;
-	virtual ~IReceiverManager() = default;
+	~IReceiverManager() override = default;
 
 	virtual void attach(IReceiverNotify *notify) = 0;
 	virtual void detach(IReceiverNotify *notify) = 0;

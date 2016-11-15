@@ -14,7 +14,7 @@ class ICorrectorNotify;
 class ICorrectorManager : public ::Interface::INotificationCallback {
 public:
 	explicit ICorrectorManager() = default;
-	virtual ~ICorrectorManager() = default;
+	~ICorrectorManager() override = default;
 
 	virtual void attach(ICorrectorNotify *notify) = 0;
 	virtual void detach(ICorrectorNotify *notify) = 0;

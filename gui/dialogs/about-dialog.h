@@ -12,7 +12,7 @@ class AboutDialog final : public DecoratedDialog {
 	Q_OBJECT
 public:
 	explicit AboutDialog(QWidget *parent = nullptr);
-	virtual ~AboutDialog();
+	~AboutDialog() override;
 
 private:
 	Ui::AboutDialog *m_ui;

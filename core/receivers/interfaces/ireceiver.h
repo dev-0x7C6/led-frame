@@ -25,7 +25,7 @@ namespace Interface {
 class IReceiver : public ::Interface::INotificationCallback {
 public:
 	explicit IReceiver() = default;
-	virtual ~IReceiver() = default;
+	~IReceiver() override = default;
 
 	virtual QString name() const = 0;
 	virtual Enum::ReceiverType type() const = 0;

@@ -10,14 +10,14 @@ class DecoratedDialog : public QDialog {
 	Q_OBJECT
 public:
 	explicit DecoratedDialog(QWidget *parent = nullptr);
-	virtual ~DecoratedDialog() = default;
+	~DecoratedDialog() override = default;
 
 	void setGradientAnimationEnabled(bool enabled);
 
 protected:
-	void paintEvent(QPaintEvent *);
-	void resizeEvent(QResizeEvent *);
-	void showEvent(QShowEvent *);
+	void paintEvent(QPaintEvent *) override;
+	void resizeEvent(QResizeEvent *) override;
+	void showEvent(QShowEvent *) override;
 
 	WavePaintEngine &wave();
 

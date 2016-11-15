@@ -11,7 +11,7 @@ class INotificationCallback : public QObject {
 	Q_OBJECT
 public:
 	explicit INotificationCallback();
-	virtual ~INotificationCallback() = default;
+	~INotificationCallback() override = default;
 
 	void callback(QObject *object, const std::function<void()> &callback) {
 		connect(this, &INotificationCallback::notify, object, callback);

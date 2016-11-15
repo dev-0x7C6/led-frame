@@ -24,9 +24,9 @@ class LedRibbonConfigContainer final : public AbstractContainer {
 public:
 	explicit LedRibbonConfigContainer() = default;
 	explicit LedRibbonConfigContainer(const Struct::LedRibbonConfigStruct &config);
-	virtual ~LedRibbonConfigContainer() = default;
+	~LedRibbonConfigContainer() override = default;
 
-	virtual Enum::ContainerType type() const override;
+	Enum::ContainerType type() const override;
 
 	inline Enum::ColorFormat colorFormat() const;
 	inline Enum::Direction direction() const;

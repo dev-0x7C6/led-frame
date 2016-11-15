@@ -15,9 +15,9 @@ class ColorScanlineContainer final : public AbstractContainer {
 public:
 	explicit ColorScanlineContainer() = default;
 	explicit ColorScanlineContainer(const uint32_t fillColor);
-	virtual ~ColorScanlineContainer() = default;
+	~ColorScanlineContainer() override = default;
 
-	virtual Enum::ContainerType type() const override;
+	Enum::ContainerType type() const override;
 
 	inline uint32_t *data(const Enum::Position &position);
 	inline uint32_t *data();

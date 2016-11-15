@@ -20,7 +20,7 @@ namespace Interface {
 class IEmitter : public ::Interface::INotificationCallback {
 public:
 	explicit IEmitter() = default;
-	virtual ~IEmitter() = default;
+	~IEmitter() override = default;
 
 	virtual QString name() const = 0;
 	virtual Enum::EmitterType type() const = 0;

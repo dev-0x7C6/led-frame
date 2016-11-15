@@ -25,9 +25,9 @@ class DeviceConfigContainer final : public AbstractContainer {
 public:
 	explicit DeviceConfigContainer();
 	explicit DeviceConfigContainer(const QString &base64);
-	virtual ~DeviceConfigContainer() = default;
+	~DeviceConfigContainer() override = default;
 
-	virtual Enum::ContainerType type() const override;
+	Enum::ContainerType type() const override;
 
 	QString toBase64();
 	void fromBase64(const QString &base64);

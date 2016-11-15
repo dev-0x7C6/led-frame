@@ -9,16 +9,16 @@ namespace Abstract {
 class AbstractEmitterManager : public Emitter::Interface::IEmitterManager {
 public:
 	explicit AbstractEmitterManager() = default;
-	virtual ~AbstractEmitterManager() = default;
+	~AbstractEmitterManager() override = default;
 
-	virtual void attach(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
-	virtual void detach(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	void attach(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	void detach(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 
-	virtual void attach(Emitter::Interface::IEmitterNotify *notify) override;
-	virtual void detach(Emitter::Interface::IEmitterNotify *notify) override;
+	void attach(Emitter::Interface::IEmitterNotify *notify) override;
+	void detach(Emitter::Interface::IEmitterNotify *notify) override;
 
-	virtual std::shared_ptr<Interface::IEmitter> find(const int id) const override;
-	virtual const std::list<std::shared_ptr<Interface::IEmitter>> &list() const override;
+	std::shared_ptr<Interface::IEmitter> find(const int id) const override;
+	const std::list<std::shared_ptr<Interface::IEmitter>> &list() const override;
 
 private:
 	std::list<std::shared_ptr<Emitter::Interface::IEmitter>> m_emitters;

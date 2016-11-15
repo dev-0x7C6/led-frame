@@ -8,7 +8,7 @@ namespace Concrete {
 class CorrectorManager final : public ::Corrector::Abstract::AbstractCorrectorManager {
 public:
 	explicit CorrectorManager() = default;
-	virtual ~CorrectorManager() = default;
+	~CorrectorManager() override = default;
 };
 }
 }

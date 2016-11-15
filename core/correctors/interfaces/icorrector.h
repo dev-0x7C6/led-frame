@@ -11,7 +11,7 @@ class ICorrector : public ::Interface::INotificationCallback {
 public:
 	explicit ICorrector(const int owner)
 			: m_owner(owner) {}
-	virtual ~ICorrector() = default;
+	~ICorrector() override = default;
 
 	virtual Enum::CorrectorType type() const = 0;
 

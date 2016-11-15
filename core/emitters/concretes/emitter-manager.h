@@ -10,12 +10,12 @@ namespace Concrete {
 class EmitterManager final : public Abstract::AbstractEmitterManager {
 public:
 	explicit EmitterManager(QSettings &settings);
-	virtual ~EmitterManager() = default;
+	~EmitterManager() override = default;
 
-	virtual void load() override;
-	virtual void save() override;
+	void load() override;
+	void save() override;
 
-	virtual bool isFirstRun() override;
+	bool isFirstRun() override;
 
 private:
 	QSettings &m_settings;

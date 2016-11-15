@@ -17,11 +17,11 @@ namespace Manager {
 class MainManager final : public Interface::IMutliNotifierManager {
 public:
 	explicit MainManager(QSettings &settings);
-	virtual ~MainManager();
+	~MainManager() override;
 
 	void run();
-	virtual void attach(Interface::IMultiNotifier &notifier) override;
-	virtual void detach(Interface::IMultiNotifier &notifier) override;
+	void attach(Interface::IMultiNotifier &notifier) override;
+	void detach(Interface::IMultiNotifier &notifier) override;
 
 	Emitter::Concrete::EmitterManager &emitters();
 	Corrector::Concrete::CorrectorManager &correctors();

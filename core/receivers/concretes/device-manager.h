@@ -22,7 +22,7 @@ class ReceiverManager : public Receiver::Abstract::AbstractReceiverManager {
 	Q_OBJECT
 public:
 	explicit ReceiverManager();
-	virtual ~ReceiverManager();
+	~ReceiverManager() override;
 
 	void setRegisterDeviceCallback(const std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> &callback);
 

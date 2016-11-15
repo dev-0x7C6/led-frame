@@ -11,9 +11,9 @@ namespace Container {
 class ColorCorrectionContainer final : public AbstractContainer {
 public:
 	explicit ColorCorrectionContainer();
-	virtual ~ColorCorrectionContainer() = default;
+	~ColorCorrectionContainer() override = default;
 
-	virtual Enum::ContainerType type() const override;
+	Enum::ContainerType type() const override;
 
 	void setColor(const double &value, const Enum::ColorType &type);
 	double color(const Enum::ColorType &type) const;

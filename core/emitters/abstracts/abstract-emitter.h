@@ -13,17 +13,17 @@ namespace Abstract {
 class AbstractEmitter : public Emitter::Interface::IEmitter {
 public:
 	explicit AbstractEmitter();
-	virtual ~AbstractEmitter() = default;
+	~AbstractEmitter() override = default;
 
-	virtual void commit(const Container::ColorScanlineContainer &scanline) override;
-	virtual Container::ColorScanlineContainer data() override;
+	void commit(const Container::ColorScanlineContainer &scanline) override;
+	Container::ColorScanlineContainer data() override;
 
-	virtual QString name() const override;
-	virtual void setName(const QString &name) override;
+	QString name() const override;
+	void setName(const QString &name) override;
 
-	virtual void connect() override;
-	virtual void disconnect() override;
-	virtual uint32_t connectionCount() override;
+	void connect() override;
+	void disconnect() override;
+	uint32_t connectionCount() override;
 
 protected:
 	virtual void onConnect(const uint32_t &count) = 0;

@@ -11,17 +11,17 @@ namespace Abstract {
 class AbstractReceiverManager : public Receiver::Interface::IReceiverManager {
 public:
 	explicit AbstractReceiverManager() = default;
-	virtual ~AbstractReceiverManager();
+	~AbstractReceiverManager() override;
 
-	virtual void attach(Receiver::Interface::IReceiverNotify *notify) override;
-	virtual void detach(Receiver::Interface::IReceiverNotify *notify) override;
+	void attach(Receiver::Interface::IReceiverNotify *notify) override;
+	void detach(Receiver::Interface::IReceiverNotify *notify) override;
 
-	virtual Interface::IReceiver *find(const int id) const override;
-	virtual const std::list<std::unique_ptr<Receiver::Interface::IReceiver>> &list() const override;
+	Interface::IReceiver *find(const int id) const override;
+	const std::list<std::unique_ptr<Receiver::Interface::IReceiver>> &list() const override;
 
 protected:
-	virtual void attach(std::unique_ptr<Receiver::Interface::IReceiver> &&receiver) override;
-	virtual void detach(Receiver::Interface::IReceiver *receiver) override;
+	void attach(std::unique_ptr<Receiver::Interface::IReceiver> &&receiver) override;
+	void detach(Receiver::Interface::IReceiver *receiver) override;
 
 private:
 	std::list<std::unique_ptr<Receiver::Interface::IReceiver>> m_receivers;

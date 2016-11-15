@@ -22,15 +22,15 @@ class DeviceMenu final
 {
 public:
 	explicit DeviceMenu();
-	virtual ~DeviceMenu();
+	~DeviceMenu() override;
 
-	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
-	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
-	virtual void modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
+	void modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 
-	virtual void attached(Receiver::Interface::IReceiver *receiver) override;
-	virtual void detached(Receiver::Interface::IReceiver *receiver) override;
-	virtual void modified(Receiver::Interface::IReceiver *receiver) override;
+	void attached(Receiver::Interface::IReceiver *receiver) override;
+	void detached(Receiver::Interface::IReceiver *receiver) override;
+	void modified(Receiver::Interface::IReceiver *receiver) override;
 
 	QAction *beforeAction() const;
 	void setBeforeAction(QAction *beforeAction);

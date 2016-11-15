@@ -13,20 +13,20 @@ namespace Abstract {
 class AbstractCorrectorManager : public Corrector::Interface::ICorrectorManager {
 public:
 	explicit AbstractCorrectorManager() = default;
-	virtual ~AbstractCorrectorManager() = default;
+	~AbstractCorrectorManager() override = default;
 
-	virtual void attach(Corrector::Interface::ICorrectorNotify *notify) override;
-	virtual void detach(Corrector::Interface::ICorrectorNotify *notify) override;
+	void attach(Corrector::Interface::ICorrectorNotify *notify) override;
+	void detach(Corrector::Interface::ICorrectorNotify *notify) override;
 
-	virtual void attach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
-	virtual void detach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
+	void attach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
+	void detach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
 
-	virtual std::shared_ptr<Interface::ICorrector> find(const int id) const override;
-	virtual const std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> &list() const override;
+	std::shared_ptr<Interface::ICorrector> find(const int id) const override;
+	const std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> &list() const override;
 
-	virtual uint32_t execute(uint32_t color) override;
-	virtual void push() override;
-	virtual void pop() override;
+	uint32_t execute(uint32_t color) override;
+	void push() override;
+	void pop() override;
 
 private:
 	std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> m_correctors;
