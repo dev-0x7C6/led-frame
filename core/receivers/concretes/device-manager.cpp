@@ -43,7 +43,7 @@ void ReceiverManager::rescan() {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
-		new Network::BroadcastService(thread->id(), thread->name(), 4999, interface);
+		m_broadcasts.emplace_back(std::make_unique<BroadcastService>(thread->id(), thread->name(), 4999));
 		attach(std::move(thread));
 		emit afterAttach();
 	}

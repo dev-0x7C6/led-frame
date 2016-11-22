@@ -5,6 +5,7 @@
 
 #include <list>
 #include <memory>
+#include <mutex>
 #include <vector>
 
 namespace Corrector {
@@ -31,6 +32,7 @@ public:
 private:
 	std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> m_correctors;
 	std::list<Corrector::Interface::ICorrectorNotify *> m_notifiers;
+	mutable std::mutex m_mutex;
 };
 }
 }

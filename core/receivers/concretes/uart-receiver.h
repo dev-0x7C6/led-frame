@@ -24,13 +24,13 @@ namespace Concrete {
 
 class UartWorker;
 
-class UartReceiver : public Receiver::Abstract::AbstractReceiver {
+class UartReceiver final : public Receiver::Abstract::AbstractReceiver {
 	Q_OBJECT
 public:
 	explicit UartReceiver(std::unique_ptr<Functional::DevicePort> &&device);
 	virtual ~UartReceiver();
 
-	virtual Enum::ReceiverType type() const override;
+	Enum::ReceiverType type() const override;
 	void interrupt();
 
 	virtual Container::DeviceConfigContainer config() override;

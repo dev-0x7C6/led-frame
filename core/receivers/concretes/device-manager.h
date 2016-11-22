@@ -13,6 +13,10 @@ namespace Functional {
 class DevicePort;
 }
 
+namespace Network {
+	class BroadcastService;
+}
+
 namespace Receiver {
 namespace Concrete {
 
@@ -33,6 +37,7 @@ protected:
 
 private:
 	std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
+	std::list<std::unique_ptr<Network::BroadcastService>> m_broadcasts;
 	QTimer m_deviceScan;
 
 signals:

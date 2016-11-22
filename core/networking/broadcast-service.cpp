@@ -1,22 +1,26 @@
 #include <core/networking/broadcast-service.h>
 
-#include <QUdpSocket>
-#include <QNetworkInterface>
-#include <QJsonObject>
-#include <QJsonDocument>
 #include <QHostInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QNetworkInterface>
+#include <QTimer>
+#include <QUdpSocket>
+#include <QObject>
 
 using namespace Network;
 
-BroadcastService::BroadcastService(const int deviceId, const QString &deviceName, const uint16_t &port, QObject *parent)
-		: QObject(parent)
-		, m_socket(std::make_unique<QUdpSocket>())
+BroadcastService::BroadcastService(const int deviceId, const QString &deviceName, const uint16_t &port)
+		: m_socket(std::make_unique<QUdpSocket>())
+		, m_timer(std::make_unique<QTimer>())
 		, m_deviceId(deviceId)
 		, m_deviceName(deviceName)
 		, m_servicePort(port)
 
 {
-	startTimer(3000);
+	QObject::connect(m_timer.get(), &QTimer::timeout, [this] { broadcast(); });
+	m_timer->setInterval(3000);
+	m_timer->start();
 }
 
 BroadcastService::~BroadcastService() = default;
@@ -25,8 +29,7 @@ uint16_t BroadcastService::servicePort() const {
 	return m_servicePort;
 }
 
-void BroadcastService::timerEvent(QTimerEvent *event) {
-	static_cast<void>(event);
+void BroadcastService::broadcast() {
 	auto interfaces = QNetworkInterface::allInterfaces();
 	QHostAddress host;
 
