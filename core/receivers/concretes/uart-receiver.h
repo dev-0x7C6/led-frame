@@ -43,7 +43,6 @@ private:
 	QSerialPortInfo m_details;
 	std::atomic<bool> m_interrupt;
 	Functional::LambdaThread m_thread;
-	const uint32_t m_uartFramerate = 90;
 
 signals:
 	void finished();

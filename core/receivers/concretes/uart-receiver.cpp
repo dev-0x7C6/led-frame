@@ -34,15 +34,17 @@ UartReceiver::~UartReceiver() {
 	m_thread.wait();
 }
 
+#include <iostream>
+
 Enum::ReceiverType UartReceiver::type() const { return Enum::ReceiverType::Uart; }
 
 void UartReceiver::run() {
-	const std::vector<LedRibbonConfigContainer> ribbon = {
+	const std::array<LedRibbonConfigContainer, 4> ribbon{{
 		m_device->config().ribbon(0),
 		m_device->config().ribbon(1),
 		m_device->config().ribbon(2),
 		m_device->config().ribbon(3),
-	};
+	}};
 
 	UartWorker worker(ribbon, correctorManager(), m_device);
 	Functional::LoopSync loopSync;
@@ -51,8 +53,9 @@ void UartReceiver::run() {
 	Container::ColorScanlineContainer diff(0u);
 	Container::ColorScanlineContainer next(0u);
 	Container::ColorScanlineContainer output(0u);
+	const auto uartFramerate = framerate();
 	uint32_t frameCounter = 0;
-	bool firstFrame = true;
+	int lastEmitterId = -1;
 
 	while (!m_interrupt && m_device->error() == 0 && m_device->isDataTerminalReady()) {
 		if (!isEmitterConnected() || !connectedEmitter()->isFirstFrameReady()) {
@@ -61,21 +64,33 @@ void UartReceiver::run() {
 		}
 
 		const auto emitter = connectedEmitter();
+		const auto emitterId = emitter->id();
 		const auto emitterFramerate = emitter->framerate();
+		const auto emitterGetFrame = [&emitter] { return emitter->data(); };
 
-		if (firstFrame) {
-			firstFrame = false;
-			output = emitter->data();
-			worker.fade([&emitter]() { return emitter->data(); });
-			output = emitter->data();
+		const auto resetFrame = [&emitterGetFrame, &output, &prev, &diff, &next] {
+			output = emitterGetFrame();
 			prev = output;
 			diff = output;
 			next = output;
+		};
+
+		if (lastEmitterId == -1) {
+			lastEmitterId = emitterId;
+			worker.fade(emitterGetFrame);
+			resetFrame();
+			continue;
+		}
+
+		if (lastEmitterId != emitterId) {
+			lastEmitterId = emitterId;
+			worker.change(output, emitterGetFrame);
+			resetFrame();
 			continue;
 		}
 
 		if (emitterFramerate != 0) {
-			next = emitter->data();
+			next = emitterGetFrame();
 			frameCounter++;
 
 			if (next != diff) {
@@ -84,14 +99,19 @@ void UartReceiver::run() {
 				frameCounter = 0;
 			}
 
-			auto fadeFactor = static_cast<double>(framerate()) / static_cast<double>(emitterFramerate);
-			Container::ColorScanlineContainer::interpolate(prev, next, std::min(1.0, double(frameCounter) / fadeFactor), output);
+			auto factor = std::min(1.0, static_cast<double>(frameCounter) / (static_cast<double>(uartFramerate) / static_cast<double>(emitterFramerate)));
+
+			if (factor < 1.0) {
+				output = emitterGetFrame();
+			} else {
+				Container::ColorScanlineContainer::interpolate(prev, next, factor, output);
+			}
 		} else {
-			output = emitter->data();
+			output = emitterGetFrame();
 		}
 
 		worker.write(output);
-		loopSync.wait(m_uartFramerate);
+		loopSync.wait(uartFramerate);
 	};
 
 	if (m_device->isOpen() && m_device->isWritable()) {

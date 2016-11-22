@@ -12,7 +12,8 @@ using namespace Functional::Helper;
 
 X11ScreenCapture::X11ScreenCapture()
 		: m_helper(std::make_unique<X11Helper>()) {}
-X11ScreenCapture::~X11ScreenCapture() {}
+
+X11ScreenCapture::~X11ScreenCapture() = default;
 
 ScreenCaptureType X11ScreenCapture::type() const { return ScreenCaptureType::X11ScreenCapture; }
 const uint32_t *X11ScreenCapture::data() { return m_helper->data(); }

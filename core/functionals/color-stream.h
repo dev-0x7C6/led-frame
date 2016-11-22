@@ -13,13 +13,13 @@ namespace Functional {
 
 class ColorStream final {
 public:
-	explicit ColorStream();
+	explicit ColorStream() = default;
 	virtual ~ColorStream() = default;
 
 	void insert(Enum::ColorFormat format, uint32_t color);
 	void write(QIODevice &device);
 
-protected:
+private:
 	inline void writeRGB(uint32_t color);
 	inline void writeRBG(uint32_t color);
 	inline void writeGRB(uint32_t color);
@@ -29,6 +29,6 @@ protected:
 
 private:
 	std::array<uint8_t, 270> m_buffer;
-	size_t m_seek;
+	size_t m_seek = 0;
 };
 }

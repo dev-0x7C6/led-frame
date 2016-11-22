@@ -1,10 +1,10 @@
-#include <core/containers/application-info-container.h>
-#include <core/networking/web-socket-server.h>
-#include <gui/dialogs/about-dialog.h>
-#include <gui/tray/system-tray.h>
-#include "core/managers/main-manager.h"
+#include "core/containers/application-info-container.h"
 #include "core/functionals/remote-controller.h"
+#include "core/managers/main-manager.h"
 #include "core/managers/session-manager.h"
+#include "core/networking/web-socket-server.h"
+#include "gui/dialogs/about-dialog.h"
+#include "gui/tray/system-tray.h"
 
 #include <QApplication>
 #include <QSettings>
@@ -15,6 +15,7 @@ using namespace Container;
 using namespace Enum;
 using namespace Functional;
 using namespace Manager;
+using namespace Network;
 
 using namespace Corrector::Concrete;
 using namespace Emitter::Concrete;
@@ -32,7 +33,7 @@ int main(int argc, char *argv[]) {
 	MainManager manager(settings);
 	SessionManager session(settings, manager);
 	RemoteController controller(manager);
-	Network::WebSocketConnectionManager webSocketServer(manager, controller);
+	WebSocketConnectionManager webSocketServer(manager, controller);
 
 	Tray::SystemTray tray;
 	manager.attach(tray);

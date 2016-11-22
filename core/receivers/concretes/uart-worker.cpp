@@ -9,7 +9,7 @@ using namespace Container;
 using namespace Receiver::Concrete;
 using namespace Corrector::Factory;
 
-UartWorker::UartWorker(const std::vector<Container::LedRibbonConfigContainer> ribbon,
+UartWorker::UartWorker(const std::array<Container::LedRibbonConfigContainer, 4> ribbon,
 	Corrector::Concrete::CorrectorManager &correctorManager,
 	std::unique_ptr<Functional::DevicePort> &device)
 		: m_ribbon(ribbon)
@@ -32,6 +32,17 @@ void UartWorker::fade(std::function<ColorScanlineContainer()> getFrame, const bo
 	}
 
 	m_correctorManager.detach(fadeCorrector);
+}
+
+void UartWorker::change(const ColorScanlineContainer &from, std::function<ColorScanlineContainer ()> getFrame)
+{
+	Functional::LoopSync loopSync;
+	ColorScanlineContainer output;
+	for (auto i = 0u; i < m_uartFramerate; ++i) {
+		ColorScanlineContainer::interpolate(from, getFrame(), std::min(1.0, static_cast<double>(i) / static_cast<double>(m_uartFramerate)), output);
+		write(output);
+		loopSync.wait(m_uartFramerate);
+	}
 }
 
 void UartWorker::write(const ColorScanlineContainer &scanline) {

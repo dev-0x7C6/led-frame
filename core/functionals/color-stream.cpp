@@ -7,9 +7,6 @@ using namespace Enum;
 using namespace Functional;
 using namespace Functional::Color;
 
-ColorStream::ColorStream()
-		: m_seek(0) {}
-
 void ColorStream::insert(Enum::ColorFormat format, uint32_t color) {
 	switch (format) {
 		case ColorFormat::RGB: return writeRGB(color);
