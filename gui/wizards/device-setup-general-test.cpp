@@ -13,6 +13,7 @@ using namespace Wizard;
 DeviceSetupGeneralTest::DeviceSetupGeneralTest(Receiver::Interface::IReceiver *device)
 		: m_receiver(device)
 		, m_symulation(new DeviceSymulationWidget)
+		, m_testEmitter(EmitterFactory::create(EmitterType::Test))
 
 {
 	setTitle(tr("Device testing..."));
@@ -22,13 +23,17 @@ DeviceSetupGeneralTest::DeviceSetupGeneralTest(Receiver::Interface::IReceiver *d
 	setLayout(layout);
 }
 
+DeviceSetupGeneralTest::~DeviceSetupGeneralTest() {
+	m_receiver->connectEmitter(nullptr);
+}
+
 void DeviceSetupGeneralTest::initializePage() {
-	auto emitter = EmitterFactory::create(EmitterType::Test);
-	m_receiver->connectEmitter(emitter);
-	m_symulation->connectEmitter(emitter);
+	m_receiver->connectEmitter(m_testEmitter);
+	m_symulation->connectEmitter(m_testEmitter);
 }
 
 void DeviceSetupGeneralTest::cleanupPage() {
 	m_receiver->disconnectEmitter();
+	m_receiver->connectEmitter(nullptr);
 	m_symulation->disconnectEmitter();
 }

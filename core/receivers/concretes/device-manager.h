@@ -14,7 +14,7 @@ class DevicePort;
 }
 
 namespace Network {
-	class BroadcastService;
+class BroadcastService;
 }
 
 namespace Receiver {

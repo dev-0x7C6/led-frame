@@ -23,7 +23,7 @@ public:
 	void detach(const std::shared_ptr<Corrector::Interface::ICorrector> &corrector) override;
 
 	std::shared_ptr<Interface::ICorrector> find(const int id) const override;
-	const std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> &list() const override;
+	void enumerate(std::function<void(const std::shared_ptr<Interface::ICorrector> &)> callback) const override;
 
 	uint32_t execute(uint32_t color) override;
 	void push() override;

@@ -60,9 +60,10 @@ std::shared_ptr<ICorrector> AbstractCorrectorManager::find(const int id) const {
 	return nullptr;
 }
 
-const std::vector<std::shared_ptr<ICorrector>> &AbstractCorrectorManager::list() const {
+void AbstractCorrectorManager::enumerate(std::function<void(const std::shared_ptr<ICorrector> &)> callback) const {
 	std::lock_guard<std::mutex> _(m_mutex);
-	return m_correctors;
+	for (const auto &corrector : m_correctors)
+		callback(corrector);
 }
 
 uint32_t AbstractCorrectorManager::execute(uint32_t color) {

@@ -84,9 +84,9 @@ bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, co
 }
 
 void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiver) {
-
-	for (const auto &corrector : m_mainManager.correctors().list())
+	m_mainManager.correctors().enumerate([receiver](const auto &corrector) {
 		receiver->correctorManager().attach(corrector);
+	});
 
 	const auto id = receiver->id();
 
@@ -122,15 +122,15 @@ SessionManager::~SessionManager() {
 			m_settings.setValue("emitter", name);
 		}
 
-		for (const auto &corrector : receiver->correctorManager().list()) {
+		m_mainManager.correctors().enumerate([this](const auto &corrector) {
 			if (corrector->isGlobal())
-				continue;
+				return;
 
 			m_settings.beginGroup(value(corrector->type()));
 			m_settings.setValue("factor", corrector->factor());
 			m_settings.setValue("enabled", corrector->isEnabled());
 			m_settings.endGroup();
-		}
+		});
 
 		m_settings.endGroup();
 	}

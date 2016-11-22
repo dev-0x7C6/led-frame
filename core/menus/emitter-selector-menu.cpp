@@ -29,9 +29,9 @@ EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::I
 	m_actionEmitters->setMenu(new QMenu);
 	m_actionCorrectors->setMenu(new QMenu);
 
-	for (const auto &corrector : receiver->correctorManager().list()) {
+	receiver->correctorManager().enumerate([this](const auto &corrector) {
 		if (corrector->owner() == -1)
-			continue;
+			return;
 
 		auto action = m_actionCorrectors->menu()->addAction(name(corrector->type()));
 		auto menu = new QMenu;
@@ -53,7 +53,7 @@ EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::I
 			});
 			dialog.exec();
 		});
-	}
+	});
 }
 
 void EmitterSelectorMenu::attached(const std::shared_ptr<IEmitter> &emitter) {

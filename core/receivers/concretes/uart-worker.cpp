@@ -25,7 +25,7 @@ void UartWorker::fade(std::function<ColorScanlineContainer()> getFrame, const bo
 	fadeCorrector->setFactor(0);
 	m_correctorManager.attach(fadeCorrector);
 
-	for (auto i = 0.0; i < 1.0; i += (1.0 / static_cast<double>(m_uartFramerate/4))) {
+	for (auto i = 0.0; i < 1.0; i += (1.0 / static_cast<double>(m_uartFramerate / 4))) {
 		fadeCorrector->setFactor((in) ? i : 1.0 - i);
 		write(getFrame());
 		loopSync.wait(m_uartFramerate);
@@ -34,8 +34,7 @@ void UartWorker::fade(std::function<ColorScanlineContainer()> getFrame, const bo
 	m_correctorManager.detach(fadeCorrector);
 }
 
-void UartWorker::change(const ColorScanlineContainer &from, std::function<ColorScanlineContainer ()> getFrame)
-{
+void UartWorker::change(const ColorScanlineContainer &from, std::function<ColorScanlineContainer()> getFrame) {
 	Functional::LoopSync loopSync;
 	ColorScanlineContainer output;
 	const auto max = m_uartFramerate / 4;
