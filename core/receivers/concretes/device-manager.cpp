@@ -36,6 +36,9 @@ void ReceiverManager::rescan() {
 		auto thread = std::make_unique<UartReceiver>(std::move(device));
 		auto interface = thread.get();
 		connect(interface, &UartReceiver::finished, this, [this, interface]() {
+			m_broadcasts.remove_if([&interface](const auto &match) {
+				return interface->id() == match->id();
+			});
 			detach(interface);
 		},
 			Qt::QueuedConnection);
