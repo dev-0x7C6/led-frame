@@ -9,8 +9,6 @@
 #include <QApplication>
 #include <QSettings>
 
-#include <memory>
-
 using namespace Container;
 using namespace Enum;
 using namespace Functional;
