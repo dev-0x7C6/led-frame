@@ -30,7 +30,7 @@ void AbstractCorrectorManager::attach(const std::shared_ptr<ICorrector> &correct
 		return (a->priority() > b->priority());
 	});
 
-	connect(interface, &INotificationCallback::notify, [this, interface]() {
+	connect(interface, &INotify::notify, [this, interface]() {
 		for (const auto &notify : m_notifiers)
 			notify->modified(interface);
 

@@ -11,12 +11,14 @@ using namespace Emitter::Interface;
 using namespace Enum;
 
 std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type) {
+	static auto id = 0;
+
 	switch (type) {
-		case EmitterType::Color: return std::make_shared<ColorEmitter>();
-		case EmitterType::Animation: return std::make_shared<AnimationEmitter>();
-		case EmitterType::Image: return std::make_shared<ImageEmitter>();
-		case EmitterType::Screen: return std::make_shared<ScreenEmitter>();
-		case EmitterType::Test: return std::make_shared<TestEmitter>();
+		case EmitterType::Color: return std::make_shared<ColorEmitter>(id++);
+		case EmitterType::Animation: return std::make_shared<AnimationEmitter>(id++);
+		case EmitterType::Image: return std::make_shared<ImageEmitter>(id++);
+		case EmitterType::Screen: return std::make_shared<ScreenEmitter>(id++);
+		case EmitterType::Test: return std::make_shared<TestEmitter>(id++);
 	}
 
 	return nullptr;

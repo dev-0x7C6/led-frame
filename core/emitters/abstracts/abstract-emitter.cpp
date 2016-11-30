@@ -6,8 +6,11 @@
 
 using namespace Emitter::Abstract;
 
-AbstractEmitter::AbstractEmitter()
-		: m_connectionCount(0) {
+AbstractEmitter::AbstractEmitter(int id)
+		: IEmitter(id)
+		, m_connectionCount(0)
+
+{
 	m_data.fill(0);
 }
 

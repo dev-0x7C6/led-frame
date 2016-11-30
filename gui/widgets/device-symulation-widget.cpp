@@ -26,6 +26,7 @@ using namespace Widget;
 
 DeviceSymulationWidget::DeviceSymulationWidget(QWidget *parent)
 		: QWidget(parent)
+		, AbstractReceiver(-1)
 		, m_view(new QQuickView()) {
 	QPalette p = palette();
 	p.setBrush(QPalette::Window, QColor::fromRgb(20, 20, 20));

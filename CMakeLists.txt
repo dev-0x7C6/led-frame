@@ -138,8 +138,7 @@ set(sources
 	core/functionals/remote-controller.h
 	core/interfaces/imulti-notifier.h
 	core/interfaces/imulti-notifier-manager.h
-	core/interfaces/inotification-callback.cpp
-	core/interfaces/inotification-callback.h
+	core/interfaces/inotify.h
 	core/interfaces/iscreen-capture.h
 	core/managers/main-manager.cpp
 	core/managers/main-manager.h

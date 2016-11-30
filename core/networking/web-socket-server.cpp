@@ -6,26 +6,31 @@
 
 using namespace Network;
 
-WebSocketConnectionManager::WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const uint16_t &port, QObject *parent)
-		: QObject(parent)
+WebSocketConnectionManager::WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const uint16_t &port)
+		: m_service(std::make_unique<QWebSocketServer>("LedFrameRemote", QWebSocketServer::NonSecureMode, nullptr))
 		, m_notifier(notifier)
 		, m_remoteController(remoteController)
-		, m_webSocketServer(new QWebSocketServer("LedFrameRemote", QWebSocketServer::NonSecureMode, this))
 
 {
-	m_webSocketServer->listen(QHostAddress::Any, port);
-	connect(m_webSocketServer, &QWebSocketServer::newConnection, this, &WebSocketConnectionManager::incommingConnection);
+	m_service->listen(QHostAddress::Any, port);
+	QObject::connect(m_service.get(), &QWebSocketServer::newConnection, [this] { incommingConnection(); });
 }
 
-bool WebSocketConnectionManager::isListening() const {
-	return m_webSocketServer->isListening();
+WebSocketConnectionManager::~WebSocketConnectionManager() {
+	for (const auto &connection : m_connections)
+		m_notifier.detach(*connection.get());
 }
 
-uint16_t WebSocketConnectionManager::port() const {
-	return m_webSocketServer->serverPort();
+bool WebSocketConnectionManager::isListening() const noexcept {
+	return m_service->isListening();
+}
+
+uint16_t WebSocketConnectionManager::port() const noexcept {
+	return m_service->serverPort();
 }
 
 void WebSocketConnectionManager::incommingConnection() {
-	auto connection = new WebSocketConnection(m_remoteController, std::unique_ptr<QWebSocket>(m_webSocketServer->nextPendingConnection()), this);
-	m_notifier.attach(*connection);
+	auto connection = std::make_unique<WebSocketConnection>(m_remoteController, std::unique_ptr<QWebSocket>(m_service->nextPendingConnection()));
+	m_notifier.attach(*connection.get());
+	m_connections.emplace_back(std::move(connection));
 }

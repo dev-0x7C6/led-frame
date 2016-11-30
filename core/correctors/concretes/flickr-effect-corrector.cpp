@@ -2,7 +2,7 @@
 
 using namespace Corrector::Concrete;
 
-FlickrEffectCorrector::FlickrEffectCorrector(const int owner)
+FlickrEffectCorrector::FlickrEffectCorrector(int id, int owner)
 		: Abstract::AbstractCorrector(owner, minimumFactor()) {
 	m_enabled = false;
 }

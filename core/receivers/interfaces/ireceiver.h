@@ -3,7 +3,7 @@
 #include <core/containers/color-scanline-container.h>
 #include <core/containers/device-config-container.h>
 #include <core/enums/receiver-type-enum.h>
-#include <core/interfaces/inotification-callback.h>
+#include <core/interfaces/inotify.h>
 
 #include <QString>
 
@@ -22,9 +22,10 @@ class CorrectorManager;
 namespace Receiver {
 namespace Interface {
 
-class IReceiver : public ::Interface::INotificationCallback {
+class IReceiver : public ::Interface::INotify {
 public:
-	explicit IReceiver() = default;
+	explicit IReceiver(int id)
+			: INotify(id) {}
 	~IReceiver() override = default;
 
 	virtual QString name() const = 0;

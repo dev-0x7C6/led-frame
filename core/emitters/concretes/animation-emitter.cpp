@@ -4,8 +4,8 @@
 
 using namespace Emitter::Concrete;
 
-AnimationEmitter::AnimationEmitter()
-		: Abstract::AbstractEmitter()
+AnimationEmitter::AnimationEmitter(int id)
+		: AbstractEmitter(id)
 
 {
 	const auto start = QColor::fromRgbF(1, 0, 0);

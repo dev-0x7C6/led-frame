@@ -2,20 +2,20 @@
 
 using namespace Corrector::Abstract;
 
-AbstractCorrector::AbstractCorrector(const int owner)
-		: Interface::ICorrector(owner)
+AbstractCorrector::AbstractCorrector(int id, int owner)
+		: Interface::ICorrector(id, owner)
 		, m_enabled(true)
 		, m_priority(10)
 		, m_factor(1.0) {
 }
 
-AbstractCorrector::AbstractCorrector(const int owner, double factor)
-		: AbstractCorrector(owner) {
+AbstractCorrector::AbstractCorrector(int id, int owner, double factor)
+		: AbstractCorrector(id, owner) {
 	m_factor = factor;
 }
 
-AbstractCorrector::AbstractCorrector(const int owner, double factor, uint32_t priority)
-		: AbstractCorrector(owner, factor) {
+AbstractCorrector::AbstractCorrector(int id, int owner, double factor, uint32_t priority)
+		: AbstractCorrector(id, owner, factor) {
 	m_priority = priority;
 }
 

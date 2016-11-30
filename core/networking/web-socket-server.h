@@ -3,31 +3,33 @@
 #include "core/interfaces/imulti-notifier-manager.h"
 #include "core/interfaces/iremote-controller.h"
 
-#include <QObject>
+#include <memory>
+#include <list>
 
 class QWebSocket;
 class QWebSocketServer;
 
 namespace Network {
 
-class WebSocketConnectionManager final : public QObject {
-	Q_OBJECT
-public:
-	explicit WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const uint16_t &port = 4999, QObject *parent = nullptr);
-	~WebSocketConnectionManager() override = default;
+class WebSocketConnection;
 
-	bool isListening() const;
-	uint16_t port() const;
+class WebSocketConnectionManager final {
+public:
+	explicit WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const uint16_t &port = 4999);
+	virtual ~WebSocketConnectionManager();
+
+	bool isListening() const noexcept;
+	uint16_t port() const noexcept;
 
 protected:
 	void incommingConnection();
 
 private:
+	std::unique_ptr<QWebSocketServer> m_service;
+	std::list<std::unique_ptr<WebSocketConnection>> m_connections;
+
+private:
 	Interface::IMutliNotifierManager &m_notifier;
 	Interface::IRemoteController &m_remoteController;
-	QWebSocketServer *m_webSocketServer;
-
-signals:
-	void signalIncommingConnection(QWebSocket *socket);
 };
 }

@@ -2,23 +2,28 @@
 #include <core/containers/color-scanline-container.h>
 
 #include <QColor>
+#include <QTimer>
 
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-TestEmitter::TestEmitter()
-		: m_currentStep(0)
+TestEmitter::TestEmitter(int id)
+		: AbstractEmitter(id)
+		, m_timer(std::unique_ptr<QTimer>(nullptr))
 
 {
-	startTimer(750);
-	timerEvent(nullptr);
+	QObject::connect(m_timer.get(), &QTimer::timeout, this, &TestEmitter::process);
+	m_timer->setInterval(750);
+	m_timer->start();
 }
+
+TestEmitter::~TestEmitter() = default;
 
 EmitterType TestEmitter::type() const {
 	return EmitterType::Test;
 }
 
-void TestEmitter::timerEvent(QTimerEvent *) {
+void TestEmitter::process() {
 	Container::ColorScanlineContainer scanline;
 	scanline.fill(0);
 

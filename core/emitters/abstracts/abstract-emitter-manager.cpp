@@ -10,7 +10,7 @@ void AbstractEmitterManager::attach(const std::shared_ptr<IEmitter> &emitter) {
 	auto interface = emitter.get();
 	m_emitters.push_back(emitter);
 
-	connect(interface, &INotificationCallback::notify, [this, &emitter]() {
+	connect(interface, &INotify::notify, [this, &emitter]() {
 		for (const auto &notify : m_notifiers)
 			notify->modified(emitter);
 

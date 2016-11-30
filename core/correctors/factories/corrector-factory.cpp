@@ -9,14 +9,16 @@ using namespace Corrector::Factory;
 using namespace Corrector::Interface;
 using namespace Enum;
 
-std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type, const int owner) {
+std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type, int owner) {
+	static int id = 0;
+
 	switch (type) {
-		case CorrectorType::Brightness: return std::make_shared<BrightnessCorrector>(owner);
-		case CorrectorType::ColorEnhancer: return std::make_shared<ColorEnhancerCorrector>(owner);
-		case CorrectorType::FlickrEffect: return std::make_shared<FlickrEffectCorrector>(owner);
-		case CorrectorType::RedChannel: return std::make_shared<RedChannelCorrector>(owner);
-		case CorrectorType::GreenChannel: return std::make_shared<GreenChannelCorrector>(owner);
-		case CorrectorType::BlueChannel: return std::make_shared<BlueChannelCorrector>(owner);
+		case CorrectorType::Brightness: return std::make_shared<BrightnessCorrector>(id++, owner);
+		case CorrectorType::ColorEnhancer: return std::make_shared<ColorEnhancerCorrector>(id++, owner);
+		case CorrectorType::FlickrEffect: return std::make_shared<FlickrEffectCorrector>(id++, owner);
+		case CorrectorType::RedChannel: return std::make_shared<RedChannelCorrector>(id++, owner);
+		case CorrectorType::GreenChannel: return std::make_shared<GreenChannelCorrector>(id++, owner);
+		case CorrectorType::BlueChannel: return std::make_shared<BlueChannelCorrector>(id++, owner);
 	}
 
 	return nullptr;

@@ -7,7 +7,7 @@ namespace Concrete {
 
 class ColorEnhancerCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit ColorEnhancerCorrector(const int owner);
+	explicit ColorEnhancerCorrector(int id, int owner);
 	virtual ~ColorEnhancerCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;

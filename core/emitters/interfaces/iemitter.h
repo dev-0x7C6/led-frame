@@ -2,7 +2,7 @@
 
 #include <core/containers/color-scanline-container.h>
 #include <core/enums/emitter-type-enum.h>
-#include <core/interfaces/inotification-callback.h>
+#include <core/interfaces/inotify.h>
 
 #include <atomic>
 #include <memory>
@@ -17,9 +17,10 @@ class IReceiver;
 namespace Emitter {
 namespace Interface {
 
-class IEmitter : public ::Interface::INotificationCallback {
+class IEmitter : public ::Interface::INotify {
 public:
-	explicit IEmitter() = default;
+	explicit IEmitter(int id)
+			: INotify(id) {}
 	~IEmitter() override = default;
 
 	virtual QString name() const = 0;

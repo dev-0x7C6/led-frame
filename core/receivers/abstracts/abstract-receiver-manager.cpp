@@ -40,7 +40,7 @@ const std::list<std::unique_ptr<IReceiver>> &AbstractReceiverManager::list() con
 void AbstractReceiverManager::attach(std::unique_ptr<IReceiver> &&receiver) {
 	auto interface = receiver.get();
 
-	connect(interface, &INotificationCallback::notify, [this, interface]() {
+	connect(interface, &INotify::notify, [this, interface]() {
 		for (const auto &notify : m_notifiers)
 			notify->modified(interface);
 

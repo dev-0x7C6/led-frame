@@ -15,9 +15,9 @@ using namespace Factory;
 using namespace Container;
 using namespace Functional::Color;
 
-ScreenEmitter::ScreenEmitter()
+ScreenEmitter::ScreenEmitter(int id)
 		: QThread(nullptr)
-		, Abstract::AbstractEmitter()
+		, AbstractEmitter(id)
 		, m_interrupted(false)
 		, m_x(0)
 		, m_y(0)

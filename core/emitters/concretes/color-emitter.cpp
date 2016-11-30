@@ -2,7 +2,8 @@
 
 using namespace Emitter::Concrete;
 
-ColorEmitter::ColorEmitter() {
+ColorEmitter::ColorEmitter(int id)
+		: AbstractEmitter(id) {
 	setColor(Qt::darkGreen);
 }
 

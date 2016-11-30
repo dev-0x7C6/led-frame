@@ -1,17 +1,18 @@
 #pragma once
 
 #include <core/containers/color-correction-container.h>
-#include <core/interfaces/inotification-callback.h>
+#include <core/interfaces/inotify.h>
 #include <core/enums/corrector-type.h>
 
 namespace Corrector {
 namespace Interface {
 
-class ICorrector : public ::Interface::INotificationCallback {
+class ICorrector : public ::Interface::INotify {
 public:
-	explicit ICorrector(const int owner)
-			: m_owner(owner) {}
-	~ICorrector() override = default;
+	explicit ICorrector(int id, int owner)
+			: INotify(id)
+			, m_owner(owner) {}
+	virtual ~ICorrector() override = default;
 
 	virtual Enum::CorrectorType type() const = 0;
 

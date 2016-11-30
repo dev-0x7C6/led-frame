@@ -20,6 +20,8 @@ void ReceiverManager::rescan() {
 	Container::DeviceInfoContainer deviceInfo("LedFrame", "LedFrame", 500000);
 	const QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
+	static auto id = 0;
+
 	for (int i = 0; i < ports.count(); ++i) {
 		if ((ports[i].manufacturer() != deviceInfo.manufacturer())) continue;
 
@@ -33,7 +35,7 @@ void ReceiverManager::rescan() {
 		device->setParity(QSerialPort::NoParity);
 		device->setDataBits(QSerialPort::Data8);
 		device->setStopBits(QSerialPort::OneStop);
-		auto thread = std::make_unique<UartReceiver>(std::move(device));
+		auto thread = std::make_unique<UartReceiver>(id++, std::move(device));
 		auto interface = thread.get();
 		connect(interface, &UartReceiver::finished, this, [this, interface]() {
 			m_broadcasts.remove_if([&interface](const auto &match) {

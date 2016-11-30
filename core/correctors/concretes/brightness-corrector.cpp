@@ -5,8 +5,8 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
-BrightnessCorrector::BrightnessCorrector(const int owner)
-		: Abstract::AbstractCorrector(owner, 1.0) {
+BrightnessCorrector::BrightnessCorrector(int id, int owner)
+		: Abstract::AbstractCorrector(id, owner, 1.0) {
 }
 
 double BrightnessCorrector::minimumFactor() const { return 0; }

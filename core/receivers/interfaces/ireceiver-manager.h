@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/interfaces/inotification-callback.h>
+#include <core/interfaces/inotify.h>
 
 #include <memory>
 #include <list>
@@ -11,9 +11,10 @@ namespace Interface {
 class IReceiver;
 class IReceiverNotify;
 
-class IReceiverManager : public ::Interface::INotificationCallback {
+class IReceiverManager : public ::Interface::INotify {
 public:
-	explicit IReceiverManager() = default;
+	explicit IReceiverManager()
+			: INotify(-1) {}
 	~IReceiverManager() override = default;
 
 	virtual void attach(IReceiverNotify *notify) = 0;

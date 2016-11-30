@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/interfaces/inotification-callback.h>
+#include <core/interfaces/inotify.h>
 
 #include <list>
 #include <memory>
@@ -11,9 +11,10 @@ namespace Interface {
 class IEmitter;
 class IEmitterNotify;
 
-class IEmitterManager : public ::Interface::INotificationCallback {
+class IEmitterManager : public ::Interface::INotify {
 public:
-	explicit IEmitterManager() = default;
+	explicit IEmitterManager()
+			: INotify(-1) {}
 	~IEmitterManager() override = default;
 
 	virtual void attach(const std::shared_ptr<IEmitter> &emitter) = 0;
