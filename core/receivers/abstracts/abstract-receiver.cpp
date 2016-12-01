@@ -18,7 +18,7 @@ AbstractReceiver::~AbstractReceiver() {
 }
 
 void AbstractReceiver::disconnectEmitter() {
-	if (m_emitter) m_emitter->disconnect();
+	m_acquiredEmitter = nullptr;
 }
 
 void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {
@@ -29,7 +29,7 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::
 	emit notify();
 
 	if (m_emitter)
-		m_emitter->connect();
+		m_acquiredEmitter = m_emitter->acquire();
 }
 
 bool AbstractReceiver::isEmitterConnected() const {

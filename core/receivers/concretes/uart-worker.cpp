@@ -19,7 +19,7 @@ UartWorker::UartWorker(const std::array<Container::LedRibbonConfigContainer, 4> 
 {
 }
 
-void UartWorker::fade(std::function<ColorScanlineContainer()> getFrame, const bool in) {
+void UartWorker::fade(std::function<ScanlineContainer()> getFrame, const bool in) {
 	Functional::LoopSync loopSync;
 	auto fadeCorrector = CorrectorFactory::create(CorrectorType::Brightness, -2);
 	fadeCorrector->setFactor(0);
@@ -34,24 +34,24 @@ void UartWorker::fade(std::function<ColorScanlineContainer()> getFrame, const bo
 	m_correctorManager.detach(fadeCorrector);
 }
 
-void UartWorker::change(const ColorScanlineContainer &from, std::function<ColorScanlineContainer()> getFrame) {
+void UartWorker::change(const ScanlineContainer &from, std::function<ScanlineContainer()> getFrame) {
 	Functional::LoopSync loopSync;
-	ColorScanlineContainer output;
+	ScanlineContainer output;
 	const auto max = m_uartFramerate / 4;
 	for (auto i = 0u; i < max; ++i) {
-		ColorScanlineContainer::interpolate(from, getFrame(), std::min(1.0, static_cast<double>(i) / static_cast<double>(max)), output);
+		ScanlineContainer::interpolate(from, getFrame(), std::min(1.0, static_cast<double>(i) / static_cast<double>(max)), output);
 		write(output);
 		loopSync.wait(m_uartFramerate);
 	}
 }
 
-void UartWorker::write(const ColorScanlineContainer &scanline) {
+void UartWorker::write(const ScanlineContainer &scanline) {
 	m_correctorManager.push();
 	for (const auto &config : m_ribbon) {
-		double step = static_cast<double>(scanline_line) / static_cast<double>(config.count() - 1);
+		double step = static_cast<double>(SCANLINE_LINE) / static_cast<double>(config.count() - 1);
 
 		for (int i = 0; i < config.count(); ++i) {
-			auto index = std::min(static_cast<int>(scanline_line - 1), static_cast<int>(i * step));
+			auto index = std::min(static_cast<int>(SCANLINE_LINE - 1), static_cast<int>(i * step));
 			auto color = scanline.constData(config.position())[index];
 			m_stream.insert(config.colorFormat(), m_correctorManager.execute(color));
 		}

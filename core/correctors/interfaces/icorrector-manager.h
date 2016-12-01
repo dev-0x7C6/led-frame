@@ -15,7 +15,7 @@ class ICorrectorNotify;
 class ICorrectorManager : public ::Interface::INotify {
 public:
 	explicit ICorrectorManager()
-			: INotify(-1){};
+			: INotify(-1) {}
 	~ICorrectorManager() override = default;
 
 	virtual void attach(ICorrectorNotify *notify) = 0;

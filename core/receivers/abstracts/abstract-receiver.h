@@ -1,7 +1,9 @@
 #pragma once
 
-#include "core/receivers/interfaces/ireceiver.h"
 #include "core/correctors/concretes/corrector-manager.h"
+#include "core/functionals/raii-reference-counter.h"
+#include "core/receivers/interfaces/ireceiver.h"
+
 #include <QString>
 
 namespace Receiver {
@@ -27,10 +29,11 @@ protected:
 	QString emitterName() const;
 
 private:
-	Container::ColorScanlineContainer m_data;
+	Container::ScanlineContainer m_data;
 	Corrector::Concrete::CorrectorManager m_correctorManager;
 	std::shared_ptr<Emitter::Interface::IEmitter> m_emitter;
 	QString m_name;
+	std::unique_ptr<Functional::RaiiReferenceCounter> m_acquiredEmitter = nullptr;
 };
 }
 }

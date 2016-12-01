@@ -8,65 +8,59 @@
 
 namespace Container {
 
-constexpr uint32_t scanline_size = 128;
-constexpr uint32_t scanline_line = 32;
+constexpr auto SCANLINE_SIZE = 128u;
+constexpr auto SCANLINE_LINE = 32u;
 
-class ColorScanlineContainer final : public AbstractContainer {
+using color = uint32_t;
+
+class ScanlineContainer final {
 public:
-	explicit ColorScanlineContainer() = default;
-	explicit ColorScanlineContainer(const uint32_t fillColor);
-	~ColorScanlineContainer() override = default;
+	constexpr explicit ScanlineContainer()
+			: m_data() {}
+	constexpr explicit ScanlineContainer(const color fillColor)
+			: m_data() { m_data.fill(fillColor); }
 
-	Enum::ContainerType type() const override;
+	constexpr static auto size() noexcept { return SCANLINE_SIZE; }
+	constexpr static auto line() noexcept { return SCANLINE_LINE; }
 
-	inline uint32_t *data(const Enum::Position &position);
-	inline uint32_t *data();
-	inline const uint32_t *constData() const;
-	inline const uint32_t *constData(const Enum::Position &position) const;
+	inline auto data() noexcept { return m_data.data(); }
+	inline auto data(const Enum::Position &position) noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
+	inline auto constData() const noexcept { return m_data.data(); }
+	inline auto constData(const Enum::Position &position) const noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
 
-	static Enum::Position fromIndexToPosition(const uint32_t &index);
+	inline void fill(const color color) noexcept { m_data.fill(color); }
+	inline void fill(const Enum::Position position, const color color) noexcept {
+		auto colors = data(position);
 
-	void clear();
-	void fill(const Enum::Position &position, const uint32_t &color);
-	void fill(const uint32_t &color);
-	void rotate(const uint32_t &color);
+		for (auto i = 0u; i < size(); ++i)
+			colors[i] = color;
+	}
 
-	static void interpolate(const ColorScanlineContainer &start, const ColorScanlineContainer &end, double progress, ColorScanlineContainer &out);
+	inline void clear() noexcept { fill(0u); }
 
-	inline ColorScanlineContainer &operator=(const ColorScanlineContainer &other);
-	inline bool operator==(const ColorScanlineContainer &other);
-	inline bool operator!=(const ColorScanlineContainer &other);
+	constexpr static auto fromIndexToPosition(const std::size_t index) noexcept { return static_cast<Enum::Position>(index / ScanlineContainer::line()); }
+	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, double progress, ScanlineContainer &out) noexcept;
+
+	inline void operator=(const ScanlineContainer &other) noexcept { m_data = other.m_data; }
+	inline void operator=(const color color) noexcept { fill(color); }
+
+	inline void operator<<(const color color) noexcept {
+		std::rotate(m_data.begin(), m_data.begin() + 1, m_data.end());
+		m_data[SCANLINE_SIZE - 1] = color;
+	}
+
+	inline void operator>>(const color color) noexcept {
+		std::rotate(m_data.rbegin(), m_data.rbegin() + 1, m_data.rend());
+		m_data[0] = color;
+	}
+
+	inline bool operator==(const ScanlineContainer &other) const noexcept { return m_data == other.m_data; }
+	inline bool operator!=(const ScanlineContainer &other) const noexcept { return !operator==(other); }
 
 private:
-	std::array<uint32_t, scanline_size> m_data;
+	std::array<uint32_t, SCANLINE_SIZE> m_data;
 };
 
-uint32_t *ColorScanlineContainer::data(const Enum::Position &position) {
-	return m_data.data() + (static_cast<uint32_t>(position) * scanline_line);
-}
-
-uint32_t *ColorScanlineContainer::data() {
-	return m_data.data();
-}
-
-const uint32_t *ColorScanlineContainer::constData() const {
-	return m_data.data();
-}
-
-const uint32_t *ColorScanlineContainer::constData(const Enum::Position &position) const {
-	return m_data.data() + (static_cast<uint32_t>(position) * scanline_line);
-}
-
-ColorScanlineContainer &ColorScanlineContainer::operator=(const ColorScanlineContainer &other) {
-	m_data = other.m_data;
-	return *this;
-}
-
-bool ColorScanlineContainer::operator==(const ColorScanlineContainer &other) {
-	return m_data == other.m_data;
-}
-
-bool ColorScanlineContainer::operator!=(const ColorScanlineContainer &other) {
-	return !operator==(other);
-}
+static_assert(sizeof(ScanlineContainer) == ScanlineContainer::size() * sizeof(color), "ScanlineContainer should fit in ScanlineSize");
+static_assert(alignof(ScanlineContainer) == sizeof(color), "ScanlineContainer should be align to sizeof(color)");
 }

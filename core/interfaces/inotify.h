@@ -14,7 +14,7 @@ public:
 			: m_id(id) {}
 	virtual ~INotify() noexcept override = default;
 
-	constexpr int id() const noexcept { return m_id; }
+	int id() const noexcept { return m_id; }
 
 private:
 	const int m_id = 0;

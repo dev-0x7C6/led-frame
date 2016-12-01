@@ -24,9 +24,3 @@ void ColorEmitter::setColor(const QColor &color) {
 	commit(m_scanline);
 	notify();
 }
-
-void ColorEmitter::onConnect(const uint32_t &) {
-}
-
-void ColorEmitter::onDisconnect(const uint32_t &) {
-}

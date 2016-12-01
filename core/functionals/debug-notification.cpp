@@ -32,7 +32,7 @@ std::string receiver_dbg(IReceiver *receiver, const std::string &text) {
 std::string emitter_dbg(IEmitter *emitter, const std::string &text) {
 	std::stringstream stream;
 	stream << mem_addr(emitter) << text << " emitter: " << emitter->name().toStdString();
-	stream << " (ref: " << emitter->connectionCount() << ")";
+	stream << " (ref: " << emitter->usages() << ")";
 	return stream.str();
 }
 

@@ -24,7 +24,7 @@ EmitterType TestEmitter::type() const {
 }
 
 void TestEmitter::process() {
-	Container::ColorScanlineContainer scanline;
+	Container::ScanlineContainer scanline;
 	scanline.fill(0);
 
 	switch (m_currentStep) {
@@ -111,10 +111,4 @@ void TestEmitter::process() {
 
 	commit(scanline);
 	m_currentStep++;
-}
-
-void TestEmitter::onConnect(const uint32_t &) {
-}
-
-void TestEmitter::onDisconnect(const uint32_t &) {
 }

@@ -17,11 +17,8 @@ public:
 protected:
 	void process(const QVariant &value);
 
-	virtual void onConnect(const uint32_t &count) override;
-	virtual void onDisconnect(const uint32_t &count) override;
-
 private:
-	Container::ColorScanlineContainer m_colors;
+	Container::ScanlineContainer m_colors;
 	QVariantAnimation m_animation;
 };
 }

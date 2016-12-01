@@ -17,9 +17,9 @@ public:
 		Corrector::Concrete::CorrectorManager &correctorManager,
 		std::unique_ptr<Functional::DevicePort> &device);
 
-	void fade(std::function<Container::ColorScanlineContainer()> getFrame, const bool in = true);
-	void change(const Container::ColorScanlineContainer &from, std::function<Container::ColorScanlineContainer()> getFrame);
-	void write(const Container::ColorScanlineContainer &scanline);
+	void fade(std::function<Container::ScanlineContainer()> getFrame, const bool in = true);
+	void change(const Container::ScanlineContainer &from, std::function<Container::ScanlineContainer()> getFrame);
+	void write(const Container::ScanlineContainer &scanline);
 
 private:
 	const std::array<Container::LedRibbonConfigContainer, 4> m_ribbon;

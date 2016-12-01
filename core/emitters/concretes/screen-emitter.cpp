@@ -9,11 +9,15 @@
 #include <QRect>
 #include <QColor>
 
+#include <thread>
+
 using namespace Enum;
 using namespace Emitter::Concrete;
 using namespace Factory;
 using namespace Container;
 using namespace Functional::Color;
+
+using namespace std::literals;
 
 ScreenEmitter::ScreenEmitter(int id)
 		: QThread(nullptr)
@@ -26,6 +30,7 @@ ScreenEmitter::ScreenEmitter(int id)
 
 {
 	setCaptureArea(0);
+	start();
 }
 
 ScreenEmitter::~ScreenEmitter() {
@@ -55,30 +60,15 @@ EmitterType ScreenEmitter::type() const {
 	return EmitterType::Screen;
 }
 
-void ScreenEmitter::onConnect(const uint32_t &count) {
-	if (!isRunning() && count > 0) {
-		m_interrupted = false;
-		start();
-	}
-}
-
-void ScreenEmitter::onDisconnect(const uint32_t &count) {
-	if (count != 0)
-		return;
-
-	interrupt();
-	wait();
-}
-
 void ScreenEmitter::interrupt() {
 	m_interrupted = true;
 }
 
 QRect ScreenEmitter::fragment(int w, int h, const uint32_t &index) {
-	auto l = static_cast<int>(scanline_line);
+	auto l = static_cast<int>(SCANLINE_LINE);
 	auto i = static_cast<int>(index) % l;
 
-	switch (ColorScanlineContainer::fromIndexToPosition(index)) {
+	switch (ScanlineContainer::fromIndexToPosition(index)) {
 		case Position::Left:
 			return QRect(0, (h / l) * (l - i - 1), 196, (h / l));
 
@@ -100,7 +90,7 @@ QRect ScreenEmitter::fragment(int w, int h, const uint32_t &index) {
 
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
-	Container::ColorScanlineContainer scanline;
+	Container::ScanlineContainer scanline;
 	uint32_t *colors = scanline.data();
 	constexpr int step = 16;
 #ifdef X11
@@ -108,7 +98,14 @@ void ScreenEmitter::run() {
 #else
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
 #endif
-	do {
+	while (!m_interrupted) {
+		while (usages() == 0) {
+			if (m_interrupted)
+				return;
+
+			std::this_thread::sleep_for(10ms);
+		}
+
 		const int32_t x = m_x;
 		const int32_t y = m_y;
 		const int32_t w = m_w;
@@ -117,7 +114,7 @@ void ScreenEmitter::run() {
 		sc->capture(x, y, w, h);
 		const uint32_t *data = sc->data();
 
-		for (uint32_t i = 0; i < scanline_size; ++i) {
+		for (uint32_t i = 0; i < SCANLINE_SIZE; ++i) {
 			QRect area = fragment(w, h, i);
 			int c = area.width() * area.height();
 			uint32_t r = 0;
@@ -144,5 +141,5 @@ void ScreenEmitter::run() {
 
 		commit(scanline);
 		loop.wait(framerate());
-	} while (!m_interrupted);
+	};
 }

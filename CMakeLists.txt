@@ -134,6 +134,7 @@ set(sources
 	core/functionals/lambda-thread.h
 	core/functionals/loop-sync.cpp
 	core/functionals/loop-sync.h
+	core/functionals/raii-reference-counter.h
 	core/functionals/remote-controller.cpp
 	core/functionals/remote-controller.h
 	core/interfaces/imulti-notifier.h

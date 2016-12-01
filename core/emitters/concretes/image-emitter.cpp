@@ -24,10 +24,10 @@ Enum::EmitterType ImageEmitter::type() const {
 }
 
 QRect ImageEmitter::fragment(int w, int h, const uint32_t &index) {
-	auto l = static_cast<int>(scanline_line);
+	auto l = static_cast<int>(SCANLINE_LINE);
 	auto i = static_cast<int>(index) % l;
 
-	switch (ColorScanlineContainer::fromIndexToPosition(index)) {
+	switch (ScanlineContainer::fromIndexToPosition(index)) {
 		case Position::Left:
 			return QRect(0, (h / l) * (l - i - 1), 200, (h / l));
 
@@ -53,10 +53,10 @@ bool ImageEmitter::loadFromFile(const QString &filePath) {
 
 	m_filePath = filePath;
 	m_image = QImage(filePath);
-	Container::ColorScanlineContainer scanline;
+	Container::ScanlineContainer scanline;
 	uint32_t *colors = scanline.data();
 
-	for (uint32_t i = 0; i < scanline_size; ++i) {
+	for (uint32_t i = 0; i < SCANLINE_SIZE; ++i) {
 		QRect area = fragment(m_image.width(), m_image.height(), i);
 		int c = area.width() * area.height();
 		uint64_t r = 0;
@@ -86,10 +86,4 @@ bool ImageEmitter::loadFromFile(const QString &filePath) {
 
 	commit(scanline);
 	return false;
-}
-
-void ImageEmitter::onConnect(const uint32_t &) {
-}
-
-void ImageEmitter::onDisconnect(const uint32_t &) {
 }
