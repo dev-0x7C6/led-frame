@@ -103,7 +103,7 @@ void DeviceSymulationWidget::createQmlMonitor() {
 
 void DeviceSymulationWidget::createQmlRibbon() {
 	QQmlComponent led(m_view->engine(), QUrl("qrc:/gui/qml/LedAmbient.qml"));
-	QQuickItem *item;
+
 	Container::DeviceConfigContainer ribbons = config();
 	auto setDefaultQmlVariables = [this](QQuickItem *item) {
 		item->setX(0);
@@ -117,6 +117,7 @@ void DeviceSymulationWidget::createQmlRibbon() {
 	};
 	uint32_t counter = 0;
 
+	QQuickItem *item;
 	for (uint8_t i = 0; i < 4; ++i) {
 		auto ribbon = ribbons.ribbon(i);
 
@@ -134,11 +135,11 @@ void DeviceSymulationWidget::resizeQmlRibbon(QSize area, const int &size) {
 	QRect draw(center.x() - size / 2, center.y() - size / 2, 256, 256);
 	Container::DeviceConfigContainer cfg = config();
 	uint32_t counter = 0;
-	auto resizeLed = [&counter, this](int x, int y, int size) {
+	auto resizeLed = [&counter, this](int x, int y, int s) {
 		auto item = m_leds.at(counter++);
 		item->setX(x);
 		item->setY(y);
-		item->setSize(QSize(size, size));
+		item->setSize(QSize(s, s));
 	};
 
 	for (uint8_t i = 0; i < 4; ++i) {

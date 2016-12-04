@@ -122,9 +122,9 @@ void ScreenEmitter::run() {
 			uint32_t b = 0;
 
 			for (int j = 0; j < c; j += step) {
-				const auto x = area.x() + (j % area.width());
-				const auto y = area.y() + (j / area.width());
-				const auto p = x + (y * w);
+				const auto x2 = area.x() + (j % area.width());
+				const auto y2 = area.y() + (j / area.width());
+				const auto p = x2 + (y2 * w);
 				r += getR(data[p]);
 				b += getB(data[p]);
 				g += getG(data[p]);

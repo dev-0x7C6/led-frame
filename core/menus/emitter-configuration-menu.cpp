@@ -19,7 +19,9 @@ void EmitterConfigurationMenu::attached(const std::shared_ptr<Emitter::Interface
 }
 
 void EmitterConfigurationMenu::detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {
+	static_cast<void>(emitter);
 }
 
 void EmitterConfigurationMenu::modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {
+	static_cast<void>(emitter);
 }

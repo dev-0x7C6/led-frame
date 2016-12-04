@@ -28,12 +28,12 @@ public:
 	inline auto constData() const noexcept { return m_data.data(); }
 	inline auto constData(const Enum::Position &position) const noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
 
-	inline void fill(const color color) noexcept { m_data.fill(color); }
-	inline void fill(const Enum::Position position, const color color) noexcept {
+	inline void fill(const color value) noexcept { m_data.fill(value); }
+	inline void fill(const Enum::Position position, const color value) noexcept {
 		auto colors = data(position);
 
 		for (auto i = 0u; i < size(); ++i)
-			colors[i] = color;
+			colors[i] = value;
 	}
 
 	inline void clear() noexcept { fill(0u); }
@@ -42,16 +42,16 @@ public:
 	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, double progress, ScanlineContainer &out) noexcept;
 
 	inline void operator=(const ScanlineContainer &other) noexcept { m_data = other.m_data; }
-	inline void operator=(const color color) noexcept { fill(color); }
+	inline void operator=(const color value) noexcept { fill(value); }
 
-	inline void operator<<(const color color) noexcept {
+	inline void operator<<(const color value) noexcept {
 		std::rotate(m_data.begin(), m_data.begin() + 1, m_data.end());
-		m_data[SCANLINE_SIZE - 1] = color;
+		m_data[SCANLINE_SIZE - 1] = value;
 	}
 
-	inline void operator>>(const color color) noexcept {
+	inline void operator>>(const color value) noexcept {
 		std::rotate(m_data.rbegin(), m_data.rbegin() + 1, m_data.rend());
-		m_data[0] = color;
+		m_data[0] = value;
 	}
 
 	inline bool operator==(const ScanlineContainer &other) const noexcept { return m_data == other.m_data; }

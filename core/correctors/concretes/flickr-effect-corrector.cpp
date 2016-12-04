@@ -3,7 +3,7 @@
 using namespace Corrector::Concrete;
 
 FlickrEffectCorrector::FlickrEffectCorrector(int id, int owner)
-		: Abstract::AbstractCorrector(owner, minimumFactor()) {
+		: Abstract::AbstractCorrector(id, owner, minimumFactor()) {
 	m_enabled = false;
 }
 

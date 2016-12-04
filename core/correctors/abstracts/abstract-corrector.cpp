@@ -32,12 +32,12 @@ void AbstractCorrector::setEnabled(bool enabled) {
 		notify();
 	}
 }
+
 void AbstractCorrector::setFactor(double factor) {
-	if (m_factor != factor) {
-		m_factor = factor;
-		notify();
-	}
+	m_factor = factor;
+	notify();
 }
+
 void AbstractCorrector::setPriority(uint32_t priority) {
 	if (m_priority != priority) {
 		m_priority = priority;

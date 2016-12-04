@@ -29,7 +29,7 @@ constexpr auto name(const ProtocolMessage message) {
 	}
 
 	return "";
-};
+}
 
 constexpr auto name(const ProtocolEvent event) {
 	switch (event) {
@@ -39,7 +39,7 @@ constexpr auto name(const ProtocolEvent event) {
 	}
 
 	return "";
-};
+}
 
 constexpr auto name(const ProtocolSource source) {
 	switch (source) {
