@@ -9,12 +9,12 @@ using namespace Container;
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-ImageEmitter::ImageEmitter(int id)
+ImageEmitter::ImageEmitter(cint id)
 		: AbstractEmitter(id) {
 	loadFromFile("/home/dev/test.jpg");
 }
 
-ImageEmitter::ImageEmitter(int id, const QString &filePath)
+ImageEmitter::ImageEmitter(cint id, const QString &filePath)
 		: AbstractEmitter(id) {
 	loadFromFile(filePath);
 }

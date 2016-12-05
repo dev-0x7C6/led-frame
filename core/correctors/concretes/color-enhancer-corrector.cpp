@@ -4,7 +4,7 @@
 using namespace Enum;
 using namespace Corrector::Concrete;
 
-ColorEnhancerCorrector::ColorEnhancerCorrector(int id, int owner)
+ColorEnhancerCorrector::ColorEnhancerCorrector(cint id, int owner)
 		: Abstract::AbstractCorrector(id, owner, 1.5, 20) {
 }
 

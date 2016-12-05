@@ -24,7 +24,7 @@ namespace Interface {
 
 class IReceiver : public ::Interface::INotify {
 public:
-	explicit IReceiver(int id)
+	explicit IReceiver(cint id)
 			: INotify(id) {}
 	~IReceiver() override = default;
 

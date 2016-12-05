@@ -10,7 +10,7 @@ constexpr auto RGB_CORRECTION_MAX_VALUE = 1.0;
 
 class RedChannelCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit RedChannelCorrector(int id, int owner);
+	explicit RedChannelCorrector(cint id, int owner);
 	virtual ~RedChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
@@ -22,7 +22,7 @@ public:
 
 class GreenChannelCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit GreenChannelCorrector(int id, int owner);
+	explicit GreenChannelCorrector(cint id, int owner);
 	virtual ~GreenChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
@@ -34,7 +34,7 @@ public:
 
 class BlueChannelCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit BlueChannelCorrector(int id, int owner);
+	explicit BlueChannelCorrector(cint id, int owner);
 	virtual ~BlueChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;

@@ -8,9 +8,9 @@ namespace Abstract {
 
 class AbstractCorrector : public Corrector::Interface::ICorrector {
 public:
-	explicit AbstractCorrector(int id, int owner, double factor);
-	explicit AbstractCorrector(int id, int owner, double factor, uint32_t priority);
-	explicit AbstractCorrector(int id, int owner);
+	explicit AbstractCorrector(cint id, int owner, double factor);
+	explicit AbstractCorrector(cint id, int owner, double factor, uint32_t priority);
+	explicit AbstractCorrector(cint id, int owner);
 	virtual ~AbstractCorrector() = default;
 
 	virtual double factor() const override;

@@ -9,8 +9,8 @@ namespace Concrete {
 
 class ImageEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit ImageEmitter(int id);
-	explicit ImageEmitter(int id, const QString &filePath);
+	explicit ImageEmitter(cint id);
+	explicit ImageEmitter(cint id, const QString &filePath);
 	virtual ~ImageEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;

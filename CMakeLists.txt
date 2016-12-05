@@ -76,7 +76,6 @@ set(sources
 	core/containers/color-scanline-container.h
 	core/containers/device-config-container.cpp
 	core/containers/device-config-container.h
-	core/containers/device-info-container.cpp
 	core/containers/device-info-container.h
 	core/containers/led-ribbon-config-container.cpp
 	core/containers/led-ribbon-config-container.h

@@ -19,7 +19,7 @@ using namespace Functional::Color;
 
 using namespace std::literals;
 
-ScreenEmitter::ScreenEmitter(int id)
+ScreenEmitter::ScreenEmitter(cint id)
 		: QThread(nullptr)
 		, AbstractEmitter(id)
 		, m_interrupted(false)

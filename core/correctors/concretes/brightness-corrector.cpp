@@ -5,7 +5,7 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
-BrightnessCorrector::BrightnessCorrector(int id, int owner)
+BrightnessCorrector::BrightnessCorrector(cint id, int owner)
 		: Abstract::AbstractCorrector(id, owner, 1.0) {
 }
 

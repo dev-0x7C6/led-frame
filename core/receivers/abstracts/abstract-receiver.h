@@ -11,7 +11,7 @@ namespace Abstract {
 
 class AbstractReceiver : public Receiver::Interface::IReceiver {
 public:
-	explicit AbstractReceiver(int id);
+	explicit AbstractReceiver(cint id);
 	virtual ~AbstractReceiver();
 
 	virtual void disconnectEmitter() override;

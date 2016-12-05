@@ -10,7 +10,7 @@ namespace Concrete {
 
 class ScreenEmitter final : public QThread, public Abstract::AbstractEmitter {
 public:
-	explicit ScreenEmitter(int id);
+	explicit ScreenEmitter(cint id);
 	virtual ~ScreenEmitter();
 
 	bool setCaptureArea(const int screen);

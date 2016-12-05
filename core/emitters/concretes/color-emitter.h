@@ -9,7 +9,7 @@ namespace Concrete {
 
 class ColorEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit ColorEmitter(int id);
+	explicit ColorEmitter(cint id);
 	virtual ~ColorEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;

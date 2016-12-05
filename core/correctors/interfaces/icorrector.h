@@ -9,7 +9,7 @@ namespace Interface {
 
 class ICorrector : public ::Interface::INotify {
 public:
-	explicit ICorrector(int id, int owner)
+	explicit ICorrector(cint id, int owner)
 			: INotify(id)
 			, m_owner(owner) {}
 	virtual ~ICorrector() override = default;

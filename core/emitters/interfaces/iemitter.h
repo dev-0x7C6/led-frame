@@ -22,7 +22,7 @@ namespace Interface {
 
 class IEmitter : public ::Interface::INotify {
 public:
-	explicit IEmitter(int id)
+	explicit IEmitter(cint id)
 			: INotify(id) {}
 	~IEmitter() override = default;
 

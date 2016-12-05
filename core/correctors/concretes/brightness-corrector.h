@@ -7,7 +7,7 @@ namespace Concrete {
 
 class BrightnessCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit BrightnessCorrector(int id, int owner);
+	explicit BrightnessCorrector(cint id, int owner);
 	virtual ~BrightnessCorrector() = default;
 
 	virtual double minimumFactor() const override;

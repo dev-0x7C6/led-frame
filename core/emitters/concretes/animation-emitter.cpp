@@ -4,7 +4,7 @@
 
 using namespace Emitter::Concrete;
 
-AnimationEmitter::AnimationEmitter(int id)
+AnimationEmitter::AnimationEmitter(cint id)
 		: AbstractEmitter(id)
 
 {

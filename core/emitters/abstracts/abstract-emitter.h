@@ -12,7 +12,7 @@ namespace Abstract {
 
 class AbstractEmitter : public Emitter::Interface::IEmitter {
 public:
-	explicit AbstractEmitter(int id);
+	explicit AbstractEmitter(cint id);
 	virtual ~AbstractEmitter() override = default;
 
 	QString name() const override;

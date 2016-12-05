@@ -9,7 +9,7 @@ namespace Concrete {
 
 class TestEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit TestEmitter(int id);
+	explicit TestEmitter(cint id);
 	virtual ~TestEmitter();
 
 	virtual Enum::EmitterType type() const override;

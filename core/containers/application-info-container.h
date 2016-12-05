@@ -1,8 +1,6 @@
 #pragma once
 
 #include <string>
-
-#include "core/containers/abstract-container.h"
 #include "config.h"
 
 namespace Container {
