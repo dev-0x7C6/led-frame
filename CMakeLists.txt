@@ -7,6 +7,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
@@ -22,6 +23,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fverbose-asm")
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 8)
 set(VERSION_PATCH 9)
+set(PROJECT_NAME LedFrame)
+set(PROJECT_CODENAME "")
 
 configure_file(config.h.in config.h)
 
@@ -65,12 +68,10 @@ set(sources
 	components/painters/wave-paint-engine.h
 	components/widgets/decorated-dialog.cpp
 	components/widgets/decorated-dialog.h
+	core/consts.h
 	core/containers/abstract-container.cpp
 	core/containers/abstract-container.h
-	core/containers/application-info-container.cpp
 	core/containers/application-info-container.h
-	core/containers/color-correction-container.cpp
-	core/containers/color-correction-container.h
 	core/containers/color-scanline-container.cpp
 	core/containers/color-scanline-container.h
 	core/containers/device-config-container.cpp

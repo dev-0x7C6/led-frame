@@ -14,7 +14,7 @@ public:
 	virtual ~RedChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual uint32_t correct(uint32_t color) override;
+	virtual uint32_t correct(color value) override;
 
 	virtual double minimumFactor() const override { return RGB_CORRECTION_MIN_VALUE; }
 	virtual double maximumFactor() const override { return RGB_CORRECTION_MAX_VALUE; }
@@ -26,7 +26,7 @@ public:
 	virtual ~GreenChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual uint32_t correct(uint32_t color) override;
+	virtual uint32_t correct(color value) override;
 
 	virtual double minimumFactor() const override { return RGB_CORRECTION_MIN_VALUE; }
 	virtual double maximumFactor() const override { return RGB_CORRECTION_MAX_VALUE; }
@@ -38,7 +38,7 @@ public:
 	virtual ~BlueChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual uint32_t correct(uint32_t color) override;
+	virtual uint32_t correct(color value) override;
 
 	virtual double minimumFactor() const override { return RGB_CORRECTION_MIN_VALUE; }
 	virtual double maximumFactor() const override { return RGB_CORRECTION_MAX_VALUE; }

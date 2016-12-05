@@ -14,7 +14,7 @@ public:
 	virtual double maximumFactor() const override;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual uint32_t correct(uint32_t color) override;
+	virtual uint32_t correct(color value) override;
 };
 }
 }

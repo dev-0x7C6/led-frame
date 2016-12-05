@@ -4,7 +4,7 @@
 
 namespace Enum {
 
-enum class ColorFormat : uint8_t {
+enum class ColorFormat {
 	RGB,
 	RBG,
 	GRB,

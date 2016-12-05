@@ -7,14 +7,14 @@ using namespace Enum;
 using namespace Functional;
 using namespace Functional::Color;
 
-void ColorStream::insert(Enum::ColorFormat format, uint32_t color) {
+void ColorStream::insert(Enum::ColorFormat format, color value) {
 	switch (format) {
-		case ColorFormat::RGB: return writeRGB(color);
-		case ColorFormat::RBG: return writeRBG(color);
-		case ColorFormat::GRB: return writeGRB(color);
-		case ColorFormat::BRG: return writeBRG(color);
-		case ColorFormat::GBR: return writeGBR(color);
-		case ColorFormat::BGR: return writeBGR(color);
+		case ColorFormat::RGB: return writeRGB(value);
+		case ColorFormat::RBG: return writeRBG(value);
+		case ColorFormat::GRB: return writeGRB(value);
+		case ColorFormat::BRG: return writeBRG(value);
+		case ColorFormat::GBR: return writeGBR(value);
+		case ColorFormat::BGR: return writeBGR(value);
 	}
 }
 
@@ -23,50 +23,50 @@ void ColorStream::write(QIODevice &device) {
 	m_seek = 0;
 }
 
-void ColorStream::writeRGB(uint32_t color) {
+void ColorStream::writeRGB(color value) noexcept {
 	auto seek = m_seek;
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(value));
 	m_seek = seek;
 }
 
-void ColorStream::writeRBG(uint32_t color) {
+void ColorStream::writeRBG(color value) noexcept {
 	auto seek = m_seek;
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(value));
 	m_seek = seek;
 }
 
-void ColorStream::writeGRB(uint32_t color) {
+void ColorStream::writeGRB(color value) noexcept {
 	auto seek = m_seek;
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(value));
 	m_seek = seek;
 }
 
-void ColorStream::writeGBR(uint32_t color) {
+void ColorStream::writeGBR(color value) noexcept {
 	auto seek = m_seek;
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(value));
 	m_seek = seek;
 }
 
-void ColorStream::writeBRG(uint32_t color) {
+void ColorStream::writeBRG(color value) noexcept {
 	auto seek = m_seek;
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(value));
 	m_seek = seek;
 }
 
-void ColorStream::writeBGR(uint32_t color) {
+void ColorStream::writeBGR(color value) noexcept {
 	auto seek = m_seek;
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(color));
-	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(color));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getB(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getG(value));
+	m_buffer[seek++] = static_cast<decltype(m_buffer)::value_type>(getR(value));
 	m_seek = seek;
 }

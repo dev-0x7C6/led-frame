@@ -20,14 +20,16 @@ using namespace Emitter::Concrete;
 using namespace Receiver::Concrete;
 
 int main(int argc, char *argv[]) {
-	ApplicationInfoContainer info;
+	auto applicationName = QString(ApplicationInfoContainer::name());
+	auto applicationVersion = QString::fromStdString(ApplicationInfoContainer::versionToString());
+
 	QApplication application(argc, argv);
 	application.setQuitOnLastWindowClosed(false);
-	application.setApplicationName(info.applicationName());
-	application.setApplicationVersion(info.versionToString());
-	application.setApplicationDisplayName(QString("%1 %2").arg(info.applicationName(), info.versionToString()));
+	application.setApplicationName(applicationName);
+	application.setApplicationVersion(applicationVersion);
+	application.setApplicationDisplayName(QString("%1 %2").arg(applicationName, applicationVersion));
 
-	QSettings settings(info.applicationName(), info.applicationName());
+	QSettings settings(applicationName, applicationName);
 	MainManager manager(settings);
 	SessionManager session(settings, manager);
 	RemoteController controller(manager);

@@ -25,7 +25,7 @@ public:
 	std::shared_ptr<Interface::ICorrector> find(const int id) const override;
 	void enumerate(std::function<void(const std::shared_ptr<Interface::ICorrector> &)> callback) const override;
 
-	uint32_t execute(uint32_t color) override;
+	uint32_t execute(color value) override;
 	void push() override;
 	void pop() override;
 

@@ -1,40 +1,29 @@
 #pragma once
 
-#include <QString>
+#include <string>
 
+#include "core/containers/abstract-container.h"
 #include "config.h"
-#include <core/containers/abstract-container.h>
 
 namespace Container {
 
-namespace Const {
-constexpr auto ApplicationName = "LedFrame";
-constexpr auto ApplicationCodename = "";
-constexpr int ApplicationVersionMajor = VERSION_MAJOR;
-constexpr int ApplicationVersionMinor = VERSION_MINOR;
-constexpr int ApplicationVersionPatch = VERSION_PATCH;
-}
-
-class ApplicationInfoContainer final : public AbstractContainer {
+class ApplicationInfoContainer final {
 public:
-	explicit ApplicationInfoContainer();
-	~ApplicationInfoContainer() override = default;
+	constexpr explicit ApplicationInfoContainer() noexcept = default;
 
-	Enum::ContainerType type() const override;
+	constexpr static auto versionMajor() noexcept { return VERSION_MAJOR; }
+	constexpr static auto versionMinor() noexcept { return VERSION_MINOR; }
+	constexpr static auto versionPatch() noexcept { return VERSION_PATCH; }
 
-	int applicationVersionMajor() const;
-	int applicationVersionMinor() const;
-	int applicationVersionPatch() const;
+	constexpr static auto codename() noexcept { return PROJECT_CODENAME; }
+	constexpr static auto name() noexcept { return PROJECT_NAME; }
 
-	QString versionToString() const;
-	QString applicationCodename() const;
-	QString applicationName() const;
+	static std::string versionToString() noexcept {
+		constexpr auto major = ApplicationInfoContainer::versionMajor();
+		constexpr auto minor = ApplicationInfoContainer::versionMinor();
+		constexpr auto patch = ApplicationInfoContainer::versionPatch();
 
-private:
-	int m_applicationVersionMajor;
-	int m_applicationVersionMinor;
-	int m_applicationVersionPatch;
-	QString m_applicationCodename;
-	QString m_applicationName;
+		return std::to_string(major) + '.' + std::to_string(minor) + '.' + std::to_string(patch);
+	}
 };
 }

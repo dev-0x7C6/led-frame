@@ -1,11 +1,10 @@
 #pragma once
 
-#include <core/containers/color-correction-container.h>
-#include <core/enums/color-format-enum.h>
-#include <core/enums/color-type-enum.h>
+#include "core/consts.h"
+#include "core/enums/color-format-enum.h"
+#include "core/enums/color-type-enum.h"
 
 #include <array>
-#include <cstdint>
 
 class QIODevice;
 
@@ -16,16 +15,16 @@ public:
 	explicit ColorStream() = default;
 	virtual ~ColorStream() = default;
 
-	void insert(Enum::ColorFormat format, uint32_t color);
+	void insert(Enum::ColorFormat format, color value);
 	void write(QIODevice &device);
 
 private:
-	inline void writeRGB(uint32_t color);
-	inline void writeRBG(uint32_t color);
-	inline void writeGRB(uint32_t color);
-	inline void writeGBR(uint32_t color);
-	inline void writeBRG(uint32_t color);
-	inline void writeBGR(uint32_t color);
+	void writeRGB(color value) noexcept;
+	void writeRBG(color value) noexcept;
+	void writeGRB(color value) noexcept;
+	void writeGBR(color value) noexcept;
+	void writeBRG(color value) noexcept;
+	void writeBGR(color value) noexcept;
 
 private:
 	std::array<uint8_t, 270> m_buffer;

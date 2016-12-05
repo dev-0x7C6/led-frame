@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/containers/color-correction-container.h>
-#include <core/interfaces/inotify.h>
-#include <core/enums/corrector-type.h>
+#include "core/consts.h"
+#include "core/enums/corrector-type.h"
+#include "core/interfaces/inotify.h"
 
 namespace Corrector {
 namespace Interface {
@@ -20,7 +20,7 @@ public:
 	virtual double minimumFactor() const = 0;
 	virtual double maximumFactor() const = 0;
 
-	virtual uint32_t correct(uint32_t color) = 0;
+	virtual uint32_t correct(color value) = 0;
 	virtual uint32_t priority() const = 0;
 
 	virtual int owner() const { return m_owner; }

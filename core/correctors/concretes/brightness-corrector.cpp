@@ -14,10 +14,10 @@ double BrightnessCorrector::maximumFactor() const { return 1.0; }
 
 CorrectorType BrightnessCorrector::type() const { return CorrectorType::Brightness; }
 
-uint32_t BrightnessCorrector::correct(uint32_t color) {
+uint32_t BrightnessCorrector::correct(color value) {
 	const double l = m_factor;
-	const auto r = static_cast<uint32_t>(getR(color) * l);
-	const auto g = static_cast<uint32_t>(getG(color) * l);
-	const auto b = static_cast<uint32_t>(getB(color) * l);
+	const auto r = static_cast<color>(getR(value) * l);
+	const auto g = static_cast<color>(getG(value) * l);
+	const auto b = static_cast<color>(getB(value) * l);
 	return rgb(r, g, b);
 }

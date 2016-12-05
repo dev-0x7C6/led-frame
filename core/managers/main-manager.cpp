@@ -7,7 +7,6 @@
 #include <QSettings>
 
 using namespace Manager;
-using namespace Container::Const;
 using namespace Corrector::Factory;
 using namespace Enum;
 

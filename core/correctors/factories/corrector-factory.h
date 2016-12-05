@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/correctors/interfaces/icorrector.h>
+#include <memory>
 
 namespace Corrector {
 namespace Factory {

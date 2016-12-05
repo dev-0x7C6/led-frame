@@ -66,13 +66,13 @@ void AbstractCorrectorManager::enumerate(std::function<void(const std::shared_pt
 		callback(corrector);
 }
 
-uint32_t AbstractCorrectorManager::execute(uint32_t color) {
+uint32_t AbstractCorrectorManager::execute(color value) {
 	std::lock_guard<std::mutex> _(m_mutex);
 	for (const auto &corrector : m_correctors)
 		if (corrector->isEnabled())
-			color = corrector->correct(color);
+			value = corrector->correct(value);
 
-	return color;
+	return value;
 }
 
 void AbstractCorrectorManager::push() {
