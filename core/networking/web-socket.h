@@ -3,17 +3,15 @@
 #include "core/interfaces/imulti-notifier.h"
 #include "core/interfaces/iremote-controller.h"
 
-#include <QObject>
 #include <memory>
 
 class QWebSocket;
 
 namespace Network {
 
-class WebSocketConnection : public QObject, public Interface::IMultiNotifier {
-	Q_OBJECT
+class WebSocketConnection : public Interface::IMultiNotifier {
 public:
-	explicit WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket, QObject *parent = nullptr);
+	explicit WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket);
 	virtual ~WebSocketConnection();
 
 protected:
@@ -36,8 +34,5 @@ protected:
 private:
 	Interface::IRemoteController &m_remoteController;
 	std::unique_ptr<QWebSocket> m_socket;
-
-signals:
-	void textMessageReceived(const QString &in);
 };
 }

@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QWebSocket>
+#include <QObject>
 
 #ifdef QT_DEBUG
 #include <iostream>
@@ -19,11 +20,10 @@ using namespace Enum;
 using namespace Network;
 using namespace Receiver::Interface;
 
-WebSocketConnection::WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket, QObject *parent)
-		: QObject(parent)
-		, m_remoteController(remoteController)
+WebSocketConnection::WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket)
+		: m_remoteController(remoteController)
 		, m_socket(std::move(socket)) {
-	connect(m_socket.get(), &QWebSocket::textMessageReceived, this, &WebSocketConnection::recv);
+	QObject::connect(m_socket.get(), &QWebSocket::textMessageReceived, [this](const auto &data) { this->recv(data); });
 }
 
 WebSocketConnection::~WebSocketConnection() = default;
