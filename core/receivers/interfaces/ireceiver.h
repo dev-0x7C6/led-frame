@@ -24,14 +24,14 @@ namespace Interface {
 
 class IReceiver : public ::Interface::INotify {
 public:
-	explicit IReceiver(cint id)
+	explicit IReceiver(ci32 id)
 			: INotify(id) {}
 	~IReceiver() override = default;
 
 	virtual QString name() const = 0;
 	virtual Enum::ReceiverType type() const = 0;
 
-	virtual uint32_t framerate() const { return 90; }
+	virtual u32 framerate() const { return 90; }
 
 	virtual void disconnectEmitter() = 0;
 	virtual void connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) = 0;

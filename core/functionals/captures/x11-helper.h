@@ -2,7 +2,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <cstdint>
+#include "core/consts.h"
 
 namespace Functional {
 namespace Helper {
@@ -12,8 +12,8 @@ public:
 	explicit X11Helper();
 	virtual ~X11Helper();
 
-	bool capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h);
-	const uint32_t *data();
+	bool capture(ci32 x, ci32 y, ci32 w, ci32 h);
+	ccolor *data();
 
 private:
 	void destroyFrame();

@@ -17,7 +17,7 @@ void LedRibbonConfigContainer::setColorFormat(const ColorFormat &format) {
 	m_config.format = static_cast<std::underlying_type<ColorFormat>::type>(format);
 }
 
-void LedRibbonConfigContainer::setCount(const uint8_t &count) {
+void LedRibbonConfigContainer::setCount(const u8 &count) {
 	m_config.count = count;
 }
 

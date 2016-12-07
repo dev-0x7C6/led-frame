@@ -6,7 +6,7 @@
 
 using namespace Emitter::Abstract;
 
-AbstractEmitter::AbstractEmitter(cint id)
+AbstractEmitter::AbstractEmitter(ci32 id)
 		: IEmitter(id) {
 }
 

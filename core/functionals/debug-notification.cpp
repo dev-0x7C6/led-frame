@@ -3,7 +3,7 @@
 #include "core/functionals/debug-notification.h"
 #include "core/receivers/interfaces/ireceiver.h"
 
-#include <cstdint>
+#include "core/consts.h"
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -18,7 +18,7 @@ namespace {
 template <typename type>
 std::string mem_addr(type addr) {
 	std::stringstream stream;
-	stream << "[0x" << std::hex << std::noshowbase << std::setw(2) << std::setfill('0') << reinterpret_cast<uint64_t>(addr) << "] ";
+	stream << "[0x" << std::hex << std::noshowbase << std::setw(2) << std::setfill('0') << reinterpret_cast<u64>(addr) << "] ";
 	return stream.str();
 }
 

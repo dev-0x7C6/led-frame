@@ -10,7 +10,7 @@
 
 using namespace Network;
 
-BroadcastService::BroadcastService(const int deviceId, const QString &deviceName, const uint16_t &port)
+BroadcastService::BroadcastService(const int deviceId, const QString &deviceName, const cu16 port)
 		: m_socket(std::make_unique<QUdpSocket>())
 		, m_timer(std::make_unique<QTimer>())
 		, m_deviceId(deviceId)
@@ -25,7 +25,7 @@ BroadcastService::BroadcastService(const int deviceId, const QString &deviceName
 
 BroadcastService::~BroadcastService() = default;
 
-uint16_t BroadcastService::servicePort() const {
+u16 BroadcastService::servicePort() const {
 	return m_servicePort;
 }
 

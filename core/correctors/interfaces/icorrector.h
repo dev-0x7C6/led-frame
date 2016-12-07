@@ -9,7 +9,7 @@ namespace Interface {
 
 class ICorrector : public ::Interface::INotify {
 public:
-	explicit ICorrector(cint id, int owner)
+	explicit ICorrector(ci32 id, int owner)
 			: INotify(id)
 			, m_owner(owner) {}
 	virtual ~ICorrector() override = default;
@@ -20,8 +20,8 @@ public:
 	virtual double minimumFactor() const = 0;
 	virtual double maximumFactor() const = 0;
 
-	virtual uint32_t correct(color value) = 0;
-	virtual uint32_t priority() const = 0;
+	virtual color correct(color value) = 0;
+	virtual u32 priority() const = 0;
 
 	virtual int owner() const { return m_owner; }
 	inline bool isGlobal() const { return m_owner == -1; }
@@ -32,7 +32,7 @@ public:
 	virtual bool isEnabled() const = 0;
 	virtual void setEnabled(bool isEnabled) = 0;
 	virtual void setFactor(double factor) = 0;
-	virtual void setPriority(uint32_t priority) = 0;
+	virtual void setPriority(u32 priority) = 0;
 
 private:
 	const int m_owner;

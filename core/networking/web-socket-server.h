@@ -15,11 +15,11 @@ class WebSocketConnection;
 
 class WebSocketConnectionManager final {
 public:
-	explicit WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const uint16_t &port = 4999);
+	explicit WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const u16 &port = 4999);
 	virtual ~WebSocketConnectionManager();
 
 	bool isListening() const noexcept;
-	uint16_t port() const noexcept;
+	u16 port() const noexcept;
 
 protected:
 	void incommingConnection();

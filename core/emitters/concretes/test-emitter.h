@@ -9,7 +9,7 @@ namespace Concrete {
 
 class TestEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit TestEmitter(cint id);
+	explicit TestEmitter(ci32 id);
 	virtual ~TestEmitter();
 
 	virtual Enum::EmitterType type() const override;
@@ -19,7 +19,7 @@ protected:
 
 private:
 	std::unique_ptr<QTimer> m_timer;
-	uint8_t m_currentStep = 0;
+	u8 m_currentStep = 0;
 };
 }
 }

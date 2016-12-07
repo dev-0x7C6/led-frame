@@ -2,6 +2,8 @@
 
 #include <QElapsedTimer>
 
+#include "core/consts.h"
+
 namespace Functional {
 
 class LoopSync {
@@ -9,13 +11,13 @@ public:
 	explicit LoopSync();
 	virtual ~LoopSync() = default;
 
-	quint64 wait(uint32_t hz = 100);
-	quint64 loopCount();
+	u32 wait(u32 hz = 100);
+	u32 loopCount();
 
 private:
 	QElapsedTimer m_elapsed;
-	quint64 m_runtime;
-	quint64 m_alltime;
-	quint64 m_loop;
+	u32 m_runtime;
+	u32 m_alltime;
+	u32 m_loop;
 };
 }

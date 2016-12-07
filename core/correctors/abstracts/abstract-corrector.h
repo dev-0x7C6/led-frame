@@ -8,13 +8,13 @@ namespace Abstract {
 
 class AbstractCorrector : public Corrector::Interface::ICorrector {
 public:
-	explicit AbstractCorrector(cint id, int owner, double factor);
-	explicit AbstractCorrector(cint id, int owner, double factor, uint32_t priority);
-	explicit AbstractCorrector(cint id, int owner);
+	explicit AbstractCorrector(ci32 id, int owner, double factor);
+	explicit AbstractCorrector(ci32 id, int owner, double factor, u32 priority);
+	explicit AbstractCorrector(ci32 id, int owner);
 	virtual ~AbstractCorrector() = default;
 
 	virtual double factor() const override;
-	virtual uint32_t priority() const override;
+	virtual u32 priority() const override;
 
 	virtual void push() override;
 	virtual void pop() override;
@@ -22,11 +22,11 @@ public:
 	virtual bool isEnabled() const override;
 	virtual void setEnabled(bool isEnabled) override;
 	virtual void setFactor(double factor) override;
-	virtual void setPriority(uint32_t priority) override;
+	virtual void setPriority(u32 priority) override;
 
 protected:
 	std::atomic<bool> m_enabled;
-	std::atomic<uint32_t> m_priority;
+	std::atomic<u32> m_priority;
 	std::atomic<double> m_factor;
 };
 }

@@ -5,7 +5,7 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
-BrightnessCorrector::BrightnessCorrector(cint id, int owner)
+BrightnessCorrector::BrightnessCorrector(ci32 id, int owner)
 		: Abstract::AbstractCorrector(id, owner, 1.0) {
 }
 
@@ -14,10 +14,10 @@ double BrightnessCorrector::maximumFactor() const { return 1.0; }
 
 CorrectorType BrightnessCorrector::type() const { return CorrectorType::Brightness; }
 
-uint32_t BrightnessCorrector::correct(color value) {
+color BrightnessCorrector::correct(color value) {
 	const double l = m_factor;
-	const auto r = static_cast<color>(getR(value) * l);
-	const auto g = static_cast<color>(getG(value) * l);
-	const auto b = static_cast<color>(getB(value) * l);
+	const auto r = static_cast<ccolor>(getR(value) * l);
+	const auto g = static_cast<ccolor>(getG(value) * l);
+	const auto b = static_cast<ccolor>(getB(value) * l);
 	return rgb(r, g, b);
 }

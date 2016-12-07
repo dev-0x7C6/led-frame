@@ -27,7 +27,7 @@ private:
 	void writeBGR(color value) noexcept;
 
 private:
-	std::array<uint8_t, 270> m_buffer;
+	std::array<u8, 270> m_buffer;
 	size_t m_seek = 0;
 };
 }

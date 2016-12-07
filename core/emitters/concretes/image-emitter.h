@@ -9,14 +9,14 @@ namespace Concrete {
 
 class ImageEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit ImageEmitter(cint id);
-	explicit ImageEmitter(cint id, const QString &filePath);
+	explicit ImageEmitter(ci32 id);
+	explicit ImageEmitter(ci32 id, const QString &filePath);
 	virtual ~ImageEmitter() = default;
 
 	virtual Enum::EmitterType type() const override;
-	virtual uint32_t framerate() const override { return 1; }
+	virtual u32 framerate() const override { return 1; }
 
-	QRect fragment(int w, int h, const uint32_t &index);
+	QRect fragment(int w, int h, cu32 index);
 
 	bool loadFromFile(const QString &filePath);
 

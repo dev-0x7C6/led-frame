@@ -4,13 +4,13 @@
 using namespace Enum;
 using namespace Corrector::Concrete;
 
-ColorEnhancerCorrector::ColorEnhancerCorrector(cint id, int owner)
+ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
 		: Abstract::AbstractCorrector(id, owner, 1.5, 20) {
 }
 
 Enum::CorrectorType ColorEnhancerCorrector::type() const { return CorrectorType::ColorEnhancer; }
 
-uint32_t ColorEnhancerCorrector::correct(color value) {
+color ColorEnhancerCorrector::correct(color value) {
 	std::array<decltype(value), 3> colors = {{
 		static_cast<decltype(value)>((value >> 0x10) & 0xffu),
 		static_cast<decltype(value)>((value >> 0x08) & 0xffu),

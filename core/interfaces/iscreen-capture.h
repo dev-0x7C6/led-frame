@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/enums/screen-capture-type.h>
-#include <cstdint>
+#include "core/consts.h"
 
 namespace Interface {
 
@@ -12,8 +12,8 @@ public:
 
 	virtual Enum::ScreenCaptureType type() const = 0;
 
-	virtual bool capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h) = 0;
+	virtual bool capture(ci32 x, ci32 y, ci32 w, ci32 h) = 0;
 
-	virtual const uint32_t *data() = 0;
+	virtual ccolor *data() = 0;
 };
 }

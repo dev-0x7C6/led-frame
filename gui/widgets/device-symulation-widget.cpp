@@ -76,16 +76,16 @@ Container::DeviceConfigContainer DeviceSymulationWidget::config() {
 		Position::Left};
 
 	for (const auto &position : list) {
-		ribbon[static_cast<uint8_t>(position)].setColorFormat(ColorFormat::RGB);
-		ribbon[static_cast<uint8_t>(position)].setDirection(Direction::Normal);
-		ribbon[static_cast<uint8_t>(position)].setPosition(position);
+		ribbon[static_cast<u8>(position)].setColorFormat(ColorFormat::RGB);
+		ribbon[static_cast<u8>(position)].setDirection(Direction::Normal);
+		ribbon[static_cast<u8>(position)].setPosition(position);
 
 		if (position == Position::Top || position == Position::Bottom)
-			ribbon[static_cast<uint8_t>(position)].setCount(8);
+			ribbon[static_cast<u8>(position)].setCount(8);
 		else
-			ribbon[static_cast<uint8_t>(position)].setCount(4);
+			ribbon[static_cast<u8>(position)].setCount(4);
 
-		config.setRibbon(ribbon[static_cast<uint8_t>(position)], static_cast<uint8_t>(position));
+		config.setRibbon(ribbon[static_cast<u8>(position)], static_cast<u8>(position));
 	}
 
 	return config;
@@ -115,13 +115,13 @@ void DeviceSymulationWidget::createQmlRibbon() {
 		item->setParent(m_view->rootObject());
 		item->setParentItem(static_cast<QQuickItem *>(m_view->rootObject()));
 	};
-	uint32_t counter = 0;
+	u32 counter = 0;
 
 	QQuickItem *item;
-	for (uint8_t i = 0; i < 4; ++i) {
+	for (u8 i = 0; i < 4; ++i) {
 		auto ribbon = ribbons.ribbon(i);
 
-		for (uint8_t j = 0; j < ribbon.count(); ++j) {
+		for (u8 j = 0; j < ribbon.count(); ++j) {
 			item = static_cast<QQuickItem *>(led.create());
 			setDefaultQmlVariables(item);
 			m_leds[counter++] = item;
@@ -134,7 +134,7 @@ void DeviceSymulationWidget::resizeQmlRibbon(QSize area, const int &size) {
 	QPoint center(area.width() / 2, area.height() / 2);
 	QRect draw(center.x() - size / 2, center.y() - size / 2, 256, 256);
 	Container::DeviceConfigContainer cfg = config();
-	uint32_t counter = 0;
+	u32 counter = 0;
 	auto resizeLed = [&counter, this](int x, int y, int s) {
 		auto item = m_leds.at(counter++);
 		item->setX(x);
@@ -142,14 +142,14 @@ void DeviceSymulationWidget::resizeQmlRibbon(QSize area, const int &size) {
 		item->setSize(QSize(s, s));
 	};
 
-	for (uint8_t i = 0; i < 4; ++i) {
+	for (u8 i = 0; i < 4; ++i) {
 		auto ribbon = cfg.ribbon(i);
 		auto sh = siz.width() / (ribbon.count() - 1);
 		auto sv = siz.height() / (ribbon.count() - 1);
 
 		switch (ribbon.position()) {
 			case Position::Top:
-				for (uint8_t j = 0; j < ribbon.count(); ++j) {
+				for (u8 j = 0; j < ribbon.count(); ++j) {
 					auto x = center.x() - siz.width() / 2 - size / 2 + (sh * j);
 					auto y = center.y() - siz.height() / 2 - size / 2;
 					resizeLed(x, y, size);
@@ -158,7 +158,7 @@ void DeviceSymulationWidget::resizeQmlRibbon(QSize area, const int &size) {
 				break;
 
 			case Position::Bottom:
-				for (uint8_t j = 0; j < ribbon.count(); ++j) {
+				for (u8 j = 0; j < ribbon.count(); ++j) {
 					auto x = center.x() + siz.width() / 2 - size / 2 - (sh * j);
 					auto y = center.y() + siz.height() / 2 - size / 2;
 					resizeLed(x, y, size);
@@ -167,7 +167,7 @@ void DeviceSymulationWidget::resizeQmlRibbon(QSize area, const int &size) {
 				break;
 
 			case Position::Right:
-				for (uint8_t j = 0; j < ribbon.count(); ++j) {
+				for (u8 j = 0; j < ribbon.count(); ++j) {
 					auto x = center.x() + siz.width() / 2 - size / 2;
 					auto y = center.y() - siz.height() / 2 - size / 2 + (sv * j);
 					resizeLed(x, y, size);
@@ -176,7 +176,7 @@ void DeviceSymulationWidget::resizeQmlRibbon(QSize area, const int &size) {
 				break;
 
 			case Position::Left:
-				for (uint8_t j = 0; j < ribbon.count(); ++j) {
+				for (u8 j = 0; j < ribbon.count(); ++j) {
 					auto x = center.x() - siz.width() / 2 - size / 2;
 					auto y = center.y() + siz.height() / 2 - size / 2 - (sv * j);
 					resizeLed(x, y, size);
@@ -211,9 +211,9 @@ void DeviceSymulationWidget::timerEvent(QTimerEvent *) {
 
 	Container::DeviceConfigContainer cfg = config();
 	auto source = emitter->data();
-	uint32_t counter = 0;
+	u32 counter = 0;
 
-	for (uint8_t i = 0; i < 4; ++i) {
+	for (u8 i = 0; i < 4; ++i) {
 		auto ribbon = cfg.ribbon(i);
 		auto colors = source.data(ribbon.position());
 

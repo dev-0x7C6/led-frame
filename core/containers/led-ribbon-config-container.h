@@ -5,16 +5,16 @@
 #include <core/enums/color-format-enum.h>
 #include <core/enums/position-enum.h>
 
-#include <cstdint>
+#include "core/consts.h"
 
 namespace Container {
 
 namespace Struct {
 struct LedRibbonConfigStruct {
-	uint16_t direction : 1;
-	uint16_t position : 2;
-	uint16_t format : 3;
-	uint16_t count : 8;
+	u16 direction : 1;
+	u16 position : 2;
+	u16 format : 3;
+	u16 count : 8;
 } __attribute__((packed));
 
 static_assert(sizeof(LedRibbonConfigStruct) == 2, "Struct size is different than expected.");
@@ -31,10 +31,10 @@ public:
 	inline Enum::ColorFormat colorFormat() const;
 	inline Enum::Direction direction() const;
 	inline Enum::Position position() const;
-	inline uint8_t count() const;
+	inline u8 count() const;
 
 	void setColorFormat(const Enum::ColorFormat &format);
-	void setCount(const uint8_t &count);
+	void setCount(const u8 &count);
 	void setDirection(const Enum::Direction &direction);
 	void setPosition(const Enum::Position &position);
 
@@ -56,7 +56,7 @@ Enum::Position LedRibbonConfigContainer::position() const {
 	return static_cast<Enum::Position>(m_config.position);
 }
 
-uint8_t LedRibbonConfigContainer::count() const {
-	return static_cast<uint8_t>(m_config.count);
+u8 LedRibbonConfigContainer::count() const {
+	return static_cast<u8>(m_config.count);
 }
 }

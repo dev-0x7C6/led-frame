@@ -2,9 +2,11 @@
 
 #include <QString>
 
+#include "core/consts.h"
+
 namespace Enum {
 
-enum class Position : uint8_t {
+enum class Position : u32 {
 	Left,
 	Top,
 	Right,

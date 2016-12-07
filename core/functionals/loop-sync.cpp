@@ -10,7 +10,7 @@ LoopSync::LoopSync()
 	m_elapsed.start();
 }
 
-quint64 LoopSync::wait(uint32_t hz) {
+u32 LoopSync::wait(u32 hz) {
 	m_runtime = m_elapsed.elapsed();
 	m_alltime += m_runtime;
 	m_elapsed.restart();
@@ -31,6 +31,6 @@ quint64 LoopSync::wait(uint32_t hz) {
 	return m_loop;
 }
 
-quint64 LoopSync::loopCount() {
+u32 LoopSync::loopCount() {
 	return m_loop;
 }

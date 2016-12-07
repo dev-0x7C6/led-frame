@@ -18,8 +18,8 @@ public:
 	virtual ~X11ShmScreenCapture();
 
 	virtual Enum::ScreenCaptureType type() const override;
-	virtual bool capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h) override;
-	virtual const uint32_t *data() override;
+	virtual bool capture(ci32 x, ci32 y, ci32 w, ci32 h) override;
+	virtual ccolor *data() override;
 
 private:
 	std::unique_ptr<Functional::Helper::X11ShmHelper> m_helper;

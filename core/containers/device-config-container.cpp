@@ -29,18 +29,18 @@ void DeviceConfigContainer::fromBase64(const QString &base64) {
 	memcpy(reinterpret_cast<void *>(&m_config), reinterpret_cast<const void *>(source.constData()), source.size());
 }
 
-uint8_t DeviceConfigContainer::version() const {
+u8 DeviceConfigContainer::version() const {
 	return m_config.version;
 }
 
-LedRibbonConfigContainer DeviceConfigContainer::ribbon(const uint8_t &index) const {
+LedRibbonConfigContainer DeviceConfigContainer::ribbon(const u8 &index) const {
 	if (index > m_config.ribbon.size())
 		return LedRibbonConfigContainer();
 
 	return LedRibbonConfigContainer(m_config.ribbon.at(index));
 }
 
-void DeviceConfigContainer::setRibbon(const LedRibbonConfigContainer &ribbon, const uint8_t &index) {
+void DeviceConfigContainer::setRibbon(const LedRibbonConfigContainer &ribbon, const u8 &index) {
 	if (index > m_config.ribbon.size())
 		return;
 

@@ -16,6 +16,6 @@ X11ScreenCapture::X11ScreenCapture()
 X11ScreenCapture::~X11ScreenCapture() = default;
 
 ScreenCaptureType X11ScreenCapture::type() const { return ScreenCaptureType::X11ScreenCapture; }
-const uint32_t *X11ScreenCapture::data() { return m_helper->data(); }
+ccolor *X11ScreenCapture::data() { return m_helper->data(); }
 
-bool X11ScreenCapture::capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h) { return m_helper->capture(x, y, w, h); }
+bool X11ScreenCapture::capture(ci32 x, ci32 y, ci32 w, ci32 h) { return m_helper->capture(x, y, w, h); }

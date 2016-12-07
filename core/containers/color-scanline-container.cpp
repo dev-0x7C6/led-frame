@@ -11,9 +11,9 @@ void ScanlineContainer::interpolate(const ScanlineContainer &start, const Scanli
 		const auto start_color = start.constData()[i];
 		const auto end_color = end.constData()[i];
 
-		const auto r = static_cast<uint32_t>(getR(end_color) * p + (getR(start_color) * (1.0 - p)));
-		const auto g = static_cast<uint32_t>(getG(end_color) * p + (getG(start_color) * (1.0 - p)));
-		const auto b = static_cast<uint32_t>(getB(end_color) * p + (getB(start_color) * (1.0 - p)));
+		const auto r = static_cast<ccolor>(getR(end_color) * p + (getR(start_color) * (1.0 - p)));
+		const auto g = static_cast<ccolor>(getG(end_color) * p + (getG(start_color) * (1.0 - p)));
+		const auto b = static_cast<ccolor>(getB(end_color) * p + (getB(start_color) * (1.0 - p)));
 
 		out.data()[i] = rgb(r, g, b);
 	}

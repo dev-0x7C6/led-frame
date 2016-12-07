@@ -5,17 +5,17 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
-RedChannelCorrector::RedChannelCorrector(cint id, int owner)
+RedChannelCorrector::RedChannelCorrector(ci32 id, int owner)
 		: Abstract::AbstractCorrector(id, owner) {}
 CorrectorType RedChannelCorrector::type() const { return CorrectorType::RedChannel; }
-uint32_t RedChannelCorrector::correct(color value) { return overwriteR(value, static_cast<color>(getR(value) * m_factor)); }
+color RedChannelCorrector::correct(color value) { return overwriteR(value, static_cast<color>(getR(value) * m_factor)); }
 
-GreenChannelCorrector::GreenChannelCorrector(cint id, int owner)
+GreenChannelCorrector::GreenChannelCorrector(ci32 id, int owner)
 		: Abstract::AbstractCorrector(id, owner) {}
 CorrectorType GreenChannelCorrector::type() const { return CorrectorType::GreenChannel; }
-uint32_t GreenChannelCorrector::correct(color value) { return overwriteG(value, static_cast<color>(getG(value) * m_factor)); }
+color GreenChannelCorrector::correct(color value) { return overwriteG(value, static_cast<color>(getG(value) * m_factor)); }
 
-BlueChannelCorrector::BlueChannelCorrector(cint id, int owner)
+BlueChannelCorrector::BlueChannelCorrector(ci32 id, int owner)
 		: Abstract::AbstractCorrector(id, owner) {}
 CorrectorType BlueChannelCorrector::type() const { return CorrectorType::BlueChannel; }
-uint32_t BlueChannelCorrector::correct(color value) { return overwriteB(value, static_cast<color>(getB(value) * m_factor)); }
+color BlueChannelCorrector::correct(color value) { return overwriteB(value, static_cast<color>(getB(value) * m_factor)); }

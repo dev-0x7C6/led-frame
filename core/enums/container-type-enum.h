@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "core/consts.h"
 
 namespace Enum {
 

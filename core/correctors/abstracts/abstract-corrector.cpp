@@ -2,26 +2,26 @@
 
 using namespace Corrector::Abstract;
 
-AbstractCorrector::AbstractCorrector(cint id, int owner)
+AbstractCorrector::AbstractCorrector(ci32 id, int owner)
 		: Interface::ICorrector(id, owner)
 		, m_enabled(true)
 		, m_priority(10)
 		, m_factor(1.0) {
 }
 
-AbstractCorrector::AbstractCorrector(cint id, int owner, double factor)
+AbstractCorrector::AbstractCorrector(ci32 id, int owner, double factor)
 		: AbstractCorrector(id, owner) {
 	m_factor = factor;
 }
 
-AbstractCorrector::AbstractCorrector(cint id, int owner, double factor, uint32_t priority)
+AbstractCorrector::AbstractCorrector(ci32 id, int owner, double factor, u32 priority)
 		: AbstractCorrector(id, owner, factor) {
 	m_priority = priority;
 }
 
 bool AbstractCorrector::isEnabled() const { return m_enabled; }
 double AbstractCorrector::factor() const { return m_factor; }
-uint32_t AbstractCorrector::priority() const { return m_priority; }
+u32 AbstractCorrector::priority() const { return m_priority; }
 
 void AbstractCorrector::push() {}
 void AbstractCorrector::pop() {}
@@ -38,7 +38,7 @@ void AbstractCorrector::setFactor(double factor) {
 	notify();
 }
 
-void AbstractCorrector::setPriority(uint32_t priority) {
+void AbstractCorrector::setPriority(u32 priority) {
 	if (m_priority != priority) {
 		m_priority = priority;
 		notify();

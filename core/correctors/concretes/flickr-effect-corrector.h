@@ -7,11 +7,11 @@ namespace Concrete {
 
 class FlickrEffectCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit FlickrEffectCorrector(cint id, int owner);
+	explicit FlickrEffectCorrector(ci32 id, int owner);
 	virtual ~FlickrEffectCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual uint32_t correct(color value) override;
+	virtual color correct(color value) override;
 	virtual void push() override;
 	virtual void pop() override;
 

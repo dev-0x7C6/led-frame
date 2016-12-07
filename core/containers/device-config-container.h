@@ -14,7 +14,7 @@ constexpr int RibbonCount = 4;
 
 namespace Struct {
 struct DeviceConfigStruct final {
-	uint8_t version;
+	u8 version;
 	std::array<Struct::LedRibbonConfigStruct, RibbonCount> ribbon;
 } __attribute__((packed));
 
@@ -32,9 +32,9 @@ public:
 	QString toBase64();
 	void fromBase64(const QString &base64);
 
-	uint8_t version() const;
-	LedRibbonConfigContainer ribbon(const uint8_t &index) const;
-	void setRibbon(const LedRibbonConfigContainer &ribbon, const uint8_t &index);
+	u8 version() const;
+	LedRibbonConfigContainer ribbon(const u8 &index) const;
+	void setRibbon(const LedRibbonConfigContainer &ribbon, const u8 &index);
 
 private:
 	Struct::DeviceConfigStruct m_config;

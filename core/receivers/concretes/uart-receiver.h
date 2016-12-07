@@ -27,7 +27,7 @@ class UartWorker;
 class UartReceiver final : public Receiver::Abstract::AbstractReceiver {
 	Q_OBJECT
 public:
-	explicit UartReceiver(cint id, std::unique_ptr<Functional::DevicePort> &&device);
+	explicit UartReceiver(ci32 id, std::unique_ptr<Functional::DevicePort> &&device);
 	virtual ~UartReceiver();
 
 	Enum::ReceiverType type() const override;

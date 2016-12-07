@@ -7,14 +7,14 @@ namespace Concrete {
 
 class BrightnessCorrector final : public Abstract::AbstractCorrector {
 public:
-	explicit BrightnessCorrector(cint id, int owner);
+	explicit BrightnessCorrector(ci32 id, int owner);
 	virtual ~BrightnessCorrector() = default;
 
 	virtual double minimumFactor() const override;
 	virtual double maximumFactor() const override;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual uint32_t correct(color value) override;
+	virtual color correct(color value) override;
 };
 }
 }

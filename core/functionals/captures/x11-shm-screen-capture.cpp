@@ -16,5 +16,5 @@ X11ShmScreenCapture::X11ShmScreenCapture()
 X11ShmScreenCapture::~X11ShmScreenCapture() = default;
 
 ScreenCaptureType X11ShmScreenCapture::type() const { return ScreenCaptureType::X11ShmScreenCapture; }
-bool X11ShmScreenCapture::capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h) { return m_helper->capture(x, y, w, h); }
-const uint32_t *X11ShmScreenCapture::data() { return m_helper->data(); }
+bool X11ShmScreenCapture::capture(ci32 x, ci32 y, ci32 w, ci32 h) { return m_helper->capture(x, y, w, h); }
+ccolor *X11ShmScreenCapture::data() { return m_helper->data(); }

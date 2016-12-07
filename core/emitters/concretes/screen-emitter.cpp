@@ -19,7 +19,7 @@ using namespace Functional::Color;
 
 using namespace std::literals;
 
-ScreenEmitter::ScreenEmitter(cint id)
+ScreenEmitter::ScreenEmitter(ci32 id)
 		: QThread(nullptr)
 		, AbstractEmitter(id)
 		, m_interrupted(false)
@@ -64,7 +64,7 @@ void ScreenEmitter::interrupt() {
 	m_interrupted = true;
 }
 
-QRect ScreenEmitter::fragment(int w, int h, const uint32_t &index) {
+QRect ScreenEmitter::fragment(int w, int h, cu32 index) {
 	auto l = static_cast<int>(SCANLINE_LINE);
 	auto i = static_cast<int>(index) % l;
 
@@ -91,7 +91,7 @@ QRect ScreenEmitter::fragment(int w, int h, const uint32_t &index) {
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
 	Container::ScanlineContainer scanline;
-	uint32_t *colors = scanline.data();
+	color *colors = scanline.data();
 	constexpr int step = 16;
 #ifdef X11
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
@@ -106,20 +106,20 @@ void ScreenEmitter::run() {
 			std::this_thread::sleep_for(10ms);
 		}
 
-		const int32_t x = m_x;
-		const int32_t y = m_y;
-		const int32_t w = m_w;
-		const int32_t h = m_h;
+		ci32 x = m_x;
+		ci32 y = m_y;
+		ci32 w = m_w;
+		ci32 h = m_h;
 
 		sc->capture(x, y, w, h);
-		const uint32_t *data = sc->data();
+		ccolor *data = sc->data();
 
-		for (uint32_t i = 0; i < SCANLINE_SIZE; ++i) {
+		for (auto i = 0u; i < SCANLINE_SIZE; ++i) {
 			QRect area = fragment(w, h, i);
 			int c = area.width() * area.height();
-			uint32_t r = 0;
-			uint32_t g = 0;
-			uint32_t b = 0;
+			u32 r = 0;
+			u32 g = 0;
+			u32 b = 0;
 
 			for (int j = 0; j < c; j += step) {
 				const auto x2 = area.x() + (j % area.width());

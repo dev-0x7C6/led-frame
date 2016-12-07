@@ -9,7 +9,7 @@ namespace Concrete {
 
 class AnimationEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit AnimationEmitter(cint id);
+	explicit AnimationEmitter(ci32 id);
 	virtual ~AnimationEmitter();
 
 	virtual Enum::EmitterType type() const override;

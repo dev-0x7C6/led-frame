@@ -8,7 +8,7 @@
 using namespace Receiver::Abstract;
 using namespace Corrector::Concrete;
 
-AbstractReceiver::AbstractReceiver(cint id)
+AbstractReceiver::AbstractReceiver(ci32 id)
 		: IReceiver(id) {
 	m_data.fill(0);
 }

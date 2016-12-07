@@ -6,7 +6,7 @@
 
 using namespace Network;
 
-WebSocketConnectionManager::WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const uint16_t &port)
+WebSocketConnectionManager::WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const u16 &port)
 		: m_service(std::make_unique<QWebSocketServer>("LedFrameRemote", QWebSocketServer::NonSecureMode, nullptr))
 		, m_notifier(notifier)
 		, m_remoteController(remoteController)
@@ -25,7 +25,7 @@ bool WebSocketConnectionManager::isListening() const noexcept {
 	return m_service->isListening();
 }
 
-uint16_t WebSocketConnectionManager::port() const noexcept {
+u16 WebSocketConnectionManager::port() const noexcept {
 	return m_service->serverPort();
 }
 

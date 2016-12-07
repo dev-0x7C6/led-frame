@@ -10,7 +10,7 @@ namespace Concrete {
 
 class ScreenEmitter final : public QThread, public Abstract::AbstractEmitter {
 public:
-	explicit ScreenEmitter(cint id);
+	explicit ScreenEmitter(ci32 id);
 	virtual ~ScreenEmitter();
 
 	bool setCaptureArea(const int screen);
@@ -22,14 +22,14 @@ protected:
 	virtual void run() override;
 
 private:
-	QRect fragment(int w, int h, const uint32_t &index);
+	QRect fragment(int w, int h, cu32 index);
 
 private:
 	std::atomic_bool m_interrupted;
-	std::atomic<int32_t> m_x;
-	std::atomic<int32_t> m_y;
-	std::atomic<int32_t> m_w;
-	std::atomic<int32_t> m_h;
+	std::atomic<int> m_x;
+	std::atomic<int> m_y;
+	std::atomic<int> m_w;
+	std::atomic<int> m_h;
 };
 }
 }

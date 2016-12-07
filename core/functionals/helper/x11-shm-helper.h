@@ -5,7 +5,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <X11/extensions/XShm.h>
-#include <cstdint>
+#include "core/consts.h"
 
 namespace Functional {
 namespace Helper {
@@ -15,8 +15,8 @@ public:
 	explicit X11ShmHelper();
 	virtual ~X11ShmHelper();
 
-	bool capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h);
-	const uint32_t *data();
+	bool capture(ci32 x, ci32 y, ci32 w, ci32 h);
+	ccolor *data();
 
 private:
 	void cleanup();
@@ -26,10 +26,10 @@ private:
 	Display *m_display;
 	XImage *m_frame;
 
-	int32_t m_x;
-	int32_t m_y;
-	uint32_t m_w;
-	uint32_t m_h;
+	int m_x;
+	int m_y;
+	int m_w;
+	int m_h;
 };
 }
 }

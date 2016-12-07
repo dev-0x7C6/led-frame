@@ -19,7 +19,7 @@ using namespace Enum;
 using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
 
-UartReceiver::UartReceiver(cint id, std::unique_ptr<DevicePort> &&device)
+UartReceiver::UartReceiver(ci32 id, std::unique_ptr<DevicePort> &&device)
 		: AbstractReceiver(id)
 		, m_device(std::move(device))
 		, m_interrupt(false)
@@ -54,7 +54,7 @@ void UartReceiver::run() {
 	Container::ScanlineContainer next(0u);
 	Container::ScanlineContainer output(0u);
 	const auto uartFramerate = framerate();
-	uint32_t frameCounter = 0;
+	u32 frameCounter = 0;
 	int lastEmitterId = -1;
 
 	while (!m_interrupt && m_device->error() == 0 && m_device->isDataTerminalReady()) {

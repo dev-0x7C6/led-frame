@@ -9,12 +9,12 @@ using namespace Container;
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-ImageEmitter::ImageEmitter(cint id)
+ImageEmitter::ImageEmitter(ci32 id)
 		: AbstractEmitter(id) {
 	loadFromFile("/home/dev/test.jpg");
 }
 
-ImageEmitter::ImageEmitter(cint id, const QString &filePath)
+ImageEmitter::ImageEmitter(ci32 id, const QString &filePath)
 		: AbstractEmitter(id) {
 	loadFromFile(filePath);
 }
@@ -23,7 +23,7 @@ Enum::EmitterType ImageEmitter::type() const {
 	return Enum::EmitterType::Image;
 }
 
-QRect ImageEmitter::fragment(int w, int h, const uint32_t &index) {
+QRect ImageEmitter::fragment(int w, int h, cu32 index) {
 	auto l = static_cast<int>(SCANLINE_LINE);
 	auto i = static_cast<int>(index) % l;
 
@@ -40,7 +40,7 @@ QRect ImageEmitter::fragment(int w, int h, const uint32_t &index) {
 		case Position::Bottom:
 			return QRect((w / l) * (l - i - 1), h - 200, (w / l), 200);
 
-		default:
+		case Position::Last:
 			return {};
 	}
 
@@ -54,33 +54,33 @@ bool ImageEmitter::loadFromFile(const QString &filePath) {
 	m_filePath = filePath;
 	m_image = QImage(filePath);
 	Container::ScanlineContainer scanline;
-	uint32_t *colors = scanline.data();
+	color *colors = scanline.data();
 
-	for (uint32_t i = 0; i < SCANLINE_SIZE; ++i) {
+	for (auto i = 0u; i < SCANLINE_SIZE; ++i) {
 		QRect area = fragment(m_image.width(), m_image.height(), i);
 		int c = area.width() * area.height();
-		uint64_t r = 0;
-		uint64_t g = 0;
-		uint64_t b = 0;
-		uint32_t rgb = 0;
+		u32 r = 0;
+		u32 g = 0;
+		u32 b = 0;
+		color rgb = 0;
 
 		for (int j = 0; j < c; ++j) {
 			QPoint point(area.x() + (j % area.width()), area.y() + (j / area.width()));
-			rgb = static_cast<uint32_t>(m_image.pixel(point));
-			r += static_cast<uint8_t>(rgb >> 0x10);
-			g += static_cast<uint8_t>(rgb >> 0x08);
-			b += static_cast<uint8_t>(rgb >> 0x00);
+			rgb = static_cast<color>(m_image.pixel(point));
+			r += static_cast<u8>(rgb >> 0x10);
+			g += static_cast<u8>(rgb >> 0x08);
+			b += static_cast<u8>(rgb >> 0x00);
 		}
 
 		if (c > 0) {
-			r /= static_cast<uint64_t>(c);
-			g /= static_cast<uint64_t>(c);
-			b /= static_cast<uint64_t>(c);
+			r /= static_cast<u32>(c);
+			g /= static_cast<u32>(c);
+			b /= static_cast<u32>(c);
 		}
 
-		r = std::min(static_cast<uint64_t>(255), r);
-		g = std::min(static_cast<uint64_t>(255), g);
-		b = std::min(static_cast<uint64_t>(255), b);
+		r = std::min(static_cast<u32>(255), r);
+		g = std::min(static_cast<u32>(255), g);
+		b = std::min(static_cast<u32>(255), b);
 		colors[i] = qRgb(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
 	}
 

@@ -13,7 +13,7 @@ X11ShmHelper::X11ShmHelper()
 
 X11ShmHelper::~X11ShmHelper() { cleanup(); }
 
-bool X11ShmHelper::capture(const int32_t x, const int32_t y, const uint32_t w, const uint32_t h) {
+bool X11ShmHelper::capture(ci32 x, ci32 y, ci32 w, ci32 h) {
 
 	if (!(m_x == x && m_y == y && m_w == w && m_h == h)) {
 		cleanup();
@@ -36,7 +36,7 @@ bool X11ShmHelper::capture(const int32_t x, const int32_t y, const uint32_t w, c
 	return m_frame != nullptr;
 }
 
-const uint32_t *X11ShmHelper::data() { return reinterpret_cast<uint32_t *>(m_frame->data); }
+ccolor *X11ShmHelper::data() { return reinterpret_cast<ccolor *>(m_frame->data); }
 
 void X11ShmHelper::cleanup() {
 	if (!m_frame)

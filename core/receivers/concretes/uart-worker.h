@@ -25,7 +25,7 @@ private:
 	const std::array<Container::LedRibbonConfigContainer, 4> m_ribbon;
 	Corrector::Concrete::CorrectorManager &m_correctorManager;
 	std::unique_ptr<Functional::DevicePort> &m_device;
-	const uint32_t m_uartFramerate = 90;
+	cu32 m_uartFramerate = 90;
 
 	Functional::ColorStream m_stream;
 };
