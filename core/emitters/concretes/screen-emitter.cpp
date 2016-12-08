@@ -9,8 +9,6 @@
 #include <QRect>
 #include <QColor>
 
-#include <thread>
-
 using namespace Enum;
 using namespace Emitter::Concrete;
 using namespace Factory;
@@ -20,22 +18,21 @@ using namespace Functional::Color;
 using namespace std::literals;
 
 ScreenEmitter::ScreenEmitter(ci32 id)
-		: QThread(nullptr)
-		, AbstractEmitter(id)
+		: AbstractEmitter(id)
 		, m_interrupted(false)
 		, m_x(0)
 		, m_y(0)
 		, m_w(0)
 		, m_h(0)
+		, m_thread([this]() { run(); })
 
 {
 	setCaptureArea(0);
-	start();
 }
 
 ScreenEmitter::~ScreenEmitter() {
 	interrupt();
-	wait();
+	m_thread.join();
 }
 
 bool ScreenEmitter::setCaptureArea(const int screen) {

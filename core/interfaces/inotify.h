@@ -11,9 +11,8 @@ namespace Interface {
 class INotify : public QObject {
 	Q_OBJECT
 public:
-	explicit INotify(ci32 id) noexcept
-			: m_id(id) {}
-	virtual ~INotify() noexcept override = default;
+	explicit INotify(ci32 id) noexcept;
+	virtual ~INotify();
 
 	int id() const noexcept { return m_id; }
 

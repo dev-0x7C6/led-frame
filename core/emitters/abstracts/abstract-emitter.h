@@ -2,11 +2,6 @@
 
 #include <core/emitters/interfaces/iemitter.h>
 
-#include <atomic>
-#include <list>
-#include <memory>
-#include <mutex>
-
 namespace Emitter {
 namespace Abstract {
 

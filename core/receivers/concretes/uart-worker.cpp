@@ -9,7 +9,7 @@ using namespace Container;
 using namespace Receiver::Concrete;
 using namespace Corrector::Factory;
 
-UartWorker::UartWorker(const std::array<Container::LedRibbonConfigContainer, 4> ribbon,
+UartWorker::UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbon,
 	Corrector::Concrete::CorrectorManager &correctorManager,
 	std::unique_ptr<Functional::DevicePort> &device)
 		: m_ribbon(ribbon)

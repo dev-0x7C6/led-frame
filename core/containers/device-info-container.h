@@ -4,10 +4,10 @@
 
 namespace Container {
 
-class DeviceInfoContainer final {
+class DeviceInfo final {
 public:
-	constexpr explicit DeviceInfoContainer();
-	constexpr explicit DeviceInfoContainer(cchar *description, cchar *manufacturer, cu64 baudrate)
+	constexpr explicit DeviceInfo();
+	constexpr explicit DeviceInfo(cchar *description, cchar *manufacturer, cu64 baudrate)
 			: m_description(description)
 			, m_manufacturer(manufacturer)
 			, m_baudrate(baudrate) {}

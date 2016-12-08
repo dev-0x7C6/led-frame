@@ -5,30 +5,22 @@
 using namespace Enum;
 using namespace Container;
 
-LedRibbonConfigContainer::LedRibbonConfigContainer(const Struct::LedRibbonConfigStruct &config)
-		: m_config(config) {
+void RibbonConfiguration::setColorFormat(const ColorFormat format) noexcept {
+	m_data.format = static_cast<u16>(format);
 }
 
-ContainerType LedRibbonConfigContainer::type() const {
-	return ContainerType::LedRibbonConfig;
+void RibbonConfiguration::setCount(cu8 count) noexcept {
+	m_data.count = count;
 }
 
-void LedRibbonConfigContainer::setColorFormat(const ColorFormat &format) {
-	m_config.format = static_cast<std::underlying_type<ColorFormat>::type>(format);
+void RibbonConfiguration::setDirection(const Direction direction) noexcept {
+	m_data.direction = static_cast<u16>(direction);
 }
 
-void LedRibbonConfigContainer::setCount(const u8 &count) {
-	m_config.count = count;
+void RibbonConfiguration::setPosition(const Position position) noexcept {
+	m_data.position = static_cast<u16>(position);
 }
 
-void LedRibbonConfigContainer::setDirection(const Direction &direction) {
-	m_config.direction = static_cast<std::underlying_type<Direction>::type>(direction);
-}
-
-void LedRibbonConfigContainer::setPosition(const Position &position) {
-	m_config.position = static_cast<std::underlying_type<Position>::type>(position);
-}
-
-const Struct::LedRibbonConfigStruct &LedRibbonConfigContainer::config() const {
-	return m_config;
+void RibbonConfiguration::operator=(const RibbonConfiguration &other) noexcept {
+	m_data = other.m_data;
 }

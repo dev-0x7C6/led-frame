@@ -8,8 +8,7 @@
 #include <atomic>
 #include <memory>
 #include <mutex>
-
-#include <QString>
+#include <string>
 
 namespace Interface {
 namespace Receiver {
@@ -22,9 +21,8 @@ namespace Interface {
 
 class IEmitter : public ::Interface::INotify {
 public:
-	explicit IEmitter(ci32 id)
-			: INotify(id) {}
-	~IEmitter() override = default;
+	explicit IEmitter(ci32 id);
+	virtual ~IEmitter();
 
 	virtual QString name() const = 0;
 	virtual Enum::EmitterType type() const = 0;
@@ -33,21 +31,13 @@ public:
 
 	virtual void setName(const QString &name) = 0;
 
-	auto commit(const Container::ScanlineContainer &scanline) noexcept {
-		std::lock_guard<std::mutex> _(m_mutex);
-		m_data = scanline;
-		m_firstFrameReady = true;
-	}
+	void commit(const Container::ScanlineContainer &scanline) noexcept;
+	auto data() const noexcept -> Container::ScanlineContainer;
 
-	auto data() const noexcept {
-		std::lock_guard<std::mutex> _(m_mutex);
-		return m_data;
-	}
+	auto acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter>;
+	auto usages() const noexcept -> int;
 
-	auto acquire() noexcept { return std::make_unique<Functional::RaiiReferenceCounter>(m_counter); }
-	auto usages() const noexcept -> int { return m_counter; }
-
-	bool isFirstFrameReady() const noexcept { return m_firstFrameReady; }
+	bool isFirstFrameReady() const noexcept;
 
 protected:
 	mutable std::mutex m_mutex;

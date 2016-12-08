@@ -39,7 +39,7 @@ UartReceiver::~UartReceiver() {
 Enum::ReceiverType UartReceiver::type() const { return Enum::ReceiverType::Uart; }
 
 void UartReceiver::run() {
-	const std::array<LedRibbonConfigContainer, 4> ribbon{{
+	const std::array<RibbonConfiguration, 4> ribbon{{
 		m_device->config().ribbon(0),
 		m_device->config().ribbon(1),
 		m_device->config().ribbon(2),

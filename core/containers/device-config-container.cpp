@@ -33,16 +33,16 @@ u8 DeviceConfigContainer::version() const {
 	return m_config.version;
 }
 
-LedRibbonConfigContainer DeviceConfigContainer::ribbon(const u8 &index) const {
+RibbonConfiguration DeviceConfigContainer::ribbon(const u8 &index) const {
 	if (index > m_config.ribbon.size())
-		return LedRibbonConfigContainer();
+		return RibbonConfiguration();
 
-	return LedRibbonConfigContainer(m_config.ribbon.at(index));
+	return RibbonConfiguration(m_config.ribbon.at(index));
 }
 
-void DeviceConfigContainer::setRibbon(const LedRibbonConfigContainer &ribbon, const u8 &index) {
+void DeviceConfigContainer::setRibbon(const RibbonConfiguration &ribbon, const u8 &index) {
 	if (index > m_config.ribbon.size())
 		return;
 
-	m_config.ribbon[index] = ribbon.config();
+	m_config.ribbon[index] = ribbon;
 }

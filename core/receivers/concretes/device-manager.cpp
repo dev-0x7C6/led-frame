@@ -17,7 +17,7 @@ ReceiverManager::ReceiverManager() {
 ReceiverManager::~ReceiverManager() {}
 
 void ReceiverManager::rescan() {
-	Container::DeviceInfoContainer deviceInfo("LedFrame", "LedFrame", 500000);
+	Container::DeviceInfo deviceInfo("LedFrame", "LedFrame", 500000);
 	const QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
 	static auto id = 0;

@@ -117,6 +117,7 @@ set(sources
 	core/emitters/concretes/test-emitter.h
 	core/emitters/factories/emitter-factory.cpp
 	core/emitters/factories/emitter-factory.h
+	core/emitters/interfaces/iemitter.cpp
 	core/emitters/interfaces/iemitter.h
 	core/emitters/interfaces/iemitter-manager.h
 	core/emitters/interfaces/iemitter-notify.h
@@ -147,6 +148,7 @@ set(sources
 	core/functionals/remote-controller.h
 	core/interfaces/imulti-notifier.h
 	core/interfaces/imulti-notifier-manager.h
+	core/interfaces/inotify.cpp
 	core/interfaces/inotify.h
 	core/interfaces/iscreen-capture.h
 	core/managers/main-manager.cpp
@@ -230,6 +232,7 @@ target_link_libraries(led-frame
 	Qt5::WebSockets
 	Qt5::Widgets
 	${x11-libs}
+	"-lpthread"
 )
 
 install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX})

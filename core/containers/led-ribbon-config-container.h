@@ -1,6 +1,5 @@
 #pragma once
 
-#include <core/containers/abstract-container.h>
 #include <core/enums/direction.h>
 #include <core/enums/color-format-enum.h>
 #include <core/enums/position-enum.h>
@@ -9,54 +8,52 @@
 
 namespace Container {
 
-namespace Struct {
-struct LedRibbonConfigStruct {
+struct alignas(sizeof(u16)) RibbonBitField {
+	constexpr explicit RibbonBitField()
+			: direction(0)
+			, position(0)
+			, format(0)
+			, count(0)
+			, unused(0) {}
+
 	u16 direction : 1;
 	u16 position : 2;
 	u16 format : 3;
 	u16 count : 8;
-} __attribute__((packed));
-
-static_assert(sizeof(LedRibbonConfigStruct) == 2, "Struct size is different than expected.");
-}
-
-class LedRibbonConfigContainer final : public AbstractContainer {
-public:
-	explicit LedRibbonConfigContainer() = default;
-	explicit LedRibbonConfigContainer(const Struct::LedRibbonConfigStruct &config);
-	~LedRibbonConfigContainer() override = default;
-
-	Enum::ContainerType type() const override;
-
-	inline Enum::ColorFormat colorFormat() const;
-	inline Enum::Direction direction() const;
-	inline Enum::Position position() const;
-	inline u8 count() const;
-
-	void setColorFormat(const Enum::ColorFormat &format);
-	void setCount(const u8 &count);
-	void setDirection(const Enum::Direction &direction);
-	void setPosition(const Enum::Position &position);
-
-	const Struct::LedRibbonConfigStruct &config() const;
-
-private:
-	Struct::LedRibbonConfigStruct m_config;
+	u16 unused : 2;
 };
 
-Enum::ColorFormat LedRibbonConfigContainer::colorFormat() const {
-	return static_cast<Enum::ColorFormat>(m_config.format);
-}
+class RibbonConfiguration final {
+public:
+	constexpr explicit RibbonConfiguration() noexcept;
+	constexpr explicit RibbonConfiguration(const RibbonBitField field) noexcept;
 
-Enum::Direction LedRibbonConfigContainer::direction() const {
-	return static_cast<Enum::Direction>(m_config.direction);
-}
+	constexpr auto colorFormat() const noexcept -> Enum::ColorFormat;
+	constexpr auto count() const noexcept -> u8;
+	constexpr auto direction() const noexcept -> Enum::Direction;
+	constexpr auto position() const noexcept -> Enum::Position;
 
-Enum::Position LedRibbonConfigContainer::position() const {
-	return static_cast<Enum::Position>(m_config.position);
-}
+	void setColorFormat(const Enum::ColorFormat format) noexcept;
+	void setCount(cu8 count) noexcept;
+	void setDirection(const Enum::Direction direction) noexcept;
+	void setPosition(const Enum::Position position) noexcept;
 
-u8 LedRibbonConfigContainer::count() const {
-	return static_cast<u8>(m_config.count);
-}
+	void operator=(const RibbonConfiguration &other) noexcept;
+
+private:
+	RibbonBitField m_data;
+};
+
+constexpr RibbonConfiguration::RibbonConfiguration() noexcept
+		: m_data() {}
+constexpr RibbonConfiguration::RibbonConfiguration(const RibbonBitField field) noexcept
+		: m_data(field) {}
+constexpr auto RibbonConfiguration::colorFormat() const noexcept -> Enum::ColorFormat { return static_cast<Enum::ColorFormat>(m_data.format); }
+constexpr auto RibbonConfiguration::direction() const noexcept -> Enum::Direction { return static_cast<Enum::Direction>(m_data.direction); }
+constexpr auto RibbonConfiguration::position() const noexcept -> Enum::Position { return static_cast<Enum::Position>(m_data.position); }
+constexpr auto RibbonConfiguration::count() const noexcept -> u8 { return static_cast<u8>(m_data.count); }
+
+static_assert(alignof(RibbonBitField) == sizeof(u16), "align should be same as u16.");
+static_assert(sizeof(RibbonBitField) == sizeof(u16), "size is different than expected.");
+static_assert(sizeof(RibbonConfiguration) == sizeof(u16), "size is different than expected.");
 }

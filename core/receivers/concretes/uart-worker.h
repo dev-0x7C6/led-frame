@@ -13,7 +13,7 @@ namespace Concrete {
 
 class UartWorker {
 public:
-	explicit UartWorker(const std::array<Container::LedRibbonConfigContainer, 4> ribbon,
+	explicit UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbon,
 		Corrector::Concrete::CorrectorManager &correctorManager,
 		std::unique_ptr<Functional::DevicePort> &device);
 
@@ -22,7 +22,7 @@ public:
 	void write(const Container::ScanlineContainer &scanline);
 
 private:
-	const std::array<Container::LedRibbonConfigContainer, 4> m_ribbon;
+	const std::array<Container::RibbonConfiguration, 4> m_ribbon;
 	Corrector::Concrete::CorrectorManager &m_correctorManager;
 	std::unique_ptr<Functional::DevicePort> &m_device;
 	cu32 m_uartFramerate = 90;

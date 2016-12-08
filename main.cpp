@@ -20,8 +20,8 @@ using namespace Emitter::Concrete;
 using namespace Receiver::Concrete;
 
 int main(int argc, char *argv[]) {
-	auto applicationName = QString(ApplicationInfoContainer::name());
-	auto applicationVersion = QString::fromStdString(ApplicationInfoContainer::versionToString());
+	auto applicationName = QString(ApplicationInfo::name());
+	auto applicationVersion = QString::fromStdString(ApplicationInfo::versionToString());
 
 	QApplication application(argc, argv);
 	application.setQuitOnLastWindowClosed(false);

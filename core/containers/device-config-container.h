@@ -15,7 +15,7 @@ constexpr int RibbonCount = 4;
 namespace Struct {
 struct DeviceConfigStruct final {
 	u8 version;
-	std::array<Struct::LedRibbonConfigStruct, RibbonCount> ribbon;
+	std::array<RibbonConfiguration, RibbonCount> ribbon;
 } __attribute__((packed));
 
 static_assert(sizeof(DeviceConfigStruct) == 9, "Struct size is different than expected.");
@@ -33,8 +33,8 @@ public:
 	void fromBase64(const QString &base64);
 
 	u8 version() const;
-	LedRibbonConfigContainer ribbon(const u8 &index) const;
-	void setRibbon(const LedRibbonConfigContainer &ribbon, const u8 &index);
+	RibbonConfiguration ribbon(const u8 &index) const;
+	void setRibbon(const RibbonConfiguration &ribbon, const u8 &index);
 
 private:
 	Struct::DeviceConfigStruct m_config;

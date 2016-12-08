@@ -68,7 +68,7 @@ Enum::ReceiverType DeviceSymulationWidget::type() const {
 
 Container::DeviceConfigContainer DeviceSymulationWidget::config() {
 	Container::DeviceConfigContainer config;
-	Container::LedRibbonConfigContainer ribbon[4];
+	Container::RibbonConfiguration ribbon[4];
 	const auto list = {
 		Position::Top,
 		Position::Right,
