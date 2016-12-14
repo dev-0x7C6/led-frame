@@ -6,7 +6,11 @@
 #include "gui/dialogs/about-dialog.h"
 #include "gui/tray/system-tray.h"
 
+#ifdef GUI
 #include <QApplication>
+#else
+#include <QCoreApplication>
+#endif
 #include <QSettings>
 
 using namespace Container;
@@ -23,11 +27,16 @@ int main(int argc, char *argv[]) {
 	auto applicationName = QString(ApplicationInfo::name());
 	auto applicationVersion = QString::fromStdString(ApplicationInfo::versionToString());
 
+#ifdef GUI
 	QApplication application(argc, argv);
 	application.setQuitOnLastWindowClosed(false);
+	application.setApplicationDisplayName(QString("%1 %2").arg(applicationName, applicationVersion));
+#else
+	QCoreApplication application(argc, argv);
+#endif
+
 	application.setApplicationName(applicationName);
 	application.setApplicationVersion(applicationVersion);
-	application.setApplicationDisplayName(QString("%1 %2").arg(applicationName, applicationVersion));
 
 	QSettings settings(applicationName, applicationName);
 	MainManager manager(settings);
@@ -35,6 +44,7 @@ int main(int argc, char *argv[]) {
 	RemoteController controller(manager);
 	WebSocketConnectionManager webSocketServer(manager, controller);
 
+#ifdef GUI
 	Tray::SystemTray tray;
 	manager.attach(tray);
 
@@ -51,6 +61,7 @@ int main(int argc, char *argv[]) {
 	});
 
 	tray.setCloseRequestCallback([&application] { application.quit(); });
+#endif
 
 	manager.run();
 	return application.exec();

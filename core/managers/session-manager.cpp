@@ -5,8 +5,11 @@
 #include "core/functionals/debug-notification.h"
 #include "core/managers/main-manager.h"
 #include "core/receivers/interfaces/ireceiver.h"
-#include "gui/wizards/device-setup-wizard.h"
 #include "core/correctors/interfaces/icorrector.h"
+
+#ifdef GUI
+#include "gui/wizards/device-setup-wizard.h"
+#endif
 
 #include <QApplication>
 #include <QMessageBox>
@@ -54,11 +57,16 @@ bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, co
 	m_settings.beginGroup(serialNumber);
 
 	if (m_settings.value("name", "").toString().isEmpty()) {
+#ifdef GUI
 		QMessageBox::information(nullptr, QObject::tr("Led frame detected"), QObject::tr("Detected new led frame device, application will run setup wizard."), QMessageBox::Ok);
 		Wizard::DeviceSetupWizard wizard(receiver);
 		wizard.exec();
 		receiver->setName(wizard.field("deviceName").toString());
 		m_settings.setValue("name", wizard.field("deviceName").toString());
+#else
+		receiver->setName(serialNumber);
+		m_settings.setValue("name", serialNumber);
+#endif
 	} else
 		receiver->setName(m_settings.value("name", "").toString());
 

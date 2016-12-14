@@ -14,11 +14,11 @@ constexpr int RibbonCount = 4;
 
 namespace Struct {
 struct DeviceConfigStruct final {
-	u8 version;
+	u16 version;
 	std::array<RibbonConfiguration, RibbonCount> ribbon;
-} __attribute__((packed));
+};
 
-static_assert(sizeof(DeviceConfigStruct) == 9, "Struct size is different than expected.");
+static_assert(sizeof(DeviceConfigStruct) == 10, "Struct size is different than expected.");
 }
 
 class DeviceConfigContainer final : public AbstractContainer {

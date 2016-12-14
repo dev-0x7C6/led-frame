@@ -14,8 +14,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfloat-equal")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunreachable-code")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -save-temps")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fverbose-asm")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -O3")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
@@ -29,15 +31,15 @@ set(PROJECT_CODENAME "")
 configure_file(config.h.in config.h)
 
 find_package(Qt5Core)
-find_package(Qt5DBus)
 find_package(Qt5Gui)
 find_package(Qt5Network)
-find_package(Qt5Quick)
 find_package(Qt5SerialPort)
-find_package(Qt5Svg)
 find_package(Qt5WebSockets)
 find_package(Qt5Widgets)
-find_package(Qt5Xml)
+
+option(SUPPORT_X11 "Support for X11 screen capture" ON)
+option(SUPPORT_RPI "Support for Raspberry Pi screen capture" ON)
+option(GUI "Build gui interface" OFF)
 
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
@@ -45,7 +47,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}
 )
 
-if (UNIX)
+if (UNIX AND SUPPORT_X11)
 	set(x11-sources
 		core/functionals/captures/x11-helper.cpp
 		core/functionals/captures/x11-helper.h
@@ -56,18 +58,69 @@ if (UNIX)
 		core/functionals/helper/x11-shm-helper.cpp
 		core/functionals/helper/x11-shm-helper.h
 	)
-	
+
 	set(x11-libs
 		-lX11
 		-lXext
 	)
-endif (UNIX)
+endif()
+
+if (UNIX AND SUPPORT_RPI)
+	set(rpi-sources "")
+	set(rpi-libs -lbcm_host)
+endif()
+
+if (GUI)
+	find_package(Qt5Quick)
+	find_package(Qt5Svg)
+
+	set(gui_sources
+		components/painters/wave-paint-engine.cpp
+		components/painters/wave-paint-engine.h
+		components/widgets/decorated-dialog.cpp
+		components/widgets/decorated-dialog.h
+		core/menus/device-menu.cpp
+		core/menus/device-menu.h
+		core/menus/emitter-configuration-menu.cpp
+		core/menus/emitter-configuration-menu.h
+		core/menus/emitter-selector-menu.cpp
+		core/menus/emitter-selector-menu.h
+		gui/dialogs/about-dialog.cpp
+		gui/dialogs/about-dialog.h
+		gui/dialogs/about-dialog.ui
+		gui/dialogs/alc-screen-configure-dialog.cpp
+		gui/dialogs/alc-screen-configure-dialog.h
+		gui/dialogs/alc-screen-configure-dialog.ui
+		gui/tray/system-tray.cpp
+		gui/tray/system-tray.h
+		gui/tray/system-tray-icon.cpp
+		gui/tray/system-tray-icon.h
+		gui/widgets/alc-color-correction-widget.cpp
+		gui/widgets/alc-color-correction-widget.h
+		gui/widgets/alc-color-correction-widget.ui
+		gui/widgets/alc-emitter-widget.ui
+		gui/widgets/corrector-settings-dialog.cpp
+		gui/widgets/corrector-settings-dialog.h
+		gui/widgets/device-symulation-widget.cpp
+		gui/widgets/device-symulation-widget.h
+		gui/wizards/device-setup-general-test.cpp
+		gui/wizards/device-setup-general-test.h
+		gui/wizards/device-setup-info.cpp
+		gui/wizards/device-setup-info.h
+		gui/wizards/device-setup-pick-name.cpp
+		gui/wizards/device-setup-pick-name.h
+		gui/wizards/device-setup-wizard.cpp
+		gui/wizards/device-setup-wizard.h
+	)
+
+	target_link_libraries(led-frame
+		Qt5::Svg
+		Qt5::Quick
+	)
+
+endif()
 
 set(sources
-	components/painters/wave-paint-engine.cpp
-	components/painters/wave-paint-engine.h
-	components/widgets/decorated-dialog.cpp
-	components/widgets/decorated-dialog.h
 	core/consts.h
 	core/containers/abstract-container.cpp
 	core/containers/abstract-container.h
@@ -155,12 +208,6 @@ set(sources
 	core/managers/main-manager.h
 	core/managers/session-manager.cpp
 	core/managers/session-manager.h
-	core/menus/device-menu.cpp
-	core/menus/device-menu.h
-	core/menus/emitter-configuration-menu.cpp
-	core/menus/emitter-configuration-menu.h
-	core/menus/emitter-selector-menu.cpp
-	core/menus/emitter-selector-menu.h
 	core/networking/broadcast-service.cpp
 	core/networking/broadcast-service.h
 	core/networking/protocols/json-protocol.cpp
@@ -182,55 +229,34 @@ set(sources
 	core/receivers/interfaces/ireceiver.h
 	core/receivers/interfaces/ireceiver-manager.h
 	core/receivers/interfaces/ireceiver-notify.h
-	gui/dialogs/about-dialog.cpp
-	gui/dialogs/about-dialog.h
-	gui/dialogs/about-dialog.ui
-	gui/dialogs/alc-screen-configure-dialog.cpp
-	gui/dialogs/alc-screen-configure-dialog.h
-	gui/dialogs/alc-screen-configure-dialog.ui
-	gui/tray/system-tray.cpp
-	gui/tray/system-tray.h
-	gui/tray/system-tray-icon.cpp
-	gui/tray/system-tray-icon.h
-	gui/widgets/alc-color-correction-widget.cpp
-	gui/widgets/alc-color-correction-widget.h
-	gui/widgets/alc-color-correction-widget.ui
-	gui/widgets/alc-emitter-widget.ui
-	gui/widgets/corrector-settings-dialog.cpp
-	gui/widgets/corrector-settings-dialog.h
-	gui/widgets/device-symulation-widget.cpp
-	gui/widgets/device-symulation-widget.h
-	gui/wizards/device-setup-general-test.cpp
-	gui/wizards/device-setup-general-test.h
-	gui/wizards/device-setup-info.cpp
-	gui/wizards/device-setup-info.h
-	gui/wizards/device-setup-pick-name.cpp
-	gui/wizards/device-setup-pick-name.h
-	gui/wizards/device-setup-wizard.cpp
-	gui/wizards/device-setup-wizard.h
 	main.cpp
 	qml.qrc
 	resources/resource.qrc
 )
 
-add_executable(led-frame ${sources} ${x11-sources})
+add_executable(led-frame ${sources} ${gui_sources} ${x11-sources})
 
-if (UNIX)
+if (UNIX AND SUPPORT_X11)
 	target_compile_definitions(led-frame PRIVATE X11)
-endif (UNIX)
+endif()
+
+if (UNIX AND SUPPORT_RPI)
+	target_compile_definitions(led-frame PRIVATE RPI)
+endif()
+
+if (UNIX AND GUI)
+	target_compile_definitions(led-frame PRIVATE GUI)
+endif()
 
 target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
 target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 target_link_libraries(led-frame
 	Qt5::Core
-	Qt5::DBus
-	Qt5::Gui
-	Qt5::Quick
 	Qt5::SerialPort
-	Qt5::Svg
-	Qt5::WebSockets
 	Qt5::Widgets
+	Qt5::Gui
+	Qt5::WebSockets
 	${x11-libs}
 	"-lpthread"
 )
