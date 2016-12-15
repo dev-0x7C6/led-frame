@@ -14,10 +14,6 @@ DeviceConfigContainer::DeviceConfigContainer(const QString &base64)
 	fromBase64(base64);
 }
 
-ContainerType DeviceConfigContainer::type() const {
-	return ContainerType::DeviceConfig;
-}
-
 QString DeviceConfigContainer::toBase64() {
 	QByteArray array(reinterpret_cast<char *>(&m_config), sizeof(m_config));
 	array = array.toBase64(QByteArray::Base64Encoding);

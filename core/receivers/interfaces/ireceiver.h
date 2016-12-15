@@ -7,6 +7,8 @@
 
 #include <QString>
 
+#include <memory>
+
 namespace Emitter {
 namespace Interface {
 class IEmitter;

@@ -1,4 +1,5 @@
 #include "core/containers/application-info-container.h"
+#include "core/functionals/raii-call-on-return.h"
 #include "core/functionals/remote-controller.h"
 #include "core/managers/main-manager.h"
 #include "core/managers/session-manager.h"
@@ -13,6 +14,10 @@
 #endif
 #include <QSettings>
 
+#ifdef RPI
+#include "bcm_host.h"
+#endif
+
 using namespace Container;
 using namespace Enum;
 using namespace Functional;
@@ -24,6 +29,10 @@ using namespace Emitter::Concrete;
 using namespace Receiver::Concrete;
 
 int main(int argc, char *argv[]) {
+#ifdef RPI
+	bcm_host_init();
+	RaiiCallOnReturn deinit = {[]() { bcm_host_deinit(); }};
+#endif
 	auto applicationName = QString(ApplicationInfo::name());
 	auto applicationVersion = QString::fromStdString(ApplicationInfo::versionToString());
 

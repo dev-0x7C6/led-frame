@@ -8,5 +8,8 @@ enum class ScreenCaptureType {
 	X11ScreenCapture,
 	X11ShmScreenCapture,
 #endif
+#ifdef RPI
+	DispmanxScreenCapture,
+#endif
 };
 }

@@ -38,7 +38,7 @@ find_package(Qt5WebSockets)
 find_package(Qt5Widgets)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
-option(SUPPORT_RPI "Support for Raspberry Pi screen capture" ON)
+option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
 option(GUI "Build gui interface" ON)
 
 include_directories(
@@ -46,6 +46,15 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_SOURCE_DIR}
 )
+
+if (UNIX AND SUPPORT_RPI)
+	set(rpi-sources
+		core/functionals/captures/dispmanx-screen-capture.cpp
+		core/functionals/captures/dispmanx-screen-capture.h
+	)
+	set(rpi-libs -lbcm_host)
+endif()
+
 
 if (UNIX AND SUPPORT_X11)
 	set(x11-sources
@@ -65,16 +74,11 @@ if (UNIX AND SUPPORT_X11)
 	)
 endif()
 
-if (UNIX AND SUPPORT_RPI)
-	set(rpi-sources "")
-	set(rpi-libs -lbcm_host)
-endif()
-
 if (GUI)
 	find_package(Qt5Quick)
 	find_package(Qt5Svg)
 
-	set(gui_sources
+	set(gui-sources
 		components/painters/wave-paint-engine.cpp
 		components/painters/wave-paint-engine.h
 		components/widgets/decorated-dialog.cpp
@@ -122,8 +126,6 @@ endif()
 
 set(sources
 	core/consts.h
-	core/containers/abstract-container.cpp
-	core/containers/abstract-container.h
 	core/containers/application-info-container.h
 	core/containers/color-scanline-container.cpp
 	core/containers/color-scanline-container.h
@@ -196,6 +198,8 @@ set(sources
 	core/functionals/lambda-thread.h
 	core/functionals/loop-sync.cpp
 	core/functionals/loop-sync.h
+	core/functionals/raii-call-on-return.cpp
+	core/functionals/raii-call-on-return.h
 	core/functionals/raii-reference-counter.h
 	core/functionals/remote-controller.cpp
 	core/functionals/remote-controller.h
@@ -234,7 +238,7 @@ set(sources
 	resources/resource.qrc
 )
 
-add_executable(led-frame ${sources} ${gui_sources} ${x11-sources})
+add_executable(led-frame ${sources} ${gui-sources} ${rpi-sources} ${x11-sources})
 
 if (UNIX AND SUPPORT_X11)
 	target_compile_definitions(led-frame PRIVATE X11)

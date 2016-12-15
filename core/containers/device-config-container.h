@@ -1,6 +1,5 @@
 #pragma once
 
-#include <core/containers/abstract-container.h>
 #include <core/containers/led-ribbon-config-container.h>
 #include <core/enums/color-format-enum.h>
 #include <core/enums/position-enum.h>
@@ -22,13 +21,10 @@ struct DeviceConfigStruct final {
 static_assert(sizeof(DeviceConfigStruct) == 9, "Struct size is different than expected.");
 }
 
-class DeviceConfigContainer final : public AbstractContainer {
+class DeviceConfigContainer final {
 public:
 	explicit DeviceConfigContainer();
 	explicit DeviceConfigContainer(const QString &base64);
-	~DeviceConfigContainer() override = default;
-
-	Enum::ContainerType type() const override;
 
 	QString toBase64();
 	void fromBase64(const QString &base64);
