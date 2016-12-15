@@ -44,5 +44,5 @@ void DeviceConfigContainer::setRibbon(const RibbonConfiguration &ribbon, const u
 	if (index > m_config.ribbon.size())
 		return;
 
-	m_config.ribbon[index] = ribbon;
+	m_config.ribbon[index] = ribbon.rawData();
 }

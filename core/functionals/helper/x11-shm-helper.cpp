@@ -32,6 +32,7 @@ bool X11ShmHelper::capture(ci32 x, ci32 y, ci32 w, ci32 h) {
 		m_h = h;
 	}
 
+	XSync(m_display, false);
 	XShmGetImage(m_display, RootWindow(m_display, 0), m_frame, x, y, AllPlanes);
 	return m_frame != nullptr;
 }

@@ -7,17 +7,17 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfloat-equal")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunreachable-code")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -save-temps")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fverbose-asm")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -O3")
+
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
@@ -39,7 +39,7 @@ find_package(Qt5Widgets)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" ON)
-option(GUI "Build gui interface" OFF)
+option(GUI "Build gui interface" ON)
 
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
@@ -113,7 +113,7 @@ if (GUI)
 		gui/wizards/device-setup-wizard.h
 	)
 
-	target_link_libraries(led-frame
+	set(gui-libs
 		Qt5::Svg
 		Qt5::Quick
 	)
@@ -257,6 +257,7 @@ target_link_libraries(led-frame
 	Qt5::Widgets
 	Qt5::Gui
 	Qt5::WebSockets
+	${gui-libs}
 	${x11-libs}
 	"-lpthread"
 )

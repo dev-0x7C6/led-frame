@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/consts.h"
+#include <algorithm>
 
 namespace Functional {
 namespace Color {
