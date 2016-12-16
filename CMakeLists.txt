@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfloat-equal")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunreachable-code")
@@ -38,8 +38,8 @@ find_package(Qt5WebSockets)
 find_package(Qt5Widgets)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
-option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
-option(GUI "Build gui interface" ON)
+option(SUPPORT_RPI "Support for Raspberry Pi screen capture" ON)
+option(GUI "Build gui interface" OFF)
 
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
@@ -48,11 +48,15 @@ include_directories(
 )
 
 if (UNIX AND SUPPORT_RPI)
+	include_directories("/opt/vc/include")
+	include_directories("/opt/vc/include/interface/vcos/pthreads")
+	include_directories("/opt/vc/include/interface/vmcs_host/linux")
 	set(rpi-sources
 		core/functionals/captures/dispmanx-screen-capture.cpp
 		core/functionals/captures/dispmanx-screen-capture.h
 	)
 	set(rpi-libs -lbcm_host)
+	link_directories("/opt/vc/lib")
 endif()
 
 
@@ -261,6 +265,7 @@ target_link_libraries(led-frame
 	Qt5::Widgets
 	Qt5::Gui
 	Qt5::WebSockets
+	${rpi-libs}
 	${gui-libs}
 	${x11-libs}
 	"-lpthread"

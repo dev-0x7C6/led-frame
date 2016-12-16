@@ -2,6 +2,8 @@
 
 #include "core/interfaces/iscreen-capture.h"
 #include "core/consts.h"
+#include "bcm_host.h"
+#include "interface/vmcs_host/vcgencmd.h"
 
 namespace Functional {
 namespace Capture {
@@ -15,6 +17,7 @@ public:
 	virtual ccolor *data() override;
 
 private:
+	DISPMANX_DISPLAY_HANDLE_T m_display;
 	ccolor *m_data = nullptr;
 	i32 m_w = 0;
 	i32 m_h = 0;

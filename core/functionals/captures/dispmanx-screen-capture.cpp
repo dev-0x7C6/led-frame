@@ -2,8 +2,9 @@
 #include "core/functionals/raii-call-on-return.h"
 #include "core/enums/screen-capture-type.h"
 
+#include <iostream>
 #include <functional>
-#include <interface/vmcs_host/vcgencmd.h>
+#include <chrono>
 
 using namespace Functional::Capture;
 using namespace Functional;
@@ -13,17 +14,17 @@ using namespace Functional;
 #endif
 
 DispmanxScreenCapture::DispmanxScreenCapture() {
-	auto display = vc_dispmanx_display_open(0);
+	m_display = vc_dispmanx_display_open(0);
 
 	DISPMANX_MODEINFO_T modeInfo;
-	vc_dispmanx_display_get_info(display, &modeInfo);
+	vc_dispmanx_display_get_info(m_display, &modeInfo);
 
 	m_w = modeInfo.width;
 	m_h = modeInfo.height;
 
 	auto scanline = 3 * ALIGN_TO_16(m_w);
 
-	m_data = static_cast<ccolor *>(std::malloc(scanline * m_h))
+	m_data = static_cast<ccolor *>(std::malloc(scanline * m_h));
 }
 
 Enum::ScreenCaptureType DispmanxScreenCapture::type() const {
@@ -40,57 +41,28 @@ bool DispmanxScreenCapture::capture(ci32 x, ci32 y, ci32 w, ci32 h) {
 
 	int scanline = 3 * ALIGN_TO_16(m_w);
 
-	void *dmxImagePtr = malloc(scanline * height);
+	void *dmxImagePtr = malloc(scanline * m_h);
 
 	if (dmxImagePtr == NULL) {
-		kprintf("unable to allocated image buffer\n");
 		exit(EXIT_FAILURE);
 	}
 
 	uint32_t vcImagePtr = 0;
 	DISPMANX_RESOURCE_HANDLE_T resourceHandle;
-	resourceHandle = vc_dispmanx_resource_create(imageType, width, height, &vcImagePtr);
+	resourceHandle = vc_dispmanx_resource_create(imageType, m_w, m_h, &vcImagePtr);
 
 	RaiiCallOnReturn resourceFree = {[&]() { vc_dispmanx_resource_delete(resourceHandle); }};
 
-	auto start = std::chrono::high_resolution_clock::now();
+	vc_dispmanx_snapshot(m_display, resourceHandle, DISPMANX_NO_ROTATE);
 
-	for (int i = 0; i < 300000; ++i) {
-		result = vc_dispmanx_snapshot(displayHandle, resourceHandle, DISPMANX_NO_ROTATE);
+	VC_RECT_T rect;
+	vc_dispmanx_rect_set(&rect, 0, 0, m_w, m_h);
 
-		if (result != 0) {
-			kprintf("vc_dispmanx_snapshot() failed\n");
-			exit(EXIT_FAILURE);
-		}
-
-		VC_RECT_T rect;
-		result = vc_dispmanx_rect_set(&rect, 0, 0, width, height);
-
-		if (result != 0) {
-			kprintf("vc_dispmanx_rect_set() failed\n");
-			exit(EXIT_FAILURE);
-		}
-
-		result = vc_dispmanx_resource_read_data(resourceHandle, &rect, dmxImagePtr, scanline);
-
-		if (result != 0) {
-			kprintf("vc_dispmanx_resource_read_data() failed\n");
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	auto end = std::chrono::high_resolution_clock::now();
-
-	std::chrono::duration<double> timeout = end - start;
-
-	std::cout << (timeout.count()) << std::endl;
-
-	if (verbose) {
-		kprintf("vc_dispmanx_resource_read_data() returned %d\n", result);
-	}
+	vc_dispmanx_resource_read_data(resourceHandle, &rect, dmxImagePtr, scanline);
 
 	return 0;
 }
 
 ccolor *DispmanxScreenCapture::data() {
+	return m_data;
 }

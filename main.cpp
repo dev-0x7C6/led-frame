@@ -15,7 +15,7 @@
 #include <QSettings>
 
 #ifdef RPI
-#include "bcm_host.h"
+#include <bcm_host.h>
 #endif
 
 using namespace Container;
