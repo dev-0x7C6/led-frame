@@ -8,6 +8,7 @@
 #include <QScreen>
 #include <QRect>
 #include <QColor>
+#include <chrono>
 
 using namespace Enum;
 using namespace Emitter::Concrete;
@@ -95,11 +96,27 @@ QRect ScreenEmitter::fragment(int w, int h, cu32 index) {
 	return {};
 }
 
+class ColorAvg {
+public:
+	constexpr explicit ColorAvg() {}
+
+	uint32_t &r() { return m_r; }
+	uint32_t &g() { return m_g; }
+	uint32_t &b() { return m_b; }
+	uint32_t toRgb(double c) { return rgb(m_r / c, m_g / c, m_b / c); }
+	uint32_t toBgr(double c) { return rgb(m_b / c, m_g / c, m_r / c); }
+
+private:
+	uint32_t m_r = 0;
+	uint32_t m_g = 0;
+	uint32_t m_b = 0;
+};
+
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
 	Container::ScanlineContainer scanline;
 	color *colors = scanline.data();
-	constexpr int step = 16;
+	constexpr int step = 8;
 #ifdef X11
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
 #endif
@@ -129,33 +146,37 @@ void ScreenEmitter::run() {
 		sc->capture(x, y, w, h);
 		ccolor *data = sc->data();
 
-		for (auto i = 0u; i < SCANLINE_SIZE; ++i) {
-			QRect area = fragment(w, h, i);
-			int c = area.width() * area.height();
-			u32 r = 0;
-			u32 g = 0;
-			u32 b = 0;
+		std::array<std::array<ColorAvg, 32>, 32> lines;
+		auto sdata = data;
+		auto lx = w / 31;
 
-			for (int j = 0; j < c; j += step) {
-				const auto x2 = area.x() + (j % area.width());
-				const auto y2 = area.y() + (j / area.width());
-				const auto p = x2 + (y2 * w);
-				r += getR(data[p]);
-				b += getB(data[p]);
-				g += getG(data[p]);
-			}
-
-			if (c > 0) {
-				c /= step;
-				r /= static_cast<decltype(r)>(c);
-				g /= static_cast<decltype(g)>(c);
-				b /= static_cast<decltype(b)>(c);
-			}
+		for (std::size_t y = 0; y < 32; ++y) {
+			for (std::size_t x = 0; x < 32; ++x) {
+				if (y == 0 || y == 31 || x == 0 || x == 31) {
+					for (int p = 0; p < lx; p += step) {
+						auto &avg = lines[y][x];
+						auto color = sdata[p];
 #ifdef RPI
-			colors[i] = rgb(b, g, r);
+						avg.r() += getB(color);
+						avg.b() += getR(color);
+						avg.g() += getG(color);
 #else
-			colors[i] = rgb(r, g, b);
+						avg.r() += getR(color);
+						avg.g() += getG(color);
+						avg.b() += getB(color);
 #endif
+					}
+				}
+				sdata += lx;
+			}
+		}
+
+		auto c = (lx / step);
+		for (int i = 0; i < 32; ++i) {
+			colors[i] = lines.at(31 - i).at(0).toBgr(c);
+			colors[i + 32] = lines.at(0).at(i).toBgr(c);
+			colors[i + 64] = lines.at(i).at(31).toBgr(c);
+			colors[i + 96] = lines.at(31).at(31 - i).toBgr(c);
 		}
 
 		commit(scanline);
