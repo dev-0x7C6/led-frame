@@ -29,6 +29,15 @@ u16 BroadcastService::servicePort() const {
 	return m_servicePort;
 }
 
+QJsonObject jsonCreator(std::initializer_list<QPair<QString, QJsonValue> > args) {
+
+	QJsonObject obj;
+	for (std::initializer_list<QPair<QString, QJsonValue> >::const_iterator i = args.begin(); i != args.end(); ++i)
+		obj.insert(i->first, i->second);
+	return obj;
+};
+
+
 void BroadcastService::broadcast() {
 	auto interfaces = QNetworkInterface::allInterfaces();
 	QHostAddress host;
@@ -50,13 +59,13 @@ void BroadcastService::broadcast() {
 		}
 	}
 
-	QJsonObject object{
+	QJsonObject object = jsonCreator({
 		{"computer", QHostInfo::localHostName()},
 		{"id", m_deviceId},
 		{"device", m_deviceName},
 		{"host", host.toString()},
 		{"port", QString::number(m_servicePort)},
-	};
+	});
 
 	QJsonDocument document(object);
 	QByteArray datagram = document.toJson();
