@@ -27,6 +27,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 		, m_mainManager(mainManager)
 
 {
+#ifndef RPI
 	auto screens = QGuiApplication::screens();
 
 	for (auto screen : screens) {
@@ -34,6 +35,13 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 		emitter->setName(QObject::tr("Display: ") + screen->name());
 		m_mainManager.emitters().attach(emitter);
 	}
+#endif
+
+#ifdef RPI
+	auto emitter = EmitterFactory::create(EmitterType::Screen);
+	emitter->setName("RPI Output");
+	m_mainManager.emitters().attach(emitter);
+#endif
 
 	const auto list = {
 		EmitterType::Animation,

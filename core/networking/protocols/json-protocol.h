@@ -23,7 +23,7 @@ enum class ProtocolSource {
 	Receiver,
 };
 
-constexpr auto name(const ProtocolMessage message) {
+inline auto name(const ProtocolMessage message) {
 	switch (message) {
 		case ProtocolMessage::Notification: return "notification";
 	}
@@ -31,7 +31,7 @@ constexpr auto name(const ProtocolMessage message) {
 	return "";
 }
 
-constexpr auto name(const ProtocolEvent event) {
+inline auto name(const ProtocolEvent event) {
 	switch (event) {
 		case ProtocolEvent::Attached: return "attached";
 		case ProtocolEvent::Detached: return "detached";
@@ -41,7 +41,7 @@ constexpr auto name(const ProtocolEvent event) {
 	return "";
 }
 
-constexpr auto name(const ProtocolSource source) {
+inline auto name(const ProtocolSource source) {
 	switch (source) {
 		case ProtocolSource::Corrector: return "corrector";
 		case ProtocolSource::Emitter: return "emitter";

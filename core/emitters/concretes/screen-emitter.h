@@ -3,12 +3,12 @@
 #include <core/emitters/abstracts/abstract-emitter.h>
 
 #include <atomic>
-#include <thread>
+#include <QThread>
 
 namespace Emitter {
 namespace Concrete {
 
-class ScreenEmitter final : public Abstract::AbstractEmitter {
+class ScreenEmitter final : public QThread, public Abstract::AbstractEmitter {
 public:
 	explicit ScreenEmitter(ci32 id);
 	virtual ~ScreenEmitter();
@@ -29,7 +29,6 @@ private:
 	std::atomic<int> m_y;
 	std::atomic<int> m_w;
 	std::atomic<int> m_h;
-	std::thread m_thread;
 };
 }
 }

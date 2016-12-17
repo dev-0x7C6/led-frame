@@ -50,7 +50,7 @@ inline QString translate(const EmitterType &type) {
 	return {};
 }
 
-constexpr auto value(const EmitterType type) {
+inline auto value(const EmitterType type) {
 	switch (type) {
 		case EmitterType::Animation: return "animation";
 		case EmitterType::Color: return "color";

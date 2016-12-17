@@ -16,7 +16,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunreachable-code")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -save-temps")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fverbose-asm")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -O3")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -O2")
 
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
@@ -37,7 +37,7 @@ find_package(Qt5SerialPort)
 find_package(Qt5WebSockets)
 find_package(Qt5Widgets)
 
-option(SUPPORT_X11 "Support for X11 screen capture" ON)
+option(SUPPORT_X11 "Support for X11 screen capture" OFF)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" ON)
 option(GUI "Build gui interface" OFF)
 

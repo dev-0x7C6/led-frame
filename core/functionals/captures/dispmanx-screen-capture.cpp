@@ -15,16 +15,45 @@ using namespace Functional;
 
 DispmanxScreenCapture::DispmanxScreenCapture() {
 	m_display = vc_dispmanx_display_open(0);
+	if (!m_display) {
+		std::cerr << "vc_dispmanx_display_open failed!" << std::endl;
+		return;
+	}
 
 	DISPMANX_MODEINFO_T modeInfo;
-	vc_dispmanx_display_get_info(m_display, &modeInfo);
+	if (vc_dispmanx_display_get_info(m_display, &modeInfo)) {
+		std::cerr << "vc_dispmanx_display_get_info failed!" << std::endl;
+		return;
+	}
 
 	m_w = modeInfo.width;
 	m_h = modeInfo.height;
 
-	auto scanline = 3 * ALIGN_TO_16(m_w);
+	m_data = std::malloc(4 * ALIGN_TO_16(m_w) * m_h);
+	if (m_data == nullptr) {
+		std::cerr << "std::malloc failed!" << std::endl;
+		return;
+	}
 
-	m_data = static_cast<ccolor *>(std::malloc(scanline * m_h));
+	VC_IMAGE_TYPE_T imageType = VC_IMAGE_RGBA32;
+	uint32_t vcImagePtr = 0;
+
+	m_resource = vc_dispmanx_resource_create(imageType, m_w, m_h, &vcImagePtr);
+	if (m_resource == 0) {
+		std::cerr << "vc_dispmanx_resource_create failed!" << std::endl;
+		return;
+	}
+}
+
+DispmanxScreenCapture::~DispmanxScreenCapture() {
+	if (m_data != nullptr)
+		std::free(m_data);
+
+	if (m_resource != 0)
+		vc_dispmanx_resource_delete(m_resource);
+
+	if (m_display != 0)
+		vc_dispmanx_display_close(m_display);
 }
 
 Enum::ScreenCaptureType DispmanxScreenCapture::type() const {
@@ -37,32 +66,26 @@ bool DispmanxScreenCapture::capture(ci32 x, ci32 y, ci32 w, ci32 h) {
 	static_cast<void>(h);
 	static_cast<void>(w);
 
-	VC_IMAGE_TYPE_T imageType = VC_IMAGE_RGB888;
-
-	int scanline = 3 * ALIGN_TO_16(m_w);
-
-	void *dmxImagePtr = malloc(scanline * m_h);
-
-	if (dmxImagePtr == NULL) {
-		exit(EXIT_FAILURE);
+	if (vc_dispmanx_snapshot(m_display, m_resource, DISPMANX_NO_ROTATE)) {
+		std::cerr << "vc_dispmanx_snapshot failed!" << std::endl;
+		return false;
 	}
 
-	uint32_t vcImagePtr = 0;
-	DISPMANX_RESOURCE_HANDLE_T resourceHandle;
-	resourceHandle = vc_dispmanx_resource_create(imageType, m_w, m_h, &vcImagePtr);
-
-	RaiiCallOnReturn resourceFree = {[&]() { vc_dispmanx_resource_delete(resourceHandle); }};
-
-	vc_dispmanx_snapshot(m_display, resourceHandle, DISPMANX_NO_ROTATE);
-
 	VC_RECT_T rect;
-	vc_dispmanx_rect_set(&rect, 0, 0, m_w, m_h);
+	if (vc_dispmanx_rect_set(&rect, 0, 0, m_w, m_h)) {
+		std::cerr << "vc_dispmanx_rect_set failed!" << std::endl;
+		return false;
+	}
 
-	vc_dispmanx_resource_read_data(resourceHandle, &rect, dmxImagePtr, scanline);
+	//std::cout << "vc_dispmanx_resource_read_data" << std::endl;
+	if (vc_dispmanx_resource_read_data(m_resource, &rect, m_data, m_w * 4)) {
+		std::cerr << "vc_dispmanx_resource_read_data failed!" << std::endl;
+		return false;
+	}
 
-	return 0;
+	return true;
 }
 
 ccolor *DispmanxScreenCapture::data() {
-	return m_data;
+	return reinterpret_cast<color *>(m_data);
 }

@@ -26,7 +26,7 @@ inline QString name(const CorrectorType &type) {
 	return {};
 }
 
-constexpr auto value(const CorrectorType type) {
+inline auto value(const CorrectorType type) {
 	switch (type) {
 		case CorrectorType::ColorEnhancer: return "color_enhancer";
 		case CorrectorType::Brightness: return "brightness";

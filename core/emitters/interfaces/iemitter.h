@@ -27,7 +27,7 @@ public:
 	virtual QString name() const = 0;
 	virtual Enum::EmitterType type() const = 0;
 
-	virtual u32 framerate() const { return 24; }
+	virtual u32 framerate() const { return 30; }
 
 	virtual void setName(const QString &name) = 0;
 

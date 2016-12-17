@@ -12,8 +12,8 @@ constexpr auto SCANLINE_LINE = 32u;
 
 class ScanlineContainer final {
 public:
-	constexpr explicit ScanlineContainer() noexcept;
-	constexpr explicit ScanlineContainer(const color fillColor) noexcept;
+	inline explicit ScanlineContainer() noexcept;
+	inline explicit ScanlineContainer(const color fillColor) noexcept;
 
 	constexpr static auto size() noexcept;
 	constexpr static auto line() noexcept;
@@ -43,9 +43,9 @@ private:
 	std::array<color, SCANLINE_SIZE> m_data;
 };
 
-constexpr ScanlineContainer::ScanlineContainer() noexcept
+inline ScanlineContainer::ScanlineContainer() noexcept
 		: m_data() {}
-constexpr ScanlineContainer::ScanlineContainer(const color fillColor) noexcept
+inline ScanlineContainer::ScanlineContainer(const color fillColor) noexcept
 		: m_data() { m_data.fill(fillColor); }
 
 constexpr auto ScanlineContainer::size() noexcept { return SCANLINE_SIZE; }

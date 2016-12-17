@@ -5,6 +5,8 @@
 #include <memory>
 #include <atomic>
 
+//TODO: RPI have older stdlib and does not support atomic_load and atomic_exchange for shared_ptr
+
 using namespace Receiver::Abstract;
 using namespace Corrector::Concrete;
 
@@ -25,7 +27,11 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::
 	if (m_emitter == emitter) return;
 	disconnectEmitter();
 
+#ifdef RPI
+	m_emitter = emitter;
+#else
 	std::atomic_exchange(&m_emitter, emitter);
+#endif
 	emit notify();
 
 	if (m_emitter)
@@ -33,11 +39,19 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::
 }
 
 bool AbstractReceiver::isEmitterConnected() const {
+#ifdef RPI
+	return m_emitter.get() != nullptr;
+#else
 	return std::atomic_load(&m_emitter) != nullptr;
+#endif
 }
 
 std::shared_ptr<Emitter::Interface::IEmitter> AbstractReceiver::connectedEmitter() const {
+#ifdef RPI
+	return m_emitter;
+#else
 	return std::atomic_load(&m_emitter);
+#endif
 }
 
 int AbstractReceiver::connectedEmitterId() const {

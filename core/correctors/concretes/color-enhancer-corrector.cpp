@@ -11,7 +11,7 @@ ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
 Enum::CorrectorType ColorEnhancerCorrector::type() const { return CorrectorType::ColorEnhancer; }
 
 color ColorEnhancerCorrector::correct(color value) {
-	std::array<decltype(value), 3> colors = {{
+	std::array<decltype(value), 3> colors{{
 		static_cast<decltype(value)>((value >> 0x10) & 0xffu),
 		static_cast<decltype(value)>((value >> 0x08) & 0xffu),
 		static_cast<decltype(value)>((value >> 0x00) & 0xffu),

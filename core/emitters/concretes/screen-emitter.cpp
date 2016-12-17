@@ -18,24 +18,34 @@ using namespace Functional::Color;
 using namespace std::literals;
 
 ScreenEmitter::ScreenEmitter(ci32 id)
-		: AbstractEmitter(id)
+		: QThread(nullptr)
+		, AbstractEmitter(id)
 		, m_interrupted(false)
 		, m_x(0)
 		, m_y(0)
 		, m_w(0)
 		, m_h(0)
-		, m_thread([this]() { run(); })
 
 {
 	setCaptureArea(0);
+	start();
 }
 
 ScreenEmitter::~ScreenEmitter() {
 	interrupt();
-	m_thread.join();
+	wait();
 }
 
 bool ScreenEmitter::setCaptureArea(const int screen) {
+#ifdef RPI
+	//TODO: temporary rpi screen resolution hack
+	m_x = 0;
+	m_y = 0;
+	m_w = 1280;
+	m_h = 720;
+	return true;
+#endif
+
 	auto screens = QGuiApplication::screens();
 	if (screens.size() <= screen)
 		return false;
@@ -92,15 +102,23 @@ void ScreenEmitter::run() {
 	constexpr int step = 16;
 #ifdef X11
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
-#else
+#endif
+#ifdef RPI
+	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::DispmanxScreenCapture);
+#endif
+
+#ifndef X11
+#ifndef RPI
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
 #endif
+#endif
+
 	while (!m_interrupted) {
 		while (usages() == 0) {
 			if (m_interrupted)
 				return;
 
-			std::this_thread::sleep_for(10ms);
+			msleep(10);
 		}
 
 		ci32 x = m_x;
@@ -133,10 +151,16 @@ void ScreenEmitter::run() {
 				g /= static_cast<decltype(g)>(c);
 				b /= static_cast<decltype(b)>(c);
 			}
+#ifdef RPI
+			colors[i] = rgb(b, g, r);
+#else
 			colors[i] = rgb(r, g, b);
+#endif
 		}
 
 		commit(scanline);
+#ifndef RPI
 		loop.wait(framerate());
+#endif
 	};
 }
