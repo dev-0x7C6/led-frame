@@ -29,14 +29,13 @@ u16 BroadcastService::servicePort() const {
 	return m_servicePort;
 }
 
-QJsonObject jsonCreator(std::initializer_list<QPair<QString, QJsonValue> > args) {
+QJsonObject jsonCreator(std::initializer_list<QPair<QString, QJsonValue>> args) {
 
 	QJsonObject obj;
-	for (std::initializer_list<QPair<QString, QJsonValue> >::const_iterator i = args.begin(); i != args.end(); ++i)
+	for (std::initializer_list<QPair<QString, QJsonValue>>::const_iterator i = args.begin(); i != args.end(); ++i)
 		obj.insert(i->first, i->second);
 	return obj;
 };
-
 
 void BroadcastService::broadcast() {
 	auto interfaces = QNetworkInterface::allInterfaces();
