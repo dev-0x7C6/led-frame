@@ -3,6 +3,8 @@
 #include <core/factories/screen-capture-factory.h>
 #include <core/functionals/loop-sync.h>
 #include "core/functionals/color-functions.h"
+#include "core/functionals/color-averaging-buffer.h"
+#include "core/functionals/image-block-processor.h"
 
 #include <QGuiApplication>
 #include <QScreen>
@@ -15,6 +17,7 @@ using namespace Emitter::Concrete;
 using namespace Factory;
 using namespace Container;
 using namespace Functional::Color;
+using namespace Functional;
 
 using namespace std::literals;
 
@@ -96,26 +99,11 @@ QRect ScreenEmitter::fragment(int w, int h, cu32 index) {
 	return {};
 }
 
-class ColorAvg {
-public:
-	constexpr explicit ColorAvg() {}
-
-	uint32_t &r() { return m_r; }
-	uint32_t &g() { return m_g; }
-	uint32_t &b() { return m_b; }
-	uint32_t toRgb(double c) { return rgb(m_r / c, m_g / c, m_b / c); }
-	uint32_t toBgr(double c) { return rgb(m_b / c, m_g / c, m_r / c); }
-
-private:
-	uint32_t m_r = 0;
-	uint32_t m_g = 0;
-	uint32_t m_b = 0;
-};
-
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
 	Container::ScanlineContainer scanline(0u);
 	color *colors = scanline.data();
+	ImageBlockProcessor<ColorAveragingContainer, 32, 32> processor;
 	constexpr int step = 8;
 #ifdef X11
 	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
@@ -146,45 +134,13 @@ void ScreenEmitter::run() {
 		sc->capture(x, y, w, h);
 		ccolor *data = sc->data();
 
-		std::array<std::array<ColorAvg, 32>, 32> lines;
-		const auto lx = w / 32;
-		const auto ly = h / 32;
-		auto sdata = data;
+		processor.process(data, w, h, step);
 
-		for (int y = 0; y < h; ++y) {
-			const auto py = y / ly;
-
-			auto &line = lines.at(std::min(31, py));
-
-			for (int x = 0; x < w; x += step) {
-				const auto px = x / lx;
-				auto &avg = line.at(std::min(31, px));
-
-				if (py > 0 && py < 31 && px > 0 && px < 31) {
-					x = lx * 31;
-				}
-
-				auto color = sdata[x];
-#ifdef RPI
-				avg.r() += getB(color);
-				avg.b() += getR(color);
-				avg.g() += getG(color);
-#else
-				avg.r() += getR(color);
-				avg.g() += getG(color);
-				avg.b() += getB(color);
-#endif
-			}
-			sdata += w;
-		}
-
-		auto c = (lx * ly) / step;
-
-		for (int i = 0; i < 32; ++i) {
-			colors[i] = lines.at(31 - i).at(0).toRgb(c);
-			colors[i + 32] = lines.at(0).at(i).toRgb(c);
-			colors[i + 64] = lines.at(i).at(31).toRgb(c);
-			colors[i + 96] = lines.at(31).at(31 - i).toRgb(c);
+		for (std::size_t i = 0; i < 32; ++i) {
+			colors[i] = processor.get(31 - i, 0);
+			colors[i + 32] = processor.get(0, i);
+			colors[i + 64] = processor.get(i, 31);
+			colors[i + 96] = processor.get(31, 31 - i);
 		}
 
 		commit(scanline);

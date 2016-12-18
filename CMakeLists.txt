@@ -192,11 +192,13 @@ set(sources
 	core/factories/screen-capture-factory.h
 	core/functionals/captures/qt-screen-capture.cpp
 	core/functionals/captures/qt-screen-capture.h
+	core/functionals/color-averaging-buffer.h
 	core/functionals/color-functions.h
 	core/functionals/color-stream.cpp
 	core/functionals/color-stream.h
 	core/functionals/debug-notification.cpp
 	core/functionals/debug-notification.h
+	core/functionals/image-block-processor.h
 	core/functionals/lambda-thread.cpp
 	core/functionals/lambda-thread.h
 	core/functionals/loop-sync.cpp
