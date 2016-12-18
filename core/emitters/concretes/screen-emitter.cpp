@@ -114,7 +114,7 @@ private:
 
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
-	Container::ScanlineContainer scanline;
+	Container::ScanlineContainer scanline(0u);
 	color *colors = scanline.data();
 	constexpr int step = 8;
 #ifdef X11
@@ -147,36 +147,44 @@ void ScreenEmitter::run() {
 		ccolor *data = sc->data();
 
 		std::array<std::array<ColorAvg, 32>, 32> lines;
+		const auto lx = w / 32;
+		const auto ly = h / 32;
 		auto sdata = data;
-		auto lx = w / 31;
 
-		for (std::size_t y = 0; y < 32; ++y) {
-			for (std::size_t x = 0; x < 32; ++x) {
-				if (y == 0 || y == 31 || x == 0 || x == 31) {
-					for (int p = 0; p < lx; p += step) {
-						auto &avg = lines[y][x];
-						auto color = sdata[p];
-#ifdef RPI
-						avg.r() += getB(color);
-						avg.b() += getR(color);
-						avg.g() += getG(color);
-#else
-						avg.r() += getR(color);
-						avg.g() += getG(color);
-						avg.b() += getB(color);
-#endif
-					}
+		for (int y = 0; y < h; ++y) {
+			const auto py = y / ly;
+
+			auto &line = lines.at(std::min(31, py));
+
+			for (int x = 0; x < w; x += step) {
+				const auto px = x / lx;
+				auto &avg = line.at(std::min(31, px));
+
+				if (py > 0 && py < 31 && px > 0 && px < 31) {
+					x = lx * 31;
 				}
-				sdata += lx;
+
+				auto color = sdata[x];
+#ifdef RPI
+				avg.r() += getB(color);
+				avg.b() += getR(color);
+				avg.g() += getG(color);
+#else
+				avg.r() += getR(color);
+				avg.g() += getG(color);
+				avg.b() += getB(color);
+#endif
 			}
+			sdata += w;
 		}
 
-		auto c = (lx / step);
+		auto c = (lx * ly) / step;
+
 		for (int i = 0; i < 32; ++i) {
-			colors[i] = lines.at(31 - i).at(0).toBgr(c);
-			colors[i + 32] = lines.at(0).at(i).toBgr(c);
-			colors[i + 64] = lines.at(i).at(31).toBgr(c);
-			colors[i + 96] = lines.at(31).at(31 - i).toBgr(c);
+			colors[i] = lines.at(31 - i).at(0).toRgb(c);
+			colors[i + 32] = lines.at(0).at(i).toRgb(c);
+			colors[i + 64] = lines.at(i).at(31).toRgb(c);
+			colors[i + 96] = lines.at(31).at(31 - i).toRgb(c);
 		}
 
 		commit(scanline);
