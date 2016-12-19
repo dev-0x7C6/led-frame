@@ -24,16 +24,16 @@ public:
 	}
 
 	color operator()() const noexcept {
-		const auto avg_r = m_r / m_counter;
-		const auto avg_g = m_g / m_counter;
-		const auto avg_b = m_b / m_counter;
+		const auto avg_r = std::max(1u, m_r) / m_counter;
+		const auto avg_g = std::max(1u, m_g) / m_counter;
+		const auto avg_b = std::max(1u, m_b) / m_counter;
 		return Color::rgb(avg_r, avg_g, avg_b);
 	}
 
 	color bgr() const noexcept {
-		const auto avg_r = m_r / m_counter;
-		const auto avg_g = m_g / m_counter;
-		const auto avg_b = m_b / m_counter;
+		const auto avg_r = std::max(1u, m_r) / m_counter;
+		const auto avg_g = std::max(1u, m_g) / m_counter;
+		const auto avg_b = std::max(1u, m_b) / m_counter;
 		return Color::rgb(avg_b, avg_g, avg_r);
 	}
 
