@@ -18,10 +18,7 @@ public:
 
 protected:
 	void interrupt();
-	void run();
-
-private:
-	QRect fragment(int w, int h, cu32 index);
+	void run() override;
 
 private:
 	std::atomic_bool m_interrupted;

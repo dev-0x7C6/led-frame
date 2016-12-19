@@ -12,6 +12,8 @@
 #include <QColor>
 #include <chrono>
 
+#include "core/debug.h"
+
 using namespace Enum;
 using namespace Emitter::Concrete;
 using namespace Factory;
@@ -75,30 +77,6 @@ void ScreenEmitter::interrupt() {
 	m_interrupted = true;
 }
 
-QRect ScreenEmitter::fragment(int w, int h, cu32 index) {
-	auto l = static_cast<int>(SCANLINE_LINE);
-	auto i = static_cast<int>(index) % l;
-
-	switch (ScanlineContainer::fromIndexToPosition(index)) {
-		case Position::Left:
-			return QRect(0, (h / l) * (l - i - 1), 196, (h / l));
-
-		case Position::Top:
-			return QRect((w / l) * i, 0, (w / l), 196);
-
-		case Position::Right:
-			return QRect(w - 196, (h / l) * i, 196, (h / l));
-
-		case Position::Bottom:
-			return QRect((w / l) * (l - i - 1), h - 196, (w / l), 196);
-
-		case Position::Last:
-			return {};
-	}
-
-	return {};
-}
-
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
 	Container::ScanlineContainer scanline(0u);
@@ -134,7 +112,10 @@ void ScreenEmitter::run() {
 		sc->capture(x, y, w, h);
 		ccolor *data = sc->data();
 
-		processor.process(data, w, h, step);
+		{
+			RaiiElapsedTime elapsed("ImageBlockProcessor");
+			processor.process(data, w, h, step);
+		}
 
 		for (std::size_t i = 0; i < 32; ++i) {
 			colors[i] = processor.get(31 - i, 0);

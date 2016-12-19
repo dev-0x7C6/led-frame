@@ -36,9 +36,9 @@ find_package(Qt5SerialPort)
 find_package(Qt5WebSockets)
 find_package(Qt5Widgets)
 
-option(SUPPORT_X11 "Support for X11 screen capture" OFF)
-option(SUPPORT_RPI "Support for Raspberry Pi screen capture" ON)
-option(GUI "Build gui interface" OFF)
+option(SUPPORT_X11 "Support for X11 screen capture" ON)
+option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
+option(GUI "Build gui interface" ON)
 
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
@@ -129,6 +129,7 @@ endif()
 
 set(sources
 	core/consts.h
+	core/debug.h
 	core/containers/application-info-container.h
 	core/containers/color-scanline-container.cpp
 	core/containers/color-scanline-container.h
