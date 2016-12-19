@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include "core/consts.h"
+#include "core/types.h"
 
 namespace Functional {
 
@@ -11,7 +11,7 @@ using Matrix = std::array<std::array<type, columns>, rows>;
 template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
-	void process(ccolor *data, cu32 w, cu32 h, cu32 step = 3, bool partial = true) {
+	void process(ccolor *data, cu32 w, cu32 h, cu32 step = 4, bool partial = true) {
 		clear();
 		const auto sx = w / columns;
 		const auto sy = h / rows;

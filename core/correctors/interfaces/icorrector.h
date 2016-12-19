@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/consts.h"
+#include "core/types.h"
 #include "core/enums/corrector-type.h"
 #include "core/interfaces/inotify.h"
 

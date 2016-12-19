@@ -81,18 +81,17 @@ void ScreenEmitter::run() {
 	Functional::LoopSync loop;
 	Container::ScanlineContainer scanline(0u);
 	color *colors = scanline.data();
-	ImageBlockProcessor<ColorAveragingContainer, 32, 32> processor;
-	constexpr int step = 8;
+	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
 #ifdef X11
-	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
+	auto screen = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
 #endif
 #ifdef RPI
-	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::DispmanxScreenCapture);
+	auto screen = ScreenCaptureFactory::create(ScreenCaptureType::DispmanxScreenCapture);
 #endif
 
 #ifndef X11
 #ifndef RPI
-	auto sc = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
+	auto screen = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
 #endif
 #endif
 
@@ -109,13 +108,8 @@ void ScreenEmitter::run() {
 		ci32 w = m_w;
 		ci32 h = m_h;
 
-		sc->capture(x, y, w, h);
-		ccolor *data = sc->data();
-
-		{
-			RaiiElapsedTime elapsed("ImageBlockProcessor");
-			processor.process(data, w, h, step);
-		}
+		screen->capture(x, y, w, h);
+		processor.process(screen->data(), w, h, 4);
 
 		for (std::size_t i = 0; i < 32; ++i) {
 			colors[i] = processor.get(31 - i, 0);

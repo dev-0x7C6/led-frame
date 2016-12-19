@@ -4,7 +4,7 @@
 #include <functional>
 
 #include <QObject>
-#include "core/consts.h"
+#include "core/types.h"
 
 namespace Interface {
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/enums/screen-capture-type.h>
-#include "core/consts.h"
+#include "core/types.h"
 
 namespace Interface {
 

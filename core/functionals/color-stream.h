@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/consts.h"
+#include "core/types.h"
 #include "core/enums/color-format-enum.h"
 #include "core/enums/color-type-enum.h"
 

@@ -5,7 +5,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <X11/extensions/XShm.h>
-#include "core/consts.h"
+#include "core/types.h"
 
 namespace Functional {
 namespace Helper {

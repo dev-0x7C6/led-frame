@@ -1,13 +1,13 @@
 #pragma once
 
-#include "core/consts.h"
+#include "core/types.h"
 #include "core/functionals/color-functions.h"
 
 namespace Functional {
 
-class ColorAveragingContainer {
+class ColorAveragingBuffer {
 public:
-	constexpr explicit ColorAveragingContainer() {}
+	constexpr explicit ColorAveragingBuffer() {}
 
 	void clear() noexcept {
 		m_r = 0;

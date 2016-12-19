@@ -2,7 +2,7 @@
 
 #include <QElapsedTimer>
 
-#include "core/consts.h"
+#include "core/types.h"
 
 namespace Functional {
 

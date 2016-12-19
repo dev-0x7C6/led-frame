@@ -128,8 +128,6 @@ if (GUI)
 endif()
 
 set(sources
-	core/consts.h
-	core/debug.h
 	core/containers/application-info-container.h
 	core/containers/color-scanline-container.cpp
 	core/containers/color-scanline-container.h
@@ -156,6 +154,7 @@ set(sources
 	core/correctors/interfaces/icorrector.h
 	core/correctors/interfaces/icorrector-manager.h
 	core/correctors/interfaces/icorrector-notify.h
+	core/debug.h
 	core/devices/device-port.cpp
 	core/devices/device-port.h
 	core/emitters/abstracts/abstract-emitter.cpp
@@ -239,9 +238,11 @@ set(sources
 	core/receivers/interfaces/ireceiver.h
 	core/receivers/interfaces/ireceiver-manager.h
 	core/receivers/interfaces/ireceiver-notify.h
+	core/types.h
 	main.cpp
 	qml.qrc
 	resources/resource.qrc
+
 )
 
 add_executable(led-frame ${sources} ${gui-sources} ${rpi-sources} ${x11-sources})

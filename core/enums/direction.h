@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/consts.h"
+#include "core/types.h"
 
 namespace Enum {
 

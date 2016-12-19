@@ -2,7 +2,7 @@
 
 #include <QString>
 
-#include "core/consts.h"
+#include "core/types.h"
 
 namespace Enum {
 

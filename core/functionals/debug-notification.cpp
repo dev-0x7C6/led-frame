@@ -3,7 +3,7 @@
 #include "core/functionals/debug-notification.h"
 #include "core/receivers/interfaces/ireceiver.h"
 
-#include "core/consts.h"
+#include "core/types.h"
 #include <iomanip>
 #include <iostream>
 #include <sstream>
