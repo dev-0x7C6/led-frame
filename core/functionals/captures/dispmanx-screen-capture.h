@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/interfaces/iscreen-capture.h"
-#include "core/consts.h"
+#include "core/types.h"
 #include "bcm_host.h"
 #include "interface/vmcs_host/vcgencmd.h"
 

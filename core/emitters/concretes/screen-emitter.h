@@ -20,7 +20,7 @@ protected:
 	void run() override;
 
 private:
-	std::atomic_bool m_interrupted;
+	std::atomic<bool> m_interrupted;
 	ci32 m_screenId;
 };
 }
