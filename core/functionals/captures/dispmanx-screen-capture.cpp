@@ -9,10 +9,6 @@
 using namespace Functional::Capture;
 using namespace Functional;
 
-#ifndef ALIGN_TO_16
-#define ALIGN_TO_16(x) ((x + 15) & ~15)
-#endif
-
 DispmanxScreenCapture::DispmanxScreenCapture() {
 	m_display = vc_dispmanx_display_open(0);
 	if (!m_display) {
@@ -29,7 +25,7 @@ DispmanxScreenCapture::DispmanxScreenCapture() {
 	m_w = modeInfo.width;
 	m_h = modeInfo.height;
 
-	m_data = std::malloc(4 * ALIGN_TO_16(m_w) * m_h);
+	m_data = std::malloc(m_w * m_h * 4);
 	if (m_data == nullptr) {
 		std::cerr << "std::malloc failed!" << std::endl;
 		return;
@@ -60,11 +56,8 @@ Enum::ScreenCaptureType DispmanxScreenCapture::type() const {
 	return Enum::ScreenCaptureType::DispmanxScreenCapture;
 }
 
-bool DispmanxScreenCapture::capture(ci32 x, ci32 y, ci32 w, ci32 h) {
-	static_cast<void>(x);
-	static_cast<void>(y);
-	static_cast<void>(h);
-	static_cast<void>(w);
+bool DispmanxScreenCapture::capture(ci32 id) {
+	static_cast<void>(id);
 
 	if (vc_dispmanx_snapshot(m_display, m_resource, DISPMANX_NO_ROTATE)) {
 		std::cerr << "vc_dispmanx_snapshot failed!" << std::endl;
@@ -77,7 +70,6 @@ bool DispmanxScreenCapture::capture(ci32 x, ci32 y, ci32 w, ci32 h) {
 		return false;
 	}
 
-	//std::cout << "vc_dispmanx_resource_read_data" << std::endl;
 	if (vc_dispmanx_resource_read_data(m_resource, &rect, m_data, m_w * 4)) {
 		std::cerr << "vc_dispmanx_resource_read_data failed!" << std::endl;
 		return false;

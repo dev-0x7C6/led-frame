@@ -16,5 +16,15 @@ X11ShmScreenCapture::X11ShmScreenCapture()
 X11ShmScreenCapture::~X11ShmScreenCapture() = default;
 
 ScreenCaptureType X11ShmScreenCapture::type() const { return ScreenCaptureType::X11ShmScreenCapture; }
-bool X11ShmScreenCapture::capture(ci32 x, ci32 y, ci32 w, ci32 h) { return m_helper->capture(x, y, w, h); }
+bool X11ShmScreenCapture::capture(ci32 id) {
+	if (QGuiApplication::screens().count() <= id)
+		return false;
+
+	auto rect = QGuiApplication::screens().at(id)->geometry();
+	m_w = rect.width();
+	m_h = rect.height();
+
+	return m_helper->capture(rect.x(), rect.y(), m_w, m_h);
+}
+
 ccolor *X11ShmScreenCapture::data() { return m_helper->data(); }

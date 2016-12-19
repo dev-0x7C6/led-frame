@@ -10,11 +10,10 @@ namespace Concrete {
 
 class ScreenEmitter final : public QThread, public Abstract::AbstractEmitter {
 public:
-	explicit ScreenEmitter(ci32 id);
+	explicit ScreenEmitter(ci32 id, ci32 screenId = 0);
 	virtual ~ScreenEmitter();
 
 	virtual Enum::EmitterType type() const override;
-	bool setCaptureArea(const int screen);
 
 protected:
 	void interrupt();
@@ -22,10 +21,7 @@ protected:
 
 private:
 	std::atomic_bool m_interrupted;
-	std::atomic<int> m_x;
-	std::atomic<int> m_y;
-	std::atomic<int> m_w;
-	std::atomic<int> m_h;
+	ci32 m_screenId;
 };
 }
 }

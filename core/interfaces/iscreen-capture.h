@@ -12,8 +12,10 @@ public:
 
 	virtual Enum::ScreenCaptureType type() const = 0;
 
-	virtual bool capture(ci32 x, ci32 y, ci32 w, ci32 h) = 0;
+	virtual bool capture(ci32 id = 0) = 0;
 
 	virtual ccolor *data() = 0;
+	virtual u32 width() const noexcept = 0;
+	virtual u32 height() const noexcept = 0;
 };
 }

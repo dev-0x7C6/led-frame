@@ -23,50 +23,19 @@ using namespace Functional;
 
 using namespace std::literals;
 
-ScreenEmitter::ScreenEmitter(ci32 id)
+ScreenEmitter::ScreenEmitter(ci32 id, ci32 screenId)
 		: QThread(nullptr)
 		, AbstractEmitter(id)
 		, m_interrupted(false)
-		, m_x(0)
-		, m_y(0)
-		, m_w(0)
-		, m_h(0)
+		, m_screenId(screenId)
 
 {
-	setCaptureArea(0);
 	start();
 }
 
 ScreenEmitter::~ScreenEmitter() {
 	interrupt();
 	wait();
-}
-
-bool ScreenEmitter::setCaptureArea(const int screen) {
-#ifdef RPI
-	//TODO: temporary rpi screen resolution hack
-	m_x = 0;
-	m_y = 0;
-	m_w = 1280;
-	m_h = 720;
-	return true;
-#endif
-
-	auto screens = QGuiApplication::screens();
-	if (screens.size() <= screen)
-		return false;
-
-	auto geometry = QGuiApplication::screens().at(screen)->geometry();
-
-	if (geometry.isValid()) {
-		m_x = geometry.x();
-		m_y = geometry.y();
-		m_w = geometry.width();
-		m_h = geometry.height();
-		return true;
-	}
-
-	return false;
 }
 
 EmitterType ScreenEmitter::type() const {
@@ -103,13 +72,10 @@ void ScreenEmitter::run() {
 			msleep(10);
 		}
 
-		ci32 x = m_x;
-		ci32 y = m_y;
-		ci32 w = m_w;
-		ci32 h = m_h;
+		if (!screen->capture(m_screenId))
+			continue;
 
-		screen->capture(x, y, w, h);
-		processor.process(screen->data(), w, h, 4);
+		processor.process(screen->data(), screen->width(), screen->height(), 4);
 
 		for (std::size_t i = 0; i < 32; ++i) {
 			colors[i] = processor.get(31 - i, 0);

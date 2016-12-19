@@ -14,8 +14,10 @@ public:
 	virtual ~DispmanxScreenCapture();
 
 	virtual Enum::ScreenCaptureType type() const override;
-	virtual bool capture(ci32 x, ci32 y, ci32 w, ci32 h) override;
+	virtual bool capture(ci32 id) override;
 	virtual ccolor *data() override;
+	virtual i32 width() const noexcept override { return m_w; }
+	virtual i32 height() const noexcept override { return m_h; }
 
 private:
 	DISPMANX_DISPLAY_HANDLE_T m_display = 0;
