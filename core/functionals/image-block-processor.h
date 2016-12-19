@@ -11,7 +11,7 @@ using Matrix = std::array<std::array<type, columns>, rows>;
 template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
-	void process(ccolor *data, cu32 w, cu32 h, cu32 step = 4) {
+	void process(ccolor *data, cu32 w, cu32 h, cu32 step = 3, bool partial = true) {
 		clear();
 		const auto sx = w / columns;
 		const auto sy = h / rows;
@@ -22,9 +22,8 @@ public:
 
 			for (auto x = 0u; x < w; x += step) {
 				const auto px = x / sx;
-				if (py > 0 && py < (rows - 1) && px > 0 && px < (columns - 1)) {
-					x = static_cast<u16>(sx * 31);
-				}
+				if (partial && py > 0 && py < (rows - 1) && px > 0 && px < (columns - 1))
+					x = sx * 31;
 
 				row.at(std::min(rows - 1, px)) += data[x];
 			}
