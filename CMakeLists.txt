@@ -38,6 +38,7 @@ find_package(Qt5Widgets)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
+option(SUPPORT_RPI3 "Some extensions for Raspberry Pi 3" OFF)
 option(GUI "Build gui interface" ON)
 
 include_directories(
@@ -47,6 +48,9 @@ include_directories(
 )
 
 if (UNIX AND SUPPORT_RPI)
+	if (SUPPORT_RPI3)
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=armv8-a+crc -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard -ftree-vectorize -funsafe-math-optimizations -O2 -pipe") 
+	endif()
 	include_directories("/opt/vc/include")
 	include_directories("/opt/vc/include/interface/vcos/pthreads")
 	include_directories("/opt/vc/include/interface/vmcs_host/linux")
