@@ -3,7 +3,7 @@
 #include <QString>
 #include <memory>
 
-#include "core/types.h"
+#include <core/types.h>
 
 class QUdpSocket;
 class QTimer;

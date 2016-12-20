@@ -7,7 +7,7 @@
 #include <core/functionals/loop-sync.h>
 #include <core/receivers/concretes/uart-receiver.h>
 #include <core/emitters/interfaces/iemitter.h>
-#include "core/receivers/concretes/uart-worker.h"
+#include <core/receivers/concretes/uart-worker.h>
 
 #include <QElapsedTimer>
 #include <algorithm>

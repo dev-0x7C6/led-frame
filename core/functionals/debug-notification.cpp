@@ -1,9 +1,9 @@
-#include "core/correctors/interfaces/icorrector.h"
-#include "core/emitters/interfaces/iemitter.h"
-#include "core/functionals/debug-notification.h"
-#include "core/receivers/interfaces/ireceiver.h"
+#include <core/correctors/interfaces/icorrector.h>
+#include <core/emitters/interfaces/iemitter.h>
+#include <core/functionals/debug-notification.h>
+#include <core/receivers/interfaces/ireceiver.h>
 
-#include "core/types.h"
+#include <core/types.h>
 #include <iomanip>
 #include <iostream>
 #include <sstream>

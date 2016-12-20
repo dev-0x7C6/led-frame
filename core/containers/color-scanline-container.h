@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/enums/position-enum.h"
-#include "core/types.h"
+#include <core/enums/position-enum.h>
+#include <core/types.h>
 
 #include <array>
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/containers/device-config-container.h"
-#include "core/enums/color-format-enum.h"
-#include "core/functionals/lambda-thread.h"
-#include "core/receivers/abstracts/abstract-receiver.h"
-#include "core/containers/led-ribbon-config-container.h"
+#include <core/containers/device-config-container.h>
+#include <core/enums/color-format-enum.h>
+#include <core/functionals/lambda-thread.h>
+#include <core/receivers/abstracts/abstract-receiver.h>
+#include <core/containers/led-ribbon-config-container.h>
 
 #include <QSerialPort>
 #include <QSerialPortInfo>

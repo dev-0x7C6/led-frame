@@ -1,5 +1,5 @@
-#include <core/containers/color-scanline-container.h>
-#include "core/functionals/color-functions.h"
+#include "color-scanline-container.h"
+#include <core/functionals/color-functions.h>
 
 #include <algorithm>
 

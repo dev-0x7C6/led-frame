@@ -1,8 +1,8 @@
 #include "uart-worker.h"
 
-#include "core/correctors/factories/corrector-factory.h"
-#include "core/correctors/interfaces/icorrector.h"
-#include "core/functionals/loop-sync.h"
+#include <core/correctors/factories/corrector-factory.h>
+#include <core/correctors/interfaces/icorrector.h>
+#include <core/functionals/loop-sync.h>
 
 using namespace Enum;
 using namespace Container;

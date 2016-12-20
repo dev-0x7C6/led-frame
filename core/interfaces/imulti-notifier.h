@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/correctors/interfaces/icorrector-notify.h"
-#include "core/emitters/interfaces/iemitter-notify.h"
-#include "core/receivers/interfaces/ireceiver-notify.h"
+#include <core/correctors/interfaces/icorrector-notify.h>
+#include <core/emitters/interfaces/iemitter-notify.h>
+#include <core/receivers/interfaces/ireceiver-notify.h>
 
 namespace Interface {
 

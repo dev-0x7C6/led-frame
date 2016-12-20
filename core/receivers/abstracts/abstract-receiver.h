@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/correctors/concretes/corrector-manager.h"
-#include "core/functionals/raii-reference-counter.h"
-#include "core/receivers/interfaces/ireceiver.h"
+#include <core/correctors/concretes/corrector-manager.h>
+#include <core/functionals/raii-reference-counter.h>
+#include <core/receivers/interfaces/ireceiver.h>
 
 #include <QString>
 

@@ -2,7 +2,7 @@
 #include <core/containers/device-config-container.h>
 #include <core/containers/led-ribbon-config-container.h>
 #include <gui/widgets/device-symulation-widget.h>
-#include "core/emitters/interfaces/iemitter.h"
+#include <core/emitters/interfaces/iemitter.h>
 
 #include <QBoxLayout>
 #include <QElapsedTimer>

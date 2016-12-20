@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/types.h"
-#include "core/enums/color-format-enum.h"
-#include "core/enums/color-type-enum.h"
+#include <core/enums/color-format-enum.h>
+#include <core/enums/color-type-enum.h>
+#include <core/types.h>
 
 #include <array>
 

@@ -1,5 +1,5 @@
 #include "emitter-configuration-menu.h"
-#include "core/emitters/interfaces/iemitter.h"
+#include <core/emitters/interfaces/iemitter.h>
 
 #include <QAction>
 #include <QMenu>

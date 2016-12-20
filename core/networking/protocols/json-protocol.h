@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/correctors/interfaces/icorrector.h"
-#include "core/emitters/interfaces/iemitter.h"
-#include "core/receivers/interfaces/ireceiver.h"
+#include <core/correctors/interfaces/icorrector.h>
+#include <core/emitters/interfaces/iemitter.h>
+#include <core/receivers/interfaces/ireceiver.h>
 
 namespace Network {
 namespace Protocol {

@@ -1,5 +1,5 @@
 #include <core/correctors/concretes/rgb-channel-corrector.h>
-#include "core/functionals/color-functions.h"
+#include <core/functionals/color-functions.h>
 
 using namespace Enum;
 using namespace Corrector::Concrete;

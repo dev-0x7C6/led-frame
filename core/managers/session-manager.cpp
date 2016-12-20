@@ -1,14 +1,14 @@
 #include "session-manager.h"
 
-#include "core/correctors/factories/corrector-factory.h"
-#include "core/emitters/factories/emitter-factory.h"
-#include "core/functionals/debug-notification.h"
-#include "core/managers/main-manager.h"
-#include "core/receivers/interfaces/ireceiver.h"
-#include "core/correctors/interfaces/icorrector.h"
+#include <core/correctors/factories/corrector-factory.h>
+#include <core/emitters/factories/emitter-factory.h>
+#include <core/functionals/debug-notification.h>
+#include <core/managers/main-manager.h>
+#include <core/receivers/interfaces/ireceiver.h>
+#include <core/correctors/interfaces/icorrector.h>
 
 #ifdef GUI
-#include "gui/wizards/device-setup-wizard.h"
+#include <gui/wizards/device-setup-wizard.h>
 #endif
 
 #include <QApplication>

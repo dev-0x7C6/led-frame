@@ -1,5 +1,5 @@
-#include "core/networking/web-socket-server.h"
-#include "core/networking/web-socket.h"
+#include <core/networking/web-socket-server.h>
+#include <core/networking/web-socket.h>
 
 #include <QWebSocketServer>
 #include <QWebSocket>

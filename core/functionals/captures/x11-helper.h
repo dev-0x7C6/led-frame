@@ -2,7 +2,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include "core/types.h"
+#include <core/types.h>
 
 namespace Functional {
 namespace Helper {

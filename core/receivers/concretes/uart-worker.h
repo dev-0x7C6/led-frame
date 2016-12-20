@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/containers/color-scanline-container.h"
-#include "core/containers/led-ribbon-config-container.h"
-#include "core/functionals/color-stream.h"
-#include "core/correctors/concretes/corrector-manager.h"
-#include "core/devices/device-port.h"
+#include <core/containers/color-scanline-container.h>
+#include <core/containers/led-ribbon-config-container.h>
+#include <core/functionals/color-stream.h>
+#include <core/correctors/concretes/corrector-manager.h>
+#include <core/devices/device-port.h>
 #include <memory>
 #include <array>
 

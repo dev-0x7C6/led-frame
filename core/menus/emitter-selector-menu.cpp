@@ -2,8 +2,7 @@
 #include <core/emitters/interfaces/iemitter.h>
 #include <core/menus/emitter-selector-menu.h>
 #include <core/receivers/interfaces/ireceiver.h>
-
-#include "gui/widgets/corrector-settings-dialog.h"
+#include <gui/widgets/corrector-settings-dialog.h>
 
 #include <QMenu>
 #include <QAction>

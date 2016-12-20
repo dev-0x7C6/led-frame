@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/interfaces/imulti-notifier-manager.h"
-#include "core/interfaces/iremote-controller.h"
+#include <core/interfaces/imulti-notifier-manager.h>
+#include <core/interfaces/iremote-controller.h>
 
 #include <memory>
 #include <list>

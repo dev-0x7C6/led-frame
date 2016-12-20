@@ -1,6 +1,6 @@
 #include <gui/tray/system-tray.h>
 #include <gui/tray/system-tray-icon.h>
-#include "core/correctors/interfaces/icorrector.h"
+#include <core/correctors/interfaces/icorrector.h>
 
 #include <QMenu>
 #include <QPainter>

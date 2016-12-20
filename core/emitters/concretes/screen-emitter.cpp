@@ -1,18 +1,19 @@
-#include <core/containers/color-scanline-container.h>
-#include <core/emitters/concretes/screen-emitter.h>
-#include <core/factories/screen-capture-factory.h>
-#include <core/functionals/loop-sync.h>
-#include "core/functionals/color-functions.h"
-#include "core/functionals/color-averaging-buffer.h"
-#include "core/functionals/image-block-processor.h"
+#include "screen-emitter.h"
 
-#include <QGuiApplication>
-#include <QScreen>
-#include <QRect>
-#include <QColor>
+#include <core/containers/color-scanline-container.h>
+#include <core/debug.h>
+#include <core/factories/screen-capture-factory.h>
+#include <core/functionals/color-averaging-buffer.h>
+#include <core/functionals/color-functions.h>
+#include <core/functionals/image-block-processor.h>
+#include <core/functionals/loop-sync.h>
+
 #include <chrono>
 
-#include "core/debug.h"
+#include <QColor>
+#include <QGuiApplication>
+#include <QRect>
+#include <QScreen>
 
 using namespace Enum;
 using namespace Emitter::Concrete;

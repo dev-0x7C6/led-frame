@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/types.h"
-#include "core/functionals/color-functions.h"
+#include <core/types.h>
+#include <core/functionals/color-functions.h>
 
 namespace Functional {
 

@@ -2,12 +2,12 @@
 #include <core/functionals/captures/qt-screen-capture.h>
 
 #ifdef X11
-#include "core/functionals/captures/x11-screen-capture.h"
-#include "core/functionals/captures/x11-shm-screen-capture.h"
+#include <core/functionals/captures/x11-screen-capture.h>
+#include <core/functionals/captures/x11-shm-screen-capture.h>
 #endif
 
 #ifdef RPI
-#include "core/functionals/captures/dispmanx-screen-capture.h"
+#include <core/functionals/captures/dispmanx-screen-capture.h>
 #endif
 
 using namespace Enum;

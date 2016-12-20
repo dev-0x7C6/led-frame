@@ -2,7 +2,7 @@
 
 #include <core/menus/device-menu.h>
 #include <core/menus/emitter-configuration-menu.h>
-#include "core/interfaces/imulti-notifier.h"
+#include <core/interfaces/imulti-notifier.h>
 
 #include <QSystemTrayIcon>
 #include <functional>

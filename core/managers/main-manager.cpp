@@ -1,8 +1,8 @@
 #include "main-manager.h"
 
-#include "core/correctors/factories/corrector-factory.h"
-#include "core/containers/application-info-container.h"
-#include "core/functionals/debug-notification.h"
+#include <core/correctors/factories/corrector-factory.h>
+#include <core/containers/application-info-container.h>
+#include <core/functionals/debug-notification.h>
 
 #include <QSettings>
 
