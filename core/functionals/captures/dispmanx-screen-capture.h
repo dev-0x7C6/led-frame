@@ -15,9 +15,10 @@ public:
 
 	virtual Enum::ScreenCaptureType type() const override;
 	virtual bool capture(ci32 id) override;
-	virtual ccolor *data() override;
-	virtual u32 width() const noexcept override { return m_w; }
-	virtual u32 height() const noexcept override { return m_h; }
+	virtual auto data() const noexcept -> ccolor * override;
+	virtual auto width() const noexcept -> u32 override { return m_w; }
+	virtual auto height() const noexcept -> u32 override { return m_h; }
+	virtual auto bytesPerPixel() const noexcept -> u32 override { return m_bpp; }
 
 private:
 	DISPMANX_DISPLAY_HANDLE_T m_display = 0;
@@ -26,6 +27,7 @@ private:
 	u32 m_size = 0;
 	u32 m_w = 0;
 	u32 m_h = 0;
+	u32 m_bpp = 0;
 };
 }
 }

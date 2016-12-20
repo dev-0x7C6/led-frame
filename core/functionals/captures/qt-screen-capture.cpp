@@ -19,12 +19,16 @@ bool QtScreenCapture::capture(ci32 id) {
 	return !m_frame.isNull();
 }
 
-ccolor *QtScreenCapture::data() { return reinterpret_cast<ccolor *>(m_frame.bits()); }
+ccolor *QtScreenCapture::data() const noexcept { return reinterpret_cast<ccolor *>(m_frame.bits()); }
 
 u32 QtScreenCapture::width() const noexcept {
-	return m_frame.width();
+	return static_cast<u32>(m_frame.width());
 }
 
 u32 QtScreenCapture::height() const noexcept {
-	return m_frame.height();
+	return static_cast<u32>(m_frame.height());
+}
+
+u32 QtScreenCapture::bytesPerPixel() const noexcept {
+	return m_frame.depth();
 }

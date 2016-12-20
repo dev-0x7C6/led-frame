@@ -27,4 +27,4 @@ bool X11ShmScreenCapture::capture(ci32 id) {
 	return m_helper->capture(rect.x(), rect.y(), m_w, m_h);
 }
 
-ccolor *X11ShmScreenCapture::data() { return m_helper->data(); }
+ccolor *X11ShmScreenCapture::data() const noexcept { return m_helper->data(); }

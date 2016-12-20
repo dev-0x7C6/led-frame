@@ -15,9 +15,10 @@ public:
 
 	virtual bool capture(ci32 id) override;
 
-	virtual ccolor *data() override;
-	virtual u32 width() const noexcept override;
-	virtual u32 height() const noexcept override;
+	virtual auto data() const noexcept -> ccolor * override;
+	virtual auto width() const noexcept -> u32 override;
+	virtual auto height() const noexcept -> u32 override;
+	virtual auto bytesPerPixel() const noexcept -> u32 override;
 
 private:
 	QImage m_frame;

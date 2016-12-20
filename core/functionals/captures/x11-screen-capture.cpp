@@ -16,7 +16,7 @@ X11ScreenCapture::X11ScreenCapture()
 X11ScreenCapture::~X11ScreenCapture() = default;
 
 ScreenCaptureType X11ScreenCapture::type() const { return ScreenCaptureType::X11ScreenCapture; }
-ccolor *X11ScreenCapture::data() { return m_helper->data(); }
+auto X11ScreenCapture::data() const noexcept -> ccolor * { return m_helper->data(); }
 
 bool X11ScreenCapture::capture(ci32 id) {
 	if (QGuiApplication::screens().count() <= id)

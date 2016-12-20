@@ -78,6 +78,6 @@ bool DispmanxScreenCapture::capture(ci32 id) {
 	return true;
 }
 
-ccolor *DispmanxScreenCapture::data() {
+ccolor *DispmanxScreenCapture::data() const noexcept {
 	return reinterpret_cast<color *>(m_data);
 }
