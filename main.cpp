@@ -28,6 +28,25 @@ using namespace Corrector::Concrete;
 using namespace Emitter::Concrete;
 using namespace Receiver::Concrete;
 
+#ifdef __unix__
+
+#include <signal.h>
+#include <unistd.h>
+
+void catchUnixSignals(const std::vector<int> &quitSignals,
+	const std::vector<int> &ignoreSignals = std::vector<int>()) {
+
+	auto handler = [](int) -> void { QCoreApplication::quit(); };
+
+	for (int sig : ignoreSignals)
+		signal(sig, SIG_IGN);
+
+	for (int sig : quitSignals)
+		signal(sig, handler);
+}
+
+#endif
+
 int main(int argc, char *argv[]) {
 #ifdef RPI
 	bcm_host_init();
@@ -42,6 +61,10 @@ int main(int argc, char *argv[]) {
 	application.setApplicationDisplayName(QString("%1 %2").arg(applicationName, applicationVersion));
 #else
 	QCoreApplication application(argc, argv);
+#endif
+
+#ifdef __unix__
+	catchUnixSignals({SIGQUIT, SIGINT, SIGTERM, SIGHUP});
 #endif
 
 	application.setApplicationName(applicationName);
