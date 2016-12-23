@@ -25,8 +25,8 @@ void AbstractCorrectorManager::detach(ICorrectorNotify *notify) {
 void AbstractCorrectorManager::attach(const std::shared_ptr<ICorrector> &corrector) {
 	std::lock_guard<std::mutex> _(m_mutex);
 	auto interface = corrector.get();
-	m_correctors.emplace_back(corrector);
-	std::sort(m_correctors.begin(), m_correctors.end(), [](const auto &a, const auto &b) {
+	m_correctors.push_back(corrector);
+	std::sort(m_correctors.begin(), m_correctors.end(), [](auto a, auto b) {
 		return (a->priority() > b->priority());
 	});
 
@@ -54,7 +54,7 @@ void AbstractCorrectorManager::detach(const std::shared_ptr<ICorrector> &correct
 std::shared_ptr<ICorrector> AbstractCorrectorManager::find(const int id) const {
 	std::lock_guard<std::mutex> _(m_mutex);
 	for (const auto &corrector : m_correctors)
-		if (corrector->id() == id)
+		if (corrector != nullptr && corrector->id() == id)
 			return corrector;
 
 	return nullptr;
@@ -69,7 +69,7 @@ void AbstractCorrectorManager::enumerate(std::function<void(const std::shared_pt
 color AbstractCorrectorManager::execute(color value) {
 	std::lock_guard<std::mutex> _(m_mutex);
 	for (const auto &corrector : m_correctors)
-		if (corrector->isEnabled())
+		if (corrector != nullptr && corrector->isEnabled())
 			value = corrector->correct(value);
 
 	return value;
@@ -78,13 +78,13 @@ color AbstractCorrectorManager::execute(color value) {
 void AbstractCorrectorManager::push() {
 	std::lock_guard<std::mutex> _(m_mutex);
 	for (const auto &corrector : m_correctors)
-		if (corrector->isEnabled())
+		if (corrector != nullptr && corrector->isEnabled())
 			corrector->push();
 }
 
 void AbstractCorrectorManager::pop() {
 	std::lock_guard<std::mutex> _(m_mutex);
 	for (const auto &corrector : m_correctors)
-		if (corrector->isEnabled())
+		if (corrector != nullptr && corrector->isEnabled())
 			corrector->pop();
 }

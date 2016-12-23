@@ -8,7 +8,7 @@ using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
 ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
-		: Abstract::AbstractCorrector(id, owner, 1.0, 6.0) {
+		: Abstract::AbstractCorrector(id, owner, 1.0, 20) {
 }
 
 Enum::CorrectorType ColorEnhancerCorrector::type() const { return CorrectorType::ColorEnhancer; }
