@@ -49,10 +49,10 @@ void UartReceiver::run() {
 	UartWorker worker(ribbon, correctorManager(), m_device);
 	Functional::LoopSync loopSync;
 
-	Container::ScanlineContainer prev(0u);
-	Container::ScanlineContainer diff(0u);
-	Container::ScanlineContainer next(0u);
-	Container::ScanlineContainer output(0u);
+	Container::Scanline prev(0u);
+	Container::Scanline diff(0u);
+	Container::Scanline next(0u);
+	Container::Scanline output(0u);
 	const auto uartFramerate = framerate();
 	u32 frameCounter = 0;
 	int lastEmitterId = -1;
@@ -104,7 +104,7 @@ void UartReceiver::run() {
 			if (factor < 1.0) {
 				output = emitterGetFrame();
 			} else {
-				Container::ScanlineContainer::interpolate(prev, next, factor, output);
+				Container::Scanline::interpolate(prev, next, factor, output);
 			}
 		} else {
 			output = emitterGetFrame();

@@ -24,8 +24,8 @@ EmitterType TestEmitter::type() const {
 }
 
 void TestEmitter::process() {
-	Container::ScanlineContainer scanline;
-	scanline.fill(0);
+	Container::Scanline scanline;
+	scanline.clear();
 
 	switch (m_currentStep) {
 		case 0:

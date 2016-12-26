@@ -1,17 +1,19 @@
 #pragma once
 
 #include <core/enums/position-enum.h>
+#include <core/functionals/color-functions.h>
 #include <core/types.h>
 
+#include <algorithm>
 #include <array>
 
 namespace Container {
 
-constexpr auto SCANLINE_SIZE = 128u;
-constexpr auto SCANLINE_LINE = 32u;
-
+template <int linesize>
 class ScanlineContainer final {
 public:
+	static_assert(linesize % 4 == 0, "modulo by 4 should be 0.");
+
 	inline explicit ScanlineContainer() noexcept;
 	inline explicit ScanlineContainer(const color fillColor) noexcept;
 
@@ -37,52 +39,114 @@ public:
 
 public:
 	constexpr static auto fromIndexToPosition(const std::size_t index) noexcept;
+
 	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, double progress, ScanlineContainer &out) noexcept;
 
+	template <int newsize>
+	inline ScanlineContainer<newsize> resize();
+
 private:
-	std::array<color, SCANLINE_SIZE> m_data;
+	std::array<color, linesize> m_data;
 };
 
-inline ScanlineContainer::ScanlineContainer() noexcept
+using Scanline = ScanlineContainer<128u>;
+
+template <int linesize>
+inline ScanlineContainer<linesize>::ScanlineContainer() noexcept
 		: m_data() {}
-inline ScanlineContainer::ScanlineContainer(const color fillColor) noexcept
+
+template <int linesize>
+inline ScanlineContainer<linesize>::ScanlineContainer(const color fillColor) noexcept
 		: m_data() { m_data.fill(fillColor); }
 
-constexpr auto ScanlineContainer::size() noexcept { return SCANLINE_SIZE; }
-constexpr auto ScanlineContainer::line() noexcept { return SCANLINE_LINE; }
+template <int linesize>
+constexpr auto ScanlineContainer<linesize>::size() noexcept { return linesize; }
 
-auto ScanlineContainer::data() noexcept { return m_data.data(); }
-auto ScanlineContainer::constData() const noexcept { return m_data.data(); }
+template <int linesize>
+constexpr auto ScanlineContainer<linesize>::line() noexcept { return linesize / 4; }
 
-auto ScanlineContainer::data(const Enum::Position &position) noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
-auto ScanlineContainer::constData(const Enum::Position &position) const noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
+template <int linesize>
+auto ScanlineContainer<linesize>::data() noexcept { return m_data.data(); }
 
-void ScanlineContainer::clear() noexcept { fill(0u); }
-void ScanlineContainer::fill(const color value) noexcept { m_data.fill(value); }
-void ScanlineContainer::fill(const Enum::Position position, const color value) noexcept {
+template <int linesize>
+auto ScanlineContainer<linesize>::constData() const noexcept { return m_data.data(); }
+
+template <int linesize>
+auto ScanlineContainer<linesize>::data(const Enum::Position &position) noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
+
+template <int linesize>
+auto ScanlineContainer<linesize>::constData(const Enum::Position &position) const noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
+
+template <int linesize>
+void ScanlineContainer<linesize>::clear() noexcept { fill(0u); }
+
+template <int linesize>
+void ScanlineContainer<linesize>::fill(const color value) noexcept { m_data.fill(value); }
+
+template <int linesize>
+void ScanlineContainer<linesize>::fill(const Enum::Position position, const color value) noexcept {
 	auto colors = data(position);
 
 	for (auto i = 0u; i < size(); ++i)
 		colors[i] = value;
 }
 
-constexpr auto ScanlineContainer::fromIndexToPosition(const std::size_t index) noexcept { return static_cast<Enum::Position>(index / ScanlineContainer::line()); }
+template <int linesize>
+constexpr auto ScanlineContainer<linesize>::fromIndexToPosition(const std::size_t index) noexcept { return static_cast<Enum::Position>(index / ScanlineContainer::line()); }
 
-void ScanlineContainer::operator=(const ScanlineContainer &other) noexcept { m_data = other.m_data; }
-void ScanlineContainer::operator=(const color value) noexcept { fill(value); }
-bool ScanlineContainer::operator==(const ScanlineContainer &other) const noexcept { return m_data == other.m_data; }
-bool ScanlineContainer::operator!=(const ScanlineContainer &other) const noexcept { return !operator==(other); }
+template <int linesize>
+void ScanlineContainer<linesize>::operator=(const ScanlineContainer &other) noexcept { m_data = other.m_data; }
 
-void ScanlineContainer::operator<<(const color value) noexcept {
+template <int linesize>
+void ScanlineContainer<linesize>::operator=(const color value) noexcept { fill(value); }
+
+template <int linesize>
+bool ScanlineContainer<linesize>::operator==(const ScanlineContainer &other) const noexcept { return m_data == other.m_data; }
+
+template <int linesize>
+bool ScanlineContainer<linesize>::operator!=(const ScanlineContainer &other) const noexcept { return !operator==(other); }
+
+template <int linesize>
+void ScanlineContainer<linesize>::operator<<(const color value) noexcept {
 	std::rotate(m_data.begin(), m_data.begin() + 1, m_data.end());
-	m_data[SCANLINE_SIZE - 1] = value;
+	m_data[linesize - 1] = value;
 }
 
-void ScanlineContainer::operator>>(const color value) noexcept {
+template <int linesize>
+void ScanlineContainer<linesize>::operator>>(const color value) noexcept {
 	std::rotate(m_data.rbegin(), m_data.rbegin() + 1, m_data.rend());
 	m_data[0] = value;
 }
 
-static_assert(sizeof(ScanlineContainer) == ScanlineContainer::size() * sizeof(color), "ScanlineContainer should fit in ScanlineSize");
-static_assert(alignof(ScanlineContainer) == sizeof(color), "ScanlineContainer should be align to sizeof(color)");
+static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color), "ScanlineContainer should fit in ScanlineSize");
+static_assert(alignof(Scanline) == sizeof(color), "ScanlineContainer should be align to sizeof(color)");
+
+template <int linesize>
+void ScanlineContainer<linesize>::interpolate(const ScanlineContainer &start, const ScanlineContainer &end, double p, ScanlineContainer &out) noexcept {
+	using namespace Functional::Color;
+	for (int i = 0; i < size() - 1; ++i) {
+		const auto start_color = start.constData()[i];
+		const auto end_color = end.constData()[i];
+
+		const auto r = static_cast<ccolor>(getR(end_color) * p + (getR(start_color) * (1.0 - p)));
+		const auto g = static_cast<ccolor>(getG(end_color) * p + (getG(start_color) * (1.0 - p)));
+		const auto b = static_cast<ccolor>(getB(end_color) * p + (getB(start_color) * (1.0 - p)));
+
+		out.data()[i] = rgb(r, g, b);
+	}
+}
+
+template <int linesize>
+template <int newsize>
+ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
+	ScanlineContainer<newsize> result;
+
+	const auto osize = static_cast<float>(linesize);
+	const auto nsize = static_cast<float>(newsize);
+
+	for (double i = 0.0; i < osize - 1; i += osize / nsize) {
+	}
+
+	return result;
+}
 }

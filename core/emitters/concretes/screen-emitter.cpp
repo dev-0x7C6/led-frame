@@ -49,7 +49,7 @@ void ScreenEmitter::interrupt() {
 
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
-	Container::ScanlineContainer scanline(0u);
+	Container::Scanline scanline(0u);
 	color *colors = scanline.data();
 	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
 #ifdef X11

@@ -19,7 +19,7 @@ public:
 	void setColor(const QColor &color);
 
 private:
-	Container::ScanlineContainer m_scanline;
+	Container::Scanline m_scanline;
 	QColor m_color;
 };
 }

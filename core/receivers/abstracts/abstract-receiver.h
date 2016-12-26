@@ -29,7 +29,7 @@ protected:
 	QString emitterName() const;
 
 private:
-	Container::ScanlineContainer m_data;
+	Container::Scanline m_data;
 	Corrector::Concrete::CorrectorManager m_correctorManager;
 	std::shared_ptr<Emitter::Interface::IEmitter> m_emitter;
 	QString m_name;

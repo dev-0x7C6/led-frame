@@ -18,7 +18,7 @@ protected:
 	void process(const QVariant &value);
 
 private:
-	Container::ScanlineContainer m_colors;
+	Container::Scanline m_colors;
 	QVariantAnimation m_animation;
 };
 }

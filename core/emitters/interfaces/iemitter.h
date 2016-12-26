@@ -31,8 +31,8 @@ public:
 
 	virtual void setName(const QString &name) = 0;
 
-	void commit(const Container::ScanlineContainer &scanline) noexcept;
-	auto data() const noexcept -> Container::ScanlineContainer;
+	void commit(const Container::Scanline &scanline) noexcept;
+	auto data() const noexcept -> Container::Scanline;
 
 	auto acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter>;
 	auto usages() const noexcept -> int;
@@ -41,7 +41,7 @@ public:
 
 protected:
 	mutable std::mutex m_mutex;
-	Container::ScanlineContainer m_data{0u};
+	Container::Scanline m_data{0u};
 	std::atomic<bool> m_firstFrameReady{false};
 	Functional::ReferenceCounter m_counter{0};
 };
