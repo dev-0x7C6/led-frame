@@ -40,6 +40,7 @@ public:
 public:
 	constexpr static auto fromIndexToPosition(const std::size_t index) noexcept;
 
+	static color interpolation(ccolor start, ccolor end, double p);
 	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, double progress, ScanlineContainer &out) noexcept;
 
 	template <int newsize>
@@ -122,17 +123,22 @@ static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color), "ScanlineCon
 static_assert(alignof(Scanline) == sizeof(color), "ScanlineContainer should be align to sizeof(color)");
 
 template <int linesize>
+color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, double p) {
+	using namespace Functional::Color;
+	const auto r = static_cast<ccolor>(getR(end) * p + (getR(start) * (1.0 - p)));
+	const auto g = static_cast<ccolor>(getG(end) * p + (getG(start) * (1.0 - p)));
+	const auto b = static_cast<ccolor>(getB(end) * p + (getB(start) * (1.0 - p)));
+	return rgb(r, g, b);
+}
+
+template <int linesize>
 void ScanlineContainer<linesize>::interpolate(const ScanlineContainer &start, const ScanlineContainer &end, double p, ScanlineContainer &out) noexcept {
 	using namespace Functional::Color;
-	for (int i = 0; i < size() - 1; ++i) {
-		const auto start_color = start.constData()[i];
-		const auto end_color = end.constData()[i];
-
-		const auto r = static_cast<ccolor>(getR(end_color) * p + (getR(start_color) * (1.0 - p)));
-		const auto g = static_cast<ccolor>(getG(end_color) * p + (getG(start_color) * (1.0 - p)));
-		const auto b = static_cast<ccolor>(getB(end_color) * p + (getB(start_color) * (1.0 - p)));
-
-		out.data()[i] = rgb(r, g, b);
+	for (int i = 0; i < size() - 1; i += 4) {
+		out.data()[i + 0] = interpolation(start.constData()[i + 0], end.constData()[i + 0], p);
+		out.data()[i + 1] = interpolation(start.constData()[i + 1], end.constData()[i + 1], p);
+		out.data()[i + 2] = interpolation(start.constData()[i + 2], end.constData()[i + 2], p);
+		out.data()[i + 3] = interpolation(start.constData()[i + 3], end.constData()[i + 3], p);
 	}
 }
 
@@ -140,7 +146,6 @@ template <int linesize>
 template <int newsize>
 ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
 	ScanlineContainer<newsize> result;
-
 	const auto osize = static_cast<float>(linesize);
 	const auto nsize = static_cast<float>(newsize);
 
