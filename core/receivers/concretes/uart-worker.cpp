@@ -48,11 +48,14 @@ void UartWorker::change(const Scanline &from, std::function<Scanline()> getFrame
 void UartWorker::write(const Scanline &scanline) {
 	m_correctorManager.push();
 	for (const auto &config : m_ribbon) {
-		double step = static_cast<double>(Scanline::line()) / static_cast<double>(config.count() - 1);
+		double factor = static_cast<double>(Scanline::line()) / static_cast<double>(config.count() - 1);
 
 		for (int i = 0; i < config.count(); ++i) {
-			auto index = std::min(static_cast<int>(Scanline::line() - 1), static_cast<int>(i * step));
-			auto color = scanline.constData(config.position())[index];
+			const auto idx1 = std::min(static_cast<int>(Scanline::line() - 1), static_cast<int>(i * factor));
+			const auto idx2 = std::min(static_cast<int>(Scanline::line() - 1), idx1 + 1);
+			const auto rest = (i * factor) - idx1;
+			auto color = Scanline::interpolation(scanline.constData(config.position())[idx1],
+				scanline.constData(config.position())[idx2], rest);
 			m_stream.insert(config.colorFormat(), m_correctorManager.execute(color));
 		}
 	}

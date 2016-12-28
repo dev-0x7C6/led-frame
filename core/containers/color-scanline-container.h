@@ -20,6 +20,7 @@ public:
 	constexpr static auto size() noexcept;
 	constexpr static auto line() noexcept;
 
+	inline auto at(const std::size_t index) const noexcept;
 	inline auto data() noexcept;
 	inline auto constData() const noexcept;
 
@@ -65,6 +66,11 @@ constexpr auto ScanlineContainer<linesize>::size() noexcept { return linesize; }
 
 template <int linesize>
 constexpr auto ScanlineContainer<linesize>::line() noexcept { return linesize / 4; }
+
+template <int linesize>
+auto ScanlineContainer<linesize>::at(const std::size_t index) const noexcept {
+	return m_data.at(index);
+}
 
 template <int linesize>
 auto ScanlineContainer<linesize>::data() noexcept { return m_data.data(); }
@@ -146,10 +152,12 @@ template <int linesize>
 template <int newsize>
 ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
 	ScanlineContainer<newsize> result;
-	const auto osize = static_cast<float>(linesize);
-	const auto nsize = static_cast<float>(newsize);
+	const auto factor = static_cast<float>(linesize) / static_cast<float>(newsize);
 
-	for (double i = 0.0; i < osize - 1; i += osize / nsize) {
+	for (int i = 0; i < newsize; ++i) {
+		const auto idx = factor * i;
+		const auto ret = idx - static_cast<int>(idx);
+		result[i] = interpolation(m_data[static_cast<int>(idx)], m_data[static_cast<int>(idx + 1)], ret);
 	}
 
 	return result;
