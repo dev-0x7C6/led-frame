@@ -58,6 +58,8 @@ if (UNIX AND SUPPORT_RPI)
 	set(rpi-sources
 		core/functionals/captures/dispmanx-screen-capture.cpp
 		core/functionals/captures/dispmanx-screen-capture.h
+		core/functionals/helper/dispmanx-helper.cpp
+		core/functionals/helper/dispmanx-helper.h
 	)
 	set(rpi-libs -lbcm_host)
 	link_directories("/opt/vc/lib")
