@@ -8,11 +8,12 @@
 #include <functional>
 #include <chrono>
 
+using namespace Functional::Helper;
 using namespace Functional::Capture;
 using namespace Functional;
 
 DispmanxScreenCapture::DispmanxScreenCapture()
-		: std::make_unique<Helper::DispmanxHelper>() {
+		: m_helper(std::make_unique<DispmanxHelper>()) {
 }
 
 DispmanxScreenCapture::~DispmanxScreenCapture() = default;
@@ -23,16 +24,13 @@ Enum::ScreenCaptureType DispmanxScreenCapture::type() const {
 
 bool DispmanxScreenCapture::capture(ci32 id) {
 	static_cast<void>(id);
-	return m_helper.capture();
+	return m_helper->capture();
 }
 
-DispmanxScreenCapture::data() const {
-}
+auto DispmanxScreenCapture::width() const noexcept -> u32 { return m_helper->width(); }
 
-u32 DispmanxScreenCapture::width() const override { return m_w; }
+auto DispmanxScreenCapture::height() const noexcept -> u32 { return m_helper->height(); }
 
-u32 DispmanxScreenCapture::height() const override { return m_h; }
-
-ccolor *DispmanxScreenCapture::data() const noexcept {
-	return reinterpret_cast<color *>(m_data);
+auto DispmanxScreenCapture::data() const noexcept -> ccolor * {
+	return reinterpret_cast<color *>(m_helper->data());
 }

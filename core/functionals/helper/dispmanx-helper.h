@@ -3,6 +3,8 @@
 #include "bcm_host.h"
 #include "interface/vmcs_host/vcgencmd.h"
 
+#include <atomic>
+
 namespace Functional {
 namespace Helper {
 
@@ -23,8 +25,8 @@ protected:
 	bool allocate(const DISPMANX_MODEINFO_T &mode) noexcept;
 	void deallocate() noexcept;
 	bool createResource(const DISPMANX_MODEINFO_T &mode) noexcept;
-	bool freeResource() noexcept;
-	bool close() noexcept;
+	void freeResource() noexcept;
+	void close() noexcept;
 
 private:
 	DISPMANX_DISPLAY_HANDLE_T m_display = 0;

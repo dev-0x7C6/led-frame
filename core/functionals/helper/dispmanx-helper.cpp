@@ -9,9 +9,10 @@ using namespace Functional::Helper;
 
 DispmanxHelper::DispmanxHelper() {
 	open();
-	queryMode(m_mode);
-	allocate(m_mode);
-	createResource(m_mode);
+	DISPMANX_MODEINFO_T mode;
+	query(mode);
+	allocate(mode);
+	createResource(mode);
 }
 
 DispmanxHelper::~DispmanxHelper() {
@@ -33,16 +34,16 @@ bool DispmanxHelper::open() noexcept {
 
 bool DispmanxHelper::query(DISPMANX_MODEINFO_T &mode) noexcept {
 	if (m_display == 0) {
-		std::cerr << "rpi: display should be open, but is not!" << std::end;
+		std::cerr << "rpi: display should be open, but is not!" << std::endl;
 		std::this_thread::sleep_for(1s);
 		return false;
 	}
 
-	if (vc_dispmanx_display_get_info(m_display, &mode)) noexcept {
-			std::cerr << "rpi: unable to get display informations." << std::endl;
-			std::this_thread::sleep_for(1s);
-			return false;
-		}
+	if (vc_dispmanx_display_get_info(m_display, &mode)) {
+		std::cerr << "rpi: unable to get display informations." << std::endl;
+		std::this_thread::sleep_for(1s);
+		return false;
+	}
 
 	return true;
 }
@@ -93,7 +94,7 @@ void DispmanxHelper::deallocate() noexcept {
 		std::free(m_data);
 }
 
-bool DispmanxHelper::freeResource() noexcept {
+void DispmanxHelper::freeResource() noexcept {
 	if (m_resource != 0)
 		vc_dispmanx_resource_delete(m_resource);
 }
@@ -134,14 +135,14 @@ bool DispmanxHelper::capture() {
 	}
 
 	VC_RECT_T rect;
-	if (vc_dispmanx_rect_set(&rect, 0, 0, m_mode.width, m_mode.height)) {
+	if (vc_dispmanx_rect_set(&rect, 0, 0, mode.width, mode.height)) {
 		std::cerr << "vc_dispmanx_rect_set failed!" << std::endl;
 		std::this_thread::sleep_for(1s);
 		restartDispmanx();
 		return false;
 	}
 
-	if (vc_dispmanx_resource_read_data(m_resource, &rect, m_data, m_mode.width * 4)) {
+	if (vc_dispmanx_resource_read_data(m_resource, &rect, m_data, mode.width * 4)) {
 		std::cerr << "vc_dispmanx_resource_read_data failed!" << std::endl;
 		std::this_thread::sleep_for(1s);
 		restartDispmanx();
@@ -154,4 +155,4 @@ bool DispmanxHelper::capture() {
 int DispmanxHelper::width() const noexcept { return m_w; }
 int DispmanxHelper::height() const noexcept { return m_h; }
 
-DispmanxHelper::data() const noexcept { return m_data; }
+void *DispmanxHelper::data() const noexcept { return m_data; }
