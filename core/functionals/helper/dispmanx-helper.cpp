@@ -42,7 +42,7 @@ bool DispmanxHelper::query(DISPMANX_MODEINFO_T &mode) noexcept {
 		return false;
 	}
 
-	if (vc_dispmanx_display_get_info(m_display, &mode)) {
+	if (vc_dispmanx_display_get_info(m_display, &mode) < 0) {
 		std::cerr << "rpi: unable to get display informations." << std::endl;
 		std::this_thread::sleep_for(1s);
 		return false;
@@ -131,7 +131,12 @@ bool DispmanxHelper::capture() {
 	}
 
 	DISPMANX_MODEINFO_T mode;
-	query(mode);
+	if (!query(mode)) {
+		std::cerr << "rpi: unable to query display!" << std::endl;
+		std::this_thread::sleep_for(1s);
+		return false;
+	}
+
 	allocate(mode);
 	createResource(mode);
 
