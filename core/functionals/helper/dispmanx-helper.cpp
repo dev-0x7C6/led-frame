@@ -33,6 +33,9 @@ bool DispmanxHelper::open() noexcept {
 }
 
 bool DispmanxHelper::query(DISPMANX_MODEINFO_T &mode) noexcept {
+	mode.width = 0;
+	mode.height = 0;
+
 	if (m_display == 0) {
 		std::cerr << "rpi: display should be open, but is not!" << std::endl;
 		std::this_thread::sleep_for(1s);
@@ -51,8 +54,19 @@ bool DispmanxHelper::query(DISPMANX_MODEINFO_T &mode) noexcept {
 bool DispmanxHelper::allocate(const DISPMANX_MODEINFO_T &mode) noexcept {
 	const auto size = mode.width * mode.height * 4;
 
-	if (m_data == nullptr)
+	if (size != m_allocated) {
+		std::free(m_data);
+		m_data = nullptr;
+	}
+
+	if (m_data == nullptr) {
+		std::cout << "rpi: allocating memory for framebuffer:" << std::endl;
+		std::cout << "rpi: w: " << mode.width << std::endl;
+		std::cout << "rpi: h: " << mode.height << std::endl;
+		std::cout << "rpi: size: " << size << std::endl
+				  << std::endl;
 		m_data = std::malloc(size);
+	}
 
 	if (size != m_allocated)
 		m_data = std::realloc(m_data, size);
@@ -92,16 +106,19 @@ bool DispmanxHelper::createResource(const DISPMANX_MODEINFO_T &mode) noexcept {
 void DispmanxHelper::deallocate() noexcept {
 	if (m_data != nullptr)
 		std::free(m_data);
+	m_data = nullptr;
 }
 
 void DispmanxHelper::freeResource() noexcept {
 	if (m_resource != 0)
 		vc_dispmanx_resource_delete(m_resource);
+	m_resource = 0;
 }
 
 void DispmanxHelper::close() noexcept {
 	if (m_display != 0)
 		vc_dispmanx_display_close(m_display);
+	m_display = 0;
 }
 
 bool DispmanxHelper::capture() {
