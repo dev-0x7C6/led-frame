@@ -86,8 +86,6 @@ void ScreenEmitter::run() {
 		}
 
 		commit(scanline);
-#ifndef RPI
 		loop.wait(framerate());
-#endif
 	};
 }
