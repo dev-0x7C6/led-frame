@@ -76,7 +76,7 @@ void ScreenEmitter::run() {
 		if (!screen->capture(m_screenId))
 			continue;
 
-		processor.process(screen->data(), screen->width(), screen->height(), 4);
+		processor.process(screen->data(), screen->width(), screen->height(), -1);
 
 		for (std::size_t i = 0; i < 32; ++i) {
 			colors[i] = processor.get(31 - i, 0);

@@ -11,12 +11,17 @@ using Matrix = std::array<std::array<type, columns>, rows>;
 template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
-	void process(ccolor *data, i32 w, i32 h, ci32 step = 4, bool partial = true) {
+	void process(ccolor *data, i32 w, i32 h, i32 step = -1, bool partial = true) {
 		clear();
 		const auto sx = w / columns;
 		const auto sy = h / rows;
 		w = sx * columns;
 		h = sy * rows;
+
+		if (step == -1)
+		{
+			step = (sx * sy) / 200;
+		}
 
 		for (i32 y = 0; y < h; y += step) {
 			const auto py = y / sy;
