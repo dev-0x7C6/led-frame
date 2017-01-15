@@ -11,21 +11,23 @@ using Matrix = std::array<std::array<type, columns>, rows>;
 template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
-	void process(ccolor *data, cu32 w, cu32 h, cu32 step = 4, bool partial = true) {
+	void process(ccolor *data, i32 w, i32 h, ci32 step = 4, bool partial = true) {
 		clear();
 		const auto sx = w / columns;
 		const auto sy = h / rows;
+		w = sx * columns;
+		h = sy * rows;
 
-		for (auto y = 0u; y < h; y += step) {
+		for (i32 y = 0; y < h; y += step) {
 			const auto py = y / sy;
-			auto &row = m_matrix.at(std::min(columns - 1, py));
+			auto &row = m_matrix.at(py);
 
-			for (auto x = 0u; x < w; x += step) {
+			for (i32 x = 0; x < w; x += step) {
 				const auto px = x / sx;
 				if (partial && py > 0 && py < (rows - 1) && px > 0 && px < (columns - 1))
 					x = sx * 31;
 
-				row.at(std::min(rows - 1, px)) += data[x];
+				row.at(px) += data[x];
 			}
 			data += w * step;
 		}
