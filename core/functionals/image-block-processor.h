@@ -11,57 +11,53 @@ using Matrix = std::array<std::array<type, columns>, rows>;
 template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
-	void process(ccolor *data, i32 w, i32 h, i32 step = -1, bool partial = true) {
+	void process(ccolor *data, i32 w, i32 h, u32 step = 0, bool partial = true) {
 		clear();
 
 		const auto sx = w / columns;
 		const auto sy = h / rows;
-		const auto wdiff = w - (sx * columns);
+		const auto scanline_size = static_cast<u32>(w);
 		w = sx * columns;
 		h = sy * rows;
 
-		if (step == -1) {
-			step = (sx * sy) / 200;
+		if (step == 0) {
+			step = std::max(1u, (sx * sy) / 200u);
 		}
 
-		for (i32 y = 0; y < sy; y += step) {
-			auto &row = m_matrix[0];
-			for (i32 cx = 0; cx < rows; ++cx) {
-				for (i32 x = 0; x < sx; x += step) {
-					row[cx] += data[x];
+		for (u16 y = 0; y < sx; y += step) {
+			auto &row = m_matrix[y / sy];
+			for (u16 p = 0; p < columns; ++p) {
+				auto &cell = row[p];
+				for (u16 x = 0; x < sx; x += step) {
+					cell += data[p * x];
 				}
-				data += sx;
 			}
-			data += wdiff;
-		}
-		data += w * (step - 1);
-
-		for (i32 cy = 1; cy < columns - 1; ++cy) {
-			for (i32 y = 0; y < sy; y += step) {
-				auto &row = m_matrix[cy];
-
-				for (i32 x = 0; x < sx; x += step) {
-					row[0] += data[x];
-				}
-				data += sx * 31;
-				for (i32 x = 0; x < sx; x += step) {
-					row[31] += data[x];
-				}
-				data += sx;
-				data += wdiff;
-			}
-			data += w * (step - 1);
+			data += scanline_size * step;
 		}
 
-		for (i32 y = 0; y < sy; y += step) {
-			auto &row = m_matrix[31];
-			for (i32 cx = 0; cx < rows; ++cx) {
-				for (i32 x = 0; x < sx; x += step) {
-					row[cx] += data[x];
-				}
-				data += sx;
+		for (u16 y = sx; y < h - sx; y += step) {
+			auto &row = m_matrix[y / sy];
+			auto &cell = row[0];
+			for (u16 x = 0; x < sx; x += step) {
+				cell += data[x];
 			}
-			data += wdiff;
+
+			auto &cell2 = row[columns - 1];
+			for (u16 x = 0; x < sx; x += step) {
+				cell2 += data[x * (columns - 1)];
+			}
+			data += scanline_size * step;
+		}
+
+		for (u16 y = h - sx; y < h; y += step) {
+			auto &row = m_matrix[y / sy];
+			for (u16 p = 0; p < columns; ++p) {
+				auto &cell = row[p];
+				for (u16 x = 0; x < sx; x += step) {
+					cell += data[p * x];
+				}
+			}
+			data += scanline_size * step;
 		}
 
 		/*
