@@ -13,6 +13,58 @@ class ImageBlockProcessor final {
 public:
 	void process(ccolor *data, i32 w, i32 h, i32 step = -1, bool partial = true) {
 		clear();
+
+		const auto sx = w / columns;
+		const auto sy = h / rows;
+		const auto wdiff = w - (sx * columns);
+		w = sx * columns;
+		h = sy * rows;
+
+		if (step == -1) {
+			step = (sx * sy) / 200;
+		}
+
+		for (i32 y = 0; y < sy; y += step) {
+			auto &row = m_matrix[0];
+			for (i32 cx = 0; cx < rows; ++cx) {
+				for (i32 x = 0; x < sx; x += step) {
+					row[cx] += data[x];
+				}
+				data += sx;
+			}
+			data += wdiff;
+		}
+		data += w * (step - 1);
+
+		for (i32 cy = 1; cy < columns - 1; ++cy) {
+			for (i32 y = 0; y < sy; y += step) {
+				auto &row = m_matrix[cy];
+
+				for (i32 x = 0; x < sx; x += step) {
+					row[0] += data[x];
+				}
+				data += sx * 31;
+				for (i32 x = 0; x < sx; x += step) {
+					row[31] += data[x];
+				}
+				data += sx;
+				data += wdiff;
+			}
+			data += w * (step - 1);
+		}
+
+		for (i32 y = 0; y < sy; y += step) {
+			auto &row = m_matrix[31];
+			for (i32 cx = 0; cx < rows; ++cx) {
+				for (i32 x = 0; x < sx; x += step) {
+					row[cx] += data[x];
+				}
+				data += sx;
+			}
+			data += wdiff;
+		}
+
+		/*
 		const auto sx = w / columns;
 		const auto sy = h / rows;
 		w = sx * columns;
@@ -36,6 +88,7 @@ public:
 			}
 			data += w * step;
 		}
+*/
 	}
 
 	void clear() {
