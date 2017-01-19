@@ -37,6 +37,8 @@ public:
 		return Color::rgb(avg_b, avg_g, avg_r);
 	}
 
+	auto count() const noexcept { return m_counter; }
+
 private:
 	u32 m_r = 0;
 	u32 m_g = 0;

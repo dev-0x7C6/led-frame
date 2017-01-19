@@ -36,6 +36,7 @@ find_package(Qt5Network)
 find_package(Qt5SerialPort)
 find_package(Qt5WebSockets)
 find_package(Qt5Widgets)
+find_package(GTest)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
@@ -249,10 +250,26 @@ set(sources
 	main.cpp
 	qml.qrc
 	resources/resource.qrc
-
 )
 
+
+set(sources_ut
+	core/functionals/image-block-processor.h
+	core/functionals/color-averaging-buffer.h
+	ut/image-block-processing-tests.cpp
+	ut/main.cpp
+)
+
+
 add_executable(led-frame ${sources} ${gui-sources} ${rpi-sources} ${x11-sources})
+add_executable(led-frame-ut ${sources_ut})
+
+target_link_libraries(led-frame-ut
+	Qt5::Core
+	${GTEST_LIBRARIES}
+	-lgmock
+	-lpthread
+)
 
 if (UNIX AND SUPPORT_X11)
 	target_compile_definitions(led-frame PRIVATE X11)
