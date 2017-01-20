@@ -293,7 +293,7 @@ target_link_libraries(led-frame
 	"-lpthread"
 )
 
-if (UNIX AND NOT SUPPORT_RPI)
+if (GTEST_FOUND)
 	add_executable(led-frame-ut ${sources_ut})
 
 	target_link_libraries(led-frame-ut
@@ -302,14 +302,14 @@ if (UNIX AND NOT SUPPORT_RPI)
 		-lgmock
 		-lpthread
 	)
-
-	add_executable(led-frame-benchmark ${sources_bench})
-
-	target_link_libraries(led-frame-benchmark
-		Qt5::Core
-		-lbenchmark
-		-lpthread
-	)
 endif()
+
+add_executable(led-frame-benchmark ${sources_bench})
+
+target_link_libraries(led-frame-benchmark
+	Qt5::Core
+	-lbenchmark
+	-lpthread
+)
 
 install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX})
