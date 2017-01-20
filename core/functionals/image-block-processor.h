@@ -66,6 +66,11 @@ public:
 		}
 		scanWhole(rowCount, b);
 
+		l[0u] = t[0u];
+		r[0u] = t[columnCount];
+		l[columnCount] = b[0];
+		r[columnCount] = b[columnCount];
+
 		m_t = t;
 		m_b = b;
 		m_l = l;
