@@ -80,13 +80,13 @@ void ScreenEmitter::run() {
 
 		for (std::size_t i = 0u; i < 32u; ++i) {
 #ifdef RPI
-			colors[i] = processor.top().at(31 - i).bgr();
-			colors[i + 32] = processor.left().at(i).bgr();
+			colors[i] = processor.left().at(31 - i).bgr();
+			colors[i + 32] = processor.top().at(i).bgr();
 			colors[i + 64] = processor.right().at(i).bgr();
 			colors[i + 96] = processor.bottom().at(31 - i).bgr();
 #else
-			colors[i] = processor.top().at(31 - i)();
-			colors[i + 32] = processor.left().at(i)();
+			colors[i] = processor.left().at(31 - i)();
+			colors[i + 32] = processor.top().at(i)();
 			colors[i + 64] = processor.right().at(i)();
 			colors[i + 96] = processor.bottom().at(31 - i)();
 #endif
