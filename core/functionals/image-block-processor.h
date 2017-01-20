@@ -14,8 +14,6 @@ template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
 	void process(ccolor *data, u32 w, u32 h, u32 step = 0) {
-		clear();
-
 		constexpr auto columnCount = columns - 1u;
 		constexpr auto rowCount = rows - 1u;
 		const auto scanline = w;
@@ -29,14 +27,17 @@ public:
 			step = std::max(1u, (bx * by) / 200);
 		}
 
-		auto scanWhole = [&](cu32 index) {
-			const ccolor *source = data + (index * by * scanline);
-			auto &row = m_matrix[index];
+		std::array<type, columns> t;
+		std::array<type, columns> b;
+		std::array<type, columns> l;
+		std::array<type, columns> r;
 
+		auto scanWhole = [&](cu32 index, std::array<type, columns> &array) {
+			ccolor *source = data + (index * by * scanline);
 			for (u32 y = 0u; y < by; y += step) {
 				for (u32 cx = 0u; cx <= columnCount; ++cx) {
 					for (u32 x = 0u; x < bx; x += step) {
-						row[cx] += source[x];
+						array[cx] += source[x];
 					}
 					source += bx;
 				}
@@ -44,49 +45,45 @@ public:
 			}
 		};
 
-		auto scanEdge = [&](cu32 index) {
+		auto scanEdge = [&](cu32 index, type &lhs, type &rhs) {
 			const ccolor *source = data + (index * by * scanline);
-			auto &row = m_matrix[index];
-
 			for (u32 y = 0u; y < by; y += step) {
 				for (u32 x = 0u; x < bx; x += step) {
-					row[0u] += source[x];
+					lhs += source[x];
 				}
 
 				source += bx * columnCount;
 				for (u32 x = 0u; x < bx; x += step) {
-					row[columnCount] += source[x];
+					rhs += source[x];
 				}
 				source += bx + diff;
 			}
 		};
 
-		scanWhole(0u);
-		for (u32 i = 1u; i < rowCount; ++i)
-			scanEdge(i);
-		scanWhole(rowCount);
-	}
+		scanWhole(0u, t);
+		for (u32 i = 1u; i < rowCount; ++i) {
+			scanEdge(i, l[i], r[i]);
+		}
+		scanWhole(rowCount, b);
 
-	void clear() {
-		for (auto &row : m_matrix)
-			for (auto &colorAvg : row)
-				colorAvg.clear();
+		m_t = t;
+		m_b = b;
+		m_l = l;
+		m_r = r;
 	}
 
 	auto columnCount() const noexcept { return columns; }
 	auto rowCount() const noexcept { return rows; }
 
-	const auto &matrix() const noexcept { return m_matrix; }
-
-	color get(std::size_t row, std::size_t column) const noexcept {
-#ifdef RPI
-		return m_matrix.at(row).at(column).bgr();
-#else
-		return m_matrix.at(row).at(column)();
-#endif
-	}
+	auto top() const noexcept { return m_t; }
+	auto bottom() const noexcept { return m_b; }
+	auto left() const noexcept { return m_l; }
+	auto right() const noexcept { return m_r; }
 
 private:
-	Matrix<type, rows, columns> m_matrix;
+	std::array<type, columns> m_t;
+	std::array<type, columns> m_b;
+	std::array<type, columns> m_l;
+	std::array<type, columns> m_r;
 };
 }

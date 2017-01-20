@@ -48,18 +48,21 @@ TEST(ImageBlockProcessor, checkingEmptySpace) {
 
 	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
 	processor.process(scene.data(), w, h, 4);
+	const auto count = processor.top().at(0).count();
 
-	const auto columns = processor.columnCount() - 1;
-	const auto rows = processor.rowCount() - 1;
-	const auto count = processor.matrix().at(0).at(0).count();
+	for (const auto &value : processor.top()) {
+		EXPECT_EQ(value.count(), count);
+	}
 
-	for (u32 y = 0; y <= rows; ++y)
-		for (u32 x = 0; x <= columns; ++x) {
-			if (y > 0 && y < rows && x > 0 && x < columns) {
-				EXPECT_EQ(processor.matrix().at(y).at(x).count(), 0);
-			} else {
-				std::cout << "x: " << x << ", y: " << y << std::endl;
-				EXPECT_EQ(processor.matrix().at(y).at(x).count(), count);
-			}
-		}
+	for (const auto &value : processor.bottom()) {
+		EXPECT_EQ(value.count(), count);
+	}
+
+	for (const auto &value : processor.left()) {
+		EXPECT_EQ(value.count(), count);
+	}
+
+	for (const auto &value : processor.right()) {
+		EXPECT_EQ(value.count(), count);
+	}
 }
