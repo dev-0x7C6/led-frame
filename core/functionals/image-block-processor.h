@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cmath>
 #include <core/types.h>
 
 #include <iostream>
@@ -23,9 +24,7 @@ public:
 		w = bx * columns;
 		h = by * rows;
 
-		if (step == 0) {
-			step = std::max(1u, (bx * by) / 200);
-		}
+		step = (step == 0) ? step = std::max(1u, static_cast<u32>(std::sqrt(std::sqrt(bx * by)))) : step;
 
 		std::array<type, columns> t;
 		std::array<type, columns> b;
@@ -76,6 +75,7 @@ public:
 		m_l = l;
 		m_r = r;
 	}
+
 
 	auto columnCount() const noexcept { return columns; }
 	auto rowCount() const noexcept { return rows; }

@@ -36,20 +36,48 @@ private:
 	u32 m_size = 0;
 };
 
-static void bm_image_block_processor_process(benchmark::State &state) {
-	constexpr auto w = 1920u;
-	constexpr auto h = 1080u;
+#include <iostream>
+
+template <cu32 w, cu32 h, cu32 step = 0>
+inline static void image_processor_process(benchmark::State &state) {
 	constexpr auto matchColor = 0xffffffu;
 
 	ColorScene scene(w, h);
 	scene.fill(matchColor);
 
+	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
 	while (state.KeepRunning()) {
-		ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
-		processor.process(scene.data(), w, h, 4);
+		processor.process(scene.data(), w, h, step);
+	}
+
+	if (processor.top().at(0).count() == 0)
+	{
+		std::terminate();
 	}
 }
 
-BENCHMARK(bm_image_block_processor_process);
+static void image_block_processor_process_480p_auto(benchmark::State &state) { image_processor_process<640, 480>(state); }
+static void image_block_processor_process_720p_auto(benchmark::State &state) { image_processor_process<1280, 720>(state); }
+static void image_block_processor_process_1080p_auto(benchmark::State &state) { image_processor_process<1920, 1080>(state); }
+static void image_block_processor_process_4K_auto(benchmark::State &state) { image_processor_process<3840, 2160>(state); }
+static void image_block_processor_process_8K_auto(benchmark::State &state) { image_processor_process<7680, 4320>(state); }
+
+static void image_block_processor_process_480p_fixed(benchmark::State &state) { image_processor_process<640, 480, 4>(state); }
+static void image_block_processor_process_720p_fixed(benchmark::State &state) { image_processor_process<1280, 720, 4>(state); }
+static void image_block_processor_process_1080p_fixed(benchmark::State &state) { image_processor_process<1920, 1080, 4>(state); }
+static void image_block_processor_process_4K_fixed(benchmark::State &state) { image_processor_process<3840, 2160, 4>(state); }
+static void image_block_processor_process_8K_fixed(benchmark::State &state) { image_processor_process<7680, 4320, 4>(state); }
+
+BENCHMARK(image_block_processor_process_480p_auto);
+BENCHMARK(image_block_processor_process_720p_auto);
+BENCHMARK(image_block_processor_process_1080p_auto);
+BENCHMARK(image_block_processor_process_4K_auto);
+BENCHMARK(image_block_processor_process_8K_auto);
+
+BENCHMARK(image_block_processor_process_480p_fixed);
+BENCHMARK(image_block_processor_process_720p_fixed);
+BENCHMARK(image_block_processor_process_1080p_fixed);
+BENCHMARK(image_block_processor_process_4K_fixed);
+BENCHMARK(image_block_processor_process_8K_fixed);
 
 BENCHMARK_MAIN();
