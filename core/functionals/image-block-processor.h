@@ -45,16 +45,17 @@ public:
 
 		auto scanEdge = [&](cu32 index, type &lhs, type &rhs) noexcept {
 			const ccolor *source = data + (index * by * scanline);
+			const auto skip = bx * columnCount;
+			const auto tail = bx + diff;
 			for (u32 y = 0u; y < by; y += step) {
-				for (u32 x = 0u; x < bx; x += step) {
+				for (u32 x = 0u; x < bx; x += step)
 					lhs += source[x];
-				}
 
-				source += bx * columnCount;
-				for (u32 x = 0u; x < bx; x += step) {
+				source += skip;
+				for (u32 x = 0u; x < bx; x += step)
 					rhs += source[x];
-				}
-				source += bx + diff;
+
+				source += tail;
 			}
 		};
 
