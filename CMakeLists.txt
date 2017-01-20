@@ -252,7 +252,6 @@ set(sources
 	resources/resource.qrc
 )
 
-
 set(sources_ut
 	core/functionals/image-block-processor.h
 	core/functionals/color-averaging-buffer.h
@@ -260,16 +259,11 @@ set(sources_ut
 	ut/main.cpp
 )
 
+set(sources_bench
+	bench/main.cpp
+)
 
 add_executable(led-frame ${sources} ${gui-sources} ${rpi-sources} ${x11-sources})
-add_executable(led-frame-ut ${sources_ut})
-
-target_link_libraries(led-frame-ut
-	Qt5::Core
-	${GTEST_LIBRARIES}
-	-lgmock
-	-lpthread
-)
 
 if (UNIX AND SUPPORT_X11)
 	target_compile_definitions(led-frame PRIVATE X11)
@@ -297,5 +291,24 @@ target_link_libraries(led-frame
 	${x11-libs}
 	"-lpthread"
 )
+
+if (UNIX AND NOT SUPPORT_RPI)
+	add_executable(led-frame-ut ${sources_ut})
+
+	target_link_libraries(led-frame-ut
+		Qt5::Core
+		${GTEST_LIBRARIES}
+		-lgmock
+		-lpthread
+	)
+
+	add_executable(led-frame-benchmark ${sources_bench})
+
+	target_link_libraries(led-frame-benchmark
+		Qt5::Core
+		-lbenchmark
+		-lpthread
+	)
+endif()
 
 install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX})

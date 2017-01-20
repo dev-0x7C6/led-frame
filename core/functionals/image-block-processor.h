@@ -13,10 +13,11 @@ using Matrix = std::array<std::array<type, columns>, rows>;
 template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
-	void process(ccolor *data, u32 w, u32 h, u32 step = 0, bool partial = true) {
+	void process(ccolor *data, u32 w, u32 h, u32 step = 0) {
 		clear();
 
-		const auto size = static_cast<u32>(w * h);
+		constexpr auto columnCount = columns - 1u;
+		constexpr auto rowCount = rows - 1u;
 		const auto scanline = w;
 		const auto bx = w / columns;
 		const auto by = h / rows;
@@ -28,34 +29,42 @@ public:
 			step = std::max(1u, (bx * by) / 200);
 		}
 
-		for (u32 cy = 0u; cy < rows; ++cy) {
-			const ccolor *source = data + (cy * by * scanline);
-			auto &row = m_matrix[cy];
+		auto scanWhole = [&](cu32 index) {
+			const ccolor *source = data + (index * by * scanline);
+			auto &row = m_matrix[index];
 
-			if (cy > 0u && cy < rows - 1) {
-				for (u32 y = 0u; y < by; y += step) {
+			for (u32 y = 0u; y < by; y += step) {
+				for (u32 cx = 0u; cx <= columnCount; ++cx) {
 					for (u32 x = 0u; x < bx; x += step) {
-						row[0] += source[x];
+						row[cx] += source[x];
 					}
-
-					source += bx * (columns - 1);
-					for (u32 x = 0u; x < bx; x += step) {
-						row[columns - 1] += source[x];
-					}
-					source += bx + diff;
+					source += bx;
 				}
-			} else {
-				for (u32 y = 0u; y < by; y += step) {
-					for (u32 cx = 0u; cx < columns; ++cx) {
-						for (u32 x = 0u; x < bx; x += step) {
-							row[cx] += source[x];
-						}
-						source += bx;
-					}
-					source += diff;
-				}
+				source += diff;
 			}
-		}
+		};
+
+		auto scanEdge = [&](cu32 index) {
+			const ccolor *source = data + (index * by * scanline);
+			auto &row = m_matrix[index];
+
+			for (u32 y = 0u; y < by; y += step) {
+				for (u32 x = 0u; x < bx; x += step) {
+					row[0u] += source[x];
+				}
+
+				source += bx * columnCount;
+				for (u32 x = 0u; x < bx; x += step) {
+					row[columnCount] += source[x];
+				}
+				source += bx + diff;
+			}
+		};
+
+		scanWhole(0u);
+		for (u32 i = 1u; i < rowCount; ++i)
+			scanEdge(i);
+		scanWhole(rowCount);
 	}
 
 	void clear() {
