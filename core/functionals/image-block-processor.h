@@ -24,27 +24,26 @@ public:
 		w = bx * columns;
 		h = by * rows;
 
-		step = (step == 0) ? step = std::max(1u, static_cast<u32>(std::sqrt(std::sqrt(bx * by)))) : step;
+		step = (step == 0) ? std::max(1u, static_cast<u32>(std::sqrt(std::sqrt(bx * by)))) : step;
 
-		std::array<type, columns> t;
-		std::array<type, columns> b;
 		std::array<type, columns> l;
 		std::array<type, columns> r;
 
-		auto scanWhole = [&](cu32 index, std::array<type, columns> &array) {
+		auto scanWhole = [&](cu32 index) noexcept {
+			std::array<type, columns> line;
 			ccolor *source = data + (index * by * scanline);
 			for (u32 y = 0u; y < by; y += step) {
 				for (u32 cx = 0u; cx <= columnCount; ++cx) {
-					for (u32 x = 0u; x < bx; x += step) {
-						array[cx] += source[x];
-					}
+					for (u32 x = 0u; x < bx; x += step)
+						line[cx] += source[x];
 					source += bx;
 				}
 				source += diff;
 			}
+			return line;
 		};
 
-		auto scanEdge = [&](cu32 index, type &lhs, type &rhs) {
+		auto scanEdge = [&](cu32 index, type &lhs, type &rhs) noexcept {
 			const ccolor *source = data + (index * by * scanline);
 			for (u32 y = 0u; y < by; y += step) {
 				for (u32 x = 0u; x < bx; x += step) {
@@ -59,23 +58,20 @@ public:
 			}
 		};
 
-		scanWhole(0u, t);
+		m_t = scanWhole(0u);
 		for (u32 i = 1u; i < rowCount; ++i) {
 			scanEdge(i, l[i], r[i]);
 		}
-		scanWhole(rowCount, b);
+		m_b = scanWhole(rowCount);
 
-		l[0u] = t[0u];
-		r[0u] = t[columnCount];
-		l[columnCount] = b[0];
-		r[columnCount] = b[columnCount];
+		l[0u] = m_t[0u];
+		r[0u] = m_t[columnCount];
+		l[columnCount] = m_b[0];
+		r[columnCount] = m_b[columnCount];
 
-		m_t = t;
-		m_b = b;
 		m_l = l;
 		m_r = r;
 	}
-
 
 	auto columnCount() const noexcept { return columns; }
 	auto rowCount() const noexcept { return rows; }
