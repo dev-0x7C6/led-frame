@@ -1,6 +1,5 @@
 #include "screen-emitter.h"
 
-#include <core/containers/color-scanline-container.h>
 #include <core/debug.h>
 #include <core/factories/screen-capture-factory.h>
 #include <core/functionals/color-averaging-buffer.h>
@@ -49,7 +48,7 @@ void ScreenEmitter::interrupt() {
 
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
-	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
+	ImageBlockProcessor<ColorAveragingBuffer, 16, 32> processor;
 #ifdef X11
 	auto screen = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
 #endif
