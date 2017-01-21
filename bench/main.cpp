@@ -40,18 +40,17 @@ private:
 
 template <cu32 w, cu32 h, cu32 step = 0>
 inline static void image_processor_process(benchmark::State &state) {
-	constexpr auto matchColor = 0xffffffu;
+	constexpr auto matchColor = 0xffffffffu;
 
 	ColorScene scene(w, h);
 	scene.fill(matchColor);
 
-	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
+	ImageBlockProcessor<ColorAveragingBuffer, 16, 24> processor;
 	while (state.KeepRunning()) {
 		processor.process(scene.data(), w, h, step);
 	}
 
-	if (processor.top().at(0).count() == 0)
-	{
+	if (processor.top().at(0).count() == 0) {
 		std::terminate();
 	}
 }
@@ -62,11 +61,11 @@ static void image_block_processor_process_1080p_auto(benchmark::State &state) { 
 static void image_block_processor_process_4K_auto(benchmark::State &state) { image_processor_process<3840, 2160>(state); }
 static void image_block_processor_process_8K_auto(benchmark::State &state) { image_processor_process<7680, 4320>(state); }
 
-static void image_block_processor_process_480p_fixed(benchmark::State &state) { image_processor_process<640, 480, 4>(state); }
-static void image_block_processor_process_720p_fixed(benchmark::State &state) { image_processor_process<1280, 720, 4>(state); }
-static void image_block_processor_process_1080p_fixed(benchmark::State &state) { image_processor_process<1920, 1080, 4>(state); }
-static void image_block_processor_process_4K_fixed(benchmark::State &state) { image_processor_process<3840, 2160, 4>(state); }
-static void image_block_processor_process_8K_fixed(benchmark::State &state) { image_processor_process<7680, 4320, 4>(state); }
+static void image_block_processor_process_480p_fixed(benchmark::State &state) { image_processor_process<640, 480, 1>(state); }
+static void image_block_processor_process_720p_fixed(benchmark::State &state) { image_processor_process<1280, 720, 1>(state); }
+static void image_block_processor_process_1080p_fixed(benchmark::State &state) { image_processor_process<1920, 1080, 1>(state); }
+static void image_block_processor_process_4K_fixed(benchmark::State &state) { image_processor_process<3840, 2160, 1>(state); }
+static void image_block_processor_process_8K_fixed(benchmark::State &state) { image_processor_process<7680, 4320, 1>(state); }
 
 BENCHMARK(image_block_processor_process_480p_auto);
 BENCHMARK(image_block_processor_process_720p_auto);

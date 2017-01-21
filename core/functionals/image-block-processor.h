@@ -4,8 +4,6 @@
 #include <cmath>
 #include <core/types.h>
 
-#include <iostream>
-
 namespace Functional {
 
 template <typename type, u32 rows, u32 columns>
@@ -20,7 +18,8 @@ public:
 		const auto scanline = w;
 		const auto bx = w / columns;
 		const auto by = h / rows;
-		const auto diff = w - (bx * columns);
+		const auto w_diff = w - (bx * columns);
+		const auto h_diff = h - (by * rows);
 		w = bx * columns;
 		h = by * rows;
 
@@ -29,41 +28,41 @@ public:
 		std::array<type, columns> l;
 		std::array<type, columns> r;
 
-		auto scanWhole = [&](cu32 index) noexcept {
+		auto scanWhole = [&](cu32 index, cu32 skip = 0) noexcept {
 			std::array<type, columns> line;
-			ccolor *source = data + (index * by * scanline);
+			ccolor *source = const_cast<color *>(data + (index * by * scanline) + skip);
 			for (u32 y = 0u; y < by; y += step) {
 				for (u32 cx = 0u; cx <= columnCount; ++cx) {
 					for (u32 x = 0u; x < bx; x += step)
 						line[cx] += source[x];
 					source += bx;
 				}
-				source += diff;
+				source += w_diff;
+				source += scanline * (step - 1);
 			}
 			return line;
 		};
 
-		auto scanEdge = [&](cu32 index, type &lhs, type &rhs) noexcept {
-			const ccolor *source = data + (index * by * scanline);
-			const auto skip = bx * columnCount;
-			const auto tail = bx + diff;
+		auto scanEdge = [&](cu32 index, type & lhs, type & rhs, cu32 skip = 0) noexcept {
+			ccolor *source = data + (index * by * scanline) + skip;
 			for (u32 y = 0u; y < by; y += step) {
 				for (u32 x = 0u; x < bx; x += step)
 					lhs += source[x];
 
-				source += skip;
+				source += bx * columnCount;
 				for (u32 x = 0u; x < bx; x += step)
 					rhs += source[x];
 
-				source += tail;
+				source += bx + w_diff;
+				source += scanline * (step - 1);
 			}
 		};
 
 		m_t = scanWhole(0u);
 		for (u32 i = 1u; i < rowCount; ++i) {
-			scanEdge(i, l[i], r[i]);
+			scanEdge(i, l[i], r[i], h_diff / 2 * scanline);
 		}
-		m_b = scanWhole(rowCount);
+		m_b = scanWhole(rowCount, h_diff * scanline);
 
 		l[0u] = m_t[0u];
 		r[0u] = m_t[columnCount];
