@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <array>
+#include <functional>
 
 namespace Container {
 
@@ -37,6 +38,7 @@ public:
 	inline bool operator!=(const ScanlineContainer &other) const noexcept;
 	inline void operator<<(const color value) noexcept;
 	inline void operator>>(const color value) noexcept;
+	inline color &operator[](u32 index) noexcept;
 
 public:
 	constexpr static auto fromIndexToPosition(const std::size_t index) noexcept;
@@ -125,6 +127,11 @@ void ScanlineContainer<linesize>::operator>>(const color value) noexcept {
 	m_data[0] = value;
 }
 
+template <int linesize>
+color &ScanlineContainer<linesize>::operator[](u32 index) noexcept {
+	return m_data[index];
+}
+
 static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color), "ScanlineContainer should fit in ScanlineSize");
 static_assert(alignof(Scanline) == sizeof(color), "ScanlineContainer should be align to sizeof(color)");
 
@@ -158,6 +165,21 @@ ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
 		const auto idx = factor * i;
 		const auto ret = idx - static_cast<int>(idx);
 		result[i] = interpolation(m_data[static_cast<int>(idx)], m_data[static_cast<int>(idx + 1)], ret);
+	}
+
+	return result;
+}
+
+template <u32 oldsize, u32 newsize>
+inline static std::array<color, newsize> createInterpolatedColorArray(const std::function<color(cu32)> &getColor) {
+	constexpr auto factor = static_cast<double>(oldsize) / static_cast<double>(newsize);
+	std::array<color, newsize> result;
+
+	for (u32 i = 0u; i < newsize; ++i) {
+		const auto curr_idx = std::min(oldsize - 1, static_cast<u32>(i * factor));
+		const auto next_idx = std::min(oldsize - 1, curr_idx + 1);
+		const auto ret = factor * i - static_cast<int>(i * factor);
+		result[i] = Scanline::interpolation(getColor(curr_idx), getColor(next_idx), ret);
 	}
 
 	return result;

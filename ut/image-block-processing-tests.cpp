@@ -41,28 +41,15 @@ private:
 TEST(ImageBlockProcessor, checkingEmptySpace) {
 	constexpr auto w = 1920u;
 	constexpr auto h = 1080u;
-	constexpr auto matchColor = 0xffffffu;
+	constexpr auto matchColor = 0xff0000u;
 
 	ColorScene scene(w, h);
 	scene.fill(matchColor);
 
 	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
 	processor.process(scene.data(), w, h, 4);
-	const auto count = processor.top().at(0).count();
 
-	for (const auto &value : processor.top()) {
-		EXPECT_EQ(value.count(), count);
-	}
-
-	for (const auto &value : processor.bottom()) {
-		EXPECT_EQ(value.count(), count);
-	}
-
-	for (const auto &value : processor.left()) {
-		EXPECT_EQ(value.count(), count);
-	}
-
-	for (const auto &value : processor.right()) {
-		EXPECT_EQ(value.count(), count);
+	for (u32 i = 0u; i < processor.output().size(); ++i) {
+		EXPECT_EQ(processor.output().at(i), 0xff0000u);
 	}
 }

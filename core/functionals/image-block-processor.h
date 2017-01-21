@@ -4,6 +4,8 @@
 #include <cmath>
 #include <core/types.h>
 
+#include <core/containers/color-scanline-container.h>
+
 namespace Functional {
 
 template <typename type, u32 rows, u32 columns>
@@ -58,33 +60,41 @@ public:
 			}
 		};
 
-		m_t = scanWhole(0u);
-		for (u32 i = 1u; i < rowCount; ++i) {
-			scanEdge(i, l[i], r[i], h_diff / 2 * scanline);
+		auto t = scanWhole(0u);
+		for (u32 i = 0; i < rowCount - 1; ++i)
+			scanEdge(i + 1, l[i], r[i], h_diff / 2 * scanline);
+		auto b = scanWhole(rowCount, h_diff * scanline);
+
+#ifdef RPI
+		auto tc = Container::createInterpolatedColorArray<columns, 32>([&t](cu32 index) { return t.at(index).bgr(); });
+		auto bc = Container::createInterpolatedColorArray<columns, 32>([&b](cu32 index) { return b.at(index).bgr(); });
+		auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&l](cu32 index) { return l.at(index).bgr(); });
+		auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&r](cu32 index) { return r.at(index).bgr(); });
+#else
+		auto tc = Container::createInterpolatedColorArray<columns, 32>([&t](cu32 index) { return t.at(index)(); });
+		auto bc = Container::createInterpolatedColorArray<columns, 32>([&b](cu32 index) { return b.at(index)(); });
+		auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&l](cu32 index) { return l.at(index)(); });
+		auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&r](cu32 index) { return r.at(index)(); });
+#endif
+		for (std::size_t i = 0u; i < 32u; ++i) {
+			m_output[i] = lc.at(31 - i);
+			m_output[i + 32] = tc.at(i);
+			m_output[i + 64] = rc.at(i);
+			m_output[i + 96] = bc.at(31 - i);
 		}
-		m_b = scanWhole(rowCount, h_diff * scanline);
-
-		l[0u] = m_t[0u];
-		r[0u] = m_t[columnCount];
-		l[columnCount] = m_b[0];
-		r[columnCount] = m_b[columnCount];
-
-		m_l = l;
-		m_r = r;
 	}
 
 	auto columnCount() const noexcept { return columns; }
 	auto rowCount() const noexcept { return rows; }
 
-	auto top() const noexcept { return m_t; }
-	auto bottom() const noexcept { return m_b; }
-	auto left() const noexcept { return m_l; }
-	auto right() const noexcept { return m_r; }
+	const auto &output() const noexcept { return m_output; }
 
 private:
+	Container::Scanline m_output;
+
 	std::array<type, columns> m_t;
 	std::array<type, columns> m_b;
-	std::array<type, columns> m_l;
-	std::array<type, columns> m_r;
+	std::array<type, rows - 2> m_l;
+	std::array<type, rows - 2> m_r;
 };
 }

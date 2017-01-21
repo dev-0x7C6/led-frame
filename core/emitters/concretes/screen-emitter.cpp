@@ -49,8 +49,6 @@ void ScreenEmitter::interrupt() {
 
 void ScreenEmitter::run() {
 	Functional::LoopSync loop;
-	Container::Scanline scanline(0u);
-	color *colors = scanline.data();
 	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
 #ifdef X11
 	auto screen = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
@@ -77,22 +75,7 @@ void ScreenEmitter::run() {
 			continue;
 
 		processor.process(screen->data(), screen->width(), screen->height());
-
-		for (std::size_t i = 0u; i < 32u; ++i) {
-#ifdef RPI
-			colors[i] = processor.left().at(31 - i).bgr();
-			colors[i + 32] = processor.top().at(i).bgr();
-			colors[i + 64] = processor.right().at(i).bgr();
-			colors[i + 96] = processor.bottom().at(31 - i).bgr();
-#else
-			colors[i] = processor.left().at(31 - i)();
-			colors[i + 32] = processor.top().at(i)();
-			colors[i + 64] = processor.right().at(i)();
-			colors[i + 96] = processor.bottom().at(31 - i)();
-#endif
-		}
-
-		commit(scanline);
+		commit(processor.output());
 		loop.wait(framerate());
 	};
 }

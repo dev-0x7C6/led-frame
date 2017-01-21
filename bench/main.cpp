@@ -50,7 +50,7 @@ inline static void image_processor_process(benchmark::State &state) {
 		processor.process(scene.data(), w, h, step);
 	}
 
-	if (processor.top().at(0).count() == 0) {
+	if (processor.output().at(0) == 0) {
 		std::terminate();
 	}
 }
