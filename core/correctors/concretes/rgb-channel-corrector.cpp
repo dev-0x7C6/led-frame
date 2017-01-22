@@ -6,16 +6,16 @@ using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
 RedChannelCorrector::RedChannelCorrector(ci32 id, int owner)
-		: Abstract::AbstractCorrector(id, owner) {}
+		: Interface::ICorrector(id, owner) {}
 CorrectorType RedChannelCorrector::type() const { return CorrectorType::RedChannel; }
-color RedChannelCorrector::correct(color value) { return overwriteR(value, static_cast<color>(getR(value) * m_factor)); }
+color RedChannelCorrector::correct(ccolor value) const noexcept { return overwriteR(value, static_cast<ccolor>(getR(value) * factor())); }
 
 GreenChannelCorrector::GreenChannelCorrector(ci32 id, int owner)
-		: Abstract::AbstractCorrector(id, owner) {}
+		: Interface::ICorrector(id, owner) {}
 CorrectorType GreenChannelCorrector::type() const { return CorrectorType::GreenChannel; }
-color GreenChannelCorrector::correct(color value) { return overwriteG(value, static_cast<color>(getG(value) * m_factor)); }
+color GreenChannelCorrector::correct(ccolor value) const noexcept { return overwriteG(value, static_cast<ccolor>(getG(value) * factor())); }
 
 BlueChannelCorrector::BlueChannelCorrector(ci32 id, int owner)
-		: Abstract::AbstractCorrector(id, owner) {}
+		: Interface::ICorrector(id, owner) {}
 CorrectorType BlueChannelCorrector::type() const { return CorrectorType::BlueChannel; }
-color BlueChannelCorrector::correct(color value) { return overwriteB(value, static_cast<color>(getB(value) * m_factor)); }
+color BlueChannelCorrector::correct(ccolor value) const noexcept { return overwriteB(value, static_cast<ccolor>(getB(value) * factor())); }

@@ -3,15 +3,13 @@
 using namespace Corrector::Concrete;
 
 FlickrEffectCorrector::FlickrEffectCorrector(ci32 id, int owner)
-		: Abstract::AbstractCorrector(id, owner, minimumFactor()) {
-	m_enabled = false;
+		: Interface::ICorrector(id, owner, 0, 0, 0, 30) {
+	setEnabled(false);
 }
 
 Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::CorrectorType::FlickrEffect; }
-double FlickrEffectCorrector::minimumFactor() const { return 0; }
-double FlickrEffectCorrector::maximumFactor() const { return 30; }
 
-color FlickrEffectCorrector::correct(color value) { return (m_skip) ? 0 : value; }
+color FlickrEffectCorrector::correct(ccolor value) const noexcept { return (m_skip) ? 0 : value; }
 
 void FlickrEffectCorrector::push() {
 	if (m_duration > factor()) {

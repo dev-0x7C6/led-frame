@@ -145,8 +145,6 @@ set(sources
 	core/containers/device-info-container.h
 	core/containers/led-ribbon-config-container.cpp
 	core/containers/led-ribbon-config-container.h
-	core/correctors/abstracts/abstract-corrector.cpp
-	core/correctors/abstracts/abstract-corrector.h
 	core/correctors/abstracts/abstract-corrector-manager.cpp
 	core/correctors/abstracts/abstract-corrector-manager.h
 	core/correctors/concretes/brightness-corrector.cpp
