@@ -11,13 +11,11 @@ public:
 	virtual ~FlickrEffectCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual color correct(ccolor value) const noexcept override;
-	virtual void push() override;
-	virtual void pop() override;
+	virtual void correct(Container::Scanline &scanline) const noexcept override;
 
 private:
-	int m_duration = 0;
-	bool m_skip = true;
+	mutable int m_duration = 0;
+	mutable bool m_skip = true;
 };
 }
 }

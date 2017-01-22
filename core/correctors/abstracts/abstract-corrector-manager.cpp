@@ -66,25 +66,9 @@ void AbstractCorrectorManager::enumerate(std::function<void(const std::shared_pt
 		callback(corrector);
 }
 
-color AbstractCorrectorManager::execute(color value) {
+void AbstractCorrectorManager::execute(Container::Scanline &scanline) {
 	std::lock_guard<std::mutex> _(m_mutex);
 	for (const auto &corrector : m_correctors)
 		if (corrector != nullptr && corrector->isEnabled())
-			value = corrector->correct(value);
-
-	return value;
-}
-
-void AbstractCorrectorManager::push() {
-	std::lock_guard<std::mutex> _(m_mutex);
-	for (const auto &corrector : m_correctors)
-		if (corrector != nullptr && corrector->isEnabled())
-			corrector->push();
-}
-
-void AbstractCorrectorManager::pop() {
-	std::lock_guard<std::mutex> _(m_mutex);
-	for (const auto &corrector : m_correctors)
-		if (corrector != nullptr && corrector->isEnabled())
-			corrector->pop();
+			corrector->correct(scanline);
 }

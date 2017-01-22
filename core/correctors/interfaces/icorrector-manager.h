@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/correctors/interfaces/icorrector.h>
+#include <core/containers/color-scanline-container.h>
 
 #include <functional>
 #include <list>
@@ -27,9 +28,7 @@ public:
 	virtual std::shared_ptr<ICorrector> find(const int id) const = 0;
 	virtual void enumerate(std::function<void(const std::shared_ptr<ICorrector> &)> callback) const = 0;
 
-	virtual color execute(color value) = 0;
-	virtual void push() = 0;
-	virtual void pop() = 0;
+	virtual void execute(Container::Scanline &scanline) = 0;
 };
 }
 }

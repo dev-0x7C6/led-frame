@@ -11,10 +11,12 @@ BrightnessCorrector::BrightnessCorrector(ci32 id, int owner)
 
 CorrectorType BrightnessCorrector::type() const { return CorrectorType::Brightness; }
 
-color BrightnessCorrector::correct(ccolor value) const noexcept {
-	const auto l = factor();
-	const auto r = static_cast<ccolor>(getR(value) * l);
-	const auto g = static_cast<ccolor>(getG(value) * l);
-	const auto b = static_cast<ccolor>(getB(value) * l);
-	return rgb(r, g, b);
+void BrightnessCorrector::correct(Container::Scanline &scanline) const noexcept {
+	const auto f = factor();
+	for (auto &value : scanline.array()) {
+		const auto r = static_cast<ccolor>(getR(value) * f);
+		const auto g = static_cast<ccolor>(getG(value) * f);
+		const auto b = static_cast<ccolor>(getB(value) * f);
+		value = rgb(r, g, b);
+	}
 }

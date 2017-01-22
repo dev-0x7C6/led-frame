@@ -19,7 +19,7 @@ public:
 
 	void fade(std::function<Container::Scanline()> getFrame, const bool in = true);
 	void change(const Container::Scanline &from, std::function<Container::Scanline()> getFrame);
-	void write(const Container::Scanline &scanline);
+	void write(Container::Scanline scanline);
 
 private:
 	const std::array<Container::RibbonConfiguration, 4> m_ribbon;

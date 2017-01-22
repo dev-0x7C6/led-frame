@@ -45,8 +45,9 @@ void UartWorker::change(const Scanline &from, std::function<Scanline()> getFrame
 	}
 }
 
-void UartWorker::write(const Scanline &scanline) {
-	m_correctorManager.push();
+void UartWorker::write(Scanline scanline) {
+	m_correctorManager.execute(scanline);
+
 	for (const auto &config : m_ribbon) {
 		double factor = static_cast<double>(Scanline::line()) / static_cast<double>(config.count() - 1);
 
@@ -56,10 +57,9 @@ void UartWorker::write(const Scanline &scanline) {
 			const auto rest = (i * factor) - idx1;
 			auto color = Scanline::interpolation(scanline.constData(config.position())[idx1],
 				scanline.constData(config.position())[idx2], rest);
-			m_stream.insert(config.colorFormat(), m_correctorManager.execute(color));
+			m_stream.insert(config.colorFormat(), color);
 		}
 	}
-	m_correctorManager.pop();
 
 	m_stream.write(*m_device);
 	if (m_device->bytesToWrite())

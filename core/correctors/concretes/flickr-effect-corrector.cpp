@@ -9,13 +9,14 @@ FlickrEffectCorrector::FlickrEffectCorrector(ci32 id, int owner)
 
 Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::CorrectorType::FlickrEffect; }
 
-color FlickrEffectCorrector::correct(ccolor value) const noexcept { return (m_skip) ? 0 : value; }
-
-void FlickrEffectCorrector::push() {
+void FlickrEffectCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (m_duration > factor()) {
 		m_skip = !m_skip;
 		m_duration = 0;
 	}
-}
 
-void FlickrEffectCorrector::pop() { m_duration += 1; }
+	for (auto &value : scanline.array())
+		value = (m_skip) ? 0 : value;
+
+	m_duration += 1;
+}

@@ -24,8 +24,10 @@ inline auto scan_all(ccolor *data, const Block &block) {
 
 	for (u32 y = 0u; y < block.height; y += block.step) {
 		for (u32 column = 0u; column < size; ++column) {
+			type avg;
 			for (u32 x = 0u; x < block.width; x += block.step)
-				result[column] += data[x];
+				avg += data[x];
+			result[column] += avg;
 			data += block.width;
 		}
 		data += memory_shift;
@@ -83,10 +85,10 @@ public:
 		auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&l](cu32 index) { return l.at(index).bgr(); });
 		auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&r](cu32 index) { return r.at(index).bgr(); });
 #else
-		auto tc = Container::createInterpolatedColorArray<columns, 32>([&t](cu32 index) { return t.at(index)(); });
-		auto bc = Container::createInterpolatedColorArray<columns, 32>([&b](cu32 index) { return b.at(index)(); });
-		auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&l](cu32 index) { return l.at(index)(); });
-		auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&r](cu32 index) { return r.at(index)(); });
+		auto tc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return t.at(index)(); });
+		auto bc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return b.at(index)(); });
+		auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&](cu32 index) { return l.at(index)(); });
+		auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&](cu32 index) { return r.at(index)(); });
 #endif
 		for (std::size_t i = 0u; i < 32u; ++i) {
 			m_output[i] = lc.at(31 - i);

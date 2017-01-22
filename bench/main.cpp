@@ -86,8 +86,7 @@ static void color_correction(benchmark::State &state) {
 	while (state.KeepRunning()) {
 		for (const auto &corrector : correctors)
 			if (corrector->isEnabled())
-				for (auto &value : scanline.array())
-					value = corrector->correct(value);
+				corrector->correct(scanline);
 	}
 }
 

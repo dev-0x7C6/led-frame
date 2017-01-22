@@ -59,7 +59,7 @@ void ReceiverManager::setRegisterDeviceCallback(const std::function<bool(Receive
 }
 
 void ReceiverManager::run() {
-	m_deviceScan.setInterval(2000);
+	m_deviceScan.setInterval(3000);
 	m_deviceScan.start();
 	rescan();
 }

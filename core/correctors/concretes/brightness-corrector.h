@@ -11,7 +11,7 @@ public:
 	virtual ~BrightnessCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual color correct(ccolor value) const noexcept override;
+	virtual void correct(Container::Scanline &scanline) const noexcept override;
 };
 }
 }

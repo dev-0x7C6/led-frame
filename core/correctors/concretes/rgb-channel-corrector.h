@@ -11,7 +11,7 @@ public:
 	virtual ~RedChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual color correct(ccolor value) const noexcept override;
+	virtual void correct(Container::Scanline &scanline) const noexcept override;
 };
 
 class GreenChannelCorrector final : public Interface::ICorrector {
@@ -20,7 +20,7 @@ public:
 	virtual ~GreenChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual color correct(ccolor value) const noexcept override;
+	virtual void correct(Container::Scanline &scanline) const noexcept override;
 };
 
 class BlueChannelCorrector final : public Interface::ICorrector {
@@ -29,7 +29,7 @@ public:
 	virtual ~BlueChannelCorrector() = default;
 
 	virtual Enum::CorrectorType type() const override;
-	virtual color correct(ccolor value) const noexcept override;
+	virtual void correct(Container::Scanline &scanline) const noexcept override;
 };
 }
 }
