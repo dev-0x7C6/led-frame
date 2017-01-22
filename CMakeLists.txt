@@ -260,6 +260,25 @@ set(sources_ut
 
 set(sources_bench
 	bench/main.cpp
+	core/containers/color-scanline-container.cpp
+	core/containers/color-scanline-container.h
+	core/correctors/abstracts/abstract-corrector-manager.cpp
+	core/correctors/abstracts/abstract-corrector-manager.h
+	core/correctors/concretes/brightness-corrector.cpp
+	core/correctors/concretes/brightness-corrector.h
+	core/correctors/concretes/color-enhancer-corrector.cpp
+	core/correctors/concretes/color-enhancer-corrector.h
+	core/correctors/concretes/corrector-manager.h
+	core/correctors/concretes/flickr-effect-corrector.cpp
+	core/correctors/concretes/flickr-effect-corrector.h
+	core/correctors/concretes/rgb-channel-corrector.cpp
+	core/correctors/concretes/rgb-channel-corrector.h
+	core/correctors/factories/corrector-factory.cpp
+	core/correctors/factories/corrector-factory.h
+	core/correctors/interfaces/icorrector.h
+	core/correctors/interfaces/icorrector-notify.h
+	core/interfaces/inotify.cpp
+	core/interfaces/inotify.h
 )
 
 add_executable(led-frame ${sources} ${gui-sources} ${rpi-sources} ${x11-sources})

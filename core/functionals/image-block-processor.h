@@ -8,62 +8,74 @@
 
 namespace Functional {
 
-template <typename type, u32 rows, u32 columns>
-using Matrix = std::array<std::array<type, columns>, rows>;
+struct Block {
+	u32 scanline;
+	u32 width;
+	u32 height;
+	u32 step;
+	u32 wdiff;
+	u32 hdiff;
+};
+
+template <typename type, u32 size>
+inline auto scan_all(ccolor *data, const Block &block) {
+	const u32 memory_shift = block.scanline * (block.step - 1) + block.wdiff;
+	std::array<type, size> result;
+
+	for (u32 y = 0u; y < block.height; y += block.step) {
+		for (u32 column = 0u; column < size; ++column) {
+			for (u32 x = 0u; x < block.width; x += block.step)
+				result[column] += data[x];
+			data += block.width;
+		}
+		data += memory_shift;
+	}
+
+	return result;
+}
+
+template <typename type, u32 size>
+inline auto scan_edge(ccolor *data, const Block &block) {
+	std::pair<type, type> result;
+
+	for (u32 y = 0u; y < block.height; y += block.step) {
+		for (u32 x = 0u; x < block.width; x += block.step)
+			result.first += data[x];
+
+		data += block.width * (size - 1);
+		for (u32 x = 0u; x < block.width; x += block.step)
+			result.second += data[x];
+
+		data += block.width + block.scanline * (block.step - 1) + block.wdiff;
+	}
+
+	return result;
+}
 
 template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
-	void process(ccolor *data, u32 w, u32 h, u32 step = 0) {
-		constexpr auto columnCount = columns - 1u;
-		constexpr auto rowCount = rows - 1u;
-		const auto scanline = w;
-		const auto bx = w / columns;
-		const auto by = h / rows;
-		const auto w_diff = w - (bx * columns);
-		const auto h_diff = h - (by * rows);
-		w = bx * columns;
-		h = by * rows;
+	void process(ccolor *const data, u32 width, u32 height, u32 step = 0) {
+		Block block;
+		block.scanline = width;
+		block.width = width / columns;
+		block.height = height / rows;
+		block.step = (step == 0) ? std::max(1u, static_cast<u32>(std::sqrt(std::sqrt(block.width * block.height)))) : step;
+		block.wdiff = width - (block.width * columns);
+		block.hdiff = height - (block.height * rows);
 
-		step = (step == 0) ? std::max(1u, static_cast<u32>(std::sqrt(std::sqrt(bx * by)))) : step;
+		std::array<type, rows - 2> l;
+		std::array<type, rows - 2> r;
 
-		std::array<type, columns> l;
-		std::array<type, columns> r;
+		auto t = scan_all<type, columns>(data, block);
 
-		auto scanWhole = [&](cu32 index, cu32 skip = 0) noexcept {
-			std::array<type, columns> line;
-			ccolor *source = const_cast<color *>(data + (index * by * scanline) + skip);
-			for (u32 y = 0u; y < by; y += step) {
-				for (u32 cx = 0u; cx <= columnCount; ++cx) {
-					for (u32 x = 0u; x < bx; x += step)
-						line[cx] += source[x];
-					source += bx;
-				}
-				source += w_diff;
-				source += scanline * (step - 1);
-			}
-			return line;
-		};
+		for (u32 i = 0; i < rows - 1; ++i) {
+			auto ret = scan_edge<type, columns>(data + ((i + 1) * block.scanline * block.height) + block.hdiff / 2 * block.scanline, block);
+			l[i] = ret.first;
+			r[i] = ret.second;
+		}
 
-		auto scanEdge = [&](cu32 index, type & lhs, type & rhs, cu32 skip = 0) noexcept {
-			ccolor *source = data + (index * by * scanline) + skip;
-			for (u32 y = 0u; y < by; y += step) {
-				for (u32 x = 0u; x < bx; x += step)
-					lhs += source[x];
-
-				source += bx * columnCount;
-				for (u32 x = 0u; x < bx; x += step)
-					rhs += source[x];
-
-				source += bx + w_diff;
-				source += scanline * (step - 1);
-			}
-		};
-
-		auto t = scanWhole(0u);
-		for (u32 i = 0; i < rowCount - 1; ++i)
-			scanEdge(i + 1, l[i], r[i], h_diff / 2 * scanline);
-		auto b = scanWhole(rowCount, h_diff * scanline);
+		auto b = scan_all<type, columns>(data + ((rows - 1) * block.scanline * block.height) + block.hdiff * block.scanline, block);
 
 #ifdef RPI
 		auto tc = Container::createInterpolatedColorArray<columns, 32>([&t](cu32 index) { return t.at(index).bgr(); });

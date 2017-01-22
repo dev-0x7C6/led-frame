@@ -40,6 +40,8 @@ public:
 	inline void operator>>(const color value) noexcept;
 	inline color &operator[](u32 index) noexcept;
 
+	auto &array() noexcept { return m_data; }
+
 public:
 	constexpr static auto fromIndexToPosition(const std::size_t index) noexcept;
 

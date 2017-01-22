@@ -1,8 +1,19 @@
 #include <benchmark/benchmark.h>
 
-#include <core/functionals/image-block-processor.h>
+#include <core/containers/color-scanline-container.h>
+#include <core/correctors/factories/corrector-factory.h>
 #include <core/functionals/color-averaging-buffer.h>
+#include <core/functionals/image-block-processor.h>
 
+#include <vector>
+#include <memory>
+
+using namespace Container;
+using namespace Corrector;
+
+using namespace Corrector::Factory;
+using namespace Corrector::Interface;
+using namespace Enum;
 using namespace Functional;
 
 class ColorScene {
@@ -51,7 +62,32 @@ inline static void image_processor_process(benchmark::State &state) {
 	}
 
 	if (processor.output().at(0) == 0) {
-		std::terminate();
+		std::cout << std::endl;
+	}
+}
+
+static void color_correction(benchmark::State &state) {
+	Scanline scanline;
+	scanline.fill(0xff0000u);
+
+	const auto type_list = {
+		CorrectorType::ColorEnhancer,
+		CorrectorType::Brightness,
+		CorrectorType::RedChannel,
+		CorrectorType::GreenChannel,
+		CorrectorType::BlueChannel,
+		CorrectorType::FlickrEffect};
+
+	std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> correctors;
+
+	for (const auto &type : type_list)
+		correctors.emplace_back(Factory::CorrectorFactory::create(type, 0));
+
+	while (state.KeepRunning()) {
+		for (const auto &corrector : correctors)
+			if (corrector->isEnabled())
+				for (auto &value : scanline.array())
+					value = corrector->correct(value);
 	}
 }
 
@@ -66,6 +102,8 @@ static void image_block_processor_process_720p_fixed(benchmark::State &state) { 
 static void image_block_processor_process_1080p_fixed(benchmark::State &state) { image_processor_process<1920, 1080, 1>(state); }
 static void image_block_processor_process_4K_fixed(benchmark::State &state) { image_processor_process<3840, 2160, 1>(state); }
 static void image_block_processor_process_8K_fixed(benchmark::State &state) { image_processor_process<7680, 4320, 1>(state); }
+
+BENCHMARK(color_correction);
 
 BENCHMARK(image_block_processor_process_480p_auto);
 BENCHMARK(image_block_processor_process_720p_auto);
