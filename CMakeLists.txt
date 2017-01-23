@@ -252,8 +252,28 @@ set(sources
 )
 
 set(sources_ut
-	core/functionals/image-block-processor.h
+	core/containers/color-scanline-container.cpp
+	core/containers/color-scanline-container.h
+	core/correctors/abstracts/abstract-corrector-manager.cpp
+	core/correctors/abstracts/abstract-corrector-manager.h
+	core/correctors/concretes/brightness-corrector.cpp
+	core/correctors/concretes/brightness-corrector.h
+	core/correctors/concretes/color-enhancer-corrector.cpp
+	core/correctors/concretes/color-enhancer-corrector.h
+	core/correctors/concretes/corrector-manager.h
+	core/correctors/concretes/flickr-effect-corrector.cpp
+	core/correctors/concretes/flickr-effect-corrector.h
+	core/correctors/concretes/rgb-channel-corrector.cpp
+	core/correctors/concretes/rgb-channel-corrector.h
+	core/correctors/factories/corrector-factory.cpp
+	core/correctors/factories/corrector-factory.h
+	core/correctors/interfaces/icorrector.h
+	core/correctors/interfaces/icorrector-notify.h
 	core/functionals/color-averaging-buffer.h
+	core/functionals/image-block-processor.h
+	core/interfaces/inotify.cpp
+	core/interfaces/inotify.h
+	ut/corrector-tests.cpp
 	ut/image-block-processing-tests.cpp
 	ut/main.cpp
 )

@@ -59,7 +59,7 @@ auto ICorrector::setEnabled(bool value) noexcept {
 }
 
 auto ICorrector::setFactor(factor_t value) noexcept {
-	value = std::min(std::max(value, m_minimumFactor), m_maximumFactor);
+	m_currentFactor = std::min(std::max(value, m_minimumFactor), m_maximumFactor);
 	notify();
 }
 }

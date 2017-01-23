@@ -10,13 +10,17 @@ FlickrEffectCorrector::FlickrEffectCorrector(ci32 id, int owner)
 Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::CorrectorType::FlickrEffect; }
 
 void FlickrEffectCorrector::correct(Container::Scanline &scanline) const noexcept {
-	if (m_duration > factor()) {
-		m_skip = !m_skip;
+	const auto f = static_cast<u32>(factor());
+
+	if (m_lastFactor != f) {
 		m_duration = 0;
+		m_lastFactor = f;
 	}
 
-	for (auto &value : scanline.array())
-		value = (m_skip) ? 0 : value;
+	auto skip = ((m_duration % f) + 1) > (f / 2);
 
-	m_duration += 1;
+	for (auto &value : scanline.array())
+		value = (skip) ? 0 : value;
+
+	m_duration++;
 }

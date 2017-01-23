@@ -14,8 +14,9 @@ public:
 	virtual void correct(Container::Scanline &scanline) const noexcept override;
 
 private:
-	mutable int m_duration = 0;
-	mutable bool m_skip = true;
+	mutable u32 m_duration = 0;
+	mutable bool m_skip = false;
+	mutable u32 m_lastFactor = 0xffffffffu;
 };
 }
 }
