@@ -79,7 +79,7 @@ void SystemTray::setBrightness(Corrector::Interface::ICorrector *corrector) {
 	if (!corrector->isGlobal() || corrector->type() != Enum::CorrectorType::Brightness)
 		return;
 
-	const auto brightness = corrector->factor();
+	const auto brightness = corrector->factor().factor();
 	m_brightnessAction->setText(tr("Brightness: %1%").arg(QString::number(std::min(100, static_cast<int>(brightness * 100)))));
 	setIcon(SystemTrayIcon::generate(brightness));
 }

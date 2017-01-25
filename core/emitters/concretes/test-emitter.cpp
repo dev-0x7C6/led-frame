@@ -9,10 +9,10 @@ using namespace Enum;
 
 TestEmitter::TestEmitter(ci32 id)
 		: AbstractEmitter(id)
-		, m_timer(std::unique_ptr<QTimer>(nullptr))
+		, m_timer(std::make_unique<QTimer>(nullptr))
 
 {
-	QObject::connect(m_timer.get(), &QTimer::timeout, this, &TestEmitter::process);
+	QObject::connect(m_timer.get(), &QTimer::timeout, [this] { process(); });
 	m_timer->setInterval(750);
 	m_timer->start();
 }

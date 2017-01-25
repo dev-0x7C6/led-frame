@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <cstdint>
 #include <type_traits>
 
@@ -82,3 +83,44 @@ using color = u32;
 using ccolor = cu32;
 
 using cchar = const char;
+using correct_t = u32;
+
+template <typename type>
+class FactorModifierTempate {
+public:
+	constexpr FactorModifierTempate(type value, type max, type min)
+			: m_value(value)
+			, m_max(max)
+			, m_min(min) {}
+
+	constexpr FactorModifierTempate(const FactorModifierTempate<type> &rhs)
+			: m_value(static_cast<type>(rhs.m_value))
+			, m_max(rhs.m_max)
+			, m_min(rhs.m_min) {
+	}
+
+	constexpr auto value() const noexcept -> type { return m_value; }
+	constexpr auto max() const noexcept { return m_max; }
+	constexpr auto min() const noexcept { return m_min; }
+
+	constexpr auto setValue(const type value) { m_value = value; }
+
+	FactorModifierTempate<type> &operator=(const FactorModifierTempate<type> &rhs) {
+		m_value = rhs.m_value;
+		m_max = rhs.m_max;
+		m_min = rhs.m_min;
+	}
+
+	constexpr auto factor() const noexcept {
+		const auto value = static_cast<factor_t>(m_value - m_min);
+		const auto max = static_cast<factor_t>(m_max - m_min);
+		return value / max;
+	}
+
+private:
+	std::atomic<type> m_value{255};
+	const type m_max = 255;
+	const type m_min = 0;
+};
+
+using FactorModifier = FactorModifierTempate<correct_t>;

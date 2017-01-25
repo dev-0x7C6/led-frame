@@ -8,12 +8,17 @@ using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
 ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
-		: Interface::ICorrector(id, owner, 1.0, 20) {
+		: Interface::ICorrector(id, owner, 20) {
 }
 
 Enum::CorrectorType ColorEnhancerCorrector::type() const { return CorrectorType::ColorEnhancer; }
 
 void ColorEnhancerCorrector::correct(Container::Scanline &scanline) const noexcept {
+	if (factor().value() == factor().min())
+		return;
+
+	const auto f = m_factor.factor() + 1.0;
+
 	for (auto &value : scanline.array()) {
 		std::array<color, 3> colors{{
 			static_cast<color>(getR(value)),
@@ -21,7 +26,6 @@ void ColorEnhancerCorrector::correct(Container::Scanline &scanline) const noexce
 			static_cast<color>(getB(value)),
 		}};
 
-		const auto f = factor();
 		auto pair = std::minmax_element(colors.cbegin(), colors.cend());
 
 		colors[pair.first - colors.cbegin()] /= f;

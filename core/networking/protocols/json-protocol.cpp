@@ -29,9 +29,9 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const Correc
 		{"id", corrector->id()},
 		{"type", value(corrector->type())},
 		{"owner", corrector->owner()},
-		{"factor", corrector->factor()},
-		{"min", corrector->minimumFactor()},
-		{"max", corrector->maximumFactor()},
+		{"factor", static_cast<int>(corrector->factor().value())},
+		{"min", static_cast<int>(corrector->factor().min())},
+		{"max", static_cast<int>(corrector->factor().max())},
 	});
 
 	json.insert(JSON_DATAGRAM_FIELD, datagram);

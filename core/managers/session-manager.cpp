@@ -119,7 +119,7 @@ void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiv
 	for (const auto &type : list) {
 		auto corrector = CorrectorFactory::create(type, id);
 		m_settings.beginGroup(value(corrector->type()));
-		corrector->setFactor(m_settings.value("factor", corrector->factor()).toDouble());
+		corrector->setFactor(m_settings.value("factor", corrector->factor().value()).toUInt());
 		corrector->setEnabled(m_settings.value("enabled", corrector->isEnabled()).toBool());
 		receiver->correctorManager().attach(corrector);
 		m_settings.endGroup();
@@ -143,7 +143,7 @@ SessionManager::~SessionManager() {
 				return;
 
 			m_settings.beginGroup(value(corrector->type()));
-			m_settings.setValue("factor", corrector->factor());
+			m_settings.setValue("factor", corrector->factor().value());
 			m_settings.setValue("enabled", corrector->isEnabled());
 			m_settings.endGroup();
 		});

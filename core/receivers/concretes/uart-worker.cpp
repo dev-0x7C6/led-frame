@@ -25,8 +25,8 @@ void UartWorker::fade(std::function<Scanline()> getFrame, const bool in) {
 	fadeCorrector->setFactor(0);
 	m_correctorManager.attach(fadeCorrector);
 
-	for (auto i = 0.0; i < 1.0; i += (1.0 / static_cast<double>(m_uartFramerate / 4))) {
-		fadeCorrector->setFactor((in) ? i : 1.0 - i);
+	for (auto i = fadeCorrector->factor().min(); i < fadeCorrector->factor().max(); i += (fadeCorrector->factor().max() / static_cast<double>(m_uartFramerate / 4))) {
+		fadeCorrector->setFactor((in) ? i : fadeCorrector->factor().max() - i);
 		write(getFrame());
 		loopSync.wait(m_uartFramerate);
 	}

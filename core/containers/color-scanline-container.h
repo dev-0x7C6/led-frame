@@ -98,7 +98,7 @@ template <int linesize>
 void ScanlineContainer<linesize>::fill(const Enum::Position position, const color value) noexcept {
 	auto colors = data(position);
 
-	for (auto i = 0u; i < size(); ++i)
+	for (auto i = 0u; i < line(); ++i)
 		colors[i] = value;
 }
 

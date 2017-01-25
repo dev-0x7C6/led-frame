@@ -10,7 +10,10 @@ RedChannelCorrector::RedChannelCorrector(ci32 id, int owner)
 CorrectorType RedChannelCorrector::type() const { return CorrectorType::RedChannel; }
 
 void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
-	const auto f = factor();
+	if (factor().value() == factor().max())
+		return;
+
+	const auto f = factor().factor();
 
 	for (auto &value : scanline.array()) {
 		const auto r = static_cast<ccolor>(getR(value) * f);
@@ -24,7 +27,10 @@ GreenChannelCorrector::GreenChannelCorrector(ci32 id, int owner)
 		: Interface::ICorrector(id, owner) {}
 CorrectorType GreenChannelCorrector::type() const { return CorrectorType::GreenChannel; }
 void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
-	const auto f = factor();
+	if (factor().value() == factor().max())
+		return;
+
+	const auto f = factor().factor();
 
 	for (auto &value : scanline.array()) {
 		const auto r = getR(value);
@@ -38,7 +44,10 @@ BlueChannelCorrector::BlueChannelCorrector(ci32 id, int owner)
 		: Interface::ICorrector(id, owner) {}
 CorrectorType BlueChannelCorrector::type() const { return CorrectorType::BlueChannel; }
 void BlueChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
-	const auto f = factor();
+	if (factor().value() == factor().max())
+		return;
+
+	const auto f = factor().factor();
 
 	for (auto &value : scanline.array()) {
 		const auto r = getR(value);

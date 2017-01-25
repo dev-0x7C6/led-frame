@@ -26,10 +26,10 @@ MainManager::MainManager(QSettings &settings)
 	m_correctorManager.attach(m_globalBlueCorrection);
 
 	m_settings.beginGroup("GlobalCorrectors");
-	m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", 0.5).toDouble());
-	m_globalRedCorrection->setFactor(m_settings.value("red", 1.0).toDouble());
-	m_globalGreenCorrection->setFactor(m_settings.value("green", 0.95).toDouble());
-	m_globalBlueCorrection->setFactor(m_settings.value("blue", 0.9).toDouble());
+	m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", m_globalBrightnessCorrection->factor().value()).toUInt());
+	m_globalRedCorrection->setFactor(m_settings.value("red", m_globalRedCorrection->factor().value()).toUInt());
+	m_globalGreenCorrection->setFactor(m_settings.value("green", m_globalGreenCorrection->factor().value()).toUInt());
+	m_globalBlueCorrection->setFactor(m_settings.value("blue", m_globalBlueCorrection->factor().value()).toUInt());
 	m_settings.endGroup();
 
 #ifdef QT_DEBUG
@@ -41,10 +41,10 @@ MainManager::~MainManager() {
 	m_emitterManager.save();
 
 	m_settings.beginGroup("GlobalCorrectors");
-	m_settings.setValue("brightness", m_globalBrightnessCorrection->factor());
-	m_settings.setValue("red", m_globalRedCorrection->factor());
-	m_settings.setValue("green", m_globalGreenCorrection->factor());
-	m_settings.setValue("blue", m_globalBlueCorrection->factor());
+	m_settings.setValue("brightness", m_globalBrightnessCorrection->factor().value());
+	m_settings.setValue("red", m_globalRedCorrection->factor().value());
+	m_settings.setValue("green", m_globalGreenCorrection->factor().value());
+	m_settings.setValue("blue", m_globalBlueCorrection->factor().value());
 	m_settings.endGroup();
 }
 

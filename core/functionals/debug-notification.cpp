@@ -39,7 +39,7 @@ std::string emitter_dbg(IEmitter *emitter, const std::string &text) {
 std::string corrector_dbg(ICorrector *corrector, const std::string &text) {
 	std::stringstream stream;
 	stream << mem_addr(corrector) << text << " corrector: " << name(corrector->type()).toStdString();
-	stream << " (enabled: " << corrector->isEnabled() << ", factor: " << corrector->factor() << ")";
+	stream << " (enabled: " << corrector->isEnabled() << ", factor: " << corrector->factor().factor() << ")";
 	return stream.str();
 }
 }

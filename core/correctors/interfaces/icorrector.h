@@ -12,7 +12,7 @@ namespace Interface {
 
 class ICorrector : public ::Interface::INotify {
 public:
-	inline explicit ICorrector(ci32 id, int owner, factor_t factor = 1.0, u32 priority = 0, factor_t minFactor = 0, factor_t maxFactor = 1.0);
+	inline explicit ICorrector(ci32 id, int owner, u32 priority = 0);
 	virtual ~ICorrector() override = default;
 
 	virtual Enum::CorrectorType type() const = 0;
@@ -20,9 +20,8 @@ public:
 
 	auto owner() const noexcept { return m_owner; }
 
-	auto factor() const noexcept -> factor_t { return m_currentFactor; }
-	auto minimumFactor() const noexcept { return m_minimumFactor; }
-	auto maximumFactor() const noexcept { return m_maximumFactor; }
+	const auto &factor() const noexcept { return m_factor; }
+	const auto &threshold() const noexcept { return m_threshold; }
 
 	auto priority() const noexcept -> u32 { return m_priority; }
 
@@ -30,26 +29,25 @@ public:
 	auto isGlobal() const noexcept { return m_owner == -1; }
 
 	inline auto setEnabled(bool value) noexcept;
-	inline auto setFactor(factor_t value) noexcept;
+	inline auto setFactor(correct_t value) noexcept;
+
+protected:
+	FactorModifier m_factor{255, 255, 0};
+	FactorModifier m_threshold{255, 255, 0};
 
 private:
 	const int m_owner = 0;
-	std::atomic<factor_t> m_currentFactor{0};
+
 	std::atomic<bool> m_isEnabled{true};
 	u32 m_priority = 0;
-	factor_t m_minimumFactor = 0;
-	factor_t m_maximumFactor = 0;
 };
 
 // impl
 
-ICorrector::ICorrector(ci32 id, int owner, factor_t factor, u32 priority, factor_t minFactor, factor_t maxFactor)
+ICorrector::ICorrector(ci32 id, int owner, u32 priority)
 		: INotify(id)
 		, m_owner(owner)
-		, m_currentFactor(factor)
 		, m_priority(priority)
-		, m_minimumFactor(minFactor)
-		, m_maximumFactor(maxFactor)
 
 {}
 
@@ -58,8 +56,8 @@ auto ICorrector::setEnabled(bool value) noexcept {
 	notify();
 }
 
-auto ICorrector::setFactor(factor_t value) noexcept {
-	m_currentFactor = std::min(std::max(value, m_minimumFactor), m_maximumFactor);
+auto ICorrector::setFactor(correct_t value) noexcept {
+	m_factor.setValue(std::min(std::max(value, m_factor.min()), m_factor.max()));
 	notify();
 }
 }

@@ -3,14 +3,14 @@
 using namespace Corrector::Concrete;
 
 FlickrEffectCorrector::FlickrEffectCorrector(ci32 id, int owner)
-		: Interface::ICorrector(id, owner, 0, 0, 0, 30) {
+		: Interface::ICorrector(id, owner, 30) {
 	setEnabled(false);
 }
 
 Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::CorrectorType::FlickrEffect; }
 
 void FlickrEffectCorrector::correct(Container::Scanline &scanline) const noexcept {
-	const auto f = static_cast<u32>(factor());
+	const auto f = factor().value();
 
 	if (m_lastFactor != f) {
 		m_duration = 0;
