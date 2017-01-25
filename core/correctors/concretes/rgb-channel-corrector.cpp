@@ -79,9 +79,6 @@ void BacklightCorrector::correct(Container::Scanline &scanline) const noexcept {
 	const auto backlight = factor().value();
 
 	for (auto &value : scanline.array()) {
-		if (value == 0)
-			continue;
-
 		const auto r = std::max(backlight, getR(value));
 		const auto g = std::max(backlight, getG(value));
 		const auto b = std::max(backlight, getB(value));
