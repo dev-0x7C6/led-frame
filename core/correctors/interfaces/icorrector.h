@@ -25,7 +25,7 @@ public:
 
 	auto priority() const noexcept -> u32 { return m_priority; }
 
-	auto isEnabled() const noexcept -> bool { return m_isEnabled; }
+	auto isEnabled() const noexcept -> bool { return m_enabled; }
 	auto isGlobal() const noexcept { return m_owner == -1; }
 
 	inline auto setEnabled(bool value) noexcept;
@@ -34,11 +34,10 @@ public:
 protected:
 	FactorModifier m_factor{255, 255, 0};
 	FactorModifier m_threshold{255, 255, 0};
+	std::atomic<bool> m_enabled{true};
 
 private:
 	const int m_owner = 0;
-
-	std::atomic<bool> m_isEnabled{true};
 	u32 m_priority = 0;
 };
 
@@ -52,7 +51,7 @@ ICorrector::ICorrector(ci32 id, int owner, u32 priority)
 {}
 
 auto ICorrector::setEnabled(bool value) noexcept {
-	m_isEnabled = value;
+	m_enabled = value;
 	notify();
 }
 

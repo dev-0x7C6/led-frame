@@ -4,7 +4,8 @@ using namespace Corrector::Concrete;
 
 FlickrEffectCorrector::FlickrEffectCorrector(ci32 id, int owner)
 		: Interface::ICorrector(id, owner, 30) {
-	setEnabled(false);
+	m_factor.setValue(0);
+	m_enabled = false;
 }
 
 Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::CorrectorType::FlickrEffect; }

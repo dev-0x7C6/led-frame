@@ -9,6 +9,8 @@ using namespace Functional::Color;
 
 ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
 		: Interface::ICorrector(id, owner, 20) {
+	m_factor.setValue(0);
+	m_enabled = false;
 }
 
 Enum::CorrectorType ColorEnhancerCorrector::type() const { return CorrectorType::ColorEnhancer; }
