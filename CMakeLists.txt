@@ -147,6 +147,8 @@ set(sources
 	core/containers/led-ribbon-config-container.h
 	core/correctors/abstracts/abstract-corrector-manager.cpp
 	core/correctors/abstracts/abstract-corrector-manager.h
+	core/correctors/concretes/backlight-corrector.cpp
+	core/correctors/concretes/backlight-corrector.h
 	core/correctors/concretes/brightness-corrector.cpp
 	core/correctors/concretes/brightness-corrector.h
 	core/correctors/concretes/color-enhancer-corrector.cpp
@@ -256,6 +258,8 @@ set(sources_ut
 	core/containers/color-scanline-container.h
 	core/correctors/abstracts/abstract-corrector-manager.cpp
 	core/correctors/abstracts/abstract-corrector-manager.h
+	core/correctors/concretes/backlight-corrector.cpp
+	core/correctors/concretes/backlight-corrector.h
 	core/correctors/concretes/brightness-corrector.cpp
 	core/correctors/concretes/brightness-corrector.h
 	core/correctors/concretes/color-enhancer-corrector.cpp
@@ -284,6 +288,8 @@ set(sources_bench
 	core/containers/color-scanline-container.h
 	core/correctors/abstracts/abstract-corrector-manager.cpp
 	core/correctors/abstracts/abstract-corrector-manager.h
+	core/correctors/concretes/backlight-corrector.cpp
+	core/correctors/concretes/backlight-corrector.h
 	core/correctors/concretes/brightness-corrector.cpp
 	core/correctors/concretes/brightness-corrector.h
 	core/correctors/concretes/color-enhancer-corrector.cpp

@@ -1,3 +1,4 @@
+#include <core/correctors/concretes/backlight-corrector.h>
 #include <core/correctors/concretes/brightness-corrector.h>
 #include <core/correctors/concretes/color-enhancer-corrector.h>
 #include <core/correctors/concretes/flickr-effect-corrector.h>
