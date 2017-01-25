@@ -12,7 +12,7 @@ namespace Interface {
 
 class ICorrector : public ::Interface::INotify {
 public:
-	inline explicit ICorrector(ci32 id, int owner, u32 priority = 0);
+	inline explicit ICorrector(ci32 id, int owner, u32 priority = 10);
 	virtual ~ICorrector() override = default;
 
 	virtual Enum::CorrectorType type() const = 0;

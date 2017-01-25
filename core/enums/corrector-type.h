@@ -11,6 +11,7 @@ enum class CorrectorType {
 	GreenChannel,
 	BlueChannel,
 	FlickrEffect,
+	Backlight,
 };
 
 inline QString name(const CorrectorType &type) {
@@ -21,6 +22,7 @@ inline QString name(const CorrectorType &type) {
 		case CorrectorType::GreenChannel: return "Green";
 		case CorrectorType::BlueChannel: return "Blue";
 		case CorrectorType::FlickrEffect: return "Flickr effect";
+		case CorrectorType::Backlight: return "Backlight";
 	}
 
 	return {};
@@ -34,6 +36,7 @@ inline auto value(const CorrectorType type) {
 		case CorrectorType::GreenChannel: return "green_channel";
 		case CorrectorType::BlueChannel: return "blue_channel";
 		case CorrectorType::FlickrEffect: return "flickr_effect";
+		case CorrectorType::Backlight: return "backlight";
 	}
 
 	return "";
