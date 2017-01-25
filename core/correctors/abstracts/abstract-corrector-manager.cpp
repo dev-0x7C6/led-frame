@@ -26,7 +26,8 @@ void AbstractCorrectorManager::attach(const std::shared_ptr<ICorrector> &correct
 	std::lock_guard<std::mutex> _(m_mutex);
 	auto interface = corrector.get();
 	m_correctors.push_back(corrector);
-	std::sort(m_correctors.begin(), m_correctors.end(), [](auto a, auto b) {
+
+	std::sort(m_correctors.begin(), m_correctors.end(), [](const auto &a, const auto &b) {
 		return (a->priority() > b->priority());
 	});
 
@@ -43,12 +44,15 @@ void AbstractCorrectorManager::attach(const std::shared_ptr<ICorrector> &correct
 
 void AbstractCorrectorManager::detach(const std::shared_ptr<ICorrector> &corrector) {
 	std::lock_guard<std::mutex> _(m_mutex);
-	auto interface = corrector.get();
+	auto keep_for_peaceful_decay = corrector;
+
+	m_correctors.erase(
+		std::remove_if(m_correctors.begin(), m_correctors.end(),
+			[&corrector](const auto &value) { return value == corrector; }),
+		m_correctors.end());
 
 	for (const auto &notify : m_notifiers)
-		notify->detached(interface);
-
-	std::remove_if(m_correctors.begin(), m_correctors.end(), [&corrector](const auto &value) { return value == corrector; });
+		notify->detached(keep_for_peaceful_decay.get());
 }
 
 std::shared_ptr<ICorrector> AbstractCorrectorManager::find(const int id) const {
