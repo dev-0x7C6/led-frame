@@ -67,7 +67,7 @@ void BlueChannelCorrector::correct(Container::Scanline &scanline) const noexcept
 }
 
 BacklightCorrector::BacklightCorrector(ci32 id, int owner)
-		: Interface::ICorrector(id, owner) {
+		: Interface::ICorrector(id, owner, 0) {
 	m_factor.setValue(0);
 	m_enabled = false;
 }

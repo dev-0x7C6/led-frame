@@ -113,6 +113,7 @@ void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiv
 		CorrectorType::BlueChannel,
 		CorrectorType::FlickrEffect,
 		CorrectorType::ColorEnhancer,
+		CorrectorType::Backlight,
 	};
 
 	m_settings.beginGroup(receiver->name());
