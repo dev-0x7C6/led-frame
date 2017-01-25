@@ -106,7 +106,7 @@ public:
 	auto setValue(const type value) { m_value = value; }
 
 	FactorModifierTempate<type> &operator=(const FactorModifierTempate<type> &rhs) {
-		m_value = rhs.m_value;
+		m_value = static_cast<type>(rhs.m_value);
 		m_max = rhs.m_max;
 		m_min = rhs.m_min;
 	}
@@ -119,8 +119,8 @@ public:
 
 private:
 	std::atomic<type> m_value{255};
-	const type m_max = 255;
-	const type m_min = 0;
+	type m_max = 255;
+	type m_min = 0;
 };
 
 using FactorModifier = FactorModifierTempate<correct_t>;

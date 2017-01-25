@@ -8,7 +8,7 @@ using namespace Functional::Color;
 
 BacklightCorrector::BacklightCorrector(ci32 id, int owner)
 		: Interface::ICorrector(id, owner, 0) {
-	m_factor.setValue(1);
+	m_factor = {1, 16, 0};
 	m_enabled = false;
 }
 CorrectorType BacklightCorrector::type() const { return CorrectorType::Backlight; }
