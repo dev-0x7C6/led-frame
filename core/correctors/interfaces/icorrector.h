@@ -2,6 +2,7 @@
 
 #include <core/containers/color-scanline-container.h>
 #include <core/enums/corrector-type.h>
+#include <core/enums/priority-enum.h>
 #include <core/interfaces/inotify.h>
 #include <core/types.h>
 
@@ -12,7 +13,7 @@ namespace Interface {
 
 class ICorrector : public ::Interface::INotify {
 public:
-	inline explicit ICorrector(ci32 id, int owner, u32 priority = 10);
+	inline explicit ICorrector(ci32 id, int owner, const Priority priority = Priority::Average);
 	virtual ~ICorrector() override = default;
 
 	virtual Enum::CorrectorType type() const = 0;
@@ -23,7 +24,7 @@ public:
 	const auto &factor() const noexcept { return m_factor; }
 	const auto &threshold() const noexcept { return m_threshold; }
 
-	auto priority() const noexcept -> u32 { return m_priority; }
+	auto priority() const noexcept { return m_priority; }
 
 	auto isEnabled() const noexcept -> bool { return m_enabled; }
 	auto isGlobal() const noexcept { return m_owner == -1; }
@@ -38,12 +39,12 @@ protected:
 
 private:
 	const int m_owner = 0;
-	u32 m_priority = 0;
+	Priority m_priority = Priority::Average;
 };
 
 // impl
 
-ICorrector::ICorrector(ci32 id, int owner, u32 priority)
+ICorrector::ICorrector(ci32 id, int owner, const Priority priority)
 		: INotify(id)
 		, m_owner(owner)
 		, m_priority(priority)

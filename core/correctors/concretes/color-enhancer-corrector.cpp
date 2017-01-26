@@ -8,7 +8,7 @@ using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
 ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
-		: Interface::ICorrector(id, owner, 20) {
+		: Interface::ICorrector(id, owner, Priority::Higher) {
 	m_factor.setValue(0);
 	m_enabled = false;
 }
