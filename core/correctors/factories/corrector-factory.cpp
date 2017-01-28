@@ -21,6 +21,7 @@ std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type, 
 		case CorrectorType::GreenChannel: return std::make_shared<GreenChannelCorrector>(id++, owner);
 		case CorrectorType::BlueChannel: return std::make_shared<BlueChannelCorrector>(id++, owner);
 		case CorrectorType::Backlight: return std::make_shared<BacklightCorrector>(id++, owner);
+		case CorrectorType::Unused: return nullptr;
 	}
 
 	return nullptr;

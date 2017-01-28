@@ -11,16 +11,6 @@ namespace Container {
 
 constexpr int RibbonCount = 4;
 
-namespace Struct {
-
-struct DeviceConfigStruct final {
-	u8 version;
-	std::array<RibbonBitField, RibbonCount> ribbon;
-} __attribute__((packed));
-
-static_assert(sizeof(DeviceConfigStruct) == 9, "Struct size is different than expected.");
-}
-
 class DeviceConfigContainer final {
 public:
 	explicit DeviceConfigContainer();
@@ -34,6 +24,7 @@ public:
 	void setRibbon(const RibbonConfiguration &ribbon, const u8 &index);
 
 private:
-	Struct::DeviceConfigStruct m_config;
+	u32 m_version = 0;
+	std::array<RibbonBitField, RibbonCount> m_ribbon;
 };
 }

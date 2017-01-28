@@ -109,6 +109,7 @@ public:
 		m_value = static_cast<type>(rhs.m_value);
 		m_max = rhs.m_max;
 		m_min = rhs.m_min;
+		return *this;
 	}
 
 	auto factor() const noexcept {

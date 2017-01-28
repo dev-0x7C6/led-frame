@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QString>
+#include <core/types.h>
+#include <array>
 
 namespace Enum {
 
@@ -12,7 +14,20 @@ enum class CorrectorType {
 	BlueChannel,
 	FlickrEffect,
 	Backlight,
+	Unused,
 };
+
+constexpr std::array<CorrectorType, static_cast<u32>(CorrectorType::Unused)> getCorrectorTypes() {
+	return {{
+		CorrectorType::ColorEnhancer,
+		CorrectorType::Brightness,
+		CorrectorType::RedChannel,
+		CorrectorType::GreenChannel,
+		CorrectorType::BlueChannel,
+		CorrectorType::FlickrEffect,
+		CorrectorType::Backlight,
+	}};
+}
 
 inline QString name(const CorrectorType &type) {
 	switch (type) {
@@ -23,6 +38,7 @@ inline QString name(const CorrectorType &type) {
 		case CorrectorType::BlueChannel: return "Blue";
 		case CorrectorType::FlickrEffect: return "Flickr effect";
 		case CorrectorType::Backlight: return "Backlight";
+		case CorrectorType::Unused: return "";
 	}
 
 	return {};
@@ -37,6 +53,7 @@ inline auto value(const CorrectorType type) {
 		case CorrectorType::BlueChannel: return "blue_channel";
 		case CorrectorType::FlickrEffect: return "flickr_effect";
 		case CorrectorType::Backlight: return "backlight";
+		case CorrectorType::Unused: return "";
 	}
 
 	return "";

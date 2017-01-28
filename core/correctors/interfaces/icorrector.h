@@ -13,7 +13,7 @@ namespace Interface {
 
 class ICorrector : public ::Interface::INotify {
 public:
-	inline explicit ICorrector(ci32 id, int owner, const Priority priority = Priority::Average);
+	inline explicit ICorrector(ci32 id, int owner, const Enum::Priority priority = Enum::Priority::Average);
 	virtual ~ICorrector() override = default;
 
 	virtual Enum::CorrectorType type() const = 0;
@@ -39,12 +39,12 @@ protected:
 
 private:
 	const int m_owner = 0;
-	Priority m_priority = Priority::Average;
+	Enum::Priority m_priority = Enum::Priority::Average;
 };
 
 // impl
 
-ICorrector::ICorrector(ci32 id, int owner, const Priority priority)
+ICorrector::ICorrector(ci32 id, int owner, const Enum::Priority priority)
 		: INotify(id)
 		, m_owner(owner)
 		, m_priority(priority)

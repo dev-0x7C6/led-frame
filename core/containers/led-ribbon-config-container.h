@@ -8,17 +8,34 @@
 
 namespace Container {
 
-union RibbonBitField {
-	u16 raw;
+struct RibbonBitField {
+	u8 count;
+	u8 direction;
+	u8 format;
+	u8 position;
 
-	struct {
-		u16 direction : 1;
-		u16 position : 2;
-		u16 format : 3;
-		u16 count : 8;
-		u16 unused : 2;
-	} bitfield;
+	void operator<<(u8 *&data) noexcept {
+		const auto value = data[0] | data[1] << 8u;
+		// uucc | cccc | ccff | fppd
+		direction = (value >> 0u) & 0b0001;
+		position = (value >> 1u) & 0b0011;
+		format = (value >> 3u) & 0b111;
+		count = (value >> 6u) & 0xff;
+		data += 2;
+	}
+
+	void operator>>(u8 *&data) {
+		auto *wdata = reinterpret_cast<u16 *>(data);
+		wdata[0] =
+			(static_cast<u16>(direction) << 0u) |
+			(static_cast<u16>(position) << 1u) |
+			(static_cast<u16>(format) << 3u) |
+			(static_cast<u16>(count) << 6u);
+		data += 2;
+	}
 };
+
+static_assert(sizeof(RibbonBitField) == 4, "");
 
 class RibbonConfiguration final {
 public:
@@ -47,13 +64,8 @@ constexpr RibbonConfiguration::RibbonConfiguration() noexcept
 		: m_data() {}
 constexpr RibbonConfiguration::RibbonConfiguration(const RibbonBitField field) noexcept
 		: m_data(field) {}
-constexpr auto RibbonConfiguration::colorFormat() const noexcept -> Enum::ColorFormat { return static_cast<Enum::ColorFormat>(m_data.bitfield.format); }
-constexpr auto RibbonConfiguration::direction() const noexcept -> Enum::Direction { return static_cast<Enum::Direction>(m_data.bitfield.direction); }
-constexpr auto RibbonConfiguration::position() const noexcept -> Enum::Position { return static_cast<Enum::Position>(m_data.bitfield.position); }
-constexpr auto RibbonConfiguration::count() const noexcept -> u8 { return static_cast<u8>(m_data.bitfield.count); }
-
-static_assert(std::is_pod<RibbonBitField>::value, "should be POD");
-static_assert(alignof(RibbonBitField) == sizeof(u16), "align should be same as u16.");
-static_assert(sizeof(RibbonBitField) == sizeof(u16), "size is different than expected.");
-static_assert(sizeof(RibbonConfiguration) == sizeof(u16), "size is different than expected.");
+constexpr auto RibbonConfiguration::colorFormat() const noexcept -> Enum::ColorFormat { return static_cast<Enum::ColorFormat>(m_data.format); }
+constexpr auto RibbonConfiguration::direction() const noexcept -> Enum::Direction { return static_cast<Enum::Direction>(m_data.direction); }
+constexpr auto RibbonConfiguration::position() const noexcept -> Enum::Position { return static_cast<Enum::Position>(m_data.position); }
+constexpr auto RibbonConfiguration::count() const noexcept -> u8 { return static_cast<u8>(m_data.count); }
 }

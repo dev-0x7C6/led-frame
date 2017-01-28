@@ -3,7 +3,7 @@
 using namespace Corrector::Concrete;
 
 FlickrEffectCorrector::FlickrEffectCorrector(ci32 id, int owner)
-		: Interface::ICorrector(id, owner, Priority::Highest) {
+		: Interface::ICorrector(id, owner, Enum::Priority::Highest) {
 	m_factor.setValue(0);
 	m_enabled = false;
 }
@@ -12,6 +12,9 @@ Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::Corrector
 
 void FlickrEffectCorrector::correct(Container::Scanline &scanline) const noexcept {
 	const auto f = factor().value();
+
+	if (f == 0)
+		return;
 
 	if (m_lastFactor != f) {
 		m_duration = 0;

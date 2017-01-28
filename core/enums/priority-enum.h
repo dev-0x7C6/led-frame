@@ -1,6 +1,6 @@
 #pragma once
 
-namespace {
+namespace Enum {
 
 enum class Priority {
 	Lowest,
