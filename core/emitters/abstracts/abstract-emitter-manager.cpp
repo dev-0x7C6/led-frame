@@ -10,6 +10,10 @@ void AbstractEmitterManager::attach(const std::shared_ptr<IEmitter> &emitter) {
 	auto interface = emitter.get();
 	m_emitters.push_back(emitter);
 
+	m_emitters.sort([](const auto &a, const auto &b) {
+		return a->type() < b->type();
+	});
+
 	connect(interface, &INotify::notify, [this, &emitter]() {
 		for (const auto &notify : m_notifiers)
 			notify->modified(emitter);

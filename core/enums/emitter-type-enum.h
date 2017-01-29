@@ -7,10 +7,10 @@
 namespace Enum {
 
 enum class EmitterType {
+	Screen,
+	Image,
 	Animation,
 	Color,
-	Image,
-	Screen,
 	Test
 };
 
