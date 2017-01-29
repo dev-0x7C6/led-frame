@@ -1,7 +1,5 @@
 #include <core/containers/device-config-container.h>
 
-#include <qdebug.h>
-
 using namespace Enum;
 using namespace Container;
 
