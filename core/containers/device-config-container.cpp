@@ -28,8 +28,6 @@ QString DeviceConfigContainer::toBase64() {
 	return QString::fromLatin1(array);
 }
 
-#include <iostream>
-
 void DeviceConfigContainer::fromBase64(const QString &base64) {
 	QByteArray source = QByteArray::fromBase64(base64.toLatin1());
 	auto data = reinterpret_cast<u8 *>(source.data());
@@ -38,17 +36,6 @@ void DeviceConfigContainer::fromBase64(const QString &base64) {
 
 	for (auto &ribbon : m_ribbon)
 		ribbon << data;
-
-	std::cout << "config: " << m_version << std::endl;
-	for (auto i = 0u; i < m_ribbon.size(); ++i) {
-		const auto &bits = m_ribbon.at(i);
-		std::cout << "id: " << i << std::endl;
-		std::cout << "count: " << int(bits.count) << std::endl;
-		std::cout << "direction: " << int(bits.direction) << std::endl;
-		std::cout << "format: " << int(bits.format) << std::endl;
-		std::cout << "position: " << int(bits.position) << std::endl;
-		std::cout << std::endl;
-	}
 }
 
 u8 DeviceConfigContainer::version() const {
