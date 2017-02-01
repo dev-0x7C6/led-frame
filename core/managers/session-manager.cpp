@@ -44,9 +44,9 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 #endif
 
 	const auto list = {
+		EmitterType::Image,
 		EmitterType::Animation,
 		EmitterType::Color,
-		EmitterType::Image,
 	};
 
 	for (const auto &type : list)
