@@ -205,6 +205,8 @@ set(sources
 	core/functionals/color-stream.h
 	core/functionals/debug-notification.cpp
 	core/functionals/debug-notification.h
+	core/functionals/file-collection.cpp
+	core/functionals/file-collection.h
 	core/functionals/image-block-processor.h
 	core/functionals/lambda-thread.cpp
 	core/functionals/lambda-thread.h
