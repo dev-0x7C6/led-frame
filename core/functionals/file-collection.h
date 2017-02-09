@@ -20,8 +20,8 @@ private:
 
 class FileCollection {
 public:
-	explicit FileCollection() = default;
-	virtual ~FileCollection() = default;
+	explicit FileCollection();
+	virtual ~FileCollection();
 
 	using collectable_t = FileCollectable;
 	using collection_t = std::list<collectable_t>;

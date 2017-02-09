@@ -99,6 +99,8 @@ if (GUI)
 		core/menus/emitter-configuration-menu.h
 		core/menus/emitter-selector-menu.cpp
 		core/menus/emitter-selector-menu.h
+		core/menus/image-collection-menu.cpp
+		core/menus/image-collection-menu.h
 		gui/dialogs/about-dialog.cpp
 		gui/dialogs/about-dialog.h
 		gui/dialogs/about-dialog.ui

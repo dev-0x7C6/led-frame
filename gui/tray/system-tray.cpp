@@ -12,8 +12,9 @@ using namespace Emitter::Interface;
 using namespace Receiver::Interface;
 using namespace Tray;
 
-SystemTray::SystemTray(QObject *parent)
+SystemTray::SystemTray(Functional::FileCollection &imageCollection, QObject *parent)
 		: QSystemTrayIcon(parent)
+		, m_imageCollectionMenu(imageCollection)
 		, m_mainMenu(std::make_unique<QMenu>())
 
 {
@@ -28,6 +29,8 @@ SystemTray::SystemTray(QObject *parent)
 	m_brightnessAction = m_mainMenu->addAction("");
 	m_brightnessAction->setEnabled(false);
 	m_mainMenu->addSeparator();
+	auto imageCollectionAction = m_mainMenu->addAction("Collection");
+	imageCollectionAction->setMenu(m_imageCollectionMenu.menu());
 	auto settings = m_mainMenu->addAction("Settings");
 	auto settingsMenu = new QMenu();
 	settings->setMenu(settingsMenu);

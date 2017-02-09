@@ -13,12 +13,34 @@ FileCollectable::FileCollectable(const std::string &filePath, const std::string 
 		, m_name(name) {
 }
 
+FileCollection::FileCollection() {
+	load();
+}
+
+FileCollection::~FileCollection() {
+	save();
+}
+
 void FileCollection::load() {
 	QSettings settings(qApp->applicationName(), "gallery");
+	const auto keys = settings.allKeys();
+	for (const auto &key : keys) {
+		settings.beginGroup(key);
+		const auto name = settings.value("name", "").toString();
+		const auto path = settings.value("path", "").toString();
+		insert(path.toStdString(), name.toStdString());
+		settings.endGroup();
+	}
 }
 
 void FileCollection::save() {
 	QSettings settings(qApp->applicationName(), "gallery");
+	for (const auto &collectable : m_collection) {
+		settings.beginGroup(QString::fromStdString(collectable.filePath()));
+		settings.setValue("path", QString::fromStdString(collectable.filePath()));
+		settings.setValue("name", QString::fromStdString(collectable.name()));
+		settings.endGroup();
+	}
 }
 
 void FileCollection::insert(const std::string &filePath, const std::string &name) noexcept {

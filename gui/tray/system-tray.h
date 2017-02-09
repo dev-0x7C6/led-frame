@@ -1,8 +1,10 @@
 #pragma once
 
+#include <core/functionals/file-collection.h>
+#include <core/interfaces/imulti-notifier.h>
 #include <core/menus/device-menu.h>
 #include <core/menus/emitter-configuration-menu.h>
-#include <core/interfaces/imulti-notifier.h>
+#include <core/menus/image-collection-menu.h>
 
 #include <QSystemTrayIcon>
 #include <functional>
@@ -15,7 +17,7 @@ namespace Tray {
 
 class SystemTray final : public QSystemTrayIcon, public Interface::IMultiNotifier {
 public:
-	explicit SystemTray(QObject *parent = nullptr);
+	explicit SystemTray(Functional::FileCollection &imageCollection, QObject *parent = nullptr);
 	~SystemTray() override;
 
 	void setAboutRequestCallback(const std::function<void()> &aboutRequestCallback);
@@ -37,6 +39,7 @@ protected:
 	void setBrightness(Corrector::Interface::ICorrector *corrector);
 
 private:
+	Menu::ImageCollectionMenu m_imageCollectionMenu;
 	std::function<void()> m_aboutRequestCallback;
 	std::function<void()> m_closeRequestCallback;
 	std::unique_ptr<QMenu> m_mainMenu;

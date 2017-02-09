@@ -11,7 +11,7 @@ public:
 	~RemoteController() override = default;
 
 	bool changeEmitter(int receiverId, int emitterId) override;
-	bool changeCorrector(int receiverId, int correctorId, double factor, bool enabled) override;
+	bool changeCorrector(int receiverId, int correctorId, correct_t factor, bool enabled) override;
 
 private:
 	Manager::MainManager &m_mainManager;
