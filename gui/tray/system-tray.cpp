@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QRadialGradient>
 #include <QWheelEvent>
+#include <QFileDialog>
 
 using namespace Emitter::Interface;
 using namespace Receiver::Interface;
@@ -31,6 +32,13 @@ SystemTray::SystemTray(Functional::FileCollection &imageCollection, QObject *par
 	m_mainMenu->addSeparator();
 	auto imageCollectionAction = m_mainMenu->addAction("Collection");
 	imageCollectionAction->setMenu(m_imageCollectionMenu.menu());
+	m_imageCollectionMenu.setInsertClickedCallback([this]() {
+		QFileDialog dialog;
+		dialog.exec();
+		const auto selections = dialog.selectedFiles();
+		return selections;
+	});
+
 	auto settings = m_mainMenu->addAction("Settings");
 	auto settingsMenu = new QMenu();
 	settings->setMenu(settingsMenu);

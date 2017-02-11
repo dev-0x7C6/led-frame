@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <memory>
+#include <QStringList>
 
 #include <core/functionals/file-collection.h>
 
@@ -15,13 +16,15 @@ public:
 	explicit ImageCollectionMenu(Functional::FileCollection &collection);
 	virtual ~ImageCollectionMenu();
 
-	void setInsertClickedCallback(const std::function<std::string()> &callback) noexcept;
+	using callback_t = std::function<QStringList()>;
+
+	void setInsertClickedCallback(const callback_t &callback) noexcept;
 	auto menu() noexcept { return m_menu.get(); }
 
 private:
 	Functional::FileCollection &m_imageCollection;
 	std::unique_ptr<QMenu> m_menu;
 	QAction *m_insertAction = nullptr;
-	std::function<std::string()> m_insertClickedCallback = nullptr;
+	callback_t m_insertClickedCallback = nullptr;
 };
 }

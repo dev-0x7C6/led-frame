@@ -69,20 +69,3 @@ void MainManager::detach(Interface::IMultiNotifier &notifier) {
 	for (const auto &receiver : m_receiverManager.list())
 		receiver->correctorManager().detach(&notifier);
 }
-
-Emitter::Concrete::EmitterManager &MainManager::emitters() {
-	return m_emitterManager;
-}
-
-Corrector::Concrete::CorrectorManager &MainManager::correctors() {
-	return m_correctorManager;
-}
-
-Receiver::Concrete::ReceiverManager &MainManager::receivers() {
-	return m_receiverManager;
-}
-
-std::shared_ptr<Corrector::Interface::ICorrector> &MainManager::globalBrightnessCorrection() { return m_globalBrightnessCorrection; }
-std::shared_ptr<Corrector::Interface::ICorrector> &MainManager::globalRedCorrection() { return m_globalRedCorrection; }
-std::shared_ptr<Corrector::Interface::ICorrector> &MainManager::globalGreenCorrection() { return m_globalGreenCorrection; }
-std::shared_ptr<Corrector::Interface::ICorrector> &MainManager::globalBlueCorrection() { return m_globalBlueCorrection; }

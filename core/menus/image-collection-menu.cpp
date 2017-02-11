@@ -16,13 +16,14 @@ ImageCollectionMenu::ImageCollectionMenu(Functional::FileCollection &collection)
 		if (m_insertClickedCallback == nullptr)
 			return;
 
-		const auto path = m_insertClickedCallback();
-		m_imageCollection.insert(path, path);
+		const auto paths = m_insertClickedCallback();
+		for (const auto &path : paths)
+			m_imageCollection.insert(path.toStdString(), path.toStdString());
 	});
 }
 
 ImageCollectionMenu::~ImageCollectionMenu() = default;
 
-void ImageCollectionMenu::setInsertClickedCallback(const std::function<std::string()> &callback) noexcept {
+void ImageCollectionMenu::setInsertClickedCallback(const ImageCollectionMenu::callback_t &callback) noexcept {
 	m_insertClickedCallback = callback;
 }

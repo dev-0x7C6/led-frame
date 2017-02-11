@@ -23,14 +23,14 @@ public:
 	void attach(Interface::IMultiNotifier &notifier) override;
 	void detach(Interface::IMultiNotifier &notifier) override;
 
-	Emitter::Concrete::EmitterManager &emitters();
-	Corrector::Concrete::CorrectorManager &correctors();
-	Receiver::Concrete::ReceiverManager &receivers();
+	auto &emitters() noexcept { return m_emitterManager; }
+	auto &correctors() noexcept { return m_correctorManager; }
+	auto &receivers() noexcept { return m_receiverManager; }
 
-	std::shared_ptr<Corrector::Interface::ICorrector> &globalBrightnessCorrection();
-	std::shared_ptr<Corrector::Interface::ICorrector> &globalRedCorrection();
-	std::shared_ptr<Corrector::Interface::ICorrector> &globalGreenCorrection();
-	std::shared_ptr<Corrector::Interface::ICorrector> &globalBlueCorrection();
+	auto &globalBrightnessCorrection() noexcept { return m_globalBrightnessCorrection; }
+	auto &globalRedCorrection() noexcept { return m_globalRedCorrection; }
+	auto &globalGreenCorrection() noexcept { return m_globalGreenCorrection; }
+	auto &globalBlueCorrection() noexcept { return m_globalRedCorrection; }
 
 private:
 	QSettings &m_settings;
