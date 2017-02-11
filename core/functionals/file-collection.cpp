@@ -23,7 +23,7 @@ FileCollection::~FileCollection() {
 
 void FileCollection::load() {
 	QSettings settings(qApp->applicationName(), "gallery");
-	const auto keys = settings.allKeys();
+	const auto keys = settings.childGroups();
 	for (const auto &key : keys) {
 		settings.beginGroup(key);
 		const auto name = settings.value("name", "").toString();
@@ -36,7 +36,10 @@ void FileCollection::load() {
 void FileCollection::save() {
 	QSettings settings(qApp->applicationName(), "gallery");
 	for (const auto &collectable : m_collection) {
-		settings.beginGroup(QString::fromStdString(collectable.filePath()));
+		auto filePath = QString::fromStdString(collectable.filePath());
+		auto data = QByteArray::fromStdString(collectable.filePath());
+		data = data.toBase64();
+		settings.beginGroup(QString::fromStdString(data.toStdString()));
 		settings.setValue("path", QString::fromStdString(collectable.filePath()));
 		settings.setValue("name", QString::fromStdString(collectable.name()));
 		settings.endGroup();

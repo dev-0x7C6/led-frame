@@ -15,7 +15,6 @@ public:
 
 private:
 	mutable u32 m_duration = 0;
-	mutable bool m_skip = false;
 	mutable u32 m_lastFactor = 0xffffffffu;
 };
 }
