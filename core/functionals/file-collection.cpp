@@ -39,7 +39,7 @@ void FileCollection::save() {
 		auto filePath = QString::fromStdString(collectable.filePath());
 		auto data = filePath.toUtf8();
 		data = data.toBase64();
-		settings.beginGroup(QString::fromStdString(data.toStdString()));
+		settings.beginGroup(QString::fromUtf8(data));
 		settings.setValue("path", QString::fromStdString(collectable.filePath()));
 		settings.setValue("name", QString::fromStdString(collectable.name()));
 		settings.endGroup();
