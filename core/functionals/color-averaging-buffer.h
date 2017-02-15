@@ -5,15 +5,25 @@
 
 namespace Functional {
 
-class ColorAveragingBuffer {
+class alignas(4) ColorAveragingBuffer {
 public:
-	constexpr explicit ColorAveragingBuffer() {}
+	constexpr explicit ColorAveragingBuffer() = default;
 
 	void clear() noexcept {
 		m_r = 0;
 		m_g = 0;
 		m_b = 0;
 		m_counter = 0;
+	}
+
+	inline void add(ccolor sample) noexcept {
+		m_r += Color::getR(sample);
+		m_g += Color::getG(sample);
+		m_b += Color::getB(sample);
+	}
+
+	inline void setCounter(u32 counter) noexcept {
+		m_counter += counter;
 	}
 
 	inline void operator+=(ccolor sample) noexcept {
@@ -54,4 +64,8 @@ private:
 	color m_b = 0;
 	u32 m_counter = 0;
 };
+
+static_assert(std::is_move_assignable<ColorAveragingBuffer>::value, "but should be!");
+static_assert(std::is_move_constructible<ColorAveragingBuffer>::value, "but should be!");
+static_assert(alignof(ColorAveragingBuffer) == 4, "but should be!");
 }

@@ -6,6 +6,8 @@
 
 #include <core/containers/color-scanline-container.h>
 
+#include <iostream>
+
 namespace Functional {
 
 struct Block {
@@ -19,18 +21,20 @@ struct Block {
 
 template <typename type, u32 size>
 inline auto scan_all(ccolor *data, const Block &block) {
-	const u32 memory_shift = block.scanline * (block.step - 1) + block.wdiff;
 	std::array<type, size> result;
 
-	for (u32 y = 0u; y < block.height; y += block.step) {
-		for (u32 column = 0u; column < size; ++column) {
-			type avg;
-			for (u32 x = 0u; x < block.width; x += block.step)
-				avg += data[x];
-			result[column] += avg;
-			data += block.width;
+	const auto shift = block.scanline * (block.step - 1) + block.wdiff;
+	const auto step = block.step;
+	const auto w = block.width;
+	const auto h = block.height;
+
+	for (auto y = 0u; y < h; y += step) {
+		for (auto column = 0u; column < size; ++column) {
+			for (auto x = 0u; x < w; x += step)
+				result[column] += data[x];
+			data += w;
 		}
-		data += memory_shift;
+		data += shift;
 	}
 
 	return result;
@@ -40,15 +44,19 @@ template <typename type, u32 size>
 inline auto scan_edge(ccolor *data, const Block &block) {
 	std::pair<type, type> result;
 
-	for (u32 y = 0u; y < block.height; y += block.step) {
-		for (u32 x = 0u; x < block.width; x += block.step)
+	const auto step = block.step;
+	const auto w = block.width;
+	const auto h = block.height;
+
+	for (auto y = 0u; y < h; y += step) {
+		for (auto x = 0u; x < w; x += step)
 			result.first += data[x];
 
-		data += block.width * (size - 1);
-		for (u32 x = 0u; x < block.width; x += block.step)
+		data += w * (size - 1);
+		for (auto x = 0u; x < w; x += step)
 			result.second += data[x];
 
-		data += block.width + block.scanline * (block.step - 1) + block.wdiff;
+		data += w + block.scanline * (step - 1) + block.wdiff;
 	}
 
 	return result;
