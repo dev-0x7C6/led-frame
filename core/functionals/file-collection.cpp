@@ -37,7 +37,7 @@ void FileCollection::save() {
 	QSettings settings(qApp->applicationName(), "gallery");
 	for (const auto &collectable : m_collection) {
 		auto filePath = QString::fromStdString(collectable.filePath());
-		auto data = QByteArray::fromStdString(collectable.filePath());
+		auto data = filePath.toUtf8();
 		data = data.toBase64();
 		settings.beginGroup(QString::fromStdString(data.toStdString()));
 		settings.setValue("path", QString::fromStdString(collectable.filePath()));
