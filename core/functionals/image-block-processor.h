@@ -24,13 +24,16 @@ inline auto scan_extract(ccolor *data, cu32 range) {
 	auto r = 0u;
 	auto g = 0u;
 	auto b = 0u;
-	for (auto i = 0u; i < range; i += 4) {
+
+	constexpr auto jmp_cacheline = 64 / sizeof(data[0]);
+
+	for (auto i = 0u; i < range; i += jmp_cacheline) {
 		const auto value = data[i];
 		r += Color::getR(value);
 		g += Color::getG(value);
 		b += Color::getB(value);
 	}
-	return type(r, g, b, range / 4);
+	return type(r, g, b, range / jmp_cacheline);
 }
 
 template <typename type, u32 size>
