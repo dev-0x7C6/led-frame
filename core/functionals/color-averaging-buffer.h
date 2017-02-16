@@ -7,7 +7,13 @@ namespace Functional {
 
 class alignas(4) ColorAveragingBuffer {
 public:
-	constexpr explicit ColorAveragingBuffer() = default;
+	constexpr ColorAveragingBuffer() = default;
+	constexpr ColorAveragingBuffer(color r, color g, color b, u32 cnt)
+			: m_r(r)
+			, m_g(g)
+			, m_b(b)
+			, m_counter(cnt) {
+	}
 
 	void clear() noexcept {
 		m_r = 0;

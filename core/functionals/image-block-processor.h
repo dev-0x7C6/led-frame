@@ -20,6 +20,20 @@ struct Block {
 };
 
 template <typename type, u32 size>
+inline auto scan_extract(ccolor *data, cu32 range) {
+	auto r = 0u;
+	auto g = 0u;
+	auto b = 0u;
+	for (auto i = 0u; i < range; i += 4) {
+		const auto value = data[i];
+		r += Color::getR(value);
+		g += Color::getG(value);
+		b += Color::getB(value);
+	}
+	return type(r, g, b, range / 4);
+}
+
+template <typename type, u32 size>
 inline auto scan_all(ccolor *data, const Block &block) {
 	std::array<type, size> result;
 
@@ -30,8 +44,7 @@ inline auto scan_all(ccolor *data, const Block &block) {
 
 	for (auto y = 0u; y < h; y += step) {
 		for (auto column = 0u; column < size; ++column) {
-			for (auto x = 0u; x < w; x += step)
-				result[column] += data[x];
+			result[column] += scan_extract<type, size>(data, w);
 			data += w;
 		}
 		data += shift;
@@ -49,13 +62,9 @@ inline auto scan_edge(ccolor *data, const Block &block) {
 	const auto h = block.height;
 
 	for (auto y = 0u; y < h; y += step) {
-		for (auto x = 0u; x < w; x += step)
-			result.first += data[x];
-
+		result.first += scan_extract<type, size>(data, w);
 		data += w * (size - 1);
-		for (auto x = 0u; x < w; x += step)
-			result.second += data[x];
-
+		result.second += scan_extract<type, size>(data, w);
 		data += w + block.scanline * (step - 1) + block.wdiff;
 	}
 
