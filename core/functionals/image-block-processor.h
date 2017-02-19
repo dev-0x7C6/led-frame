@@ -3,6 +3,7 @@
 #include <array>
 #include <cmath>
 #include <core/types.h>
+#include <thread>
 
 #include <core/containers/color-scanline-container.h>
 
@@ -25,7 +26,8 @@ inline auto scan_extract(ccolor *data, cu32 range) {
 	auto g = 0u;
 	auto b = 0u;
 
-	constexpr auto jmp_cacheline = 64 / sizeof(data[0]);
+	constexpr auto jmp_cacheline = 64 / sizeof(std::remove_pointer<std::decay<decltype(data)>::type>::type);
+	static_assert(jmp_cacheline == 16, "explicit check");
 
 	for (auto i = 0u; i < range; i += jmp_cacheline) {
 		const auto value = data[i];
@@ -58,20 +60,21 @@ inline auto scan_all(ccolor *data, const Block &block) {
 
 template <typename type, u32 size>
 inline auto scan_edge(ccolor *data, const Block &block) {
-	std::pair<type, type> result;
-
 	const auto step = block.step;
 	const auto w = block.width;
 	const auto h = block.height;
 
+	type lhs;
+	type rhs;
+
 	for (auto y = 0u; y < h; y += step) {
-		result.first += scan_extract<type, size>(data, w);
+		lhs += scan_extract<type, size>(data, w);
 		data += w * (size - 1);
-		result.second += scan_extract<type, size>(data, w);
+		rhs += scan_extract<type, size>(data, w);
 		data += w + block.scanline * (step - 1) + block.wdiff;
 	}
 
-	return result;
+	return std::make_pair(lhs, rhs);
 }
 
 template <class type, u32 rows, u32 columns>
@@ -86,29 +89,25 @@ public:
 		block.wdiff = width - (block.width * columns);
 		block.hdiff = height - (block.height * rows);
 
-		std::array<type, rows - 2> l;
-		std::array<type, rows - 2> r;
+		std::array<std::pair<type, type>, rows - 2> pairs;
 
-		auto t = scan_all<type, columns>(data, block);
+		const auto t = scan_all<type, columns>(data, block);
 
-		for (u32 i = 0; i < rows - 2; ++i) {
-			auto ret = scan_edge<type, columns>(data + ((i + 1) * block.scanline * block.height) + block.hdiff / 2 * block.scanline, block);
-			l[i] = ret.first;
-			r[i] = ret.second;
-		}
+		for (u32 i = 0; i < rows - 2; ++i)
+			pairs[i] = scan_edge<type, columns>(data + ((i + 1) * block.scanline * block.height) + block.hdiff / 2 * block.scanline, block);
 
-		auto b = scan_all<type, columns>(data + ((rows - 1) * block.scanline * block.height) + block.hdiff * block.scanline, block);
+		const auto b = scan_all<type, columns>(data + ((rows - 1) * block.scanline * block.height) + block.hdiff * block.scanline, block);
 
 #ifdef RPI
-		auto tc = Container::createInterpolatedColorArray<columns, 32>([&t](cu32 index) { return t.at(index).bgr(); });
-		auto bc = Container::createInterpolatedColorArray<columns, 32>([&b](cu32 index) { return b.at(index).bgr(); });
-		auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&l](cu32 index) { return l.at(index).bgr(); });
-		auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&r](cu32 index) { return r.at(index).bgr(); });
+		const auto tc = Container::createInterpolatedColorArray<columns, 32>([&t](cu32 index) { return t.at(index).bgr(); });
+		const auto bc = Container::createInterpolatedColorArray<columns, 32>([&b](cu32 index) { return b.at(index).bgr(); });
+		const auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&l](cu32 index) { return l.at(index).first.bgr(); });
+		const auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&r](cu32 index) { return r.at(index).second.bgr(); });
 #else
-		auto tc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return t.at(index)(); });
-		auto bc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return b.at(index)(); });
-		auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&](cu32 index) { return l.at(index)(); });
-		auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&](cu32 index) { return r.at(index)(); });
+		const auto tc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return t.at(index)(); });
+		const auto bc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return b.at(index)(); });
+		const auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&](cu32 index) { return pairs.at(index).first(); });
+		const auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&](cu32 index) { return pairs.at(index).second(); });
 #endif
 		for (std::size_t i = 0u; i < 32u; ++i) {
 			m_output[i] = lc.at(31 - i);

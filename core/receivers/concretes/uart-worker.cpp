@@ -39,7 +39,7 @@ void UartWorker::change(const Scanline &from, std::function<Scanline()> getFrame
 	Scanline output;
 	const auto max = m_uartFramerate / 4;
 	for (auto i = 0u; i < max; ++i) {
-		Scanline::interpolate(from, getFrame(), std::min(1.0, static_cast<double>(i) / static_cast<double>(max)), output);
+		Scanline::interpolate(from, getFrame(), std::min(1.0f, static_cast<cfactor>(i) / static_cast<cfactor>(max)), output);
 		write(output);
 		loopSync.wait(m_uartFramerate);
 	}
@@ -49,7 +49,7 @@ void UartWorker::write(Scanline scanline) {
 	m_correctorManager.execute(scanline);
 
 	for (const auto &config : m_ribbon) {
-		double factor = static_cast<double>(Scanline::line()) / static_cast<double>(config.count() - 1);
+		const auto factor = static_cast<cfactor>(Scanline::line()) / static_cast<cfactor>(config.count() - 1);
 
 		for (int i = 0; i < config.count(); ++i) {
 			const auto idx1 = std::min(static_cast<int>(Scanline::line() - 1), static_cast<int>(i * factor));

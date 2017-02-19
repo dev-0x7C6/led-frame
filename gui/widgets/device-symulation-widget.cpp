@@ -218,7 +218,7 @@ void DeviceSymulationWidget::timerEvent(QTimerEvent *) {
 		auto colors = source.data(ribbon.position());
 
 		for (int j = 0; j < ribbon.count(); ++j) {
-			double step = Scanline::line() / static_cast<double>(ribbon.count() - 1);
+			auto step = Scanline::line() / static_cast<cfactor>(ribbon.count() - 1);
 			auto index = std::min(static_cast<int>(Scanline::line() - 1), static_cast<int>(j * step));
 			QColor color(colors[index]);
 			QQuickItem *item = m_leds.at(counter++);

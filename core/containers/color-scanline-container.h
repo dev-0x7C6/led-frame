@@ -45,8 +45,8 @@ public:
 public:
 	constexpr static auto fromIndexToPosition(const std::size_t index) noexcept;
 
-	static color interpolation(ccolor start, ccolor end, double p);
-	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, double progress, ScanlineContainer &out) noexcept;
+	static color interpolation(ccolor start, ccolor end, cfactor p);
+	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, cfactor progress, ScanlineContainer &out) noexcept;
 
 	template <u32 newsize>
 	inline ScanlineContainer<newsize> resize();
@@ -138,7 +138,7 @@ static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color), "ScanlineCon
 static_assert(alignof(Scanline) == sizeof(color), "ScanlineContainer should be align to sizeof(color)");
 
 template <u32 linesize>
-color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, double p) {
+color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, cfactor p) {
 	using namespace Functional::Color;
 	const auto r = static_cast<ccolor>(getR(end) * p + (getR(start) * (1.0 - p)));
 	const auto g = static_cast<ccolor>(getG(end) * p + (getG(start) * (1.0 - p)));
@@ -147,7 +147,7 @@ color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, doubl
 }
 
 template <u32 linesize>
-void ScanlineContainer<linesize>::interpolate(const ScanlineContainer &start, const ScanlineContainer &end, double p, ScanlineContainer &out) noexcept {
+void ScanlineContainer<linesize>::interpolate(const ScanlineContainer &start, const ScanlineContainer &end, cfactor p, ScanlineContainer &out) noexcept {
 	using namespace Functional::Color;
 	for (auto i = 0u; i < size() - 1u; i += 4u) {
 		out.data()[i + 0] = interpolation(start.constData()[i + 0], end.constData()[i + 0], p);
@@ -174,7 +174,7 @@ ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
 
 template <u32 oldsize, u32 newsize>
 inline static std::array<color, newsize> createInterpolatedColorArray(const std::function<color(cu32)> &getColor) {
-	constexpr auto factor = static_cast<double>(oldsize) / static_cast<double>(newsize);
+	constexpr auto factor = static_cast<cfactor>(oldsize) / static_cast<cfactor>(newsize);
 	std::array<color, newsize> result;
 
 	for (u32 i = 0u; i < newsize; ++i) {

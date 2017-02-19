@@ -76,7 +76,7 @@ static_assert(std::is_unsigned<cu32>::value, "");
 static_assert(std::is_unsigned<cu64>::value, "");
 static_assert(std::is_unsigned<cu8>::value, "");
 
-using factor_t = double;
+using factor_t = float;
 using cfactor = const factor_t;
 
 using color = u32;

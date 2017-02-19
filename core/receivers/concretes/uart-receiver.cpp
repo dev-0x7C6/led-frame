@@ -99,9 +99,9 @@ void UartReceiver::run() {
 				frameCounter = 0;
 			}
 
-			auto factor = std::min(1.0, static_cast<double>(frameCounter) / (static_cast<double>(uartFramerate) / static_cast<double>(emitterFramerate)));
+			auto factor = std::min(1.0f, static_cast<cfactor>(frameCounter) / (static_cast<cfactor>(uartFramerate) / static_cast<cfactor>(emitterFramerate)));
 
-			if (factor < 1.0) {
+			if (factor < 1.0f) {
 				output = emitterGetFrame();
 			} else {
 				Container::Scanline::interpolate(prev, next, factor, output);
