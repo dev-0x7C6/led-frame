@@ -44,8 +44,8 @@ void WebSocketConnection::modified(IReceiver *receiver) { send(JsonProtocolHelpe
 
 void WebSocketConnection::send(const QString &message) {
 #ifdef QT_DEBUG
-	std::cout << message.toStdString() << std::endl
-			  << std::endl;
+	std::cout << "send:\n";
+	std::cout << "\t" << message.toStdString() << "\n\n";
 #endif
 	m_socket->sendTextMessage(message);
 	m_socket->flush();
@@ -55,6 +55,11 @@ void WebSocketConnection::recv(const QString &in) {
 	auto json = QJsonDocument::fromJson(in.toUtf8());
 	auto obj = json.object();
 
+#ifdef QT_DEBUG
+	std::cout << "recv:\n";
+	std::cout << "\t" << in.toStdString() << "\n\n";
+#endif
+
 	const auto message = obj.value("message").toString();
 	const auto event = obj.value("event");
 
@@ -62,7 +67,7 @@ void WebSocketConnection::recv(const QString &in) {
 		if (event == "set_corrector") {
 			const auto receiverId = obj.value("receiver").toInt();
 			const auto correctorId = obj.value("corrector").toInt();
-			const auto factor = obj.value("factor").toDouble();
+			const auto factor = obj.value("factor").toInt();
 			const auto enabled = obj.value("enabled").toBool();
 			m_remoteController.changeCorrector(receiverId, correctorId, factor, enabled);
 		}
