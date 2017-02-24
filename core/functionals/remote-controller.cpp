@@ -21,6 +21,18 @@ bool RemoteController::changeEmitter(int receiverId, int emitterId) {
 	return true;
 }
 
+bool RemoteController::changeEmitterData(int emitterId, const std::string &data) {
+	auto emitter = m_mainManager.emitters().find(emitterId);
+	static_cast<void>(data);
+
+	if (!emitter)
+		return false;
+
+	//TODO: Emitter should interpret instruction from data
+
+	return true;
+}
+
 bool RemoteController::changeCorrector(int receiverId, int correctorId, correct_t factor, bool enabled) {
 	auto receiver = m_mainManager.receivers().find(receiverId);
 

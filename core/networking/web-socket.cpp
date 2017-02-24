@@ -72,6 +72,12 @@ void WebSocketConnection::recv(const QString &in) {
 			m_remoteController.changeCorrector(receiverId, correctorId, factor, enabled);
 		}
 
+		if (event == "set_emitter_data") {
+			const auto id = obj.value("emitter").toInt();
+			const auto data = obj.value("data").toString();
+			m_remoteController.changeEmitterData(id, data.toStdString());
+		}
+
 		if (event == "set_emitter") {
 			const auto receiverId = obj.value("receiver").toInt();
 			const auto emitterId = obj.value("emitter").toInt();

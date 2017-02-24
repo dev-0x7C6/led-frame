@@ -10,8 +10,9 @@ public:
 	explicit RemoteController(Manager::MainManager &mainManager);
 	~RemoteController() override = default;
 
-	bool changeEmitter(int receiverId, int emitterId) override;
 	bool changeCorrector(int receiverId, int correctorId, correct_t factor, bool enabled) override;
+	bool changeEmitter(int receiverId, int emitterId) override;
+	bool changeEmitterData(int emitterId, const std::string &data) override;
 
 private:
 	Manager::MainManager &m_mainManager;

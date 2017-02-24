@@ -10,7 +10,8 @@ public:
 	explicit IRemoteController() = default;
 	virtual ~IRemoteController() = default;
 
-	virtual bool changeEmitter(int receiverId, int emitterId) = 0;
 	virtual bool changeCorrector(int receiverId, int correctorId, correct_t factor, bool enabled) = 0;
+	virtual bool changeEmitterData(int emitterId, const std::string &data) = 0;
+	virtual bool changeEmitter(int receiverId, int emitterId) = 0;
 };
 }
