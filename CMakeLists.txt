@@ -40,6 +40,8 @@ find_package(GTest)
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
 option(SUPPORT_RPI3 "Some extensions for Raspberry Pi 3" OFF)
+option(TESTS "Build unit tests" ON)
+option(BENCHMARKS "Build benchmarks" ON)
 option(GUI "Build gui interface" ON)
 
 include_directories(
@@ -338,7 +340,7 @@ target_link_libraries(led-frame
 	"-lpthread"
 )
 
-if (GTEST_FOUND)
+if (TESTS AND GTEST_FOUND)
 	add_executable(led-frame-ut ${sources_ut})
 
 	target_link_libraries(led-frame-ut
@@ -349,12 +351,13 @@ if (GTEST_FOUND)
 	)
 endif()
 
-add_executable(led-frame-benchmark ${sources_bench})
-
-target_link_libraries(led-frame-benchmark
-	Qt5::Core
-	-lbenchmark
-	-lpthread
-)
+if (BENCHMARKS)
+	add_executable(led-frame-benchmark ${sources_bench})
+	target_link_libraries(led-frame-benchmark
+		Qt5::Core
+		-lbenchmark
+		-lpthread
+	)
+endif()
 
 install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX})
