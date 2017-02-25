@@ -99,10 +99,10 @@ public:
 		const auto b = scan_all<type, columns>(data + ((rows - 1) * block.scanline * block.height) + block.hdiff * block.scanline, block);
 
 #ifdef RPI
-		const auto tc = Container::createInterpolatedColorArray<columns, 32>([&t](cu32 index) { return t.at(index).bgr(); });
-		const auto bc = Container::createInterpolatedColorArray<columns, 32>([&b](cu32 index) { return b.at(index).bgr(); });
-		const auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&l](cu32 index) { return l.at(index).first.bgr(); });
-		const auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&r](cu32 index) { return r.at(index).second.bgr(); });
+		const auto tc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return t.at(index).bgr(); });
+		const auto bc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return b.at(index).bgr(); });
+		const auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&](cu32 index) { return pairs.at(index).first.bgr(); });
+		const auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&](cu32 index) { return pairs.at(index).second.bgr(); });
 #else
 		const auto tc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return t.at(index)(); });
 		const auto bc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return b.at(index)(); });
