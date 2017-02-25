@@ -63,7 +63,7 @@ if (UNIX AND SUPPORT_RPI)
 		core/functionals/helper/dispmanx-helper.cpp
 		core/functionals/helper/dispmanx-helper.h
 	)
-	set(rpi-libs -lbcm_host)
+	set(rpi-libs -lbcm_host -lvcos -lvcsm -lvchostif)
 	link_directories("/opt/vc/lib")
 endif()
 
@@ -360,4 +360,4 @@ if (BENCHMARKS)
 	)
 endif()
 
-install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
