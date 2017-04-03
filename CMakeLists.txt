@@ -106,17 +106,10 @@ if (GUI)
 		gui/dialogs/about-dialog.cpp
 		gui/dialogs/about-dialog.h
 		gui/dialogs/about-dialog.ui
-		gui/dialogs/alc-screen-configure-dialog.cpp
-		gui/dialogs/alc-screen-configure-dialog.h
-		gui/dialogs/alc-screen-configure-dialog.ui
 		gui/tray/system-tray.cpp
 		gui/tray/system-tray.h
 		gui/tray/system-tray-icon.cpp
 		gui/tray/system-tray-icon.h
-		gui/widgets/alc-color-correction-widget.cpp
-		gui/widgets/alc-color-correction-widget.h
-		gui/widgets/alc-color-correction-widget.ui
-		gui/widgets/alc-emitter-widget.ui
 		gui/widgets/corrector-settings-dialog.cpp
 		gui/widgets/corrector-settings-dialog.h
 		gui/widgets/device-symulation-widget.cpp
