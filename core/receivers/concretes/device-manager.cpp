@@ -2,7 +2,7 @@
 
 #include <core/containers/device-info-container.h>
 #include <core/devices/device-port.h>
-#include <core/networking/broadcast-service.h>
+#include <core/networking/udp-broadcast-service.h>
 #include <core/receivers/concretes/device-manager.h>
 #include <core/receivers/concretes/uart-receiver.h>
 
@@ -48,7 +48,7 @@ void ReceiverManager::rescan() {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
 			continue;
 
-		m_broadcasts.emplace_back(std::make_unique<BroadcastService>(thread->id(), thread->name(), 4999));
+		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(thread->id(), thread->name(), 4999));
 		attach(std::move(thread));
 		emit afterAttach();
 	}

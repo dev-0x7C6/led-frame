@@ -230,12 +230,12 @@ set(sources
 	core/managers/main-manager.h
 	core/managers/session-manager.cpp
 	core/managers/session-manager.h
-	core/networking/broadcast-service.cpp
-	core/networking/broadcast-service.h
+	core/networking/udp-broadcast-service.cpp
+	core/networking/udp-broadcast-service.h
 	core/networking/protocols/json-protocol.cpp
 	core/networking/protocols/json-protocol.h
-	core/networking/web-socket.cpp
-	core/networking/web-socket.h
+	core/networking/web-socket-connection.cpp
+	core/networking/web-socket-connection.h
 	core/networking/web-socket-server.cpp
 	core/networking/web-socket-server.h
 	core/receivers/abstracts/abstract-receiver.cpp

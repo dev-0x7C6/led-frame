@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 	SessionManager session(settings, manager);
 	FileCollection imageCollection;
 	RemoteController controller(manager);
-	WebSocketConnectionManager webSocketServer(manager, controller);
+	WebSocketServer webSocketServer(manager, controller);
 
 #ifdef GUI
 	Tray::SystemTray tray(imageCollection);

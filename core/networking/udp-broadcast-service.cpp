@@ -1,4 +1,4 @@
-#include <core/networking/broadcast-service.h>
+#include <core/networking/udp-broadcast-service.h>
 
 #include <QHostInfo>
 #include <QJsonDocument>
@@ -10,7 +10,7 @@
 
 using namespace Network;
 
-BroadcastService::BroadcastService(const int deviceId, const QString &deviceName, const cu16 port)
+UdpBroadcastService::UdpBroadcastService(const int deviceId, const QString &deviceName, const cu16 port)
 		: m_socket(std::make_unique<QUdpSocket>())
 		, m_timer(std::make_unique<QTimer>())
 		, m_deviceId(deviceId)
@@ -23,9 +23,9 @@ BroadcastService::BroadcastService(const int deviceId, const QString &deviceName
 	m_timer->start();
 }
 
-BroadcastService::~BroadcastService() = default;
+UdpBroadcastService::~UdpBroadcastService() = default;
 
-u16 BroadcastService::servicePort() const {
+u16 UdpBroadcastService::servicePort() const {
 	return m_servicePort;
 }
 
@@ -37,7 +37,7 @@ QJsonObject jsonCreator(std::initializer_list<QPair<QString, QJsonValue>> args) 
 	return obj;
 }
 
-void BroadcastService::broadcast() {
+void UdpBroadcastService::broadcast() {
 	auto interfaces = QNetworkInterface::allInterfaces();
 	QHostAddress host;
 

@@ -13,10 +13,10 @@ namespace Network {
 
 class WebSocketConnection;
 
-class WebSocketConnectionManager final {
+class WebSocketServer final {
 public:
-	explicit WebSocketConnectionManager(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const u16 &port = 4999);
-	virtual ~WebSocketConnectionManager();
+	explicit WebSocketServer(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const u16 &port = 4999);
+	virtual ~WebSocketServer();
 
 	bool isListening() const noexcept;
 	u16 port() const noexcept;

@@ -10,10 +10,10 @@ class QTimer;
 
 namespace Network {
 
-class BroadcastService final {
+class UdpBroadcastService final {
 public:
-	explicit BroadcastService(const int deviceId, const QString &deviceName, cu16 port = 4999);
-	virtual ~BroadcastService();
+	explicit UdpBroadcastService(const int deviceId, const QString &deviceName, cu16 port = 4999);
+	virtual ~UdpBroadcastService();
 
 	int id() const { return m_deviceId; }
 	u16 servicePort() const;

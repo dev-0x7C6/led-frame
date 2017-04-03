@@ -14,7 +14,7 @@ class DevicePort;
 }
 
 namespace Network {
-class BroadcastService;
+class UdpBroadcastService;
 }
 
 namespace Receiver {
@@ -37,7 +37,7 @@ protected:
 
 private:
 	std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
-	std::list<std::unique_ptr<Network::BroadcastService>> m_broadcasts;
+	std::list<std::unique_ptr<Network::UdpBroadcastService>> m_broadcasts;
 	QTimer m_deviceScan;
 
 signals:
