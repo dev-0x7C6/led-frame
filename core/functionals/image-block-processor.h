@@ -25,6 +25,7 @@ inline auto scan_extract(ccolor *data, cu32 range) {
 	auto r = 0u;
 	auto g = 0u;
 	auto b = 0u;
+	auto cnt = 0u;
 
 	constexpr auto jmp_cacheline = 64 / sizeof(std::remove_pointer<std::decay<decltype(data)>::type>::type);
 	static_assert(jmp_cacheline == 16, "explicit check");
@@ -34,8 +35,10 @@ inline auto scan_extract(ccolor *data, cu32 range) {
 		r += Color::getR(value);
 		g += Color::getG(value);
 		b += Color::getB(value);
+		++cnt;
 	}
-	return type(r, g, b, range / jmp_cacheline);
+
+	return type(r, g, b, cnt);
 }
 
 template <typename type, u32 size>
