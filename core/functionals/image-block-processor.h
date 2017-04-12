@@ -22,23 +22,20 @@ struct Block {
 
 template <typename type, u32 size>
 inline auto scan_extract(ccolor *data, cu32 range) {
-	auto r = 0u;
-	auto g = 0u;
-	auto b = 0u;
-	auto cnt = 0u;
+	std::array<color, 4> rgb{{0, 0, 0, 0}};
 
 	constexpr auto jmp_cacheline = 64 / sizeof(std::remove_pointer<std::decay<decltype(data)>::type>::type);
 	static_assert(jmp_cacheline == 16, "explicit check");
 
 	for (auto i = 0u; i < range; i += jmp_cacheline) {
 		const auto value = data[i];
-		r += Color::getR(value);
-		g += Color::getG(value);
-		b += Color::getB(value);
-		++cnt;
+		rgb[0] += Color::getR(value);
+		rgb[1] += Color::getG(value);
+		rgb[2] += Color::getB(value);
+		++rgb[3];
 	}
 
-	return type(r, g, b, cnt);
+	return type(rgb[0], rgb[1], rgb[2], rgb[3]);
 }
 
 template <typename type, u32 size>

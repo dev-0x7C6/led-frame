@@ -6,19 +6,19 @@ using namespace Enum;
 using namespace Container;
 
 void RibbonConfiguration::setColorFormat(const ColorFormat format) noexcept {
-	m_data.format = static_cast<u8>(format);
+	m_data.setFormat(static_cast<u8>(format));
 }
 
 void RibbonConfiguration::setCount(cu8 count) noexcept {
-	m_data.count = count;
+	m_data.setFormat(static_cast<u8>(count));
 }
 
 void RibbonConfiguration::setDirection(const Direction direction) noexcept {
-	m_data.direction = static_cast<u8>(direction);
+	m_data.setDirection(static_cast<u8>(direction));
 }
 
 void RibbonConfiguration::setPosition(const Position position) noexcept {
-	m_data.position = static_cast<u8>(position);
+	m_data.setPosition(static_cast<u8>(position));
 }
 
 void RibbonConfiguration::operator=(const RibbonConfiguration &other) noexcept {
