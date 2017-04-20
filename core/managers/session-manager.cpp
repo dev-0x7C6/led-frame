@@ -47,7 +47,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 		EmitterType::Image,
 		EmitterType::Animation,
 		EmitterType::Color,
-	};
+		EmitterType::Off};
 
 	for (const auto &type : list)
 		m_mainManager.emitters().attach(EmitterFactory::create(type, translate(type)));

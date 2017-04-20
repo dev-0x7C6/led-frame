@@ -11,7 +11,8 @@ enum class EmitterType {
 	Image,
 	Animation,
 	Color,
-	Test
+	Test,
+	Off
 };
 
 inline QIcon icon(const EmitterType &type) {
@@ -20,6 +21,7 @@ inline QIcon icon(const EmitterType &type) {
 		case EmitterType::Color: return QIcon(":/emitters/color-emitter.svg");
 		case EmitterType::Image: return QIcon(":/emitters/image-emitter.svg");
 		case EmitterType::Screen: return QIcon(":/emitters/screen-emitter.png");
+		case EmitterType::Off: return {};
 		case EmitterType::Test: return {};
 	}
 
@@ -32,6 +34,7 @@ inline QString description(const EmitterType &type) {
 		case EmitterType::Color: return "Color";
 		case EmitterType::Image: return "Image";
 		case EmitterType::Screen: return "Screen capture";
+		case EmitterType::Off: return "Switch off";
 		case EmitterType::Test: return {};
 	}
 
@@ -44,6 +47,7 @@ inline QString translate(const EmitterType &type) {
 		case EmitterType::Color: return QObject::tr("Color");
 		case EmitterType::Image: return QObject::tr("Image");
 		case EmitterType::Screen: return QObject::tr("Display");
+		case EmitterType::Off: return QObject::tr("Switch off");
 		case EmitterType::Test: return {};
 	}
 
@@ -56,6 +60,7 @@ inline auto value(const EmitterType type) {
 		case EmitterType::Color: return "color";
 		case EmitterType::Image: return "image";
 		case EmitterType::Screen: return "display";
+		case EmitterType::Off: return "off";
 		case EmitterType::Test: return "";
 	}
 

@@ -1,6 +1,7 @@
 #include <core/emitters/concretes/animation-emitter.h>
 #include <core/emitters/concretes/color-emitter.h>
 #include <core/emitters/concretes/image-emitter.h>
+#include <core/emitters/concretes/off-emitter.h>
 #include <core/emitters/concretes/screen-emitter.h>
 #include <core/emitters/concretes/test-emitter.h>
 #include <core/emitters/factories/emitter-factory.h>
@@ -19,6 +20,7 @@ std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type) {
 		case EmitterType::Image: return std::make_shared<ImageEmitter>(id++);
 		case EmitterType::Screen: return std::make_shared<ScreenEmitter>(id++);
 		case EmitterType::Test: return std::make_shared<TestEmitter>(id++);
+		case EmitterType::Off: return std::make_shared<OffEmitter>(id++);
 	}
 
 	return nullptr;
