@@ -71,7 +71,6 @@ private:
 	u32 m_counter = 0;
 };
 
-static_assert(std::is_move_assignable<ColorAveragingBuffer>::value, "but should be!");
-static_assert(std::is_move_constructible<ColorAveragingBuffer>::value, "but should be!");
-static_assert(alignof(ColorAveragingBuffer) == 4, "but should be!");
+static_assert(is_class_cxx14_efficient_nothrow<ColorAveragingBuffer>::value, "");
+static_assert(alignof(ColorAveragingBuffer) == 4, "");
 }

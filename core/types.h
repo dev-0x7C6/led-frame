@@ -4,6 +4,28 @@
 #include <cstdint>
 #include <type_traits>
 
+template <typename type>
+inline constexpr auto is_class_efficient_func() noexcept {
+	return std::is_copy_assignable<type>::value &&
+		std::is_copy_constructible<type>::value &&
+		std::is_move_assignable<type>::value &&
+		std::is_move_constructible<type>::value;
+}
+
+template <typename type>
+inline constexpr auto is_class_efficient_nothrow_func() noexcept {
+	return std::is_nothrow_copy_assignable<type>::value &&
+		std::is_nothrow_copy_constructible<type>::value &&
+		std::is_nothrow_move_assignable<type>::value &&
+		std::is_nothrow_move_constructible<type>::value;
+}
+
+template <typename type>
+class is_class_cxx14_efficient : public std::integral_constant<bool, is_class_efficient_func<type>()> {};
+
+template <typename type>
+class is_class_cxx14_efficient_nothrow : public std::integral_constant<bool, is_class_efficient_nothrow_func<type>()> {};
+
 using i16 = int16_t;
 using i32 = int32_t;
 using i64 = int64_t;

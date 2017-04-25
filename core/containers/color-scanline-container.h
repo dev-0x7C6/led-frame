@@ -32,7 +32,6 @@ public:
 	inline void fill(const color value) noexcept;
 	inline void fill(const Enum::Position position, const color value) noexcept;
 
-	inline void operator=(const ScanlineContainer &other) noexcept;
 	inline void operator=(const color value) noexcept;
 	inline bool operator==(const ScanlineContainer &other) const noexcept;
 	inline bool operator!=(const ScanlineContainer &other) const noexcept;
@@ -56,6 +55,7 @@ private:
 };
 
 using Scanline = ScanlineContainer<128u>;
+static_assert(is_class_cxx14_efficient_nothrow<Scanline>::value, "");
 
 template <u32 linesize>
 inline ScanlineContainer<linesize>::ScanlineContainer() noexcept
@@ -104,9 +104,6 @@ void ScanlineContainer<linesize>::fill(const Enum::Position position, const colo
 
 template <u32 linesize>
 constexpr auto ScanlineContainer<linesize>::fromIndexToPosition(const std::size_t index) noexcept { return static_cast<Enum::Position>(index / ScanlineContainer::line()); }
-
-template <u32 linesize>
-void ScanlineContainer<linesize>::operator=(const ScanlineContainer &other) noexcept { m_data = other.m_data; }
 
 template <u32 linesize>
 void ScanlineContainer<linesize>::operator=(const color value) noexcept { fill(value); }
