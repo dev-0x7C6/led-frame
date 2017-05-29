@@ -2,25 +2,68 @@
 
 #include <QColor>
 
+#include <chrono>
+
 using namespace Emitter::Concrete;
+
+enum class AnimationType {
+	Rainbow,
+	Candle,
+};
+
+class AnimationFactory {
+public:
+	explicit AnimationFactory() = delete;
+	virtual ~AnimationFactory() = delete;
+
+	static void setup(QVariantAnimation &animation, const AnimationType &type) noexcept;
+};
+
+void AnimationFactory::setup(QVariantAnimation &animation, const AnimationType &type) noexcept {
+	animation.setKeyValues({});
+
+	switch (type) {
+		case AnimationType::Rainbow:
+			for (int i = 0; i < 359; ++i)
+				animation.setKeyValueAt(static_cast<double>(i) / 359.0, QColor::fromHsv(i, 255, 255, 255));
+			break;
+
+		case AnimationType::Candle:
+			animation.setKeyValueAt(0.000, QColor::fromHsv(25, 255, 255, 255));
+			animation.setKeyValueAt(0.100, QColor::fromHsv(30, 255, 255, 255));
+			animation.setKeyValueAt(0.150, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.200, QColor::fromHsv(25, 255, 255, 255));
+			animation.setKeyValueAt(0.250, QColor::fromHsv(35, 255, 255, 255));
+			animation.setKeyValueAt(0.275, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.300, QColor::fromHsv(28, 255, 255, 255));
+			animation.setKeyValueAt(0.400, QColor::fromHsv(25, 255, 255, 255));
+			animation.setKeyValueAt(0.500, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.550, QColor::fromHsv(25, 255, 255, 255));
+			animation.setKeyValueAt(0.600, QColor::fromHsv(30, 255, 255, 255));
+			animation.setKeyValueAt(0.625, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.700, QColor::fromHsv(30, 255, 255, 255));
+			animation.setKeyValueAt(0.800, QColor::fromHsv(25, 255, 255, 255));
+			animation.setKeyValueAt(0.850, QColor::fromHsv(30, 255, 255, 255));
+			animation.setKeyValueAt(0.900, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.925, QColor::fromHsv(28, 255, 255, 255));
+			animation.setKeyValueAt(0.950, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.975, QColor::fromHsv(30, 255, 255, 255));
+			animation.setKeyValueAt(1.000, QColor::fromHsv(25, 255, 255, 255));
+			break;
+	}
+
+	animation.setDuration(50000);
+	animation.setLoopCount(-1);
+	animation.start();
+}
 
 AnimationEmitter::AnimationEmitter(ci32 id)
 		: AbstractEmitter(id)
 
 {
-	const auto start = QColor::fromRgbF(1, 0, 0);
 	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, this, &AnimationEmitter::process);
-	m_animation.setKeyValues(QVariantAnimation::KeyValues());
-	m_animation.setKeyValueAt(0.000, start);
-	m_animation.setKeyValueAt(0.200, QColor::fromRgbF(0, 0, 1));
-	m_animation.setKeyValueAt(0.400, QColor::fromRgbF(0, 1, 1));
-	m_animation.setKeyValueAt(0.600, QColor::fromRgbF(0, 1, 0));
-	m_animation.setKeyValueAt(0.800, QColor::fromRgbF(1, 1, 0));
-	m_animation.setKeyValueAt(1.000, QColor::fromRgbF(1, 0, 0));
-	m_animation.setDuration(50000);
-	m_animation.setLoopCount(-1);
-	m_animation.start();
-	m_colors.fill(start.rgba());
+	AnimationFactory::setup(m_animation, AnimationType::Candle);
+	m_colors.fill(m_animation.keyValueAt(0).value<QColor>().rgba());
 	commit(m_colors);
 }
 
