@@ -29,25 +29,25 @@ void AnimationFactory::setup(QVariantAnimation &animation, const AnimationType &
 			break;
 
 		case AnimationType::Candle:
-			animation.setKeyValueAt(0.000, QColor::fromHsv(25, 255, 255, 255));
-			animation.setKeyValueAt(0.100, QColor::fromHsv(30, 255, 255, 255));
-			animation.setKeyValueAt(0.150, QColor::fromHsv(20, 255, 255, 255));
-			animation.setKeyValueAt(0.200, QColor::fromHsv(25, 255, 255, 255));
-			animation.setKeyValueAt(0.250, QColor::fromHsv(35, 255, 255, 255));
-			animation.setKeyValueAt(0.275, QColor::fromHsv(20, 255, 255, 255));
-			animation.setKeyValueAt(0.300, QColor::fromHsv(28, 255, 255, 255));
-			animation.setKeyValueAt(0.400, QColor::fromHsv(25, 255, 255, 255));
-			animation.setKeyValueAt(0.500, QColor::fromHsv(20, 255, 255, 255));
-			animation.setKeyValueAt(0.550, QColor::fromHsv(25, 255, 255, 255));
-			animation.setKeyValueAt(0.600, QColor::fromHsv(30, 255, 255, 255));
-			animation.setKeyValueAt(0.625, QColor::fromHsv(20, 255, 255, 255));
-			animation.setKeyValueAt(0.700, QColor::fromHsv(30, 255, 255, 255));
-			animation.setKeyValueAt(0.800, QColor::fromHsv(25, 255, 255, 255));
-			animation.setKeyValueAt(0.850, QColor::fromHsv(30, 255, 255, 255));
-			animation.setKeyValueAt(0.900, QColor::fromHsv(20, 255, 255, 255));
-			animation.setKeyValueAt(0.925, QColor::fromHsv(28, 255, 255, 255));
-			animation.setKeyValueAt(0.950, QColor::fromHsv(20, 255, 255, 255));
-			animation.setKeyValueAt(0.975, QColor::fromHsv(30, 255, 255, 255));
+			animation.setKeyValueAt(0.000, QColor::fromHsv(15, 255, 255, 255));
+			animation.setKeyValueAt(0.100, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.150, QColor::fromHsv(10, 255, 255, 255));
+			animation.setKeyValueAt(0.200, QColor::fromHsv(15, 255, 255, 255));
+			animation.setKeyValueAt(0.250, QColor::fromHsv(25, 255, 255, 255));
+			animation.setKeyValueAt(0.275, QColor::fromHsv(10, 255, 255, 255));
+			animation.setKeyValueAt(0.300, QColor::fromHsv(18, 255, 255, 255));
+			animation.setKeyValueAt(0.400, QColor::fromHsv(15, 255, 255, 255));
+			animation.setKeyValueAt(0.500, QColor::fromHsv(10, 255, 255, 255));
+			animation.setKeyValueAt(0.550, QColor::fromHsv(15, 255, 255, 255));
+			animation.setKeyValueAt(0.600, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.625, QColor::fromHsv(10, 255, 255, 255));
+			animation.setKeyValueAt(0.700, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.800, QColor::fromHsv(15, 255, 255, 255));
+			animation.setKeyValueAt(0.850, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.900, QColor::fromHsv(10, 255, 255, 255));
+			animation.setKeyValueAt(0.925, QColor::fromHsv(18, 255, 255, 255));
+			animation.setKeyValueAt(0.950, QColor::fromHsv(10, 255, 255, 255));
+			animation.setKeyValueAt(0.975, QColor::fromHsv(20, 255, 255, 255));
 			animation.setKeyValueAt(1.000, QColor::fromHsv(25, 255, 255, 255));
 			break;
 	}
