@@ -6,9 +6,12 @@
 #include <core/interfaces/inotify.h>
 
 #include <atomic>
+#include <experimental/any>
 #include <memory>
 #include <mutex>
 #include <string>
+
+using namespace std::experimental;
 
 namespace Interface {
 namespace Receiver {
@@ -36,6 +39,8 @@ public:
 
 	auto acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter>;
 	auto usages() const noexcept -> int;
+
+	virtual void interpret(any data);
 
 	bool isFirstFrameReady() const noexcept;
 

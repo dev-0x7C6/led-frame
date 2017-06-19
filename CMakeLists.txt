@@ -176,18 +176,19 @@ set(sources
 	core/emitters/concretes/emitter-manager.h
 	core/emitters/concretes/image-emitter.cpp
 	core/emitters/concretes/image-emitter.h
+	core/emitters/concretes/off-emitter.cpp
+	core/emitters/concretes/off-emitter.h
 	core/emitters/concretes/screen-emitter.cpp
 	core/emitters/concretes/screen-emitter.h
 	core/emitters/concretes/test-emitter.cpp
 	core/emitters/concretes/test-emitter.h
-	core/emitters/concretes/off-emitter.h
-	core/emitters/concretes/off-emitter.cpp
 	core/emitters/factories/emitter-factory.cpp
 	core/emitters/factories/emitter-factory.h
 	core/emitters/interfaces/iemitter.cpp
 	core/emitters/interfaces/iemitter.h
 	core/emitters/interfaces/iemitter-manager.h
 	core/emitters/interfaces/iemitter-notify.h
+	core/enums/animation-variant.h
 	core/enums/color-format-enum.h
 	core/enums/color-type-enum.h
 	core/enums/container-type-enum.h
@@ -199,6 +200,8 @@ set(sources
 	core/enums/screen-capture-type.h
 	core/factories/screen-capture-factory.cpp
 	core/factories/screen-capture-factory.h
+	core/functionals/animations/animation-variant-factory.cpp
+	core/functionals/animations/animation-variant-factory.h
 	core/functionals/captures/qt-screen-capture.cpp
 	core/functionals/captures/qt-screen-capture.h
 	core/functionals/color-averaging-buffer.h
@@ -228,10 +231,10 @@ set(sources
 	core/managers/main-manager.h
 	core/managers/session-manager.cpp
 	core/managers/session-manager.h
-	core/networking/udp-broadcast-service.cpp
-	core/networking/udp-broadcast-service.h
 	core/networking/protocols/json-protocol.cpp
 	core/networking/protocols/json-protocol.h
+	core/networking/udp-broadcast-service.cpp
+	core/networking/udp-broadcast-service.h
 	core/networking/web-socket-connection.cpp
 	core/networking/web-socket-connection.h
 	core/networking/web-socket-server.cpp
@@ -250,6 +253,9 @@ set(sources
 	core/receivers/interfaces/ireceiver-manager.h
 	core/receivers/interfaces/ireceiver-notify.h
 	core/types.h
+)
+
+set(sources_app
 	main.cpp
 	qml.qrc
 	resources/resource.qrc
@@ -309,7 +315,7 @@ set(sources_bench
 	core/interfaces/inotify.h
 )
 
-add_executable(led-frame ${sources} ${gui-sources} ${rpi-sources} ${x11-sources})
+add_executable(led-frame ${sources} ${sources_app}  ${gui-sources} ${rpi-sources} ${x11-sources})
 
 if (UNIX AND SUPPORT_X11)
 	target_compile_definitions(led-frame PRIVATE X11)

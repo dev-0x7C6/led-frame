@@ -6,6 +6,7 @@
 #include <core/managers/main-manager.h>
 #include <core/receivers/interfaces/ireceiver.h>
 #include <core/correctors/interfaces/icorrector.h>
+#include <core/enums/animation-variant.h>
 
 #ifdef GUI
 #include <gui/wizards/device-setup-wizard.h>
@@ -43,14 +44,16 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 	m_mainManager.emitters().attach(emitter);
 #endif
 
-	const auto list = {
-		EmitterType::Image,
-		EmitterType::Animation,
-		EmitterType::Color,
-		EmitterType::Off};
+	m_mainManager.emitters().attach(EmitterFactory::create(EmitterType::Image, translate(EmitterType::Image)));
 
-	for (const auto &type : list)
-		m_mainManager.emitters().attach(EmitterFactory::create(type, translate(type)));
+	for (auto &types : getAnimationVariantTypes()) {
+		auto animation = EmitterFactory::create(EmitterType::Animation, translate(EmitterType::Animation));
+		animation->interpret(types);
+		m_mainManager.emitters().attach(std::move(animation));
+	}
+
+	m_mainManager.emitters().attach(EmitterFactory::create(EmitterType::Color, translate(EmitterType::Color)));
+	m_mainManager.emitters().attach(EmitterFactory::create(EmitterType::Off, translate(EmitterType::Off)));
 
 	m_mainManager.receivers().setRegisterDeviceCallback([this](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) -> bool {
 		return registerDevice(receiver, serialNumber);

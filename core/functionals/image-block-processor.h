@@ -11,6 +11,7 @@
 
 namespace Functional {
 
+namespace {
 struct Block {
 	u32 scanline;
 	u32 width;
@@ -19,6 +20,7 @@ struct Block {
 	u32 wdiff;
 	u32 hdiff;
 };
+}
 
 template <typename type, u32 size>
 inline auto scan_extract(ccolor *data, cu32 range) {
