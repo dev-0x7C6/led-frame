@@ -40,7 +40,7 @@ public:
 	auto acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter>;
 	auto usages() const noexcept -> int;
 
-	virtual void interpret(any data);
+	virtual void interpret(any data) noexcept;
 
 	bool isFirstFrameReady() const noexcept;
 

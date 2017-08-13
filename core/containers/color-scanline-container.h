@@ -137,9 +137,9 @@ static_assert(alignof(Scanline) == sizeof(color), "ScanlineContainer should be a
 template <u32 linesize>
 color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, cfactor p) {
 	using namespace Functional::Color;
-	const auto r = static_cast<ccolor>(getR(end) * p + (getR(start) * (1.0 - p)));
-	const auto g = static_cast<ccolor>(getG(end) * p + (getG(start) * (1.0 - p)));
-	const auto b = static_cast<ccolor>(getB(end) * p + (getB(start) * (1.0 - p)));
+	const auto r = static_cast<ccolor>(getR(end) * p + (getR(start) * (static_cast<cfactor>(1.0) - p)));
+	const auto g = static_cast<ccolor>(getG(end) * p + (getG(start) * (static_cast<cfactor>(1.0) - p)));
+	const auto b = static_cast<ccolor>(getB(end) * p + (getB(start) * (static_cast<cfactor>(1.0) - p)));
 	return rgb(r, g, b);
 }
 

@@ -11,10 +11,11 @@ enum class AnimationVariant {
 	Unused,
 };
 
-constexpr std::array<AnimationVariant, static_cast<u32>(AnimationVariant::Unused)> getAnimationVariantTypes() {
-	return {{
+template <typename type = std::array<AnimationVariant, static_cast<u32>(AnimationVariant::Unused)>>
+constexpr type getAnimationVariantTypes() {
+	return {
 		AnimationVariant::Rainbow,
 		AnimationVariant::Candle,
-	}};
+	};
 }
 }

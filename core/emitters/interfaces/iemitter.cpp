@@ -26,7 +26,7 @@ auto IEmitter::acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCo
 
 auto IEmitter::usages() const noexcept -> int { return m_counter; }
 
-void IEmitter::interpret(any data) {
+void IEmitter::interpret(any data) noexcept {
 	std::cout << "default implementation: " << data.type().name() << std::endl;
 }
 bool IEmitter::isFirstFrameReady() const noexcept { return m_firstFrameReady; }
