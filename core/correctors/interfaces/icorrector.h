@@ -8,13 +8,27 @@
 
 #include <atomic>
 
+#include <core/generic/iatom.h>
+
 namespace Corrector {
 namespace Interface {
 
-class ICorrector : public ::Interface::INotify {
+class ICorrector : public ::Interface::INotify, public IAtom {
 public:
 	inline explicit ICorrector(ci32 id, int owner, const Enum::Priority priority = Enum::Priority::Average);
 	virtual ~ICorrector() override = default;
+
+	virtual auto category() const noexcept -> Category final { return Category::Corrector; }
+	virtual std::vector<std::pair<std::string, std::experimental::any>> properties() const noexcept final {
+		return {
+			{"id", id()},
+			{"type", value(type())},
+			{"owner", m_owner},
+			{"factor", static_cast<int>(m_factor.value())},
+			{"min", static_cast<int>(m_factor.min())},
+			{"max", static_cast<int>(m_factor.max())},
+		};
+	}
 
 	virtual Enum::CorrectorType type() const = 0;
 	virtual void correct(Container::Scanline &scanline) const noexcept = 0;
@@ -54,11 +68,13 @@ ICorrector::ICorrector(ci32 id, int owner, const Enum::Priority priority)
 auto ICorrector::setEnabled(bool value) noexcept {
 	m_enabled = value;
 	notify();
+	notify2();
 }
 
 auto ICorrector::setFactor(correct_t value) noexcept {
 	m_factor.setValue(std::min(std::max(value, m_factor.min()), m_factor.max()));
 	notify();
+	notify2();
 }
 }
 }

@@ -45,5 +45,7 @@ private:
 	Emitter::Concrete::EmitterManager m_emitterManager;
 	Corrector::Concrete::CorrectorManager m_correctorManager;
 	Receiver::Concrete::ReceiverManager m_receiverManager;
+
+	AtomAggregator m_atoms;
 };
 }

@@ -26,13 +26,47 @@ WebSocketConnection::WebSocketConnection(Interface::IRemoteController &remoteCon
 	QObject::connect(m_socket.get(), &QWebSocket::textMessageReceived, [this](const auto &data) { this->recv(data); });
 }
 
+#include <typeindex>
+
+QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
+	std::cout << static_cast<int>(atom->category()) << std::endl;
+	QJsonObject result;
+	for (const auto &value : atom->properties()) {
+		if (std::type_index(typeid(int)) == std::type_index(value.second.type()))
+			result.insert(QString::fromStdString(value.first), std::experimental::any_cast<int>(value.second));
+		if (std::type_index(typeid(QString)) == std::type_index(value.second.type()))
+			result.insert(QString::fromStdString(value.first), std::experimental::any_cast<QString>(value.second));
+		if (std::type_index(typeid(double)) == std::type_index(value.second.type()))
+			result.insert(QString::fromStdString(value.first), std::experimental::any_cast<double>(value.second));
+		if (std::type_index(typeid(std::string)) == std::type_index(value.second.type()))
+			result.insert(QString::fromStdString(value.first), QString::fromStdString(std::experimental::any_cast<std::string>(value.second)));
+		if (std::type_index(typeid(const char *)) == std::type_index(value.second.type()))
+			result.insert(QString::fromStdString(value.first), std::experimental::any_cast<const char *>(value.second));
+	}
+	return result;
+}
+
+void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
+	QJsonObject notification{
+		{"message", "notification"},
+		{"version", 1},
+		{"event", toString(type)},
+		{"source", toString(atom->category())},
+		{"datagram", toJson(atom)}};
+
+	send(QJsonDocument(notification).toJson());
+}
+
 WebSocketConnection::~WebSocketConnection() = default;
 
 // documentation/protocol/notification.md
 
-void WebSocketConnection::attached(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, corrector)); }
-void WebSocketConnection::detached(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, corrector)); }
-void WebSocketConnection::modified(ICorrector *corrector) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, corrector)); }
+void WebSocketConnection::attached(ICorrector *) { /*send(JsonProtocolHelper::notification(ProtocolEvent::Attached, corrector));*/
+}
+void WebSocketConnection::detached(ICorrector *) { /*send(JsonProtocolHelper::notification(ProtocolEvent::Detached, corrector));*/
+}
+void WebSocketConnection::modified(ICorrector *) { /*send(JsonProtocolHelper::notification(ProtocolEvent::Modified, corrector));*/
+}
 
 void WebSocketConnection::attached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, emitter.get())); }
 void WebSocketConnection::detached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, emitter.get())); }

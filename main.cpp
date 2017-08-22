@@ -7,6 +7,7 @@
 #include <core/networking/web-socket-server.h>
 #include <gui/dialogs/about-dialog.h>
 #include <gui/tray/system-tray.h>
+#include <core/functionals/debug-notification.h>
 
 #ifdef GUI
 #include <QApplication>
@@ -14,6 +15,8 @@
 #include <QCoreApplication>
 #endif
 #include <QSettings>
+#include <QDebug>
+#include <memory>
 
 #ifdef RPI
 #include <bcm_host.h>
@@ -35,12 +38,13 @@ using namespace Receiver::Concrete;
 #include <unistd.h>
 
 void catchUnixSignals(const std::vector<int> &quitSignals,
-	const std::vector<int> &ignoreSignals = std::vector<int>()) {
+	const std::vector<int> & = std::vector<int>()) {
 
 	auto handler = [](int) -> void { QCoreApplication::quit(); };
 
-	for (int sig : ignoreSignals)
-		signal(sig, SIG_IGN);
+	//#pragma
+	//	for (int sig : ignoreSignals)
+	//		signal(sig, SIG_IGN);
 
 	for (int sig : quitSignals)
 		signal(sig, handler);

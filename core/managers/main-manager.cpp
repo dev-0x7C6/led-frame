@@ -3,11 +3,13 @@
 #include <core/correctors/factories/corrector-factory.h>
 #include <core/containers/application-info-container.h>
 #include <core/functionals/debug-notification.h>
+#include <core/functionals/debug-notification.h>
 
 #include <QSettings>
 
 using namespace Manager;
 using namespace Corrector::Factory;
+using namespace Functional;
 using namespace Enum;
 
 MainManager::MainManager(QSettings &settings)
@@ -24,6 +26,11 @@ MainManager::MainManager(QSettings &settings)
 	m_correctorManager.attach(m_globalRedCorrection);
 	m_correctorManager.attach(m_globalGreenCorrection);
 	m_correctorManager.attach(m_globalBlueCorrection);
+
+	m_atoms.attach(m_globalBrightnessCorrection);
+	m_atoms.attach(m_globalRedCorrection);
+	m_atoms.attach(m_globalGreenCorrection);
+	m_atoms.attach(m_globalBlueCorrection);
 
 	m_settings.beginGroup("GlobalCorrectors");
 	m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", m_globalBrightnessCorrection->factor().value()).toUInt());
@@ -54,8 +61,9 @@ void MainManager::run() {
 
 void MainManager::attach(Interface::IMultiNotifier &notifier) {
 	m_emitterManager.attach(&notifier);
-	m_correctorManager.attach(&notifier);
+	//m_correctorManager.attach(&notifier);
 	m_receiverManager.attach(&notifier);
+	m_atoms.attach(&notifier);
 
 	for (const auto &receiver : m_receiverManager.list())
 		receiver->correctorManager().attach(&notifier);

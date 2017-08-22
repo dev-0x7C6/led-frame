@@ -13,9 +13,9 @@ enum class AnimationVariant {
 
 template <typename type = std::array<AnimationVariant, static_cast<u32>(AnimationVariant::Unused)>>
 constexpr type getAnimationVariantTypes() {
-	return {
+	return {{
 		AnimationVariant::Rainbow,
 		AnimationVariant::Candle,
-	};
+	}};
 }
 }

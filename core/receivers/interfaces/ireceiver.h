@@ -8,6 +8,7 @@
 #include <QString>
 
 #include <memory>
+#include <core/generic/iatom.h>
 
 namespace Emitter {
 namespace Interface {
@@ -24,11 +25,13 @@ class CorrectorManager;
 namespace Receiver {
 namespace Interface {
 
-class IReceiver : public ::Interface::INotify {
+class IReceiver : public ::Interface::INotify, public IAtom {
 public:
 	explicit IReceiver(ci32 id)
 			: INotify(id) {}
 	~IReceiver() override = default;
+
+	virtual auto category() const noexcept -> Category final { return Category::Receiver; }
 
 	virtual QString name() const = 0;
 	virtual Enum::ReceiverType type() const = 0;

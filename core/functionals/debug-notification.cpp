@@ -44,6 +44,32 @@ std::string corrector_dbg(ICorrector *corrector, const std::string &text) {
 }
 }
 
+void DebugNotification::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
+	switch (type) {
+		case NotifyAction::Attached:
+			std::cout << "[*] attached" << std::endl;
+			break;
+		case NotifyAction::Detached:
+			std::cout << "[*] detached" << std::endl;
+			break;
+		case NotifyAction::Modified:
+			std::cout << "[*] modified" << std::endl;
+			break;
+	}
+
+	switch (atom->category()) {
+		case Category::Corrector:
+			std::cout << "corrector" << std::endl;
+			break;
+		case Category::Emitter:
+			std::cout << "emitter" << std::endl;
+			break;
+		case Category::Receiver:
+			std::cout << "receiver" << std::endl;
+			break;
+	}
+}
+
 void DebugNotification::attached(Receiver::Interface::IReceiver *receiver) {
 	std::cout << receiver_dbg(receiver, "attached") << std::endl;
 }

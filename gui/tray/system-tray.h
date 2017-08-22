@@ -47,5 +47,8 @@ private:
 	QAction *m_brightnessAction;
 	Menu::DeviceMenu m_deviceMenu;
 	Menu::EmitterConfigurationMenu m_emitterConfigurationMenu;
+
+	virtual void action(const NotifyAction, const std::shared_ptr<IAtom> &) noexcept override {
+	}
 };
 }

@@ -4,6 +4,7 @@
 #include <core/enums/emitter-type-enum.h>
 #include <core/functionals/raii-reference-counter.h>
 #include <core/interfaces/inotify.h>
+#include <core/generic/iatom.h>
 
 #include <atomic>
 #include <experimental/any>
@@ -22,7 +23,7 @@ class IReceiver;
 namespace Emitter {
 namespace Interface {
 
-class IEmitter : public ::Interface::INotify {
+class IEmitter : public ::Interface::INotify, public IAtom {
 public:
 	explicit IEmitter(ci32 id);
 	virtual ~IEmitter();
@@ -43,6 +44,13 @@ public:
 	virtual void interpret(any data) noexcept;
 
 	bool isFirstFrameReady() const noexcept;
+
+	virtual std::vector<std::pair<std::string, any>> properties() const noexcept override {
+		return {
+			{"id", id()},
+			{"type", value(type())},
+			{"name", name()}};
+	}
 
 protected:
 	mutable std::mutex m_mutex;

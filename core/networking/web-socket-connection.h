@@ -9,12 +9,14 @@ class QWebSocket;
 
 namespace Network {
 
-class WebSocketConnection : public Interface::IMultiNotifier {
+class WebSocketConnection final : public Interface::IMultiNotifier {
 public:
 	explicit WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket);
 	virtual ~WebSocketConnection();
 
 protected:
+	virtual void action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept override;
+
 	virtual void attached(Corrector::Interface::ICorrector *corrector) override;
 	virtual void detached(Corrector::Interface::ICorrector *corrector) override;
 	virtual void modified(Corrector::Interface::ICorrector *corrector) override;
