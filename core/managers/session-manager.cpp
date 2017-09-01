@@ -107,6 +107,10 @@ void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiv
 		receiver->correctorManager().attach(corrector);
 	});
 
+	m_mainManager.correctors().enumerate([receiver](const auto &corrector) {
+		receiver->correctors().attach(corrector);
+	});
+
 	const auto id = receiver->id();
 
 	const auto list = {
@@ -126,6 +130,7 @@ void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiv
 		corrector->setFactor(m_settings.value("factor", corrector->factor().value()).toUInt());
 		corrector->setEnabled(m_settings.value("enabled", corrector->isEnabled()).toBool());
 		receiver->correctorManager().attach(corrector);
+		receiver->correctors().attach(corrector);
 		m_settings.endGroup();
 	};
 

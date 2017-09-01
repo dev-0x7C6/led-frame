@@ -46,7 +46,7 @@ void UartReceiver::run() {
 		m_device->config().ribbon(3),
 	}};
 
-	UartWorker worker(ribbon, correctorManager(), m_device);
+	UartWorker worker(ribbon, correctorManager(), correctors(), m_device);
 	Functional::LoopSync loopSync;
 
 	Container::Scanline prev(0u);

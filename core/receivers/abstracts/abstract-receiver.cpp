@@ -74,6 +74,10 @@ Corrector::Concrete::CorrectorManager &AbstractReceiver::correctorManager() {
 	return m_correctorManager;
 }
 
+auto AbstractReceiver::correctors() noexcept -> AtomAggregator & {
+	return m_correctors;
+}
+
 QString AbstractReceiver::emitterName() const {
 	return m_emitter->name();
 }

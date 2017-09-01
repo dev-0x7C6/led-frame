@@ -11,9 +11,11 @@ using namespace Corrector::Factory;
 
 UartWorker::UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbon,
 	Corrector::Concrete::CorrectorManager &correctorManager,
+	AtomAggregator &correctors,
 	std::unique_ptr<Functional::DevicePort> &device)
 		: m_ribbon(ribbon)
 		, m_correctorManager(correctorManager)
+		, m_correctors(correctors)
 		, m_device(device)
 
 {
@@ -45,8 +47,16 @@ void UartWorker::change(const Scanline &from, std::function<Scanline()> getFrame
 	}
 }
 
+#include <iostream>
+
+#include <core/correctors/interfaces/icorrector.h>
+
 void UartWorker::write(Scanline scanline) {
-	m_correctorManager.execute(scanline);
+	//m_correctorManager.execute(scanline);
+	m_correctors.enumerate([&scanline](const auto &source) {
+		if (Category::Corrector == source->category())
+			static_cast<Corrector::Interface::ICorrector *>(source.get())->correct(scanline);
+	});
 
 	for (const auto &config : m_ribbon) {
 		const auto factor = static_cast<cfactor>(Scanline::line()) / static_cast<cfactor>(config.count() - 1);

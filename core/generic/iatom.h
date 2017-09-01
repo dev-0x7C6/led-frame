@@ -48,19 +48,12 @@ public:
 
 	virtual auto category() const noexcept -> Category = 0;
 
-	void attach(std::function<void()> callback) {
-		m_callbackConnector.attach(callback);
-	}
+	void attach(std::function<void()> callback);
+	void notify2();
 
-	void notify2() {
-		m_callbackConnector.call();
-	}
+	virtual std::vector<std::pair<std::string, std::experimental::any>> properties() const noexcept;
 
-	virtual std::vector<std::pair<std::string, std::experimental::any>> properties() const noexcept {
-		return {};
-	}
-
-	auto sharedFromThis() noexcept { return shared_from_this(); }
+	auto sharedFromThis() noexcept;
 
 private:
 	CallbackConnector<std::function<void()>> m_callbackConnector;

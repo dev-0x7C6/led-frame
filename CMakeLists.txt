@@ -222,6 +222,10 @@ set(sources
 	core/functionals/raii-reference-counter.h
 	core/functionals/remote-controller.cpp
 	core/functionals/remote-controller.h
+	core/generic/atom-aggregator.cpp
+	core/generic/atom-aggregator.h
+	core/generic/iatom.cpp
+	core/generic/iatom.h
 	core/interfaces/imulti-notifier.h
 	core/interfaces/imulti-notifier-manager.h
 	core/interfaces/inotify.cpp
@@ -283,6 +287,10 @@ set(sources_ut
 	core/correctors/interfaces/icorrector-notify.h
 	core/functionals/color-averaging-buffer.h
 	core/functionals/image-block-processor.h
+	core/generic/atom-aggregator.cpp
+	core/generic/atom-aggregator.h
+	core/generic/iatom.cpp
+	core/generic/iatom.h
 	core/interfaces/inotify.cpp
 	core/interfaces/inotify.h
 	ut/corrector-tests.cpp
@@ -311,6 +319,10 @@ set(sources_bench
 	core/correctors/factories/corrector-factory.h
 	core/correctors/interfaces/icorrector.h
 	core/correctors/interfaces/icorrector-notify.h
+	core/generic/atom-aggregator.cpp
+	core/generic/atom-aggregator.h
+	core/generic/iatom.cpp
+	core/generic/iatom.h
 	core/interfaces/inotify.cpp
 	core/interfaces/inotify.h
 )

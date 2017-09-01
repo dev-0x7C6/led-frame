@@ -27,11 +27,6 @@ public:
 	auto &correctors() noexcept { return m_correctorManager; }
 	auto &receivers() noexcept { return m_receiverManager; }
 
-	auto &globalBrightnessCorrection() noexcept { return m_globalBrightnessCorrection; }
-	auto &globalRedCorrection() noexcept { return m_globalRedCorrection; }
-	auto &globalGreenCorrection() noexcept { return m_globalGreenCorrection; }
-	auto &globalBlueCorrection() noexcept { return m_globalRedCorrection; }
-
 private:
 	QSettings &m_settings;
 

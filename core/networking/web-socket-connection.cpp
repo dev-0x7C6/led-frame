@@ -29,7 +29,7 @@ WebSocketConnection::WebSocketConnection(Interface::IRemoteController &remoteCon
 #include <typeindex>
 
 QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
-	std::cout << static_cast<int>(atom->category()) << std::endl;
+	//std::cout << static_cast<int>(atom->category()) << std::endl;
 	QJsonObject result;
 	for (const auto &value : atom->properties()) {
 		if (std::type_index(typeid(int)) == std::type_index(value.second.type()))

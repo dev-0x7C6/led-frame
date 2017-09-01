@@ -25,6 +25,8 @@ public:
 
 	virtual Corrector::Concrete::CorrectorManager &correctorManager() override;
 
+	virtual auto correctors() noexcept -> AtomAggregator & override final;
+
 protected:
 	QString emitterName() const;
 
@@ -32,6 +34,7 @@ private:
 	Container::Scanline m_data;
 	Corrector::Concrete::CorrectorManager m_correctorManager;
 	std::shared_ptr<Emitter::Interface::IEmitter> m_emitter;
+	AtomAggregator m_correctors;
 	QString m_name;
 	std::unique_ptr<Functional::RaiiReferenceCounter> m_acquiredEmitter = nullptr;
 };

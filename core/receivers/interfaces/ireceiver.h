@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <core/generic/iatom.h>
+#include <core/generic/atom-aggregator.h>
 
 namespace Emitter {
 namespace Interface {
@@ -47,6 +48,8 @@ public:
 
 	virtual Container::DeviceConfigContainer config() = 0;
 	virtual void setName(const QString &name) = 0;
+
+	virtual auto correctors() noexcept -> AtomAggregator & = 0;
 
 	virtual Corrector::Concrete::CorrectorManager &correctorManager() = 0;
 };
