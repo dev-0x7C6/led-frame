@@ -12,7 +12,9 @@ public:
 
 	void attach(const std::shared_ptr<IAtom> &object) noexcept;
 	void detach(const std::shared_ptr<IAtom> &object) noexcept;
+
 	void enumerate(std::function<void(const std::shared_ptr<IAtom> &)> callback) const noexcept;
+	auto find(const Category category, const int id) noexcept -> std::shared_ptr<IAtom>;
 
 private:
 	std::vector<std::shared_ptr<IAtom>> m_objects;

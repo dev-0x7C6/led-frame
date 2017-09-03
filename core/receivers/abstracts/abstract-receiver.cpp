@@ -1,6 +1,5 @@
 #include <core/receivers/abstracts/abstract-receiver.h>
 #include <core/emitters/interfaces/iemitter.h>
-#include <core/correctors/concretes/corrector-manager.h>
 
 #include <memory>
 #include <atomic>
@@ -32,7 +31,7 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::
 #else
 	std::atomic_exchange(&m_emitter, emitter);
 #endif
-	emit notify();
+	notify2();
 
 	if (m_emitter)
 		m_acquiredEmitter = m_emitter->acquire();
@@ -68,10 +67,6 @@ QString AbstractReceiver::name() const {
 void AbstractReceiver::setName(const QString &name) {
 	m_name = name;
 	//TODO: We should notify when name is changed
-}
-
-Corrector::Concrete::CorrectorManager &AbstractReceiver::correctorManager() {
-	return m_correctorManager;
 }
 
 auto AbstractReceiver::correctors() noexcept -> AtomAggregator & {

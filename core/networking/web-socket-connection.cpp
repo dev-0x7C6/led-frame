@@ -61,13 +61,6 @@ WebSocketConnection::~WebSocketConnection() = default;
 
 // documentation/protocol/notification.md
 
-void WebSocketConnection::attached(ICorrector *) { /*send(JsonProtocolHelper::notification(ProtocolEvent::Attached, corrector));*/
-}
-void WebSocketConnection::detached(ICorrector *) { /*send(JsonProtocolHelper::notification(ProtocolEvent::Detached, corrector));*/
-}
-void WebSocketConnection::modified(ICorrector *) { /*send(JsonProtocolHelper::notification(ProtocolEvent::Modified, corrector));*/
-}
-
 void WebSocketConnection::attached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, emitter.get())); }
 void WebSocketConnection::detached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, emitter.get())); }
 void WebSocketConnection::modified(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, emitter.get())); }

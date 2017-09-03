@@ -1,4 +1,5 @@
-#include <core/correctors/concretes/corrector-manager.h>
+
+#include <core/correctors/interfaces/icorrector.h>
 #include <core/emitters/interfaces/iemitter.h>
 #include <core/menus/emitter-selector-menu.h>
 #include <core/receivers/interfaces/ireceiver.h>
@@ -28,7 +29,8 @@ EmitterSelectorMenu::EmitterSelectorMenu(QAction *parent, Receiver::Interface::I
 	m_actionEmitters->setMenu(new QMenu);
 	m_actionCorrectors->setMenu(new QMenu);
 
-	receiver->correctorManager().enumerate([this](const auto &corrector) {
+	receiver->correctors().enumerate([this](const auto &atom) {
+		auto corrector = std::static_pointer_cast<Corrector::Interface::ICorrector>(atom);
 		if (corrector->owner() == -1)
 			return;
 

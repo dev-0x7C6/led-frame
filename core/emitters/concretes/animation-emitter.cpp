@@ -11,7 +11,7 @@ AnimationEmitter::AnimationEmitter(ci32 id)
 		: AbstractEmitter(id)
 
 {
-	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, this, &AnimationEmitter::process);
+	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, [this](const auto &value) { process(value); });
 	AnimationVariantFactory::setup(m_animation, Enum::AnimationVariant::Candle);
 	m_colors.fill(m_animation.keyValueAt(0).value<QColor>().rgba());
 	commit(m_colors);
@@ -20,6 +20,8 @@ AnimationEmitter::AnimationEmitter(ci32 id)
 AnimationEmitter::~AnimationEmitter() {
 	if (m_animation.state() == QAbstractAnimation::Running)
 		m_animation.stop();
+
+	QObject::disconnect(&m_animation, 0, 0, 0);
 }
 
 Enum::EmitterType AnimationEmitter::type() const {

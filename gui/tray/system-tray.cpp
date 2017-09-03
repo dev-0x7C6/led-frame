@@ -78,9 +78,11 @@ void SystemTray::modified(const std::shared_ptr<IEmitter> &emitter) {
 	m_emitterConfigurationMenu.modified(emitter);
 }
 
-void SystemTray::attached(Corrector::Interface::ICorrector *corrector) { setBrightness(corrector); }
-void SystemTray::detached(Corrector::Interface::ICorrector *corrector) { setBrightness(corrector); }
-void SystemTray::modified(Corrector::Interface::ICorrector *corrector) { setBrightness(corrector); }
+void SystemTray::action(const NotifyAction action, const std::shared_ptr<IAtom> &atom) noexcept {
+	static_cast<void>(action);
+	static_cast<void>(atom);
+	//setBrightness
+}
 
 void SystemTray::attached(IReceiver *receiver) { m_deviceMenu.attached(receiver); }
 void SystemTray::detached(IReceiver *receiver) { m_deviceMenu.detached(receiver); }

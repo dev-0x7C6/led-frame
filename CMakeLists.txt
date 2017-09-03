@@ -143,15 +143,12 @@ set(sources
 	core/containers/device-info-container.h
 	core/containers/led-ribbon-config-container.cpp
 	core/containers/led-ribbon-config-container.h
-	core/correctors/abstracts/abstract-corrector-manager.cpp
-	core/correctors/abstracts/abstract-corrector-manager.h
 	core/correctors/concretes/backlight-corrector.cpp
 	core/correctors/concretes/backlight-corrector.h
 	core/correctors/concretes/brightness-corrector.cpp
 	core/correctors/concretes/brightness-corrector.h
 	core/correctors/concretes/color-enhancer-corrector.cpp
 	core/correctors/concretes/color-enhancer-corrector.h
-	core/correctors/concretes/corrector-manager.h
 	core/correctors/concretes/flickr-effect-corrector.cpp
 	core/correctors/concretes/flickr-effect-corrector.h
 	core/correctors/concretes/rgb-channel-corrector.cpp
@@ -159,21 +156,15 @@ set(sources
 	core/correctors/factories/corrector-factory.cpp
 	core/correctors/factories/corrector-factory.h
 	core/correctors/interfaces/icorrector.h
-	core/correctors/interfaces/icorrector-manager.h
-	core/correctors/interfaces/icorrector-notify.h
 	core/debug.h
 	core/devices/device-port.cpp
 	core/devices/device-port.h
 	core/emitters/abstracts/abstract-emitter.cpp
 	core/emitters/abstracts/abstract-emitter.h
-	core/emitters/abstracts/abstract-emitter-manager.cpp
-	core/emitters/abstracts/abstract-emitter-manager.h
 	core/emitters/concretes/animation-emitter.cpp
 	core/emitters/concretes/animation-emitter.h
 	core/emitters/concretes/color-emitter.cpp
 	core/emitters/concretes/color-emitter.h
-	core/emitters/concretes/emitter-manager.cpp
-	core/emitters/concretes/emitter-manager.h
 	core/emitters/concretes/image-emitter.cpp
 	core/emitters/concretes/image-emitter.h
 	core/emitters/concretes/off-emitter.cpp
@@ -186,7 +177,6 @@ set(sources
 	core/emitters/factories/emitter-factory.h
 	core/emitters/interfaces/iemitter.cpp
 	core/emitters/interfaces/iemitter.h
-	core/emitters/interfaces/iemitter-manager.h
 	core/emitters/interfaces/iemitter-notify.h
 	core/enums/animation-variant.h
 	core/enums/color-format-enum.h
@@ -228,8 +218,6 @@ set(sources
 	core/generic/iatom.h
 	core/interfaces/imulti-notifier.h
 	core/interfaces/imulti-notifier-manager.h
-	core/interfaces/inotify.cpp
-	core/interfaces/inotify.h
 	core/interfaces/iscreen-capture.h
 	core/managers/main-manager.cpp
 	core/managers/main-manager.h
@@ -245,16 +233,11 @@ set(sources
 	core/networking/web-socket-server.h
 	core/receivers/abstracts/abstract-receiver.cpp
 	core/receivers/abstracts/abstract-receiver.h
-	core/receivers/abstracts/abstract-receiver-manager.cpp
-	core/receivers/abstracts/abstract-receiver-manager.h
-	core/receivers/concretes/device-manager.cpp
-	core/receivers/concretes/device-manager.h
 	core/receivers/concretes/uart-receiver.cpp
 	core/receivers/concretes/uart-receiver.h
 	core/receivers/concretes/uart-worker.cpp
 	core/receivers/concretes/uart-worker.h
 	core/receivers/interfaces/ireceiver.h
-	core/receivers/interfaces/ireceiver-manager.h
 	core/receivers/interfaces/ireceiver-notify.h
 	core/types.h
 )
@@ -268,15 +251,12 @@ set(sources_app
 set(sources_ut
 	core/containers/color-scanline-container.cpp
 	core/containers/color-scanline-container.h
-	core/correctors/abstracts/abstract-corrector-manager.cpp
-	core/correctors/abstracts/abstract-corrector-manager.h
 	core/correctors/concretes/backlight-corrector.cpp
 	core/correctors/concretes/backlight-corrector.h
 	core/correctors/concretes/brightness-corrector.cpp
 	core/correctors/concretes/brightness-corrector.h
 	core/correctors/concretes/color-enhancer-corrector.cpp
 	core/correctors/concretes/color-enhancer-corrector.h
-	core/correctors/concretes/corrector-manager.h
 	core/correctors/concretes/flickr-effect-corrector.cpp
 	core/correctors/concretes/flickr-effect-corrector.h
 	core/correctors/concretes/rgb-channel-corrector.cpp
@@ -284,15 +264,12 @@ set(sources_ut
 	core/correctors/factories/corrector-factory.cpp
 	core/correctors/factories/corrector-factory.h
 	core/correctors/interfaces/icorrector.h
-	core/correctors/interfaces/icorrector-notify.h
 	core/functionals/color-averaging-buffer.h
 	core/functionals/image-block-processor.h
 	core/generic/atom-aggregator.cpp
 	core/generic/atom-aggregator.h
 	core/generic/iatom.cpp
 	core/generic/iatom.h
-	core/interfaces/inotify.cpp
-	core/interfaces/inotify.h
 	ut/corrector-tests.cpp
 	ut/image-block-processing-tests.cpp
 	ut/main.cpp
@@ -302,15 +279,12 @@ set(sources_bench
 	bench/main.cpp
 	core/containers/color-scanline-container.cpp
 	core/containers/color-scanline-container.h
-	core/correctors/abstracts/abstract-corrector-manager.cpp
-	core/correctors/abstracts/abstract-corrector-manager.h
 	core/correctors/concretes/backlight-corrector.cpp
 	core/correctors/concretes/backlight-corrector.h
 	core/correctors/concretes/brightness-corrector.cpp
 	core/correctors/concretes/brightness-corrector.h
 	core/correctors/concretes/color-enhancer-corrector.cpp
 	core/correctors/concretes/color-enhancer-corrector.h
-	core/correctors/concretes/corrector-manager.h
 	core/correctors/concretes/flickr-effect-corrector.cpp
 	core/correctors/concretes/flickr-effect-corrector.h
 	core/correctors/concretes/rgb-channel-corrector.cpp
@@ -318,13 +292,10 @@ set(sources_bench
 	core/correctors/factories/corrector-factory.cpp
 	core/correctors/factories/corrector-factory.h
 	core/correctors/interfaces/icorrector.h
-	core/correctors/interfaces/icorrector-notify.h
 	core/generic/atom-aggregator.cpp
 	core/generic/atom-aggregator.h
 	core/generic/iatom.cpp
 	core/generic/iatom.h
-	core/interfaces/inotify.cpp
-	core/interfaces/inotify.h
 )
 
 add_executable(led-frame ${sources} ${sources_app}  ${gui-sources} ${rpi-sources} ${x11-sources})

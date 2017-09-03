@@ -1,6 +1,5 @@
 #pragma once
 
-#include <core/correctors/concretes/corrector-manager.h>
 #include <core/functionals/raii-reference-counter.h>
 #include <core/receivers/interfaces/ireceiver.h>
 
@@ -23,8 +22,6 @@ public:
 	virtual QString name() const override;
 	virtual void setName(const QString &name) override;
 
-	virtual Corrector::Concrete::CorrectorManager &correctorManager() override;
-
 	virtual auto correctors() noexcept -> AtomAggregator & override final;
 
 protected:
@@ -32,7 +29,6 @@ protected:
 
 private:
 	Container::Scanline m_data;
-	Corrector::Concrete::CorrectorManager m_correctorManager;
 	std::shared_ptr<Emitter::Interface::IEmitter> m_emitter;
 	AtomAggregator m_correctors;
 	QString m_name;

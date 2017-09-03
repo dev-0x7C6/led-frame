@@ -20,7 +20,6 @@
 using namespace Enum;
 using namespace Manager;
 using namespace Emitter::Factory;
-using namespace Emitter::Concrete;
 using namespace Corrector::Factory;
 
 SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
@@ -34,7 +33,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 	for (auto screen : screens) {
 		auto emitter = EmitterFactory::create(EmitterType::Screen);
 		emitter->setName(QObject::tr("Display: ") + screen->name());
-		m_mainManager.emitters().attach(emitter);
+		m_mainManager.atoms().attach(emitter);
 	}
 #endif
 
@@ -44,25 +43,25 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 	m_mainManager.emitters().attach(emitter);
 #endif
 
-	m_mainManager.emitters().attach(EmitterFactory::create(EmitterType::Image, translate(EmitterType::Image)));
+	m_mainManager.atoms().attach(EmitterFactory::create(EmitterType::Image, translate(EmitterType::Image)));
 
 	for (auto &types : getAnimationVariantTypes()) {
 		auto animation = EmitterFactory::create(EmitterType::Animation, translate(EmitterType::Animation));
 		animation->interpret(types);
-		m_mainManager.emitters().attach(std::move(animation));
+		m_mainManager.atoms().attach(std::move(animation));
 	}
 
-	m_mainManager.emitters().attach(EmitterFactory::create(EmitterType::Color, translate(EmitterType::Color)));
-	m_mainManager.emitters().attach(EmitterFactory::create(EmitterType::Off, translate(EmitterType::Off)));
+	m_mainManager.atoms().attach(EmitterFactory::create(EmitterType::Color, translate(EmitterType::Color)));
+	m_mainManager.atoms().attach(EmitterFactory::create(EmitterType::Off, translate(EmitterType::Off)));
 
-	m_mainManager.receivers().setRegisterDeviceCallback([this](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) -> bool {
+	m_mainManager.setRegisterDeviceCallback([this](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) -> bool {
 		return registerDevice(receiver, serialNumber);
 	});
 }
 
 bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
 #ifdef QT_DEBUG
-	receiver->correctorManager().attach(&Functional::DebugNotification::instance());
+	receiver->correctors().attach(&Functional::DebugNotification::instance());
 #endif
 	m_settings.beginGroup("devices");
 	m_settings.beginGroup(serialNumber);
@@ -91,24 +90,24 @@ bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, co
 	const auto defaultEmitter = m_settings.value("emitter").toString();
 
 	if (!defaultEmitter.isEmpty()) {
-		for (const auto &emitter : m_mainManager.emitters().list()) {
-			if (emitter->name() == defaultEmitter) {
+
+		m_mainManager.atoms().enumerate([receiver, defaultEmitter](const auto &atom) {
+			if (Category::Emitter != atom->category())
+				return;
+
+			auto emitter = std::static_pointer_cast<Emitter::Interface::IEmitter>(atom);
+			if (emitter->name() == defaultEmitter)
 				receiver->connectEmitter(emitter);
-				break;
-			}
-		}
+		});
 	}
 	m_settings.endGroup();
 	return true;
 }
 
 void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiver) {
-	m_mainManager.correctors().enumerate([receiver](const auto &corrector) {
-		receiver->correctorManager().attach(corrector);
-	});
-
-	m_mainManager.correctors().enumerate([receiver](const auto &corrector) {
-		receiver->correctors().attach(corrector);
+	m_mainManager.atoms().enumerate([receiver](const auto &atom) {
+		if (Category::Corrector == atom->category())
+			receiver->correctors().attach(atom);
 	});
 
 	const auto id = receiver->id();
@@ -129,7 +128,6 @@ void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiv
 		m_settings.beginGroup(value(corrector->type()));
 		corrector->setFactor(m_settings.value("factor", corrector->factor().value()).toUInt());
 		corrector->setEnabled(m_settings.value("enabled", corrector->isEnabled()).toBool());
-		receiver->correctorManager().attach(corrector);
 		receiver->correctors().attach(corrector);
 		m_settings.endGroup();
 	};
@@ -138,7 +136,12 @@ void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiv
 }
 
 SessionManager::~SessionManager() {
-	for (const auto &receiver : m_mainManager.receivers().list()) {
+	m_mainManager.atoms().enumerate([this](const auto &atom) {
+		if (Category::Receiver != atom->category())
+			return;
+
+		auto receiver = std::static_pointer_cast<Receiver::Interface::IReceiver>(atom);
+
 		m_settings.beginGroup(receiver->name());
 
 		m_settings.setValue("emitter", "");
@@ -147,10 +150,11 @@ SessionManager::~SessionManager() {
 			m_settings.setValue("emitter", name);
 		}
 
-		m_mainManager.correctors().enumerate([this](const auto &corrector) {
-			if (corrector->isGlobal())
+		m_mainManager.atoms().enumerate([this](const auto &atom) {
+			if (Category::Corrector != atom->category())
 				return;
 
+			auto corrector = std::static_pointer_cast<Corrector::Interface::ICorrector>(atom);
 			m_settings.beginGroup(value(corrector->type()));
 			m_settings.setValue("factor", corrector->factor().value());
 			m_settings.setValue("enabled", corrector->isEnabled());
@@ -158,5 +162,5 @@ SessionManager::~SessionManager() {
 		});
 
 		m_settings.endGroup();
-	}
+	});
 }

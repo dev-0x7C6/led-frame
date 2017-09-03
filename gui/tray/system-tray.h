@@ -5,6 +5,7 @@
 #include <core/menus/device-menu.h>
 #include <core/menus/emitter-configuration-menu.h>
 #include <core/menus/image-collection-menu.h>
+#include <core/correctors/interfaces/icorrector.h>
 
 #include <QSystemTrayIcon>
 #include <functional>
@@ -28,9 +29,7 @@ protected:
 	void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	void modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 
-	void attached(Corrector::Interface::ICorrector *corrector) override;
-	void detached(Corrector::Interface::ICorrector *corrector) override;
-	void modified(Corrector::Interface::ICorrector *corrector) override;
+	virtual void action(const NotifyAction, const std::shared_ptr<IAtom> &) noexcept override;
 
 	void attached(Receiver::Interface::IReceiver *receiver) override;
 	void detached(Receiver::Interface::IReceiver *receiver) override;
@@ -47,8 +46,5 @@ private:
 	QAction *m_brightnessAction;
 	Menu::DeviceMenu m_deviceMenu;
 	Menu::EmitterConfigurationMenu m_emitterConfigurationMenu;
-
-	virtual void action(const NotifyAction, const std::shared_ptr<IAtom> &) noexcept override {
-	}
 };
 }

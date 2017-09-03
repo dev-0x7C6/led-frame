@@ -22,5 +22,4 @@ void ColorEmitter::setColor(const QColor &color) {
 	m_color = color;
 	m_scanline.fill(color.rgb());
 	commit(m_scanline);
-	notify();
 }

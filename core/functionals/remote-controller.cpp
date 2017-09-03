@@ -1,5 +1,8 @@
 #include "remote-controller.h"
 
+#include <core/receivers/interfaces/ireceiver.h>
+#include <core/emitters/interfaces/iemitter.h>
+
 using namespace Functional;
 
 RemoteController::RemoteController(Manager::MainManager &mainManager)
@@ -7,12 +10,12 @@ RemoteController::RemoteController(Manager::MainManager &mainManager)
 }
 
 bool RemoteController::changeEmitter(int receiverId, int emitterId) {
-	auto receiver = m_mainManager.receivers().find(receiverId);
+	auto receiver = std::static_pointer_cast<Receiver::Interface::IReceiver>(m_mainManager.atoms().find(Category::Receiver, receiverId));
 
 	if (!receiver)
 		return false;
 
-	auto emitter = m_mainManager.emitters().find(emitterId);
+	auto emitter = std::static_pointer_cast<Emitter::Interface::IEmitter>(m_mainManager.atoms().find(Category::Emitter, emitterId));
 
 	if (!emitter)
 		return false;
@@ -22,7 +25,7 @@ bool RemoteController::changeEmitter(int receiverId, int emitterId) {
 }
 
 bool RemoteController::changeEmitterData(int emitterId, const std::string &data) {
-	auto emitter = m_mainManager.emitters().find(emitterId);
+	auto emitter = std::static_pointer_cast<Emitter::Interface::IEmitter>(m_mainManager.atoms().find(Category::Emitter, emitterId));
 	static_cast<void>(data);
 
 	if (!emitter)
@@ -34,30 +37,19 @@ bool RemoteController::changeEmitterData(int emitterId, const std::string &data)
 }
 
 bool RemoteController::changeCorrector(int receiverId, int correctorId, correct_t factor, bool enabled) {
-	auto receiver = m_mainManager.receivers().find(receiverId);
+	auto receiver = std::static_pointer_cast<Receiver::Interface::IReceiver>(m_mainManager.atoms().find(Category::Receiver, receiverId));
 
 	if (!receiver) {
-
 		if (receiverId == -1) {
-			auto corrector = m_mainManager.correctors().find(correctorId);
+			auto corrector = std::static_pointer_cast<Corrector::Interface::ICorrector>(m_mainManager.atoms().find(Category::Corrector, correctorId));
 
-			if (!corrector)
-				return false;
+			if (!corrector) return false;
 
 			corrector->setFactor(factor);
 			corrector->setEnabled(enabled);
 			return true;
 		}
-
-		return false;
 	}
 
-	auto corrector = receiver->correctorManager().find(correctorId);
-
-	if (!corrector)
-		return false;
-
-	corrector->setFactor(factor);
-	corrector->setEnabled(enabled);
-	return true;
+	return false;
 }

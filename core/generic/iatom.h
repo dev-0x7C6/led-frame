@@ -26,7 +26,8 @@ private:
 enum class Category {
 	Emitter,
 	Receiver,
-	Corrector
+	Corrector,
+	Undefined,
 };
 
 constexpr auto toString(const Category &source) noexcept {
@@ -37,16 +38,19 @@ constexpr auto toString(const Category &source) noexcept {
 			return "emitter";
 		case Category::Receiver:
 			return "receiver";
+		case Category::Undefined:
+			return "undefined";
 	}
 
-	return "";
+	return "undefined";
 }
 
 class IAtom : public std::enable_shared_from_this<IAtom> {
 public:
+	explicit IAtom(const int id);
 	virtual ~IAtom() = default;
 
-	virtual auto category() const noexcept -> Category = 0;
+	virtual auto category() const noexcept -> Category;
 
 	void attach(std::function<void()> callback);
 	void notify2();
@@ -55,6 +59,9 @@ public:
 
 	auto sharedFromThis() noexcept;
 
+	auto id() const noexcept -> int { return m_id; }
+
 private:
+	const int m_id = 0;
 	CallbackConnector<std::function<void()>> m_callbackConnector;
 };

@@ -5,7 +5,7 @@
 using namespace Emitter::Interface;
 
 IEmitter::IEmitter(ci32 id)
-		: INotify(id) {}
+		: IAtom(id) {}
 
 IEmitter::~IEmitter() = default;
 

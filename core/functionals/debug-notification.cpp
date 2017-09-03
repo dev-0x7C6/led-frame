@@ -36,12 +36,12 @@ std::string emitter_dbg(IEmitter *emitter, const std::string &text) {
 	return stream.str();
 }
 
-std::string corrector_dbg(ICorrector *corrector, const std::string &text) {
-	std::stringstream stream;
-	stream << mem_addr(corrector) << text << " corrector: " << name(corrector->type()).toStdString();
-	stream << " (enabled: " << corrector->isEnabled() << ", factor: " << corrector->factor().factor() << ")";
-	return stream.str();
-}
+//std::string corrector_dbg(ICorrector *corrector, const std::string &text) {
+//	std::stringstream stream;
+//	stream << mem_addr(corrector) << text << " corrector: " << name(corrector->type()).toStdString();
+//	stream << " (enabled: " << corrector->isEnabled() << ", factor: " << corrector->factor().factor() << ")";
+//	return stream.str();
+//}
 }
 
 void DebugNotification::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
@@ -66,6 +66,9 @@ void DebugNotification::action(const NotifyAction type, const std::shared_ptr<IA
 			break;
 		case Category::Receiver:
 			std::cout << "receiver" << std::endl;
+			break;
+		case Category::Undefined:
+			std::cout << "undefined" << std::endl;
 			break;
 	}
 }
@@ -92,18 +95,6 @@ void DebugNotification::detached(const std::shared_ptr<Emitter::Interface::IEmit
 
 void DebugNotification::modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {
 	std::cout << emitter_dbg(emitter.get(), "modified") << std::endl;
-}
-
-void DebugNotification::attached(Corrector::Interface::ICorrector *corrector) {
-	std::cout << corrector_dbg(corrector, "attached") << std::endl;
-}
-
-void DebugNotification::detached(Corrector::Interface::ICorrector *corrector) {
-	std::cout << corrector_dbg(corrector, "detached") << std::endl;
-}
-
-void DebugNotification::modified(Corrector::Interface::ICorrector *corrector) {
-	std::cout << corrector_dbg(corrector, "modified") << std::endl;
 }
 
 DebugNotification &DebugNotification::instance() {

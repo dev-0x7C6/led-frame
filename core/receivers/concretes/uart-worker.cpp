@@ -10,11 +10,9 @@ using namespace Receiver::Concrete;
 using namespace Corrector::Factory;
 
 UartWorker::UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbon,
-	Corrector::Concrete::CorrectorManager &correctorManager,
 	AtomAggregator &correctors,
 	std::unique_ptr<Functional::DevicePort> &device)
 		: m_ribbon(ribbon)
-		, m_correctorManager(correctorManager)
 		, m_correctors(correctors)
 		, m_device(device)
 
@@ -25,7 +23,7 @@ void UartWorker::fade(std::function<Scanline()> getFrame, const bool in) {
 	Functional::LoopSync loopSync;
 	auto fadeCorrector = CorrectorFactory::create(CorrectorType::Brightness, -2);
 	fadeCorrector->setFactor(0);
-	m_correctorManager.attach(fadeCorrector);
+	m_correctors.attach(fadeCorrector);
 
 	for (auto i = fadeCorrector->factor().min(); i < fadeCorrector->factor().max(); i += (fadeCorrector->factor().max() / static_cast<double>(m_uartFramerate / 4))) {
 		fadeCorrector->setFactor((in) ? i : fadeCorrector->factor().max() - i);
@@ -33,7 +31,7 @@ void UartWorker::fade(std::function<Scanline()> getFrame, const bool in) {
 		loopSync.wait(m_uartFramerate);
 	}
 
-	m_correctorManager.detach(fadeCorrector);
+	m_correctors.detach(fadeCorrector);
 }
 
 void UartWorker::change(const Scanline &from, std::function<Scanline()> getFrame) {

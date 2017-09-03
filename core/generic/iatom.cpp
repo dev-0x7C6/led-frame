@@ -1,5 +1,13 @@
 #include "iatom.h"
 
+IAtom::IAtom(const int id)
+		: m_id(id) {
+}
+
+auto IAtom::category() const noexcept -> Category {
+	return Category::Undefined;
+}
+
 void IAtom::attach(std::function<void()> callback) {
 	m_callbackConnector.attach(callback);
 }

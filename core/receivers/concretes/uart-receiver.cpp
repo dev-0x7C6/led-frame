@@ -1,6 +1,5 @@
 #include <core/containers/device-config-container.h>
 #include <core/correctors/concretes/color-enhancer-corrector.h>
-#include <core/correctors/concretes/corrector-manager.h>
 #include <core/devices/device-port.h>
 #include <core/enums/position-enum.h>
 #include <core/functionals/color-stream.h>
@@ -46,7 +45,7 @@ void UartReceiver::run() {
 		m_device->config().ribbon(3),
 	}};
 
-	UartWorker worker(ribbon, correctorManager(), correctors(), m_device);
+	UartWorker worker(ribbon, correctors(), m_device);
 	Functional::LoopSync loopSync;
 
 	Container::Scanline prev(0u);

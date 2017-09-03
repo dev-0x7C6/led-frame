@@ -1,31 +1,40 @@
 #pragma once
 
-#include <core/correctors/concretes/corrector-manager.h>
 #include <core/correctors/interfaces/icorrector.h>
-#include <core/emitters/concretes/emitter-manager.h>
 #include <core/interfaces/imulti-notifier.h>
 #include <core/interfaces/imulti-notifier-manager.h>
-#include <core/receivers/concretes/device-manager.h>
+#include <core/generic/atom-aggregator.h>
 
 #include <memory>
 #include <list>
+
+#include <QTimer>
+
+namespace Functional {
+class DevicePort;
+}
+
+namespace Network {
+class UdpBroadcastService;
+}
 
 class QSettings;
 
 namespace Manager {
 
-class MainManager final : public Interface::IMutliNotifierManager {
+class MainManager final : public QObject, public Interface::IMutliNotifierManager {
+	Q_OBJECT
 public:
 	explicit MainManager(QSettings &settings);
 	~MainManager() override;
 
-	void run();
 	void attach(Interface::IMultiNotifier &notifier) override;
 	void detach(Interface::IMultiNotifier &notifier) override;
 
-	auto &emitters() noexcept { return m_emitterManager; }
-	auto &correctors() noexcept { return m_correctorManager; }
-	auto &receivers() noexcept { return m_receiverManager; }
+	auto &atoms() noexcept { return m_atoms; }
+
+	void setRegisterDeviceCallback(const std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> &callback);
+	void run();
 
 private:
 	QSettings &m_settings;
@@ -37,10 +46,14 @@ private:
 	std::shared_ptr<Corrector::Interface::ICorrector> m_globalBlueCorrection;
 
 private:
-	Emitter::Concrete::EmitterManager m_emitterManager;
-	Corrector::Concrete::CorrectorManager m_correctorManager;
-	Receiver::Concrete::ReceiverManager m_receiverManager;
-
 	AtomAggregator m_atoms;
+
+protected:
+	void rescan();
+
+private:
+	std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
+	std::list<std::unique_ptr<Network::UdpBroadcastService>> m_broadcasts;
+	QTimer m_deviceScan;
 };
 }

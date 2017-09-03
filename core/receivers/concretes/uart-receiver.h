@@ -24,7 +24,7 @@ namespace Concrete {
 
 class UartWorker;
 
-class UartReceiver final : public Receiver::Abstract::AbstractReceiver {
+class UartReceiver final : public QObject, public Receiver::Abstract::AbstractReceiver {
 	Q_OBJECT
 public:
 	explicit UartReceiver(ci32 id, std::unique_ptr<Functional::DevicePort> &&device);

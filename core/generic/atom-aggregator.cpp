@@ -49,3 +49,12 @@ void AtomAggregator::enumerate(std::function<void(const std::shared_ptr<IAtom> &
 	for (const auto &object : m_objects)
 		callback(object);
 }
+
+auto AtomAggregator::find(const Category category, const int id) noexcept -> std::shared_ptr<IAtom> {
+	std::lock_guard<std::mutex> _(m_mutex);
+	for (const auto &object : m_objects)
+		if (id == object->id() && category == object->category())
+			return object;
+
+	return nullptr;
+}

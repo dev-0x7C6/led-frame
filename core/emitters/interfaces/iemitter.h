@@ -3,7 +3,6 @@
 #include <core/containers/color-scanline-container.h>
 #include <core/enums/emitter-type-enum.h>
 #include <core/functionals/raii-reference-counter.h>
-#include <core/interfaces/inotify.h>
 #include <core/generic/iatom.h>
 
 #include <atomic>
@@ -23,7 +22,7 @@ class IReceiver;
 namespace Emitter {
 namespace Interface {
 
-class IEmitter : public ::Interface::INotify, public IAtom {
+class IEmitter : public IAtom {
 public:
 	explicit IEmitter(ci32 id);
 	virtual ~IEmitter();

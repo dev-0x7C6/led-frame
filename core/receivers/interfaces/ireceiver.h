@@ -3,7 +3,6 @@
 #include <core/containers/color-scanline-container.h>
 #include <core/containers/device-config-container.h>
 #include <core/enums/receiver-type-enum.h>
-#include <core/interfaces/inotify.h>
 
 #include <QString>
 
@@ -26,10 +25,10 @@ class CorrectorManager;
 namespace Receiver {
 namespace Interface {
 
-class IReceiver : public ::Interface::INotify, public IAtom {
+class IReceiver : public IAtom {
 public:
 	explicit IReceiver(ci32 id)
-			: INotify(id) {}
+			: IAtom(id) {}
 	~IReceiver() override = default;
 
 	virtual auto category() const noexcept -> Category final { return Category::Receiver; }
@@ -50,8 +49,6 @@ public:
 	virtual void setName(const QString &name) = 0;
 
 	virtual auto correctors() noexcept -> AtomAggregator & = 0;
-
-	virtual Corrector::Concrete::CorrectorManager &correctorManager() = 0;
 };
 }
 }

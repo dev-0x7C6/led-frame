@@ -28,10 +28,6 @@ using namespace Functional;
 using namespace Manager;
 using namespace Network;
 
-using namespace Corrector::Concrete;
-using namespace Emitter::Concrete;
-using namespace Receiver::Concrete;
-
 #ifdef __unix__
 
 #include <signal.h>

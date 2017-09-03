@@ -18,9 +18,6 @@ public:
 	virtual void attached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	virtual void detached(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
 	virtual void modified(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) override;
-	virtual void attached(Corrector::Interface::ICorrector *corrector) override;
-	virtual void detached(Corrector::Interface::ICorrector *corrector) override;
-	virtual void modified(Corrector::Interface::ICorrector *corrector) override;
 
 	static DebugNotification &instance();
 };

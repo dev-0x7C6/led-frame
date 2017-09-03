@@ -3,7 +3,6 @@
 #include <core/containers/color-scanline-container.h>
 #include <core/enums/corrector-type.h>
 #include <core/enums/priority-enum.h>
-#include <core/interfaces/inotify.h>
 #include <core/types.h>
 
 #include <atomic>
@@ -13,7 +12,7 @@
 namespace Corrector {
 namespace Interface {
 
-class ICorrector : public ::Interface::INotify, public IAtom {
+class ICorrector : public IAtom {
 public:
 	inline explicit ICorrector(ci32 id, int owner, const Enum::Priority priority = Enum::Priority::Average);
 	virtual ~ICorrector() override = default;
@@ -59,7 +58,7 @@ private:
 // impl
 
 ICorrector::ICorrector(ci32 id, int owner, const Enum::Priority priority)
-		: INotify(id)
+		: IAtom(id)
 		, m_owner(owner)
 		, m_priority(priority)
 
@@ -67,13 +66,11 @@ ICorrector::ICorrector(ci32 id, int owner, const Enum::Priority priority)
 
 auto ICorrector::setEnabled(bool value) noexcept {
 	m_enabled = value;
-	notify();
 	notify2();
 }
 
 auto ICorrector::setFactor(correct_t value) noexcept {
 	m_factor.setValue(std::min(std::max(value, m_factor.min()), m_factor.max()));
-	notify();
 	notify2();
 }
 }
