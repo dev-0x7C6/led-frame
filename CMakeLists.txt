@@ -33,7 +33,6 @@ set(PROJECT_CODENAME "")
 configure_file(config.h.in config.h)
 
 find_package(Qt5Core)
-find_package(Qt5Gui)
 find_package(Qt5Network)
 find_package(Qt5SerialPort)
 find_package(Qt5WebSockets)
@@ -45,7 +44,6 @@ option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
 option(SUPPORT_RPI3 "Some extensions for Raspberry Pi 3" OFF)
 option(TESTS "Build unit tests" ON)
 option(BENCHMARKS "Build benchmarks" ON)
-option(GUI "Build gui interface" ON)
 
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
@@ -87,51 +85,6 @@ if (UNIX AND SUPPORT_X11)
 		-lX11
 		-lXext
 	)
-endif()
-
-if (GUI)
-	find_package(Qt5Quick)
-	find_package(Qt5Svg)
-
-	set(gui-sources
-		components/painters/wave-paint-engine.cpp
-		components/painters/wave-paint-engine.h
-		components/widgets/decorated-dialog.cpp
-		components/widgets/decorated-dialog.h
-		core/menus/device-menu.cpp
-		core/menus/device-menu.h
-		core/menus/emitter-configuration-menu.cpp
-		core/menus/emitter-configuration-menu.h
-		core/menus/emitter-selector-menu.cpp
-		core/menus/emitter-selector-menu.h
-		core/menus/image-collection-menu.cpp
-		core/menus/image-collection-menu.h
-		gui/dialogs/about-dialog.cpp
-		gui/dialogs/about-dialog.h
-		gui/dialogs/about-dialog.ui
-		gui/tray/system-tray.cpp
-		gui/tray/system-tray.h
-		gui/tray/system-tray-icon.cpp
-		gui/tray/system-tray-icon.h
-		gui/widgets/corrector-settings-dialog.cpp
-		gui/widgets/corrector-settings-dialog.h
-		gui/widgets/device-symulation-widget.cpp
-		gui/widgets/device-symulation-widget.h
-		gui/wizards/device-setup-general-test.cpp
-		gui/wizards/device-setup-general-test.h
-		gui/wizards/device-setup-info.cpp
-		gui/wizards/device-setup-info.h
-		gui/wizards/device-setup-pick-name.cpp
-		gui/wizards/device-setup-pick-name.h
-		gui/wizards/device-setup-wizard.cpp
-		gui/wizards/device-setup-wizard.h
-	)
-
-	set(gui-libs
-		Qt5::Svg
-		Qt5::Quick
-	)
-
 endif()
 
 set(sources
@@ -244,8 +197,6 @@ set(sources
 
 set(sources_app
 	main.cpp
-	qml.qrc
-	resources/resource.qrc
 )
 
 set(sources_ut
@@ -298,7 +249,7 @@ set(sources_bench
 	core/generic/iatom.h
 )
 
-add_executable(led-frame ${sources} ${sources_app}  ${gui-sources} ${rpi-sources} ${x11-sources})
+add_executable(led-frame ${sources} ${sources_app} ${rpi-sources} ${x11-sources})
 
 if (UNIX AND SUPPORT_X11)
 	target_compile_definitions(led-frame PRIVATE X11)
@@ -308,10 +259,6 @@ if (UNIX AND SUPPORT_RPI)
 	target_compile_definitions(led-frame PRIVATE RPI)
 endif()
 
-if (UNIX AND GUI)
-	target_compile_definitions(led-frame PRIVATE GUI)
-endif()
-
 target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
 target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
@@ -319,10 +266,8 @@ target_link_libraries(led-frame
 	Qt5::Core
 	Qt5::SerialPort
 	Qt5::Widgets
-	Qt5::Gui
 	Qt5::WebSockets
 	${rpi-libs}
-	${gui-libs}
 	${x11-libs}
 	"-lpthread"
 )
