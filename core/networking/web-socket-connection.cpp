@@ -8,10 +8,14 @@
 #include <QJsonObject>
 #include <QObject>
 #include <QWebSocket>
+#include <QTimer>
 
 #ifdef QT_DEBUG
 #include <iostream>
 #endif
+
+#include <chrono>
+#include <typeindex>
 
 using namespace Network::Protocol;
 using namespace Emitter::Interface;
@@ -19,16 +23,25 @@ using namespace Enum;
 using namespace Network;
 using namespace Receiver::Interface;
 
+using namespace std::chrono_literals;
+
 WebSocketConnection::WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket)
 		: m_remoteController(remoteController)
 		, m_socket(std::move(socket)) {
 	QObject::connect(m_socket.get(), &QWebSocket::textMessageReceived, [this](const auto &data) { this->recv(data); });
+	QObject::connect(&m_timer, &QTimer::timeout, [this]() {
+		std::lock_guard<std::mutex> _(m_mutex);
+		while (!m_outgoingQueue.empty()) {
+			send(m_outgoingQueue.front());
+			m_outgoingQueue.pop();
+		}
+	});
+	m_timer.start(5ms);
 }
 
-#include <typeindex>
+WebSocketConnection::~WebSocketConnection() = default;
 
 QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
-	//std::cout << static_cast<int>(atom->category()) << std::endl;
 	QJsonObject result;
 	for (const auto &value : atom->properties()) {
 		if (std::type_index(typeid(int)) == std::type_index(value.second.type()))
@@ -48,6 +61,7 @@ QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
 // documentation/protocol/notification.md
 
 void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
+	std::lock_guard<std::mutex> _(m_mutex);
 	QJsonObject notification{
 		{"message", "notification"},
 		{"version", 1},
@@ -55,10 +69,8 @@ void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<
 		{"source", toString(atom->category())},
 		{"datagram", toJson(atom)}};
 
-	send(QJsonDocument(notification).toJson());
+	m_outgoingQueue.push(QJsonDocument(notification).toJson());
 }
-
-WebSocketConnection::~WebSocketConnection() = default;
 
 void WebSocketConnection::send(const QString &message) {
 #ifdef QT_DEBUG
