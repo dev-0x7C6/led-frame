@@ -39,9 +39,9 @@ bool RemoteController::changeEmitterData(int emitterId, const std::string &data)
 bool RemoteController::changeCorrector(int receiverId, int correctorId, correct_t factor, bool enabled) {
 	auto receiver = std::static_pointer_cast<Receiver::Interface::IReceiver>(m_mainManager.atoms().find(Category::Receiver, receiverId));
 
-	if (!receiver) {
+	if (receiver) {
 		if (receiverId == -1) {
-			auto corrector = std::static_pointer_cast<ICorrector>(m_mainManager.atoms().find(Category::Corrector, correctorId));
+			auto corrector = std::static_pointer_cast<ICorrector>(m_mainManager.atoms().findCorrector(correctorId));
 
 			if (!corrector) return false;
 
@@ -49,6 +49,14 @@ bool RemoteController::changeCorrector(int receiverId, int correctorId, correct_
 			corrector->setEnabled(enabled);
 			return true;
 		}
+
+		auto corrector = std::static_pointer_cast<ICorrector>(receiver->correctors().findCorrector(correctorId));
+
+		if (!corrector) return false;
+
+		corrector->setFactor(factor);
+		corrector->setEnabled(enabled);
+		return true;
 	}
 
 	return false;
