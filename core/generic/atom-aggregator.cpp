@@ -3,7 +3,7 @@
 #include <algorithm>
 
 void AtomAggregator::attach(INotification *notificator) noexcept {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard<std::recursive_mutex> _(m_mutex);
 	m_notifications.emplace_back(notificator);
 
 	for (const auto &object : m_objects)
@@ -11,7 +11,7 @@ void AtomAggregator::attach(INotification *notificator) noexcept {
 }
 
 void AtomAggregator::detach(INotification *notificator) noexcept {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard<std::recursive_mutex> _(m_mutex);
 	m_notifications.erase(std::remove_if(m_notifications.begin(),
 							  m_notifications.end(),
 							  [notificator](const auto &value) { return value == notificator; }),
@@ -19,21 +19,21 @@ void AtomAggregator::detach(INotification *notificator) noexcept {
 }
 
 void AtomAggregator::attach(const std::shared_ptr<IAtom> &object) noexcept {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard<std::recursive_mutex> _(m_mutex);
 	m_objects.emplace_back(object);
 
 	for (auto notification : m_notifications)
 		notification->action(NotifyAction::Attached, object);
 
 	object->attach([ this, object = object ]() {
-		std::lock_guard<std::mutex> locker(m_mutex);
+		std::lock_guard<std::recursive_mutex> locker(m_mutex);
 		for (auto notification : m_notifications)
 			notification->action(NotifyAction::Modified, object);
 	});
 }
 
 void AtomAggregator::detach(const std::shared_ptr<IAtom> &object) noexcept {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard<std::recursive_mutex> _(m_mutex);
 
 	for (auto notification : m_notifications)
 		notification->action(NotifyAction::Detached, object);
@@ -45,13 +45,13 @@ void AtomAggregator::detach(const std::shared_ptr<IAtom> &object) noexcept {
 }
 
 void AtomAggregator::enumerate(std::function<void(const std::shared_ptr<IAtom> &)> callback) const noexcept {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard<std::recursive_mutex> _(m_mutex);
 	for (const auto &object : m_objects)
 		callback(object);
 }
 
 auto AtomAggregator::find(const Category category, const int id) noexcept -> std::shared_ptr<IAtom> {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard<std::recursive_mutex> _(m_mutex);
 	for (const auto &object : m_objects)
 		if (id == object->id() && category == object->category())
 			return object;

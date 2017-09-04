@@ -1,9 +1,9 @@
 #pragma once
 
 #include <core/correctors/interfaces/icorrector.h>
-#include <core/interfaces/imulti-notifier.h>
-#include <core/interfaces/imulti-notifier-manager.h>
 #include <core/generic/atom-aggregator.h>
+
+#include <core/interfaces/inotification-aggregator.h>
 
 #include <memory>
 #include <list>
@@ -18,18 +18,24 @@ namespace Network {
 class UdpBroadcastService;
 }
 
+namespace Receiver {
+namespace Interface {
+class IReceiver;
+}
+}
+
 class QSettings;
 
 namespace Manager {
 
-class MainManager final : public QObject, public Interface::IMutliNotifierManager {
+class MainManager final : public QObject, public INotificationAggregator {
 	Q_OBJECT
 public:
 	explicit MainManager(QSettings &settings);
 	~MainManager() override;
 
-	void attach(Interface::IMultiNotifier &notifier) override;
-	void detach(Interface::IMultiNotifier &notifier) override;
+	virtual void attach(INotification &notifier) noexcept override final;
+	virtual void detach(INotification &notifier) noexcept override final;
 
 	auto &atoms() noexcept { return m_atoms; }
 

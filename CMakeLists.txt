@@ -7,7 +7,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wold-style-cast")
@@ -15,10 +15,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-variadic-macros -Wno-old-style-cast")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fverbose-asm")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -O0")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -save-temps")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -g3")
 
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
@@ -130,7 +127,6 @@ set(sources
 	core/emitters/factories/emitter-factory.h
 	core/emitters/interfaces/iemitter.cpp
 	core/emitters/interfaces/iemitter.h
-	core/emitters/interfaces/iemitter-notify.h
 	core/enums/animation-variant.h
 	core/enums/color-format-enum.h
 	core/enums/color-type-enum.h
@@ -169,9 +165,8 @@ set(sources
 	core/generic/atom-aggregator.h
 	core/generic/iatom.cpp
 	core/generic/iatom.h
-	core/interfaces/imulti-notifier.h
-	core/interfaces/imulti-notifier-manager.h
 	core/interfaces/iscreen-capture.h
+	core/interfaces/inotification-aggregator.h
 	core/managers/main-manager.cpp
 	core/managers/main-manager.h
 	core/managers/session-manager.cpp
@@ -191,7 +186,6 @@ set(sources
 	core/receivers/concretes/uart-worker.cpp
 	core/receivers/concretes/uart-worker.h
 	core/receivers/interfaces/ireceiver.h
-	core/receivers/interfaces/ireceiver-notify.h
 	core/types.h
 )
 

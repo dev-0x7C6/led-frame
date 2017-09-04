@@ -51,7 +51,7 @@ MainManager::~MainManager() {
 	m_settings.endGroup();
 }
 
-void MainManager::attach(Interface::IMultiNotifier &notifier) {
+void MainManager::attach(INotification &notifier) noexcept {
 	m_atoms.attach(&notifier);
 	m_atoms.enumerate([&notifier](const auto &atom) {
 		if (Category::Receiver != atom->category())
@@ -61,7 +61,7 @@ void MainManager::attach(Interface::IMultiNotifier &notifier) {
 	});
 }
 
-void MainManager::detach(Interface::IMultiNotifier &notifier) {
+void MainManager::detach(INotification &notifier) noexcept {
 	m_atoms.detach(&notifier);
 
 	m_atoms.enumerate([&notifier](const auto &atom) {
@@ -93,11 +93,11 @@ void MainManager::rescan() {
 		device->setStopBits(QSerialPort::OneStop);
 		auto thread = std::make_unique<UartReceiver>(id++, std::move(device));
 		auto interface = thread.get();
-		connect(interface, &UartReceiver::finished, this, [this, interface]() {
-			m_broadcasts.remove_if([id = interface->id()](const auto &match) {
+		connect(interface, &UartReceiver::finished, this, [ this, id = interface->id() ]() {
+			m_broadcasts.remove_if([id](const auto &match) {
 				return id == match->id();
 			});
-			m_atoms.detach(m_atoms.find(Category::Receiver, id));
+			m_atoms.detach(m_atoms.findReceiver(id));
 		},
 			Qt::QueuedConnection);
 

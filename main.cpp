@@ -7,9 +7,10 @@
 #include <core/managers/session-manager.h>
 #include <core/networking/web-socket-server.h>
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QSettings>
 #include <memory>
+#include <QTimer>
 
 #ifdef RPI
 #include <bcm_host.h>
@@ -26,14 +27,17 @@ using namespace Network;
 #include <signal.h>
 #include <unistd.h>
 
+#include <chrono>
+
+using namespace std::chrono_literals;
+
 void catchUnixSignals(const std::vector<int> &quitSignals,
-	const std::vector<int> & = std::vector<int>()) {
+	const std::vector<int> &ignoreSignals = std::vector<int>()) {
 
 	auto handler = [](int) -> void { QCoreApplication::quit(); };
 
-	//#pragma
-	//	for (int sig : ignoreSignals)
-	//		signal(sig, SIG_IGN);
+	for (int sig : ignoreSignals)
+		signal(sig, SIG_IGN);
 
 	for (int sig : quitSignals)
 		signal(sig, handler);
@@ -49,13 +53,12 @@ int main(int argc, char *argv[]) {
 	auto applicationName = QString(ApplicationInfo::name());
 	auto applicationVersion = QString::fromStdString(ApplicationInfo::versionToString());
 
-	QCoreApplication application(argc, argv);
+	QApplication application(argc, argv);
+	application.setApplicationName(applicationName);
+	application.setApplicationVersion(applicationVersion);
 #ifdef __unix__
 	catchUnixSignals({SIGQUIT, SIGINT, SIGTERM, SIGHUP});
 #endif
-
-	application.setApplicationName(applicationName);
-	application.setApplicationVersion(applicationVersion);
 
 	QSettings settings(applicationName, applicationName);
 	MainManager manager(settings);
@@ -63,6 +66,8 @@ int main(int argc, char *argv[]) {
 	FileCollection imageCollection;
 	RemoteController controller(manager);
 	WebSocketServer webSocketServer(manager, controller);
+
+	QTimer::singleShot(3s, [&application]() { application.quit(); });
 
 	manager.run();
 	return application.exec();

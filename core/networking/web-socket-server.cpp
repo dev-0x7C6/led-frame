@@ -6,7 +6,7 @@
 
 using namespace Network;
 
-WebSocketServer::WebSocketServer(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const u16 &port)
+WebSocketServer::WebSocketServer(INotificationAggregator &notifier, Interface::IRemoteController &remoteController, const u16 &port)
 		: m_service(std::make_unique<QWebSocketServer>("LedFrameRemote", QWebSocketServer::NonSecureMode, nullptr))
 		, m_notifier(notifier)
 		, m_remoteController(remoteController)

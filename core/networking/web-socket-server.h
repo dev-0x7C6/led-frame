@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/interfaces/imulti-notifier-manager.h>
 #include <core/interfaces/iremote-controller.h>
+#include <core/interfaces/inotification-aggregator.h>
 
 #include <memory>
 #include <list>
@@ -15,7 +15,7 @@ class WebSocketConnection;
 
 class WebSocketServer final {
 public:
-	explicit WebSocketServer(Interface::IMutliNotifierManager &notifier, Interface::IRemoteController &remoteController, const u16 &port = 4999);
+	explicit WebSocketServer(INotificationAggregator &notifier, Interface::IRemoteController &remoteController, const u16 &port = 4999);
 	virtual ~WebSocketServer();
 
 	bool isListening() const noexcept;
@@ -29,7 +29,7 @@ private:
 	std::list<std::unique_ptr<WebSocketConnection>> m_connections;
 
 private:
-	Interface::IMutliNotifierManager &m_notifier;
+	INotificationAggregator &m_notifier;
 	Interface::IRemoteController &m_remoteController;
 };
 }

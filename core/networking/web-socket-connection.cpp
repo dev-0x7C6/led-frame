@@ -46,6 +46,8 @@ QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
 	return result;
 }
 
+// documentation/protocol/notification.md
+
 void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
 	QJsonObject notification{
 		{"message", "notification"},
@@ -58,16 +60,6 @@ void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<
 }
 
 WebSocketConnection::~WebSocketConnection() = default;
-
-// documentation/protocol/notification.md
-
-void WebSocketConnection::attached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, emitter.get())); }
-void WebSocketConnection::detached(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, emitter.get())); }
-void WebSocketConnection::modified(const std::shared_ptr<IEmitter> &emitter) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, emitter.get())); }
-
-void WebSocketConnection::attached(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Attached, receiver)); }
-void WebSocketConnection::detached(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Detached, receiver)); }
-void WebSocketConnection::modified(IReceiver *receiver) { send(JsonProtocolHelper::notification(ProtocolEvent::Modified, receiver)); }
 
 void WebSocketConnection::send(const QString &message) {
 #ifdef QT_DEBUG
