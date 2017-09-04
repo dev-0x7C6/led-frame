@@ -6,7 +6,7 @@ using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
 BrightnessCorrector::BrightnessCorrector(ci32 id, int owner)
-		: Interface::ICorrector(id, owner) {
+		: ICorrector(id, owner) {
 }
 
 CorrectorType BrightnessCorrector::type() const { return CorrectorType::Brightness; }

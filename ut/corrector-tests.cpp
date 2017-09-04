@@ -9,7 +9,6 @@
 using namespace Container;
 using namespace Corrector;
 using namespace Corrector::Concrete;
-using namespace Corrector::Interface;
 using namespace Enum;
 using namespace Functional::Color;
 

@@ -10,7 +10,6 @@
 #include <QApplication>
 #include <QSettings>
 #include <memory>
-#include <QTimer>
 
 #ifdef RPI
 #include <bcm_host.h>
@@ -66,8 +65,6 @@ int main(int argc, char *argv[]) {
 	FileCollection imageCollection;
 	RemoteController controller(manager);
 	WebSocketServer webSocketServer(manager, controller);
-
-	QTimer::singleShot(3s, [&application]() { application.quit(); });
 
 	manager.run();
 	return application.exec();

@@ -1,7 +1,7 @@
 #include "remote-controller.h"
 
-#include <core/receivers/interfaces/ireceiver.h>
-#include <core/emitters/interfaces/iemitter.h>
+#include <core/interfaces/ireceiver.h>
+#include <core/interfaces/iemitter.h>
 
 using namespace Functional;
 
@@ -41,7 +41,7 @@ bool RemoteController::changeCorrector(int receiverId, int correctorId, correct_
 
 	if (!receiver) {
 		if (receiverId == -1) {
-			auto corrector = std::static_pointer_cast<Corrector::Interface::ICorrector>(m_mainManager.atoms().find(Category::Corrector, correctorId));
+			auto corrector = std::static_pointer_cast<ICorrector>(m_mainManager.atoms().find(Category::Corrector, correctorId));
 
 			if (!corrector) return false;
 

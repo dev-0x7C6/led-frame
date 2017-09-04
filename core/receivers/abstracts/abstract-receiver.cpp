@@ -1,5 +1,5 @@
 #include <core/receivers/abstracts/abstract-receiver.h>
-#include <core/emitters/interfaces/iemitter.h>
+#include <core/interfaces/iemitter.h>
 
 #include <memory>
 #include <atomic>
@@ -31,7 +31,7 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::
 #else
 	std::atomic_exchange(&m_emitter, emitter);
 #endif
-	notify2();
+	notify();
 
 	if (m_emitter)
 		m_acquiredEmitter = m_emitter->acquire();

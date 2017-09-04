@@ -4,8 +4,8 @@
 #include <core/emitters/factories/emitter-factory.h>
 #include <core/functionals/debug-notification.h>
 #include <core/managers/main-manager.h>
-#include <core/receivers/interfaces/ireceiver.h>
-#include <core/correctors/interfaces/icorrector.h>
+#include <core/interfaces/ireceiver.h>
+#include <core/interfaces/icorrector.h>
 #include <core/enums/animation-variant.h>
 
 #include <QApplication>
@@ -142,7 +142,7 @@ SessionManager::~SessionManager() {
 			if (Category::Corrector != atom->category())
 				return;
 
-			auto corrector = std::static_pointer_cast<Corrector::Interface::ICorrector>(atom);
+			auto corrector = std::static_pointer_cast<ICorrector>(atom);
 			m_settings.beginGroup(value(corrector->type()));
 			m_settings.setValue("factor", corrector->factor().value());
 			m_settings.setValue("enabled", corrector->isEnabled());

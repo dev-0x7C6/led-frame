@@ -3,7 +3,7 @@
 using namespace Corrector::Concrete;
 
 FlickrEffectCorrector::FlickrEffectCorrector(ci32 id, int owner)
-		: Interface::ICorrector(id, owner, Enum::Priority::Highest) {
+		: ICorrector(id, owner, Enum::Priority::Highest) {
 	m_factor.setValue(0);
 	m_enabled = false;
 }

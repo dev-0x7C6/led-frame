@@ -30,12 +30,12 @@ void AnimationVariantFactory::setup(QVariantAnimation &animation, const Animatio
 			animation.setKeyValueAt(0.625, QColor::fromHsv(10, 255, 255, 255));
 			animation.setKeyValueAt(0.700, QColor::fromHsv(20, 255, 255, 255));
 			animation.setKeyValueAt(0.800, QColor::fromHsv(15, 255, 255, 255));
-			animation.setKeyValueAt(0.850, QColor::fromHsv(20, 255, 255, 255));
+			animation.setKeyValueAt(0.850, QColor::fromHsv(25, 255, 255, 255));
 			animation.setKeyValueAt(0.900, QColor::fromHsv(10, 255, 255, 255));
 			animation.setKeyValueAt(0.925, QColor::fromHsv(18, 255, 255, 255));
 			animation.setKeyValueAt(0.950, QColor::fromHsv(10, 255, 255, 255));
 			animation.setKeyValueAt(0.975, QColor::fromHsv(20, 255, 255, 255));
-			animation.setKeyValueAt(1.000, QColor::fromHsv(25, 255, 255, 255));
+			animation.setKeyValueAt(1.000, QColor::fromHsv(15, 255, 255, 255));
 			break;
 
 		case AnimationVariant::Unused:

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <core/correctors/interfaces/icorrector.h>
+#include <core/interfaces/icorrector.h>
 
 namespace Corrector {
 namespace Concrete {
 
-class BrightnessCorrector final : public Interface::ICorrector {
+class BrightnessCorrector final : public ICorrector {
 public:
 	explicit BrightnessCorrector(ci32 id, int owner);
 	virtual ~BrightnessCorrector() = default;

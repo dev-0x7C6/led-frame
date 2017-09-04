@@ -9,9 +9,6 @@
 
 #include <core/generic/iatom.h>
 
-namespace Corrector {
-namespace Interface {
-
 class ICorrector : public IAtom {
 public:
 	inline explicit ICorrector(ci32 id, int owner, const Enum::Priority priority = Enum::Priority::Average);
@@ -66,12 +63,10 @@ ICorrector::ICorrector(ci32 id, int owner, const Enum::Priority priority)
 
 auto ICorrector::setEnabled(bool value) noexcept {
 	m_enabled = value;
-	notify2();
+	notify();
 }
 
 auto ICorrector::setFactor(correct_t value) noexcept {
 	m_factor.setValue(std::min(std::max(value, m_factor.min()), m_factor.max()));
-	notify2();
-}
-}
+	notify();
 }

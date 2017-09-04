@@ -12,7 +12,6 @@ using namespace Container;
 using namespace Corrector;
 
 using namespace Corrector::Factory;
-using namespace Corrector::Interface;
 using namespace Enum;
 using namespace Functional;
 
@@ -78,7 +77,7 @@ static void color_correction(benchmark::State &state) {
 		CorrectorType::BlueChannel,
 		CorrectorType::FlickrEffect};
 
-	std::vector<std::shared_ptr<Corrector::Interface::ICorrector>> correctors;
+	std::vector<std::shared_ptr<ICorrector>> correctors;
 
 	for (const auto &type : type_list)
 		correctors.emplace_back(Factory::CorrectorFactory::create(type, 0));

@@ -7,7 +7,6 @@
 
 using namespace Corrector::Concrete;
 using namespace Corrector::Factory;
-using namespace Corrector::Interface;
 using namespace Enum;
 
 std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type, int owner) {

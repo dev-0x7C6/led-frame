@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/functionals/raii-reference-counter.h>
-#include <core/receivers/interfaces/ireceiver.h>
+#include <core/interfaces/ireceiver.h>
 
 #include <QString>
 

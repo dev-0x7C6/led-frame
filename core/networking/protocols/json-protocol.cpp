@@ -1,8 +1,8 @@
 #include "json-protocol.h"
 
-#include <core/correctors/interfaces/icorrector.h>
-#include <core/emitters/interfaces/iemitter.h>
-#include <core/receivers/interfaces/ireceiver.h>
+#include <core/interfaces/icorrector.h>
+#include <core/interfaces/iemitter.h>
+#include <core/interfaces/ireceiver.h>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -21,7 +21,7 @@ QJsonObject JsonProtocolHelper::header(const ProtocolMessage message, const Prot
 	};
 }
 
-QString JsonProtocolHelper::notification(const ProtocolEvent event, const Corrector::Interface::ICorrector *corrector) {
+QString JsonProtocolHelper::notification(const ProtocolEvent event, const ICorrector *corrector) {
 	auto json = header(ProtocolMessage::Notification, event, ProtocolSource::Corrector);
 	const auto datagram = QJsonObject{
 		{"id", corrector->id()},

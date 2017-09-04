@@ -1,7 +1,7 @@
 #include "uart-worker.h"
 
 #include <core/correctors/factories/corrector-factory.h>
-#include <core/correctors/interfaces/icorrector.h>
+#include <core/interfaces/icorrector.h>
 #include <core/functionals/loop-sync.h>
 
 using namespace Enum;
@@ -47,13 +47,13 @@ void UartWorker::change(const Scanline &from, std::function<Scanline()> getFrame
 
 #include <iostream>
 
-#include <core/correctors/interfaces/icorrector.h>
+#include <core/interfaces/icorrector.h>
 
 void UartWorker::write(Scanline scanline) {
 	//m_correctorManager.execute(scanline);
 	m_correctors.enumerate([&scanline](const auto &source) {
 		if (Category::Corrector == source->category())
-			static_cast<Corrector::Interface::ICorrector *>(source.get())->correct(scanline);
+			static_cast<ICorrector *>(source.get())->correct(scanline);
 	});
 
 	for (const auto &config : m_ribbon) {

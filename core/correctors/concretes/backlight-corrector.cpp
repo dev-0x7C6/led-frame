@@ -7,7 +7,7 @@ using namespace Corrector::Concrete;
 using namespace Functional::Color;
 
 BacklightCorrector::BacklightCorrector(ci32 id, int owner)
-		: Interface::ICorrector(id, owner, Priority::Lowest) {
+		: ICorrector(id, owner, Priority::Lowest) {
 	m_factor = {1, 16, 0};
 	m_enabled = false;
 }

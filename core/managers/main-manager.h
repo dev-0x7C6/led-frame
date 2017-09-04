@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/correctors/interfaces/icorrector.h>
+#include <core/interfaces/icorrector.h>
 #include <core/generic/atom-aggregator.h>
 
 #include <core/interfaces/inotification-aggregator.h>
@@ -46,10 +46,10 @@ private:
 	QSettings &m_settings;
 
 private:
-	std::shared_ptr<Corrector::Interface::ICorrector> m_globalBrightnessCorrection;
-	std::shared_ptr<Corrector::Interface::ICorrector> m_globalRedCorrection;
-	std::shared_ptr<Corrector::Interface::ICorrector> m_globalGreenCorrection;
-	std::shared_ptr<Corrector::Interface::ICorrector> m_globalBlueCorrection;
+	std::shared_ptr<ICorrector> m_globalBrightnessCorrection;
+	std::shared_ptr<ICorrector> m_globalRedCorrection;
+	std::shared_ptr<ICorrector> m_globalGreenCorrection;
+	std::shared_ptr<ICorrector> m_globalBlueCorrection;
 
 private:
 	AtomAggregator m_atoms;

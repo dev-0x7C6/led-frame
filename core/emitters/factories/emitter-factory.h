@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/emitters/interfaces/iemitter.h>
+#include <core/interfaces/iemitter.h>
 
 namespace Emitter {
 namespace Factory {

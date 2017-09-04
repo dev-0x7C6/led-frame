@@ -105,7 +105,6 @@ set(sources
 	core/correctors/concretes/rgb-channel-corrector.h
 	core/correctors/factories/corrector-factory.cpp
 	core/correctors/factories/corrector-factory.h
-	core/correctors/interfaces/icorrector.h
 	core/debug.h
 	core/devices/device-port.cpp
 	core/devices/device-port.h
@@ -125,8 +124,6 @@ set(sources
 	core/emitters/concretes/test-emitter.h
 	core/emitters/factories/emitter-factory.cpp
 	core/emitters/factories/emitter-factory.h
-	core/emitters/interfaces/iemitter.cpp
-	core/emitters/interfaces/iemitter.h
 	core/enums/animation-variant.h
 	core/enums/color-format-enum.h
 	core/enums/color-type-enum.h
@@ -165,8 +162,12 @@ set(sources
 	core/generic/atom-aggregator.h
 	core/generic/iatom.cpp
 	core/generic/iatom.h
-	core/interfaces/iscreen-capture.h
+	core/interfaces/icorrector.h
+	core/interfaces/iemitter.cpp
+	core/interfaces/iemitter.h
 	core/interfaces/inotification-aggregator.h
+	core/interfaces/ireceiver.h
+	core/interfaces/iscreen-capture.h
 	core/managers/main-manager.cpp
 	core/managers/main-manager.h
 	core/managers/session-manager.cpp
@@ -185,7 +186,6 @@ set(sources
 	core/receivers/concretes/uart-receiver.h
 	core/receivers/concretes/uart-worker.cpp
 	core/receivers/concretes/uart-worker.h
-	core/receivers/interfaces/ireceiver.h
 	core/types.h
 )
 
@@ -208,7 +208,7 @@ set(sources_ut
 	core/correctors/concretes/rgb-channel-corrector.h
 	core/correctors/factories/corrector-factory.cpp
 	core/correctors/factories/corrector-factory.h
-	core/correctors/interfaces/icorrector.h
+	core/interfaces/icorrector.h
 	core/functionals/color-averaging-buffer.h
 	core/functionals/image-block-processor.h
 	core/generic/atom-aggregator.cpp
@@ -236,7 +236,7 @@ set(sources_bench
 	core/correctors/concretes/rgb-channel-corrector.h
 	core/correctors/factories/corrector-factory.cpp
 	core/correctors/factories/corrector-factory.h
-	core/correctors/interfaces/icorrector.h
+	core/interfaces/icorrector.h
 	core/generic/atom-aggregator.cpp
 	core/generic/atom-aggregator.h
 	core/generic/iatom.cpp

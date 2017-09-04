@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/correctors/interfaces/icorrector.h>
-#include <core/emitters/interfaces/iemitter.h>
-#include <core/receivers/interfaces/ireceiver.h>
+#include <core/interfaces/icorrector.h>
+#include <core/interfaces/iemitter.h>
+#include <core/interfaces/ireceiver.h>
 
 namespace Network {
 namespace Protocol {
@@ -57,7 +57,7 @@ public:
 	virtual ~JsonProtocolHelper() = delete;
 
 	static QJsonObject header(const ProtocolMessage message, const ProtocolEvent event, const ProtocolSource source);
-	static QString notification(const ProtocolEvent event, const Corrector::Interface::ICorrector *corrector);
+	static QString notification(const ProtocolEvent event, const ICorrector *corrector);
 	static QString notification(const ProtocolEvent event, const Emitter::Interface::IEmitter *emitter);
 	static QString notification(const ProtocolEvent event, const Receiver::Interface::IReceiver *receiver);
 };

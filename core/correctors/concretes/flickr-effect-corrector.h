@@ -1,11 +1,11 @@
 #pragma once
 
-#include <core/correctors/interfaces/icorrector.h>
+#include <core/interfaces/icorrector.h>
 
 namespace Corrector {
 namespace Concrete {
 
-class FlickrEffectCorrector final : public Interface::ICorrector {
+class FlickrEffectCorrector final : public ICorrector {
 public:
 	explicit FlickrEffectCorrector(ci32 id, int owner);
 	virtual ~FlickrEffectCorrector() = default;

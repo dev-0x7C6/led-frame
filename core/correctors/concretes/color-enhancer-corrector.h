@@ -1,11 +1,11 @@
 #pragma once
 
-#include <core/correctors/interfaces/icorrector.h>
+#include <core/interfaces/icorrector.h>
 
 namespace Corrector {
 namespace Concrete {
 
-class ColorEnhancerCorrector final : public Interface::ICorrector {
+class ColorEnhancerCorrector final : public ICorrector {
 public:
 	explicit ColorEnhancerCorrector(ci32 id, int owner);
 	virtual ~ColorEnhancerCorrector() = default;

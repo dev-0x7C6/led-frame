@@ -2,8 +2,6 @@
 
 #include <core/emitters/abstracts/abstract-emitter.h>
 
-class QTimer;
-
 namespace Emitter {
 namespace Concrete {
 

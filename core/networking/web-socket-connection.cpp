@@ -1,8 +1,8 @@
-#include <core/correctors/interfaces/icorrector.h>
-#include <core/emitters/interfaces/iemitter.h>
+#include <core/interfaces/icorrector.h>
+#include <core/interfaces/iemitter.h>
 #include <core/networking/protocols/json-protocol.h>
 #include <core/networking/web-socket-connection.h>
-#include <core/receivers/interfaces/ireceiver.h>
+#include <core/interfaces/ireceiver.h>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -14,7 +14,6 @@
 #endif
 
 using namespace Network::Protocol;
-using namespace Corrector::Interface;
 using namespace Emitter::Interface;
 using namespace Enum;
 using namespace Network;
