@@ -22,7 +22,7 @@ void AbstractReceiver::disconnectEmitter() {
 	m_acquiredEmitter = nullptr;
 }
 
-void AbstractReceiver::connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) {
+void AbstractReceiver::connectEmitter(const std::shared_ptr<IEmitter> &emitter) {
 	if (m_emitter == emitter) return;
 	disconnectEmitter();
 
@@ -45,7 +45,7 @@ bool AbstractReceiver::isEmitterConnected() const {
 #endif
 }
 
-std::shared_ptr<Emitter::Interface::IEmitter> AbstractReceiver::connectedEmitter() const {
+std::shared_ptr<IEmitter> AbstractReceiver::connectedEmitter() const {
 #ifdef RPI
 	return m_emitter;
 #else

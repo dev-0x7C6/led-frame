@@ -57,7 +57,7 @@ void MainManager::attach(INotification &notifier) noexcept {
 		if (Category::Receiver != atom->category())
 			return;
 
-		std::static_pointer_cast<Receiver::Interface::IReceiver>(atom)->correctors().attach(&notifier);
+		std::static_pointer_cast<IReceiver>(atom)->correctors().attach(&notifier);
 	});
 }
 
@@ -68,7 +68,7 @@ void MainManager::detach(INotification &notifier) noexcept {
 		if (Category::Receiver != atom->category())
 			return;
 
-		std::static_pointer_cast<Receiver::Interface::IReceiver>(atom)->correctors().detach(&notifier);
+		std::static_pointer_cast<IReceiver>(atom)->correctors().detach(&notifier);
 	});
 }
 
@@ -109,7 +109,7 @@ void MainManager::rescan() {
 	}
 }
 
-void MainManager::setRegisterDeviceCallback(const std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> &callback) {
+void MainManager::setRegisterDeviceCallback(const std::function<bool(IReceiver *, const QString &serialNumber)> &callback) {
 	m_registerDeviceCallback = callback;
 }
 

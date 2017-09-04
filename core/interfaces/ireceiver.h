@@ -10,20 +10,13 @@
 #include <core/generic/iatom.h>
 #include <core/generic/atom-aggregator.h>
 
-namespace Emitter {
-namespace Interface {
 class IEmitter;
-}
-}
 
 namespace Corrector {
 namespace Concrete {
 class CorrectorManager;
 }
 }
-
-namespace Receiver {
-namespace Interface {
 
 class IReceiver : public IAtom {
 public:
@@ -39,16 +32,14 @@ public:
 	virtual u32 framerate() const { return 90; }
 
 	virtual void disconnectEmitter() = 0;
-	virtual void connectEmitter(const std::shared_ptr<Emitter::Interface::IEmitter> &emitter) = 0;
+	virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) = 0;
 	virtual bool isEmitterConnected() const = 0;
 	virtual int connectedEmitterId() const = 0;
 
-	virtual std::shared_ptr<Emitter::Interface::IEmitter> connectedEmitter() const = 0;
+	virtual std::shared_ptr<IEmitter> connectedEmitter() const = 0;
 
 	virtual Container::DeviceConfigContainer config() = 0;
 	virtual void setName(const QString &name) = 0;
 
 	virtual auto correctors() noexcept -> AtomAggregator & = 0;
 };
-}
-}

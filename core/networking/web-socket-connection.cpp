@@ -18,10 +18,8 @@
 #include <typeindex>
 
 using namespace Network::Protocol;
-using namespace Emitter::Interface;
 using namespace Enum;
 using namespace Network;
-using namespace Receiver::Interface;
 
 using namespace std::chrono_literals;
 

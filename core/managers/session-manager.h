@@ -1,13 +1,8 @@
 #pragma once
 
-namespace Receiver {
-namespace Interface {
 class IReceiver;
-}
-}
-
-class QString;
 class QSettings;
+class QString;
 
 namespace Manager {
 
@@ -19,8 +14,8 @@ public:
 	virtual ~SessionManager();
 
 protected:
-	bool registerDevice(Receiver::Interface::IReceiver *receiver, const QString &serialNumber);
-	void createCorrectorGroup(Receiver::Interface::IReceiver *receiver);
+	bool registerDevice(IReceiver *receiver, const QString &serialNumber);
+	void createCorrectorGroup(IReceiver *receiver);
 
 protected:
 	void load();

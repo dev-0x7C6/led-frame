@@ -28,8 +28,8 @@ Enum::EmitterType AnimationEmitter::type() const {
 	return Enum::EmitterType::Animation;
 }
 
-void AnimationEmitter::interpret(any data) noexcept {
-	AnimationVariantFactory::setup(m_animation, any_cast<Enum::AnimationVariant>(data));
+void AnimationEmitter::interpret(std::experimental::any data) noexcept {
+	AnimationVariantFactory::setup(m_animation, std::experimental::any_cast<Enum::AnimationVariant>(data));
 }
 
 void AnimationEmitter::process(const QVariant &value) {

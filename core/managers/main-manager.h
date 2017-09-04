@@ -18,12 +18,7 @@ namespace Network {
 class UdpBroadcastService;
 }
 
-namespace Receiver {
-namespace Interface {
 class IReceiver;
-}
-}
-
 class QSettings;
 
 namespace Manager {
@@ -39,7 +34,7 @@ public:
 
 	auto &atoms() noexcept { return m_atoms; }
 
-	void setRegisterDeviceCallback(const std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> &callback);
+	void setRegisterDeviceCallback(const std::function<bool(IReceiver *, const QString &serialNumber)> &callback);
 	void run();
 
 private:
@@ -58,7 +53,7 @@ protected:
 	void rescan();
 
 private:
-	std::function<bool(Receiver::Interface::IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
+	std::function<bool(IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
 	std::list<std::unique_ptr<Network::UdpBroadcastService>> m_broadcasts;
 	QTimer m_deviceScan;
 };

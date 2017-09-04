@@ -8,7 +8,6 @@
 
 using namespace Emitter::Concrete;
 using namespace Emitter::Factory;
-using namespace Emitter::Interface;
 using namespace Enum;
 
 std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type) {

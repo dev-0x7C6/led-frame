@@ -13,7 +13,7 @@ public:
 	virtual ~AnimationEmitter();
 
 	virtual Enum::EmitterType type() const override;
-	virtual void interpret(any data) noexcept override;
+	virtual void interpret(std::experimental::any data) noexcept override;
 
 protected:
 	void process(const QVariant &value);

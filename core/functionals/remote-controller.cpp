@@ -10,12 +10,12 @@ RemoteController::RemoteController(Manager::MainManager &mainManager)
 }
 
 bool RemoteController::changeEmitter(int receiverId, int emitterId) {
-	auto receiver = std::static_pointer_cast<Receiver::Interface::IReceiver>(m_mainManager.atoms().find(Category::Receiver, receiverId));
+	auto receiver = std::static_pointer_cast<IReceiver>(m_mainManager.atoms().find(Category::Receiver, receiverId));
 
 	if (!receiver)
 		return false;
 
-	auto emitter = std::static_pointer_cast<Emitter::Interface::IEmitter>(m_mainManager.atoms().find(Category::Emitter, emitterId));
+	auto emitter = std::static_pointer_cast<IEmitter>(m_mainManager.atoms().find(Category::Emitter, emitterId));
 
 	if (!emitter)
 		return false;
@@ -25,7 +25,7 @@ bool RemoteController::changeEmitter(int receiverId, int emitterId) {
 }
 
 bool RemoteController::changeEmitterData(int emitterId, const std::string &data) {
-	auto emitter = std::static_pointer_cast<Emitter::Interface::IEmitter>(m_mainManager.atoms().find(Category::Emitter, emitterId));
+	auto emitter = std::static_pointer_cast<IEmitter>(m_mainManager.atoms().find(Category::Emitter, emitterId));
 	static_cast<void>(data);
 
 	if (!emitter)
@@ -37,7 +37,7 @@ bool RemoteController::changeEmitterData(int emitterId, const std::string &data)
 }
 
 bool RemoteController::changeCorrector(int receiverId, int correctorId, correct_t factor, bool enabled) {
-	auto receiver = std::static_pointer_cast<Receiver::Interface::IReceiver>(m_mainManager.atoms().find(Category::Receiver, receiverId));
+	auto receiver = std::static_pointer_cast<IReceiver>(m_mainManager.atoms().find(Category::Receiver, receiverId));
 
 	if (receiver) {
 		if (receiverId == -1) {

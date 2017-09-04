@@ -11,17 +11,6 @@
 #include <mutex>
 #include <string>
 
-using namespace std::experimental;
-
-namespace Interface {
-namespace Receiver {
-class IReceiver;
-}
-}
-
-namespace Emitter {
-namespace Interface {
-
 class IEmitter : public IAtom {
 public:
 	explicit IEmitter(ci32 id);
@@ -40,11 +29,11 @@ public:
 	auto acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter>;
 	auto usages() const noexcept -> int;
 
-	virtual void interpret(any data) noexcept;
+	virtual void interpret(std::experimental::any data) noexcept;
 
 	bool isFirstFrameReady() const noexcept;
 
-	virtual std::vector<std::pair<std::string, any>> properties() const noexcept override {
+	virtual std::vector<std::pair<std::string, std::experimental::any>> properties() const noexcept override {
 		return {
 			{"id", id()},
 			{"type", value(type())},
@@ -57,5 +46,3 @@ protected:
 	std::atomic<bool> m_firstFrameReady{false};
 	Functional::ReferenceCounter m_counter{0};
 };
-}
-}

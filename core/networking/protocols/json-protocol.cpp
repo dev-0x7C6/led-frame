@@ -36,7 +36,7 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const ICorre
 	return QJsonDocument(json).toJson();
 }
 
-QString JsonProtocolHelper::notification(const ProtocolEvent event, const Emitter::Interface::IEmitter *emitter) {
+QString JsonProtocolHelper::notification(const ProtocolEvent event, const IEmitter *emitter) {
 	auto json = header(ProtocolMessage::Notification, event, ProtocolSource::Emitter);
 	const auto datagram = QJsonObject{
 		{"id", emitter->id()},
@@ -49,7 +49,7 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const Emitte
 	return QJsonDocument(json).toJson();
 }
 
-QString JsonProtocolHelper::notification(const ProtocolEvent event, const Receiver::Interface::IReceiver *receiver) {
+QString JsonProtocolHelper::notification(const ProtocolEvent event, const IReceiver *receiver) {
 	auto json = header(ProtocolMessage::Notification, event, ProtocolSource::Receiver);
 	const auto datagram = QJsonObject{
 		{"id", receiver->id()},

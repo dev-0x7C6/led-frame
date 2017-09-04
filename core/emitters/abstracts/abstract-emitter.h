@@ -5,7 +5,7 @@
 namespace Emitter {
 namespace Abstract {
 
-class AbstractEmitter : public Emitter::Interface::IEmitter {
+class AbstractEmitter : public IEmitter {
 public:
 	explicit AbstractEmitter(ci32 id);
 	virtual ~AbstractEmitter() override = default;

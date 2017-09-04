@@ -50,12 +50,12 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 	m_mainManager.atoms().attach(EmitterFactory::create(EmitterType::Color, translate(EmitterType::Color)));
 	m_mainManager.atoms().attach(EmitterFactory::create(EmitterType::Off, translate(EmitterType::Off)));
 
-	m_mainManager.setRegisterDeviceCallback([this](Receiver::Interface::IReceiver *receiver, const QString &serialNumber) -> bool {
+	m_mainManager.setRegisterDeviceCallback([this](IReceiver *receiver, const QString &serialNumber) -> bool {
 		return registerDevice(receiver, serialNumber);
 	});
 }
 
-bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, const QString &serialNumber) {
+bool SessionManager::registerDevice(IReceiver *receiver, const QString &serialNumber) {
 #ifdef QT_DEBUG
 	receiver->correctors().attach(&Functional::DebugNotification::instance());
 #endif
@@ -83,7 +83,7 @@ bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, co
 			if (Category::Emitter != atom->category())
 				return;
 
-			auto emitter = std::static_pointer_cast<Emitter::Interface::IEmitter>(atom);
+			auto emitter = std::static_pointer_cast<IEmitter>(atom);
 			if (emitter->name() == defaultEmitter)
 				receiver->connectEmitter(emitter);
 		});
@@ -92,7 +92,7 @@ bool SessionManager::registerDevice(Receiver::Interface::IReceiver *receiver, co
 	return true;
 }
 
-void SessionManager::createCorrectorGroup(Receiver::Interface::IReceiver *receiver) {
+void SessionManager::createCorrectorGroup(IReceiver *receiver) {
 	m_mainManager.atoms().enumerate([receiver](const auto &atom) {
 		if (Category::Corrector == atom->category())
 			receiver->correctors().attach(atom);
@@ -128,7 +128,7 @@ SessionManager::~SessionManager() {
 		if (Category::Receiver != atom->category())
 			return;
 
-		auto receiver = std::static_pointer_cast<Receiver::Interface::IReceiver>(atom);
+		auto receiver = std::static_pointer_cast<IReceiver>(atom);
 
 		m_settings.beginGroup(receiver->name());
 

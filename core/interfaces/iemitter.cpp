@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-using namespace Emitter::Interface;
-
 IEmitter::IEmitter(ci32 id)
 		: IAtom(id) {}
 
@@ -26,7 +24,7 @@ auto IEmitter::acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCo
 
 auto IEmitter::usages() const noexcept -> int { return m_counter; }
 
-void IEmitter::interpret(any data) noexcept {
+void IEmitter::interpret(std::experimental::any data) noexcept {
 	std::cout << "default implementation: " << data.type().name() << std::endl;
 }
 bool IEmitter::isFirstFrameReady() const noexcept { return m_firstFrameReady; }
