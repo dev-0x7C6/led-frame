@@ -4,8 +4,6 @@
 #include <QString>
 #include <QObject>
 
-namespace Enum {
-
 enum class EmitterType {
 	Screen,
 	Image,
@@ -65,5 +63,4 @@ inline auto value(const EmitterType type) {
 	}
 
 	return "";
-}
 }

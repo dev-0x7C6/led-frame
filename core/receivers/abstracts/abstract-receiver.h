@@ -19,7 +19,7 @@ public:
 	virtual std::shared_ptr<IEmitter> connectedEmitter() const override;
 	virtual int connectedEmitterId() const override;
 
-	virtual QString name() const override;
+	virtual auto name() const noexcept -> QString override;
 	virtual void setName(const QString &name) override;
 
 	virtual auto correctors() noexcept -> AtomAggregator & override final;

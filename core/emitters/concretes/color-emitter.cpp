@@ -7,8 +7,8 @@ ColorEmitter::ColorEmitter(ci32 id)
 	setColor(Qt::darkGreen);
 }
 
-Enum::EmitterType ColorEmitter::type() const {
-	return Enum::EmitterType::Color;
+EmitterType ColorEmitter::type() const {
+	return EmitterType::Color;
 }
 
 QColor ColorEmitter::color() const {

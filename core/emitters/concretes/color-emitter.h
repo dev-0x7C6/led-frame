@@ -12,7 +12,7 @@ public:
 	explicit ColorEmitter(ci32 id);
 	virtual ~ColorEmitter() = default;
 
-	virtual Enum::EmitterType type() const override;
+	virtual EmitterType type() const override;
 	virtual u32 framerate() const override { return 1; }
 
 	QColor color() const;

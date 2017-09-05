@@ -17,7 +17,7 @@ public:
 	virtual ~IEmitter();
 
 	virtual QString name() const = 0;
-	virtual Enum::EmitterType type() const = 0;
+	virtual EmitterType type() const = 0;
 
 	virtual u32 framerate() const { return 30; }
 

@@ -7,7 +7,6 @@
 //TODO: RPI have older stdlib and does not support atomic_load and atomic_exchange for shared_ptr
 
 using namespace Receiver::Abstract;
-using namespace Corrector::Concrete;
 
 AbstractReceiver::AbstractReceiver(ci32 id)
 		: IReceiver(id) {
@@ -60,7 +59,7 @@ int AbstractReceiver::connectedEmitterId() const {
 	return -1;
 }
 
-QString AbstractReceiver::name() const {
+auto AbstractReceiver::name() const noexcept -> QString {
 	return m_name;
 }
 

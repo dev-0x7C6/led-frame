@@ -132,7 +132,7 @@ set(sources
 	core/enums/direction.h
 	core/enums/emitter-type-enum.h
 	core/enums/position-enum.h
-	core/enums/receiver-type-enum.h
+	core/enums/ereceiver-type.h
 	core/enums/screen-capture-type.h
 	core/factories/screen-capture-factory.cpp
 	core/factories/screen-capture-factory.h
@@ -167,6 +167,7 @@ set(sources
 	core/interfaces/iemitter.h
 	core/interfaces/inotification-aggregator.h
 	core/interfaces/ireceiver.h
+	core/interfaces/ireceiver.cpp
 	core/interfaces/iscreen-capture.h
 	core/managers/main-manager.cpp
 	core/managers/main-manager.h

@@ -8,7 +8,7 @@ FlickrEffectCorrector::FlickrEffectCorrector(ci32 id, int owner)
 	m_enabled = false;
 }
 
-Enum::CorrectorType FlickrEffectCorrector::type() const { return Enum::CorrectorType::FlickrEffect; }
+CorrectorType FlickrEffectCorrector::type() const { return CorrectorType::FlickrEffect; }
 
 void FlickrEffectCorrector::correct(Container::Scanline &scanline) const noexcept {
 	const auto f = factor().value();

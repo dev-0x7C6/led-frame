@@ -11,7 +11,7 @@ public:
 	explicit CorrectorFactory() = delete;
 	virtual ~CorrectorFactory() = delete;
 
-	static std::shared_ptr<ICorrector> create(const Enum::CorrectorType &type, int owner);
+	static std::shared_ptr<ICorrector> create(const CorrectorType &type, int owner);
 };
 }
 }

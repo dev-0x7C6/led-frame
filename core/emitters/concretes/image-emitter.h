@@ -13,7 +13,7 @@ public:
 	explicit ImageEmitter(ci32 id, const QString &filePath);
 	virtual ~ImageEmitter() = default;
 
-	virtual Enum::EmitterType type() const override;
+	virtual EmitterType type() const override;
 	virtual u32 framerate() const override { return 1; }
 
 	QRect fragment(int w, int h, cu32 index);

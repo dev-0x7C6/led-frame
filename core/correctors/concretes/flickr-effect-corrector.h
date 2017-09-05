@@ -10,7 +10,7 @@ public:
 	explicit FlickrEffectCorrector(ci32 id, int owner);
 	virtual ~FlickrEffectCorrector() = default;
 
-	virtual Enum::CorrectorType type() const override;
+	virtual CorrectorType type() const override;
 	virtual void correct(Container::Scanline &scanline) const noexcept override;
 
 private:

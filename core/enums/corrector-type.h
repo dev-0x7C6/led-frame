@@ -4,8 +4,6 @@
 #include <core/types.h>
 #include <array>
 
-namespace Enum {
-
 enum class CorrectorType {
 	ColorEnhancer,
 	Brightness,
@@ -57,5 +55,4 @@ inline auto value(const CorrectorType type) {
 	}
 
 	return "";
-}
 }

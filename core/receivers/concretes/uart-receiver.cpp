@@ -9,7 +9,9 @@
 #include <core/receivers/concretes/uart-worker.h>
 
 #include <QElapsedTimer>
+
 #include <algorithm>
+#include <iostream>
 #include <memory>
 
 using namespace Container;
@@ -33,9 +35,9 @@ UartReceiver::~UartReceiver() {
 	m_thread.wait();
 }
 
-#include <iostream>
-
-Enum::ReceiverType UartReceiver::type() const { return Enum::ReceiverType::Uart; }
+auto UartReceiver::type() const noexcept -> ReceiverType {
+	return ReceiverType::Uart;
+}
 
 void UartReceiver::run() {
 	const std::array<RibbonConfiguration, 4> ribbon{{

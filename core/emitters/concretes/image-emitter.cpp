@@ -19,8 +19,8 @@ ImageEmitter::ImageEmitter(ci32 id, const QString &filePath)
 	loadFromFile(filePath);
 }
 
-Enum::EmitterType ImageEmitter::type() const {
-	return Enum::EmitterType::Image;
+EmitterType ImageEmitter::type() const {
+	return EmitterType::Image;
 }
 
 QRect ImageEmitter::fragment(int w, int h, cu32 index) {

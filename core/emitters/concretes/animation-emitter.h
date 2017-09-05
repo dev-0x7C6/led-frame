@@ -12,7 +12,7 @@ public:
 	explicit AnimationEmitter(ci32 id);
 	virtual ~AnimationEmitter();
 
-	virtual Enum::EmitterType type() const override;
+	virtual EmitterType type() const override;
 	virtual void interpret(std::experimental::any data) noexcept override;
 
 protected:

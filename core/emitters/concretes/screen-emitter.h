@@ -13,7 +13,7 @@ public:
 	explicit ScreenEmitter(ci32 id, ci32 screenId = 0);
 	virtual ~ScreenEmitter();
 
-	virtual Enum::EmitterType type() const override;
+	virtual EmitterType type() const override;
 
 protected:
 	void interrupt();

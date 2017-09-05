@@ -30,7 +30,7 @@ public:
 	explicit UartReceiver(ci32 id, std::unique_ptr<Functional::DevicePort> &&device);
 	virtual ~UartReceiver();
 
-	Enum::ReceiverType type() const override;
+	auto type() const noexcept -> ReceiverType override final;
 	void interrupt();
 
 	virtual Container::DeviceConfigContainer config() override;

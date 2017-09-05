@@ -26,7 +26,7 @@ public:
 		};
 	}
 
-	virtual Enum::CorrectorType type() const = 0;
+	virtual CorrectorType type() const = 0;
 	virtual void correct(Container::Scanline &scanline) const noexcept = 0;
 
 	auto owner() const noexcept { return m_owner; }

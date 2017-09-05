@@ -1,8 +1,10 @@
 #include "uart-worker.h"
 
+#include <iostream>
+
 #include <core/correctors/factories/corrector-factory.h>
-#include <core/interfaces/icorrector.h>
 #include <core/functionals/loop-sync.h>
+#include <core/interfaces/icorrector.h>
 
 using namespace Enum;
 using namespace Container;
@@ -44,10 +46,6 @@ void UartWorker::change(const Scanline &from, std::function<Scanline()> getFrame
 		loopSync.wait(m_uartFramerate);
 	}
 }
-
-#include <iostream>
-
-#include <core/interfaces/icorrector.h>
 
 void UartWorker::write(Scanline scanline) {
 	//m_correctorManager.execute(scanline);

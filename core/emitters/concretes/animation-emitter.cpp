@@ -24,8 +24,8 @@ AnimationEmitter::~AnimationEmitter() {
 	QObject::disconnect(&m_animation, 0, 0, 0);
 }
 
-Enum::EmitterType AnimationEmitter::type() const {
-	return Enum::EmitterType::Animation;
+EmitterType AnimationEmitter::type() const {
+	return EmitterType::Animation;
 }
 
 void AnimationEmitter::interpret(std::experimental::any data) noexcept {

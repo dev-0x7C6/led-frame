@@ -4,6 +4,10 @@ IAtom::IAtom(const int id)
 		: m_id(id) {
 }
 
+auto IAtom::id() const noexcept -> int {
+	return m_id;
+}
+
 auto IAtom::category() const noexcept -> Category {
 	return Category::Undefined;
 }
@@ -17,8 +21,4 @@ void IAtom::notify() {
 		callback();
 }
 
-std::vector<std::pair<std::string, std::experimental::any>> IAtom::properties() const noexcept {
-	return {};
-}
-
-auto IAtom::sharedFromThis() noexcept { return shared_from_this(); }
+auto IAtom::properties() const noexcept -> std::vector<std::pair<std::string, std::experimental::any>> { return {}; }

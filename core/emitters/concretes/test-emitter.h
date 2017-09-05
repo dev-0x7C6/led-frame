@@ -12,7 +12,7 @@ public:
 	explicit TestEmitter(ci32 id);
 	virtual ~TestEmitter();
 
-	virtual Enum::EmitterType type() const override;
+	virtual EmitterType type() const override;
 
 protected:
 	void process();

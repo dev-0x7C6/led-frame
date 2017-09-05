@@ -10,7 +10,7 @@ public:
 	explicit RedChannelCorrector(ci32 id, int owner);
 	virtual ~RedChannelCorrector() = default;
 
-	virtual Enum::CorrectorType type() const override;
+	virtual CorrectorType type() const override;
 	virtual void correct(Container::Scanline &scanline) const noexcept override;
 };
 
@@ -19,7 +19,7 @@ public:
 	explicit GreenChannelCorrector(ci32 id, int owner);
 	virtual ~GreenChannelCorrector() = default;
 
-	virtual Enum::CorrectorType type() const override;
+	virtual CorrectorType type() const override;
 	virtual void correct(Container::Scanline &scanline) const noexcept override;
 };
 
@@ -28,7 +28,7 @@ public:
 	explicit BlueChannelCorrector(ci32 id, int owner);
 	virtual ~BlueChannelCorrector() = default;
 
-	virtual Enum::CorrectorType type() const override;
+	virtual CorrectorType type() const override;
 	virtual void correct(Container::Scanline &scanline) const noexcept override;
 };
 }

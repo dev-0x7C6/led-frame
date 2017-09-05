@@ -10,7 +10,7 @@ public:
 	explicit ColorEnhancerCorrector(ci32 id, int owner);
 	virtual ~ColorEnhancerCorrector() = default;
 
-	virtual Enum::CorrectorType type() const override;
+	virtual CorrectorType type() const override;
 	virtual void correct(Container::Scanline &scanline) const noexcept override;
 };
 }

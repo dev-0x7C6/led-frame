@@ -9,7 +9,7 @@ class OffEmitter final : public Abstract::AbstractEmitter {
 public:
 	explicit OffEmitter(ci32 id);
 
-	virtual Enum::EmitterType type() const override;
+	virtual EmitterType type() const override;
 };
 }
 }
