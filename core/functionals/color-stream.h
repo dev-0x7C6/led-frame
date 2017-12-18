@@ -19,15 +19,16 @@ public:
 	void write(QIODevice &device);
 
 private:
-	void writeRGB(color value) noexcept;
-	void writeRBG(color value) noexcept;
-	void writeGRB(color value) noexcept;
-	void writeGBR(color value) noexcept;
-	void writeBRG(color value) noexcept;
-	void writeBGR(color value) noexcept;
+	void write(color value, rgb_format) noexcept;
+	void write(color value, rbg_format) noexcept;
+	void write(color value, grb_format) noexcept;
+	void write(color value, gbr_format) noexcept;
+	void write(color value, brg_format) noexcept;
+	void write(color value, bgr_format) noexcept;
 
 private:
-	std::array<u8, 270> m_buffer;
+	using color_type_u8 = u8;
+	std::array<color_type_u8, 270> m_buffer;
 	size_t m_seek = 0;
 };
 }

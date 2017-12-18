@@ -23,9 +23,9 @@ void ColorEnhancerCorrector::correct(Container::Scanline &scanline) const noexce
 
 	for (auto &value : scanline.array()) {
 		std::array<color, 3> colors{{
-			static_cast<color>(getR(value)),
-			static_cast<color>(getG(value)),
-			static_cast<color>(getB(value)),
+			static_cast<color>(get_r24(value)),
+			static_cast<color>(get_g24(value)),
+			static_cast<color>(get_b24(value)),
 		}};
 
 		auto pair = std::minmax_element(colors.cbegin(), colors.cend());

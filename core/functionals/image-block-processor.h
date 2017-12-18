@@ -31,9 +31,9 @@ inline auto scan_extract(ccolor *data, cu32 range) {
 
 	for (auto i = 0u; i < range; i += jmp_cacheline) {
 		const auto value = data[i];
-		rgb[0] += Color::getR(value);
-		rgb[1] += Color::getG(value);
-		rgb[2] += Color::getB(value);
+		rgb[0] += Color::get_r24(value);
+		rgb[1] += Color::get_g24(value);
+		rgb[2] += Color::get_b24(value);
 		++rgb[3];
 	}
 

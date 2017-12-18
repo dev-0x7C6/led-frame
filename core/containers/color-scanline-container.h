@@ -55,7 +55,7 @@ private:
 };
 
 using Scanline = ScanlineContainer<128u>;
-static_assert(is_class_cxx14_efficient_nothrow<Scanline>::value, "");
+static_assert(is_class_cxx14_efficient_nothrow<Scanline>::value);
 
 template <u32 linesize>
 inline ScanlineContainer<linesize>::ScanlineContainer() noexcept
@@ -137,9 +137,9 @@ static_assert(alignof(Scanline) == sizeof(color), "ScanlineContainer should be a
 template <u32 linesize>
 color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, cfactor p) {
 	using namespace Functional::Color;
-	const auto r = static_cast<ccolor>(getR(end) * p + (getR(start) * (static_cast<cfactor>(1.0) - p)));
-	const auto g = static_cast<ccolor>(getG(end) * p + (getG(start) * (static_cast<cfactor>(1.0) - p)));
-	const auto b = static_cast<ccolor>(getB(end) * p + (getB(start) * (static_cast<cfactor>(1.0) - p)));
+	const auto r = static_cast<ccolor>(get_r24(end) * p + (get_r24(start) * (static_cast<cfactor>(1.0) - p)));
+	const auto g = static_cast<ccolor>(get_g24(end) * p + (get_g24(start) * (static_cast<cfactor>(1.0) - p)));
+	const auto b = static_cast<ccolor>(get_b24(end) * p + (get_b24(start) * (static_cast<cfactor>(1.0) - p)));
 	return rgb(r, g, b);
 }
 

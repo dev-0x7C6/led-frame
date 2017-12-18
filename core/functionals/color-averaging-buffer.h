@@ -23,9 +23,9 @@ public:
 	}
 
 	inline void add(ccolor sample) noexcept {
-		m_r += Color::getR(sample);
-		m_g += Color::getG(sample);
-		m_b += Color::getB(sample);
+		m_r += Color::get_r24(sample);
+		m_g += Color::get_g24(sample);
+		m_b += Color::get_b24(sample);
 	}
 
 	inline void setCounter(u32 counter) noexcept {
@@ -33,9 +33,9 @@ public:
 	}
 
 	inline void operator+=(ccolor sample) noexcept {
-		m_r += Color::getR(sample);
-		m_g += Color::getG(sample);
-		m_b += Color::getB(sample);
+		m_r += Color::get_r24(sample);
+		m_g += Color::get_g24(sample);
+		m_b += Color::get_b24(sample);
 		++m_counter;
 	}
 
@@ -71,6 +71,7 @@ private:
 	u32 m_counter = 0;
 };
 
-static_assert(is_class_cxx14_efficient_nothrow<ColorAveragingBuffer>::value, "");
-static_assert(alignof(ColorAveragingBuffer) == 4, "");
+static_assert(is_class_cxx14_efficient_nothrow<ColorAveragingBuffer>::value);
+static_assert(alignof(ColorAveragingBuffer));
+static_assert(sizeof(ColorAveragingBuffer) == 16);
 }

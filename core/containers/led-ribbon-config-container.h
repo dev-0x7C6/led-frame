@@ -77,7 +77,7 @@ private:
 	constexpr static u16 put_count(cu8 value) { return static_cast<u16>(value << count_shift); }
 };
 
-static_assert(sizeof(RibbonBitField) == 4, "");
+static_assert(sizeof(RibbonBitField) == 4);
 
 class RibbonConfiguration final {
 public:

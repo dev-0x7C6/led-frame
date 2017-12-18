@@ -2,6 +2,13 @@
 
 #include <QString>
 
+struct rgb_format {};
+struct rbg_format {};
+struct grb_format {};
+struct gbr_format {};
+struct brg_format {};
+struct bgr_format {};
+
 namespace Enum {
 
 enum class ColorFormat {

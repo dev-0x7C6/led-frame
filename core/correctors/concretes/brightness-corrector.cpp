@@ -20,9 +20,9 @@ void BrightnessCorrector::correct(Container::Scanline &scanline) const noexcept 
 		if (value == 0)
 			continue;
 
-		const auto r = static_cast<ccolor>(getR(value) * f);
-		const auto g = static_cast<ccolor>(getG(value) * f);
-		const auto b = static_cast<ccolor>(getB(value) * f);
+		const auto r = static_cast<ccolor>(get_r24(value) * f);
+		const auto g = static_cast<ccolor>(get_g24(value) * f);
+		const auto b = static_cast<ccolor>(get_b24(value) * f);
 		value = rgb(r, g, b);
 	}
 }
