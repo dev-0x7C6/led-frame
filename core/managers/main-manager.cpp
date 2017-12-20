@@ -63,7 +63,6 @@ void MainManager::attach(INotification &notifier) noexcept {
 
 void MainManager::detach(INotification &notifier) noexcept {
 	m_atoms.detach(&notifier);
-
 	m_atoms.enumerate([&notifier](const auto &atom) {
 		if (Category::Receiver != atom->category())
 			return;
@@ -74,14 +73,14 @@ void MainManager::detach(INotification &notifier) noexcept {
 
 void MainManager::rescan() {
 	Container::DeviceInfo deviceInfo("LedFrame", "LedFrame", 500000);
-	const QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+	const auto ports = QSerialPortInfo::availablePorts();
 
 	static auto id = 0;
 
-	for (int i = 0; i < ports.count(); ++i) {
-		if ((ports[i].manufacturer() != deviceInfo.manufacturer())) continue;
+	for (const auto &port : ports) {
+		if ((port.manufacturer().toStdString() != deviceInfo.manufacturer())) continue;
 
-		auto device = std::make_unique<DevicePort>(ports[i]);
+		auto device = std::make_unique<DevicePort>(port);
 
 		if (!device->open(QIODevice::ReadWrite))
 			continue;
@@ -101,7 +100,7 @@ void MainManager::rescan() {
 		},
 			Qt::QueuedConnection);
 
-		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), ports[i].serialNumber()))
+		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), port.serialNumber()))
 			continue;
 
 		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(thread->id(), thread->name(), 4999));

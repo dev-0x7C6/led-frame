@@ -10,7 +10,7 @@ using namespace Container;
 using namespace Corrector;
 using namespace Corrector::Concrete;
 using namespace Enum;
-using namespace Functional::Color;
+using namespace Functional;
 
 inline void correctAndCheck(ICorrector *iface, const correct_t factor, ccolor fill, ccolor expect) {
 	Scanline scanline;

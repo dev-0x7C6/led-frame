@@ -4,7 +4,6 @@
 #include <algorithm>
 
 namespace Functional {
-namespace Color {
 
 constexpr auto R_CHANNEL_SHIFT = 0x10u;
 constexpr auto G_CHANNEL_SHIFT = 0x8u;
@@ -21,5 +20,4 @@ constexpr color put_r24(ccolor r) { return (std::min(RGB_MAX_VALUE, r) << R_CHAN
 constexpr color put_g24(ccolor g) { return (std::min(RGB_MAX_VALUE, g) << G_CHANNEL_SHIFT); }
 constexpr color put_b24(ccolor b) { return std::min(RGB_MAX_VALUE, b); }
 constexpr color rgb(ccolor r, ccolor g, ccolor b) { return put_r24(r) | put_g24(g) | put_b24(b); }
-}
 }

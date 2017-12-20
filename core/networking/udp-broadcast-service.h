@@ -12,7 +12,7 @@ namespace Network {
 
 class UdpBroadcastService final {
 public:
-	explicit UdpBroadcastService(const int deviceId, const QString &deviceName, cu16 port = 4999);
+	explicit UdpBroadcastService(const int deviceId, const std::string &deviceName, cu16 port = 4999);
 	virtual ~UdpBroadcastService();
 
 	int id() const { return m_deviceId; }
@@ -25,7 +25,7 @@ private:
 	std::unique_ptr<QUdpSocket> m_socket;
 	std::unique_ptr<QTimer> m_timer;
 	const int m_deviceId;
-	const QString m_deviceName;
+	const std::string m_deviceName;
 	const u16 m_servicePort;
 };
 }

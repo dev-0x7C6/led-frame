@@ -15,7 +15,7 @@ public:
 	virtual ~ICorrector() override = default;
 
 	virtual auto category() const noexcept -> Category final { return Category::Corrector; }
-	virtual std::vector<std::pair<std::string, std::experimental::any>> properties() const noexcept final {
+	virtual Properties properties() const noexcept final {
 		return {
 			{"id", id()},
 			{"type", value(type())},

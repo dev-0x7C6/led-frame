@@ -25,7 +25,7 @@ std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type) {
 	return nullptr;
 }
 
-std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type, const QString &name) {
+std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type, const std::string &name) {
 	auto emitter = create(type);
 
 	if (emitter)

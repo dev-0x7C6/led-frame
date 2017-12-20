@@ -1,11 +1,13 @@
 #pragma once
 
-#include <experimental/any>
 #include <functional>
 #include <memory>
 #include <vector>
+#include <variant>
 
 #include <core/enums/ecategory.h>
+
+using Properties = std::vector<std::pair<std::string, std::variant<std::string, double, int, bool>>>;
 
 class IAtom : public std::enable_shared_from_this<IAtom> {
 public:
@@ -15,7 +17,7 @@ public:
 	auto id() const noexcept -> int;
 
 	virtual auto category() const noexcept -> Category;
-	virtual auto properties() const noexcept -> std::vector<std::pair<std::string, std::experimental::any>>;
+	virtual auto properties() const noexcept -> Properties;
 
 	void attach(std::function<void()> callback);
 	void notify();

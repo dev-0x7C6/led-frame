@@ -18,7 +18,6 @@ using namespace Enum;
 using namespace Emitter::Concrete;
 using namespace Factory;
 using namespace Container;
-using namespace Functional::Color;
 using namespace Functional;
 
 using namespace std::literals;

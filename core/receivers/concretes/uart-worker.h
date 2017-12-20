@@ -28,7 +28,7 @@ private:
 	std::unique_ptr<Functional::DevicePort> &m_device;
 	cu32 m_uartFramerate = 90;
 
-	Functional::ColorStream m_stream;
+	Functional::ColorStream<270> m_stream;
 };
 }
 }

@@ -23,9 +23,9 @@ public:
 	}
 
 	inline void add(ccolor sample) noexcept {
-		m_r += Color::get_r24(sample);
-		m_g += Color::get_g24(sample);
-		m_b += Color::get_b24(sample);
+		m_r += get_r24(sample);
+		m_g += get_g24(sample);
+		m_b += get_b24(sample);
 	}
 
 	inline void setCounter(u32 counter) noexcept {
@@ -33,9 +33,9 @@ public:
 	}
 
 	inline void operator+=(ccolor sample) noexcept {
-		m_r += Color::get_r24(sample);
-		m_g += Color::get_g24(sample);
-		m_b += Color::get_b24(sample);
+		m_r += get_r24(sample);
+		m_g += get_g24(sample);
+		m_b += get_b24(sample);
 		++m_counter;
 	}
 
@@ -51,7 +51,7 @@ public:
 		const auto avg_r = std::max(1u, m_r) / std::max(static_cast<counter_t>(1u), m_counter);
 		const auto avg_g = std::max(1u, m_g) / std::max(static_cast<counter_t>(1u), m_counter);
 		const auto avg_b = std::max(1u, m_b) / std::max(static_cast<counter_t>(1u), m_counter);
-		return Color::rgb(avg_r, avg_g, avg_b);
+		return rgb(avg_r, avg_g, avg_b);
 	}
 
 	color bgr() const noexcept {
@@ -59,7 +59,7 @@ public:
 		const auto avg_r = std::max(1u, m_r) / std::max(static_cast<counter_t>(1u), m_counter);
 		const auto avg_g = std::max(1u, m_g) / std::max(static_cast<counter_t>(1u), m_counter);
 		const auto avg_b = std::max(1u, m_b) / std::max(static_cast<counter_t>(1u), m_counter);
-		return Color::rgb(avg_b, avg_g, avg_r);
+		return rgb(avg_b, avg_g, avg_r);
 	}
 
 	auto count() const noexcept { return m_counter; }

@@ -136,7 +136,7 @@ static_assert(alignof(Scanline) == sizeof(color), "ScanlineContainer should be a
 
 template <u32 linesize>
 color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, cfactor p) {
-	using namespace Functional::Color;
+	using namespace Functional;
 	const auto r = static_cast<ccolor>(get_r24(end) * p + (get_r24(start) * (static_cast<cfactor>(1.0) - p)));
 	const auto g = static_cast<ccolor>(get_g24(end) * p + (get_g24(start) * (static_cast<cfactor>(1.0) - p)));
 	const auto b = static_cast<ccolor>(get_b24(end) * p + (get_b24(start) * (static_cast<cfactor>(1.0) - p)));
@@ -145,7 +145,7 @@ color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, cfact
 
 template <u32 linesize>
 void ScanlineContainer<linesize>::interpolate(const ScanlineContainer &start, const ScanlineContainer &end, cfactor p, ScanlineContainer &out) noexcept {
-	using namespace Functional::Color;
+	using namespace Functional;
 	for (auto i = 0u; i < size() - 1u; i += 4u) {
 		out.data()[i + 0] = interpolation(start.constData()[i + 0], end.constData()[i + 0], p);
 		out.data()[i + 1] = interpolation(start.constData()[i + 1], end.constData()[i + 1], p);

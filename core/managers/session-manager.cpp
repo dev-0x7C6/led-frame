@@ -28,7 +28,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 
 	for (auto screen : screens) {
 		auto emitter = EmitterFactory::create(EmitterType::Screen);
-		emitter->setName(QObject::tr("Display: ") + screen->name());
+		emitter->setName((QObject::tr("Display: ") + screen->name()).toStdString());
 		m_mainManager.atoms().attach(emitter);
 	}
 #endif
@@ -63,10 +63,10 @@ bool SessionManager::registerDevice(IReceiver *receiver, const QString &serialNu
 	m_settings.beginGroup(serialNumber);
 
 	if (m_settings.value("name", "").toString().isEmpty()) {
-		receiver->setName(serialNumber);
+		receiver->setName(serialNumber.toStdString());
 		m_settings.setValue("name", serialNumber);
 	} else
-		receiver->setName(m_settings.value("name", "").toString());
+		receiver->setName(m_settings.value("name", "").toString().toStdString());
 
 	m_settings.endGroup();
 	m_settings.endGroup();
@@ -74,10 +74,10 @@ bool SessionManager::registerDevice(IReceiver *receiver, const QString &serialNu
 
 	createCorrectorGroup(receiver);
 
-	m_settings.beginGroup(receiver->name());
-	const auto defaultEmitter = m_settings.value("emitter").toString();
+	m_settings.beginGroup(QString::fromStdString(receiver->name()));
+	const auto defaultEmitter = m_settings.value("emitter").toString().toStdString();
 
-	if (!defaultEmitter.isEmpty()) {
+	if (!defaultEmitter.empty()) {
 
 		m_mainManager.atoms().enumerate([receiver, defaultEmitter](const auto &atom) {
 			if (Category::Emitter != atom->category())
@@ -110,7 +110,7 @@ void SessionManager::createCorrectorGroup(IReceiver *receiver) {
 		CorrectorType::Backlight,
 	};
 
-	m_settings.beginGroup(receiver->name());
+	m_settings.beginGroup(QString::fromStdString(receiver->name()));
 	for (const auto &type : list) {
 		auto corrector = CorrectorFactory::create(type, id);
 		m_settings.beginGroup(value(corrector->type()));
@@ -130,12 +130,12 @@ SessionManager::~SessionManager() {
 
 		auto receiver = std::static_pointer_cast<IReceiver>(atom);
 
-		m_settings.beginGroup(receiver->name());
+		m_settings.beginGroup(QString::fromStdString(receiver->name()));
 
 		m_settings.setValue("emitter", "");
 		if (receiver->isEmitterConnected()) {
 			const auto name = receiver->connectedEmitter()->name();
-			m_settings.setValue("emitter", name);
+			m_settings.setValue("emitter", QString::fromStdString(name));
 		}
 
 		m_mainManager.atoms().enumerate([this](const auto &atom) {

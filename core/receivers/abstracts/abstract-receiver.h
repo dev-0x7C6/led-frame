@@ -3,8 +3,6 @@
 #include <core/functionals/raii-reference-counter.h>
 #include <core/interfaces/ireceiver.h>
 
-#include <QString>
-
 namespace Receiver {
 namespace Abstract {
 
@@ -19,19 +17,19 @@ public:
 	virtual std::shared_ptr<IEmitter> connectedEmitter() const override;
 	virtual int connectedEmitterId() const override;
 
-	virtual auto name() const noexcept -> QString override;
-	virtual void setName(const QString &name) override;
+	virtual auto name() const noexcept -> std::string override;
+	virtual void setName(const std::string &name) override;
 
 	virtual auto correctors() noexcept -> AtomAggregator & override final;
 
 protected:
-	QString emitterName() const;
+	std::string emitterName() const;
 
 private:
 	Container::Scanline m_data;
 	std::shared_ptr<IEmitter> m_emitter;
 	AtomAggregator m_correctors;
-	QString m_name;
+	std::string m_name;
 	std::unique_ptr<Functional::RaiiReferenceCounter> m_acquiredEmitter = nullptr;
 };
 }

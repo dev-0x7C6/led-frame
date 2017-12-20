@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string_view>
 #include <core/types.h>
 
 namespace Container {
@@ -7,7 +8,7 @@ namespace Container {
 class DeviceInfo final {
 public:
 	constexpr explicit DeviceInfo();
-	constexpr explicit DeviceInfo(cchar *description, cchar *manufacturer, cu64 baudrate)
+	constexpr explicit DeviceInfo(std::string_view description, std::string_view manufacturer, cu64 baudrate)
 			: m_description(description)
 			, m_manufacturer(manufacturer)
 			, m_baudrate(baudrate) {}
@@ -17,8 +18,8 @@ public:
 	constexpr auto baudrate() const noexcept { return m_baudrate; }
 
 private:
-	cchar *m_description = nullptr;
-	cchar *m_manufacturer = nullptr;
+	std::string_view m_description = nullptr;
+	std::string_view m_manufacturer = nullptr;
 	cu64 m_baudrate = 500000;
 };
 }

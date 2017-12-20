@@ -39,21 +39,30 @@ WebSocketConnection::WebSocketConnection(Interface::IRemoteController &remoteCon
 
 WebSocketConnection::~WebSocketConnection() = default;
 
+template <class... Ts>
+struct overloaded : Ts... { using Ts::operator()...; };
+template <class... Ts>
+overloaded(Ts...)->overloaded<Ts...>;
+
 QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
 	QJsonObject result;
-	for (const auto &value : atom->properties()) {
-		if (std::type_index(typeid(int)) == std::type_index(value.second.type()))
-			result.insert(QString::fromStdString(value.first), std::experimental::any_cast<int>(value.second));
-		if (std::type_index(typeid(QString)) == std::type_index(value.second.type()))
-			result.insert(QString::fromStdString(value.first), std::experimental::any_cast<QString>(value.second));
-		if (std::type_index(typeid(double)) == std::type_index(value.second.type()))
-			result.insert(QString::fromStdString(value.first), std::experimental::any_cast<double>(value.second));
-		if (std::type_index(typeid(std::string)) == std::type_index(value.second.type()))
-			result.insert(QString::fromStdString(value.first), QString::fromStdString(std::experimental::any_cast<std::string>(value.second)));
-		if (std::type_index(typeid(const char *)) == std::type_index(value.second.type()))
-			result.insert(QString::fromStdString(value.first), std::experimental::any_cast<const char *>(value.second));
+
+	for (const auto & [ key, value ] : atom->properties()) {
+		std::visit(overloaded{
+					   [&result, key = key](auto arg) {
+						   if constexpr (std::is_same_v<decltype (arg), std::string>) {
+							   result.insert(QString::fromStdString(key), QString::fromStdString(arg));
 	}
-	return result;
+	else {
+		result.insert(QString::fromStdString(key), arg);
+	};
+}
+,
+},
+			value);
+}
+
+return result;
 }
 
 // documentation/protocol/notification.md

@@ -30,10 +30,11 @@ void AbstractReceiver::connectEmitter(const std::shared_ptr<IEmitter> &emitter) 
 #else
 	std::atomic_exchange(&m_emitter, emitter);
 #endif
+
 	notify();
 
 	if (m_emitter)
-		m_acquiredEmitter = m_emitter->acquire();
+		m_acquiredEmitter = m_emitter->acquire(); //TODO: acquaire or emitter use_count() ?
 }
 
 bool AbstractReceiver::isEmitterConnected() const {
@@ -59,11 +60,11 @@ int AbstractReceiver::connectedEmitterId() const {
 	return -1;
 }
 
-auto AbstractReceiver::name() const noexcept -> QString {
+auto AbstractReceiver::name() const noexcept -> std::string {
 	return m_name;
 }
 
-void AbstractReceiver::setName(const QString &name) {
+void AbstractReceiver::setName(const std::string &name) {
 	m_name = name;
 	//TODO: We should notify when name is changed
 }
@@ -72,6 +73,6 @@ auto AbstractReceiver::correctors() noexcept -> AtomAggregator & {
 	return m_correctors;
 }
 
-QString AbstractReceiver::emitterName() const {
+std::string AbstractReceiver::emitterName() const {
 	return m_emitter->name();
 }

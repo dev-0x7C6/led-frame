@@ -39,17 +39,17 @@ inline QString description(const EmitterType &type) {
 	return {};
 }
 
-inline QString translate(const EmitterType &type) {
+inline auto translate(const EmitterType &type) {
 	switch (type) {
-		case EmitterType::Animation: return QObject::tr("Animation");
-		case EmitterType::Color: return QObject::tr("Color");
-		case EmitterType::Image: return QObject::tr("Image");
-		case EmitterType::Screen: return QObject::tr("Display");
-		case EmitterType::Off: return QObject::tr("Switch off");
-		case EmitterType::Test: return {};
+		case EmitterType::Animation: return QObject::tr("Animation").toStdString();
+		case EmitterType::Color: return QObject::tr("Color").toStdString();
+		case EmitterType::Image: return QObject::tr("Image").toStdString();
+		case EmitterType::Screen: return QObject::tr("Display").toStdString();
+		case EmitterType::Off: return QObject::tr("Switch off").toStdString();
+		case EmitterType::Test: return std::string{};
 	}
 
-	return {};
+	return std::string{};
 }
 
 inline auto value(const EmitterType type) {

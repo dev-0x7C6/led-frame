@@ -12,11 +12,11 @@ public:
 
 	virtual Category category() const noexcept final { return Category::Emitter; }
 
-	QString name() const override;
-	void setName(const QString &name) override;
+	std::string name() const override;
+	void setName(const std::string &name) override;
 
 private:
-	QString m_name;
+	std::string m_name;
 };
 }
 }

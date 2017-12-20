@@ -16,12 +16,12 @@ public:
 	explicit IEmitter(ci32 id);
 	virtual ~IEmitter();
 
-	virtual QString name() const = 0;
+	virtual std::string name() const = 0;
 	virtual EmitterType type() const = 0;
 
 	virtual u32 framerate() const { return 30; }
 
-	virtual void setName(const QString &name) = 0;
+	virtual void setName(const std::string &name) = 0;
 
 	void commit(const Container::Scanline &scanline) noexcept;
 	auto data() const noexcept -> Container::Scanline;
@@ -33,7 +33,7 @@ public:
 
 	bool isFirstFrameReady() const noexcept;
 
-	virtual std::vector<std::pair<std::string, std::experimental::any>> properties() const noexcept override {
+	virtual Properties properties() const noexcept override {
 		return {
 			{"id", id()},
 			{"type", value(type())},

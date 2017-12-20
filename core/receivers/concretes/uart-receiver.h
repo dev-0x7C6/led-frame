@@ -14,7 +14,6 @@
 #include <initializer_list>
 
 namespace Functional {
-class ColorStream;
 class DevicePort;
 class LoopSync;
 }

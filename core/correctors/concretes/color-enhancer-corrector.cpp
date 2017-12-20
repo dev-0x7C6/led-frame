@@ -5,7 +5,7 @@
 
 using namespace Enum;
 using namespace Corrector::Concrete;
-using namespace Functional::Color;
+using namespace Functional;
 
 ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
 		: ICorrector(id, owner, Priority::Higher) {

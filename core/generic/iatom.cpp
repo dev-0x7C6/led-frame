@@ -21,4 +21,4 @@ void IAtom::notify() {
 		callback();
 }
 
-auto IAtom::properties() const noexcept -> std::vector<std::pair<std::string, std::experimental::any>> { return {}; }
+auto IAtom::properties() const noexcept -> Properties { return {}; }

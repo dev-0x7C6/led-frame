@@ -7,7 +7,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wold-style-cast")
@@ -142,7 +141,6 @@ set(sources
 	core/functionals/captures/qt-screen-capture.h
 	core/functionals/color-averaging-buffer.h
 	core/functionals/color-functions.h
-	core/functionals/color-stream.cpp
 	core/functionals/color-stream.h
 	core/functionals/debug-notification.cpp
 	core/functionals/debug-notification.h

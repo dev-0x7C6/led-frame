@@ -41,7 +41,7 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const IEmitt
 	const auto datagram = QJsonObject{
 		{"id", emitter->id()},
 		{"type", value(emitter->type())},
-		{"name", emitter->name()},
+		{"name", QString::fromStdString(emitter->name())},
 		{"description", ""},
 	};
 
@@ -54,7 +54,7 @@ QString JsonProtocolHelper::notification(const ProtocolEvent event, const IRecei
 	const auto datagram = QJsonObject{
 		{"id", receiver->id()},
 		{"type", value(receiver->type())},
-		{"name", receiver->name()},
+		{"name", QString::fromStdString(receiver->name())},
 		{"emitter", receiver->connectedEmitterId()},
 	};
 

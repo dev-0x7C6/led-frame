@@ -10,7 +10,7 @@
 
 using namespace Network;
 
-UdpBroadcastService::UdpBroadcastService(const int deviceId, const QString &deviceName, const cu16 port)
+UdpBroadcastService::UdpBroadcastService(const int deviceId, const std::string &deviceName, const cu16 port)
 		: m_socket(std::make_unique<QUdpSocket>())
 		, m_timer(std::make_unique<QTimer>())
 		, m_deviceId(deviceId)
@@ -53,7 +53,7 @@ void UdpBroadcastService::broadcast() {
 	QJsonObject object{
 		{"computer", QHostInfo::localHostName()},
 		{"id", m_deviceId},
-		{"device", m_deviceName},
+		{"device", m_deviceName.c_str()},
 		{"host", host.toString()},
 		{"port", QString::number(m_servicePort)},
 	};

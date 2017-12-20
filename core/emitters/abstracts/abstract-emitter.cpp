@@ -10,10 +10,10 @@ AbstractEmitter::AbstractEmitter(ci32 id)
 		: IEmitter(id) {
 }
 
-QString AbstractEmitter::name() const {
+std::string AbstractEmitter::name() const {
 	return m_name;
 }
 
-void AbstractEmitter::setName(const QString &name) {
+void AbstractEmitter::setName(const std::string &name) {
 	m_name = name;
 }

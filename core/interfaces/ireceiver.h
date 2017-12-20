@@ -19,9 +19,9 @@ public:
 	~IReceiver() override = default;
 
 	virtual auto category() const noexcept -> Category override final;
-	virtual auto properties() const noexcept -> std::vector<std::pair<std::string, std::experimental::any>> override final;
+	virtual auto properties() const noexcept -> Properties override final;
 
-	virtual auto name() const noexcept -> QString = 0;
+	virtual auto name() const noexcept -> std::string = 0;
 	virtual auto type() const noexcept -> ReceiverType = 0;
 	virtual auto framerate() const noexcept -> u32;
 
@@ -33,7 +33,7 @@ public:
 	virtual std::shared_ptr<IEmitter> connectedEmitter() const = 0;
 
 	virtual Container::DeviceConfigContainer config() = 0;
-	virtual void setName(const QString &name) = 0;
+	virtual void setName(const std::string &name) = 0;
 
 	virtual auto correctors() noexcept -> AtomAggregator & = 0;
 };
