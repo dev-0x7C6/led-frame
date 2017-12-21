@@ -52,7 +52,7 @@ inline auto translate(const EmitterType &type) {
 	return std::string{};
 }
 
-inline auto value(const EmitterType type) {
+inline std::string value(const EmitterType type) {
 	switch (type) {
 		case EmitterType::Animation: return "animation";
 		case EmitterType::Color: return "color";
