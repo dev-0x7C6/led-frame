@@ -20,28 +20,31 @@ struct Block {
 	u32 wdiff;
 	u32 hdiff;
 };
-}
+} // namespace
 
 template <typename type, u32 size>
-inline auto scan_extract(ccolor *data, cu32 range) {
-	std::array<color, 4> rgb{{0, 0, 0, 0}};
+constexpr decltype(auto) scan_extract(ccolor *data, cu32 range) noexcept {
+	u32 r = 0;
+	u32 g = 0;
+	u32 b = 0;
 
 	constexpr auto jmp_cacheline = 64 / sizeof(std::remove_pointer<std::decay<decltype(data)>::type>::type);
 	static_assert(jmp_cacheline == 16, "explicit check");
 
-	for (auto i = 0u; i < range; i += jmp_cacheline) {
-		const auto value = data[i];
-		rgb[0] += get_r24(value);
-		rgb[1] += get_g24(value);
-		rgb[2] += get_b24(value);
-		++rgb[3];
+	const u32 loop_count = range / jmp_cacheline;
+
+	for (auto i = 0u; i < loop_count; ++i) {
+		r += get_r24(data[0]);
+		g += get_g24(data[0]);
+		b += get_b24(data[0]);
+		data += jmp_cacheline;
 	}
 
-	return type(rgb[0], rgb[1], rgb[2], rgb[3]);
+	return type(r, g, b, loop_count);
 }
 
 template <typename type, u32 size>
-inline auto scan_all(ccolor *data, const Block &block) {
+constexpr decltype(auto) scan_all(ccolor *data, const Block &block) noexcept {
 	std::array<type, size> result;
 
 	const auto shift = block.scanline * (block.step - 1) + block.wdiff;
@@ -61,7 +64,7 @@ inline auto scan_all(ccolor *data, const Block &block) {
 }
 
 template <typename type, u32 size>
-inline auto scan_edge(ccolor *data, const Block &block) {
+constexpr decltype(auto) scan_edge(ccolor *data, const Block &block) noexcept {
 	const auto step = block.step;
 	const auto w = block.width;
 	const auto h = block.height;
@@ -132,4 +135,4 @@ private:
 	std::array<type, rows - 2> m_l;
 	std::array<type, rows - 2> m_r;
 };
-}
+} // namespace Functional

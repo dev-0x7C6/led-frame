@@ -51,7 +51,7 @@ QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
 		std::visit(overloaded{
 					   [&result, key = key](auto arg) {
 						   if constexpr (std::is_same_v<decltype (arg), std::string>) {
-							   result.insert(QString::fromStdString(key), QString::fromStdString(arg));
+							   result.insert(key.c_str(), arg.c_str());
 	}
 	else {
 		result.insert(QString::fromStdString(key), arg);

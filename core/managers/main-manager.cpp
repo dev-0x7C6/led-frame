@@ -96,7 +96,7 @@ void MainManager::rescan() {
 			m_broadcasts.remove_if([id](const auto &match) {
 				return id == match->id();
 			});
-			m_atoms.detach(m_atoms.findReceiver(id));
+			m_atoms.detach(m_atoms.find(id, receiver_type{}));
 		},
 			Qt::QueuedConnection);
 
