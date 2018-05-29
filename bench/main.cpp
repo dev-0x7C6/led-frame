@@ -89,6 +89,21 @@ static void color_correction(benchmark::State &state) {
 	}
 }
 
+static void color_interpolation(benchmark::State &state) {
+	factor_t value = 0;
+
+	while (state.KeepRunning()) {
+		value += 0.01;
+
+		if (value >= static_cast<factor_t>(1.0))
+			value = 0;
+
+		Scanline result;
+		Scanline::interpolate(Scanline(0x00), Scanline(0xFF), value, result);
+		benchmark::DoNotOptimize(result);
+	}
+}
+
 static void image_block_processor_process_480p_auto(benchmark::State &state) { image_processor_process<640, 480>(state); }
 static void image_block_processor_process_720p_auto(benchmark::State &state) { image_processor_process<1280, 720>(state); }
 static void image_block_processor_process_1080p_auto(benchmark::State &state) { image_processor_process<1920, 1080>(state); }
@@ -101,6 +116,7 @@ static void image_block_processor_process_1080p_fixed(benchmark::State &state) {
 static void image_block_processor_process_4K_fixed(benchmark::State &state) { image_processor_process<3840, 2160, 1>(state); }
 static void image_block_processor_process_8K_fixed(benchmark::State &state) { image_processor_process<7680, 4320, 1>(state); }
 
+BENCHMARK(color_interpolation);
 BENCHMARK(color_correction);
 
 BENCHMARK(image_block_processor_process_480p_auto);

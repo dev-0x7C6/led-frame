@@ -10,7 +10,7 @@ IEmitter::~IEmitter() = default;
 void IEmitter::commit(const Container::Scanline &scanline) noexcept {
 	std::lock_guard<std::mutex> _(m_mutex);
 	m_data = scanline;
-	m_firstFrameReady = true;
+	m_firstFrameReady = 0;
 }
 
 auto IEmitter::data() const noexcept -> Container::Scanline {
@@ -27,4 +27,4 @@ auto IEmitter::usages() const noexcept -> int { return m_counter; }
 void IEmitter::interpret(std::experimental::any data) noexcept {
 	std::cout << "default implementation: " << data.type().name() << std::endl;
 }
-bool IEmitter::isFirstFrameReady() const noexcept { return m_firstFrameReady; }
+bool IEmitter::isFirstFrameReady() const noexcept { return m_firstFrameReady == 1; }

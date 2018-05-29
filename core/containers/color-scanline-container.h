@@ -11,40 +11,40 @@
 namespace Container {
 
 template <u32 linesize>
-class ScanlineContainer final {
+class alignas(16) ScanlineContainer final {
 public:
-	static_assert(linesize % 4 == 0, "modulo by 4 should be 0.");
+	static_assert(linesize % 4 == 0);
 
-	inline explicit ScanlineContainer() noexcept;
-	inline explicit ScanlineContainer(const color fillColor) noexcept;
+	explicit ScanlineContainer() noexcept;
+	explicit ScanlineContainer(const color fillColor) noexcept;
 
 	constexpr static auto size() noexcept;
 	constexpr static auto line() noexcept;
 
-	inline auto at(const std::size_t index) const noexcept;
-	inline auto data() noexcept;
-	inline auto constData() const noexcept;
+	auto at(const std::size_t index) const noexcept;
+	auto data() noexcept;
+	auto constData() const noexcept;
 
-	inline auto data(const Enum::Position &position) noexcept;
-	inline auto constData(const Enum::Position &position) const noexcept;
+	auto data(const Enum::Position &position) noexcept;
+	auto constData(const Enum::Position &position) const noexcept;
 
-	inline void clear() noexcept;
-	inline void fill(const color value) noexcept;
-	inline void fill(const Enum::Position position, const color value) noexcept;
+	void clear() noexcept;
+	void fill(const color value) noexcept;
+	void fill(const Enum::Position position, const color value) noexcept;
 
-	inline void operator=(const color value) noexcept;
-	inline bool operator==(const ScanlineContainer &other) const noexcept;
-	inline bool operator!=(const ScanlineContainer &other) const noexcept;
-	inline void operator<<(const color value) noexcept;
-	inline void operator>>(const color value) noexcept;
-	inline color &operator[](u32 index) noexcept;
+	ScanlineContainer &operator=(const color value) noexcept;
+	bool operator==(const ScanlineContainer &other) const noexcept;
+	bool operator!=(const ScanlineContainer &other) const noexcept;
+	void operator<<(const color value) noexcept;
+	void operator>>(const color value) noexcept;
+	color &operator[](u32 index) noexcept;
 
 	auto &array() noexcept { return m_data; }
 
 public:
 	constexpr static auto fromIndexToPosition(const std::size_t index) noexcept;
 
-	static color interpolation(ccolor start, ccolor end, cfactor p);
+	static color interpolation(color start, color end, factor_t p);
 	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, cfactor progress, ScanlineContainer &out) noexcept;
 
 	template <u32 newsize>
@@ -106,7 +106,10 @@ template <u32 linesize>
 constexpr auto ScanlineContainer<linesize>::fromIndexToPosition(const std::size_t index) noexcept { return static_cast<Enum::Position>(index / ScanlineContainer::line()); }
 
 template <u32 linesize>
-void ScanlineContainer<linesize>::operator=(const color value) noexcept { fill(value); }
+ScanlineContainer<linesize> &ScanlineContainer<linesize>::operator=(const color value) noexcept {
+	fill(value);
+	return *this;
+}
 
 template <u32 linesize>
 bool ScanlineContainer<linesize>::operator==(const ScanlineContainer &other) const noexcept { return m_data == other.m_data; }
@@ -131,27 +134,28 @@ color &ScanlineContainer<linesize>::operator[](u32 index) noexcept {
 	return m_data[index];
 }
 
-static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color), "ScanlineContainer should fit in ScanlineSize");
-static_assert(alignof(Scanline) == sizeof(color), "ScanlineContainer should be align to sizeof(color)");
+static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color));
+
+template <typename input_type, typename factor_type>
+constexpr auto linear_interpolation(input_type &&start, input_type &&end, factor_type &&factor) noexcept -> std::decay_t<factor_type> {
+	return start + factor * (end - start);
+}
 
 template <u32 linesize>
-color ScanlineContainer<linesize>::interpolation(ccolor start, ccolor end, cfactor p) {
+color ScanlineContainer<linesize>::interpolation(color start, color end, factor_t p) {
 	using namespace Functional;
-	const auto r = static_cast<ccolor>(get_r24(end) * p + (get_r24(start) * (static_cast<cfactor>(1.0) - p)));
-	const auto g = static_cast<ccolor>(get_g24(end) * p + (get_g24(start) * (static_cast<cfactor>(1.0) - p)));
-	const auto b = static_cast<ccolor>(get_b24(end) * p + (get_b24(start) * (static_cast<cfactor>(1.0) - p)));
+	const auto r = static_cast<color>(linear_interpolation(get_r24(start), get_r24(end), p));
+	const auto g = static_cast<color>(linear_interpolation(get_g24(start), get_g24(end), p));
+	const auto b = static_cast<color>(linear_interpolation(get_b24(start), get_b24(end), p));
 	return rgb(r, g, b);
 }
 
 template <u32 linesize>
 void ScanlineContainer<linesize>::interpolate(const ScanlineContainer &start, const ScanlineContainer &end, cfactor p, ScanlineContainer &out) noexcept {
 	using namespace Functional;
-	for (auto i = 0u; i < size() - 1u; i += 4u) {
-		out.data()[i + 0] = interpolation(start.constData()[i + 0], end.constData()[i + 0], p);
-		out.data()[i + 1] = interpolation(start.constData()[i + 1], end.constData()[i + 1], p);
-		out.data()[i + 2] = interpolation(start.constData()[i + 2], end.constData()[i + 2], p);
-		out.data()[i + 3] = interpolation(start.constData()[i + 3], end.constData()[i + 3], p);
-	}
+
+	for (auto i = 0u; i < linesize; ++i)
+		out.data()[i] = interpolation(start.constData()[i], end.constData()[i], p);
 }
 
 template <u32 linesize>
@@ -171,7 +175,7 @@ ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
 
 template <u32 oldsize, u32 newsize>
 inline static std::array<color, newsize> createInterpolatedColorArray(const std::function<color(cu32)> &getColor) {
-	constexpr auto factor = static_cast<cfactor>(oldsize) / static_cast<cfactor>(newsize);
+	constexpr auto factor = static_cast<factor_t>(oldsize) / static_cast<factor_t>(newsize);
 	std::array<color, newsize> result;
 
 	for (u32 i = 0u; i < newsize; ++i) {

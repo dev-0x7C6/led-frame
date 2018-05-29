@@ -25,7 +25,7 @@ public:
 	}
 
 	void operator<<(u8 *&data) noexcept {
-		fromData(static_cast<cu16>(data[0] | data[1] << 8u));
+		fromData(static_cast<u16>(data[0] | data[1] << 8u));
 		data += 2;
 	}
 

@@ -33,7 +33,7 @@ public:
 
 	bool isFirstFrameReady() const noexcept;
 
-	virtual Properties properties() const noexcept override {
+	Properties properties() const noexcept override {
 		return {
 			{"id", id()},
 			{"type", value(type())},
@@ -43,6 +43,6 @@ public:
 protected:
 	mutable std::mutex m_mutex;
 	Container::Scanline m_data{0u};
-	std::atomic<bool> m_firstFrameReady{false};
+	std::atomic<int> m_firstFrameReady{0};
 	Functional::ReferenceCounter m_counter{0};
 };

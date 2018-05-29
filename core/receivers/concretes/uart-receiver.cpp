@@ -100,7 +100,7 @@ void UartReceiver::run() {
 				frameCounter = 0;
 			}
 
-			auto factor = std::min(1.0f, static_cast<cfactor>(frameCounter) / (static_cast<cfactor>(uartFramerate) / static_cast<cfactor>(emitterFramerate)));
+			auto factor = std::min(static_cast<factor_t>(1.0), static_cast<factor_t>(frameCounter) / (static_cast<factor_t>(uartFramerate) / static_cast<factor_t>(emitterFramerate)));
 
 			if (factor < 1.0f) {
 				output = emitterGetFrame();

@@ -18,8 +18,8 @@ public:
 			: IAtom(id) {}
 	~IReceiver() override = default;
 
-	virtual auto category() const noexcept -> Category override final;
-	virtual auto properties() const noexcept -> Properties override final;
+	auto category() const noexcept -> Category final;
+	auto properties() const noexcept -> Properties final;
 
 	virtual auto name() const noexcept -> std::string = 0;
 	virtual auto type() const noexcept -> ReceiverType = 0;

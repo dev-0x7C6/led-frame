@@ -89,3 +89,11 @@ TEST(ColorCorrectors, AllCorrectorsAllRange) {
 		}
 	}
 }
+
+TEST(Scanline, Test) {
+	Scanline result;
+	Scanline::interpolate(Scanline(0x00), Scanline(0xFF), 0.5, result);
+
+	for (auto atom : result.array())
+		EXPECT_EQ(atom, 0x7F);
+}

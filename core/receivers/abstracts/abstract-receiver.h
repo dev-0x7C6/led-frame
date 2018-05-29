@@ -9,18 +9,18 @@ namespace Abstract {
 class AbstractReceiver : public IReceiver {
 public:
 	explicit AbstractReceiver(ci32 id);
-	virtual ~AbstractReceiver();
+	~AbstractReceiver() override;
 
-	virtual void disconnectEmitter() override;
-	virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) override;
-	virtual bool isEmitterConnected() const override;
-	virtual std::shared_ptr<IEmitter> connectedEmitter() const override;
-	virtual int connectedEmitterId() const override;
+	void disconnectEmitter() override;
+	void connectEmitter(const std::shared_ptr<IEmitter> &emitter) override;
+	bool isEmitterConnected() const override;
+	std::shared_ptr<IEmitter> connectedEmitter() const override;
+	int connectedEmitterId() const override;
 
-	virtual auto name() const noexcept -> std::string override;
-	virtual void setName(const std::string &name) override;
+	auto name() const noexcept -> std::string override;
+	void setName(const std::string &name) override;
 
-	virtual auto correctors() noexcept -> AtomAggregator & override final;
+	auto correctors() noexcept -> AtomAggregator & final;
 
 protected:
 	std::string emitterName() const;

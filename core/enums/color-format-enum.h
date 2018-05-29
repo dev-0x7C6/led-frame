@@ -2,12 +2,12 @@
 
 #include <QString>
 
-struct rgb_format {};
-struct rbg_format {};
-struct grb_format {};
-struct gbr_format {};
-struct brg_format {};
-struct bgr_format {};
+struct rgb_format_overload {};
+struct rbg_format_overload {};
+struct grb_format_overload {};
+struct gbr_format_overload {};
+struct brg_format_overload {};
+struct bgr_format_overload {};
 
 namespace Enum {
 

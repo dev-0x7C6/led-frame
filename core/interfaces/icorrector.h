@@ -36,7 +36,7 @@ public:
 
 	auto priority() const noexcept { return m_priority; }
 
-	auto isEnabled() const noexcept -> bool { return m_enabled; }
+	auto isEnabled() const noexcept -> bool { return m_enabled == 1; }
 	auto isGlobal() const noexcept { return m_owner == -1; }
 
 	inline auto setEnabled(bool value) noexcept;
@@ -45,7 +45,7 @@ public:
 protected:
 	FactorModifier m_factor{255, 255, 0};
 	FactorModifier m_threshold{255, 255, 0};
-	std::atomic<bool> m_enabled{true};
+	std::atomic<int> m_enabled{1};
 
 private:
 	const int m_owner = 0;
@@ -62,7 +62,7 @@ ICorrector::ICorrector(ci32 id, int owner, const Enum::Priority priority)
 {}
 
 auto ICorrector::setEnabled(bool value) noexcept {
-	m_enabled = value;
+	m_enabled = value ? 1 : 0;
 	notify();
 }
 

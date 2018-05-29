@@ -19,7 +19,7 @@ void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept 
 		if (value == 0)
 			continue;
 
-		const auto r = static_cast<ccolor>(get_r24(value) * f);
+		const auto r = static_cast<color>(get_r24(value) * f);
 		const auto g = get_g24(value);
 		const auto b = get_b24(value);
 		value = rgb(r, g, b);
@@ -40,7 +40,7 @@ void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcep
 			continue;
 
 		const auto r = get_r24(value);
-		const auto g = static_cast<ccolor>(get_g24(value) * f);
+		const auto g = static_cast<color>(get_g24(value) * f);
 		const auto b = get_b24(value);
 		value = rgb(r, g, b);
 	}
@@ -61,7 +61,7 @@ void BlueChannelCorrector::correct(Container::Scanline &scanline) const noexcept
 
 		const auto r = get_r24(value);
 		const auto g = get_g24(value);
-		const auto b = static_cast<ccolor>(get_b24(value) * f);
+		const auto b = static_cast<color>(get_b24(value) * f);
 		value = rgb(r, g, b);
 	}
 }
