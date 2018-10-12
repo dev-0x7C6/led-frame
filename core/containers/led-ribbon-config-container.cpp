@@ -20,7 +20,3 @@ void RibbonConfiguration::setDirection(const Direction direction) noexcept {
 void RibbonConfiguration::setPosition(const Position position) noexcept {
 	m_data.setPosition(static_cast<u8>(position));
 }
-
-void RibbonConfiguration::operator=(const RibbonConfiguration &other) noexcept {
-	m_data = other.m_data;
-}

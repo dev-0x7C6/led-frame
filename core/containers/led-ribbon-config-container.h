@@ -10,12 +10,7 @@ namespace Container {
 
 class RibbonBitField {
 public:
-	constexpr explicit RibbonBitField()
-			: m_count(0)
-			, m_direction(0)
-			, m_format(0)
-			, m_position(0) {
-	}
+	constexpr explicit RibbonBitField() = default;
 
 	void fromData(cu16 data) noexcept {
 		m_direction = get_direction(data);
@@ -50,10 +45,10 @@ public:
 	void setPosition(cu8 position) noexcept { m_position = position; }
 
 private:
-	u8 m_count;
-	u8 m_direction;
-	u8 m_format;
-	u8 m_position;
+	u8 m_count{};
+	u8 m_direction{};
+	u8 m_format{};
+	u8 m_position{};
 
 private:
 	constexpr static auto direction_shift = 0;
@@ -94,8 +89,6 @@ public:
 	void setDirection(const Enum::Direction direction) noexcept;
 	void setPosition(const Enum::Position position) noexcept;
 
-	void operator=(const RibbonConfiguration &other) noexcept;
-
 	constexpr auto rawData() const noexcept { return m_data; }
 
 private:
@@ -110,4 +103,4 @@ constexpr auto RibbonConfiguration::colorFormat() const noexcept -> Enum::ColorF
 constexpr auto RibbonConfiguration::direction() const noexcept -> Enum::Direction { return static_cast<Enum::Direction>(m_data.direction()); }
 constexpr auto RibbonConfiguration::position() const noexcept -> Enum::Position { return static_cast<Enum::Position>(m_data.position()); }
 constexpr auto RibbonConfiguration::count() const noexcept -> u8 { return static_cast<u8>(m_data.count()); }
-}
+} // namespace Container

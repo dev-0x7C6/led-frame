@@ -8,13 +8,13 @@ IEmitter::IEmitter(ci32 id)
 IEmitter::~IEmitter() = default;
 
 void IEmitter::commit(const Container::Scanline &scanline) noexcept {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard _(m_mutex);
 	m_data = scanline;
 	m_firstFrameReady = 0;
 }
 
 auto IEmitter::data() const noexcept -> Container::Scanline {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard _(m_mutex);
 	return m_data;
 }
 

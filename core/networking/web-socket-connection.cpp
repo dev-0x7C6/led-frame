@@ -28,7 +28,7 @@ WebSocketConnection::WebSocketConnection(Interface::IRemoteController &remoteCon
 		, m_socket(std::move(socket)) {
 	QObject::connect(m_socket.get(), &QWebSocket::textMessageReceived, [this](const auto &data) { this->recv(data); });
 	QObject::connect(&m_timer, &QTimer::timeout, [this]() {
-		std::lock_guard<std::mutex> _(m_mutex);
+		std::lock_guard _(m_mutex);
 		while (!m_outgoingQueue.empty()) {
 			send(m_outgoingQueue.front());
 			m_outgoingQueue.pop();
@@ -68,7 +68,7 @@ return result;
 // documentation/protocol/notification.md
 
 void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
-	std::lock_guard<std::mutex> _(m_mutex);
+	std::lock_guard _(m_mutex);
 	QJsonObject notification{
 		{"message", "notification"},
 		{"version", 1},

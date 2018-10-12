@@ -11,7 +11,6 @@ public:
 	explicit AbstractReceiver(ci32 id);
 	~AbstractReceiver() override;
 
-	void disconnectEmitter() override;
 	void connectEmitter(const std::shared_ptr<IEmitter> &emitter) override;
 	bool isEmitterConnected() const override;
 	std::shared_ptr<IEmitter> connectedEmitter() const override;

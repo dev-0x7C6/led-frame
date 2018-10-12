@@ -17,7 +17,7 @@ public:
 	void attach(const std::shared_ptr<IAtom> &object) noexcept;
 	void detach(const std::shared_ptr<IAtom> &object) noexcept;
 
-	void enumerate(std::function<void(const std::shared_ptr<IAtom> &)> callback) const noexcept;
+	void enumerate(const std::function<void(const std::shared_ptr<IAtom> &)> &callback) const noexcept;
 
 	auto find(const Category category, const int id) noexcept -> std::shared_ptr<IAtom>;
 	auto find(const int id, corrector_type) noexcept -> std::shared_ptr<IAtom> { return find(Category::Corrector, id); }

@@ -13,17 +13,10 @@ AbstractReceiver::AbstractReceiver(ci32 id)
 	m_data.fill(0);
 }
 
-AbstractReceiver::~AbstractReceiver() {
-	disconnectEmitter();
-}
-
-void AbstractReceiver::disconnectEmitter() {
-	m_acquiredEmitter = nullptr;
-}
+AbstractReceiver::~AbstractReceiver() = default;
 
 void AbstractReceiver::connectEmitter(const std::shared_ptr<IEmitter> &emitter) {
 	if (m_emitter == emitter) return;
-	disconnectEmitter();
 
 #ifdef RPI
 	m_emitter = emitter;

@@ -25,7 +25,6 @@ public:
 	virtual auto type() const noexcept -> ReceiverType = 0;
 	virtual auto framerate() const noexcept -> u32;
 
-	virtual void disconnectEmitter() = 0;
 	virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) = 0;
 	virtual bool isEmitterConnected() const = 0;
 	virtual int connectedEmitterId() const = 0;
