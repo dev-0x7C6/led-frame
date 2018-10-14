@@ -1,3 +1,0 @@
-[submodule "formatter"]
-	path = formatter
-	url = git@cube:repositories/formatter.git
