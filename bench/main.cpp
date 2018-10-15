@@ -131,4 +131,7 @@ BENCHMARK(image_block_processor_process_1080p_fixed);
 BENCHMARK(image_block_processor_process_4K_fixed);
 BENCHMARK(image_block_processor_process_8K_fixed);
 
-BENCHMARK_MAIN()
+int main(int argc, char **argv) {
+	::benchmark::Initialize(&argc, argv);
+	::benchmark::RunSpecifiedBenchmarks();
+}
