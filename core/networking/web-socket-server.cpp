@@ -18,7 +18,7 @@ WebSocketServer::WebSocketServer(INotificationAggregator &notifier, Interface::I
 
 WebSocketServer::~WebSocketServer() {
 	for (const auto &connection : m_connections)
-		m_notifier.detach(*connection.get());
+		m_notifier.detach(*connection);
 }
 
 bool WebSocketServer::isListening() const noexcept {
@@ -31,6 +31,6 @@ u16 WebSocketServer::port() const noexcept {
 
 void WebSocketServer::incommingConnection() {
 	auto connection = std::make_unique<WebSocketConnection>(m_remoteController, std::unique_ptr<QWebSocket>(m_service->nextPendingConnection()));
-	m_notifier.attach(*connection.get());
+	m_notifier.attach(*connection);
 	m_connections.emplace_back(std::move(connection));
 }

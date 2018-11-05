@@ -14,9 +14,15 @@ namespace Network {
 class WebSocketConnection final : public INotification {
 public:
 	explicit WebSocketConnection(Interface::IRemoteController &remoteController, std::unique_ptr<QWebSocket> &&socket);
-	virtual ~WebSocketConnection();
 
-	virtual void action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept override;
+	WebSocketConnection() = delete;
+	WebSocketConnection(const WebSocketConnection &) = delete;
+	WebSocketConnection &operator=(const WebSocketConnection &) = delete;
+	WebSocketConnection(WebSocketConnection &&) noexcept = delete;
+	WebSocketConnection &operator=(WebSocketConnection &&) noexcept = delete;
+	~WebSocketConnection() final;
+
+	void action(NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept final;
 
 private:
 	void recv(const QString &message);
@@ -30,4 +36,4 @@ private:
 
 	QTimer m_timer;
 };
-}
+} // namespace Network

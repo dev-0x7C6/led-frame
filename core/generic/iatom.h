@@ -7,7 +7,8 @@
 
 #include <core/enums/ecategory.h>
 
-using Properties = std::vector<std::pair<std::string, std::variant<std::string, double, int, bool>>>;
+using Property = std::variant<std::string, double, int, bool>;
+using Properties = std::vector<std::pair<std::string, Property>>;
 
 class IAtom : public std::enable_shared_from_this<IAtom> {
 public:

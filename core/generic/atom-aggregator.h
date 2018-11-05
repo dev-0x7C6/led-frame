@@ -19,7 +19,7 @@ public:
 
 	void enumerate(const std::function<void(const std::shared_ptr<IAtom> &)> &callback) const noexcept;
 
-	auto find(const Category category, const int id) noexcept -> std::shared_ptr<IAtom>;
+	auto find(Category category, int id) noexcept -> std::shared_ptr<IAtom>;
 	auto find(const int id, corrector_type) noexcept -> std::shared_ptr<IAtom> { return find(Category::Corrector, id); }
 	auto find(const int id, emitter_type) noexcept -> std::shared_ptr<IAtom> { return find(Category::Emitter, id); }
 	auto find(const int id, receiver_type) noexcept -> std::shared_ptr<IAtom> { return find(Category::Receiver, id); }
