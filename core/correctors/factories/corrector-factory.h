@@ -3,15 +3,7 @@
 #include <core/interfaces/icorrector.h>
 #include <memory>
 
-namespace Corrector {
 namespace Factory {
 
-class CorrectorFactory final {
-public:
-	explicit CorrectorFactory() = delete;
-	virtual ~CorrectorFactory() = delete;
-
-	static std::shared_ptr<ICorrector> create(const CorrectorType &type, int owner);
-};
-}
+std::shared_ptr<ICorrector> make_corrector(CorrectorType type, int owner) noexcept;
 }

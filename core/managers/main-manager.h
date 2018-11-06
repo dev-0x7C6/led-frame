@@ -29,8 +29,8 @@ public:
 	explicit MainManager(QSettings &settings);
 	~MainManager() override;
 
-	virtual void attach(INotification &notifier) noexcept override final;
-	virtual void detach(INotification &notifier) noexcept override final;
+	void attach(INotification &notifier) noexcept final;
+	void detach(INotification &notifier) noexcept final;
 
 	auto &atoms() noexcept { return m_atoms; }
 
@@ -45,8 +45,6 @@ private:
 	std::shared_ptr<ICorrector> m_globalRedCorrection;
 	std::shared_ptr<ICorrector> m_globalGreenCorrection;
 	std::shared_ptr<ICorrector> m_globalBlueCorrection;
-
-private:
 	AtomAggregator m_atoms;
 
 protected:

@@ -2,11 +2,12 @@
 
 #include <core/correctors/factories/corrector-factory.h>
 #include <core/emitters/factories/emitter-factory.h>
-#include <core/functionals/debug-notification.h>
-#include <core/managers/main-manager.h>
-#include <core/interfaces/ireceiver.h>
-#include <core/interfaces/icorrector.h>
 #include <core/enums/animation-variant.h>
+#include <core/functionals/debug-notification.h>
+#include <core/interfaces/icorrector.h>
+#include <core/interfaces/iemitter.h>
+#include <core/interfaces/ireceiver.h>
+#include <core/managers/main-manager.h>
 
 #include <QApplication>
 #include <QMessageBox>
@@ -14,9 +15,8 @@
 #include <QSettings>
 
 using namespace Enum;
+using namespace Factory;
 using namespace Manager;
-using namespace Emitter::Factory;
-using namespace Corrector::Factory;
 
 SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 		: m_settings(settings)
@@ -27,28 +27,28 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 	auto screens = QGuiApplication::screens();
 
 	for (auto screen : screens) {
-		auto emitter = EmitterFactory::create(EmitterType::Screen);
+		auto emitter = make_emitter(EmitterType::Screen);
 		emitter->setName((QObject::tr("Display: ") + screen->name()).toStdString());
 		m_mainManager.atoms().attach(emitter);
 	}
 #endif
 
 #ifdef RPI
-	auto emitter = EmitterFactory::create(EmitterType::Screen);
+	auto emitter = make_emitter(EmitterType::Screen);
 	emitter->setName("RPI Output");
 	m_mainManager.emitters().attach(emitter);
 #endif
 
-	m_mainManager.atoms().attach(EmitterFactory::create(EmitterType::Image, translate(EmitterType::Image)));
+	m_mainManager.atoms().attach(make_emitter(EmitterType::Image, translate(EmitterType::Image)));
 
 	for (auto &types : getAnimationVariantTypes()) {
-		auto animation = EmitterFactory::create(EmitterType::Animation, translate(EmitterType::Animation));
+		auto animation = make_emitter(EmitterType::Animation, translate(EmitterType::Animation));
 		animation->interpret(types);
 		m_mainManager.atoms().attach(std::move(animation));
 	}
 
-	m_mainManager.atoms().attach(EmitterFactory::create(EmitterType::Color, translate(EmitterType::Color)));
-	m_mainManager.atoms().attach(EmitterFactory::create(EmitterType::Off, translate(EmitterType::Off)));
+	m_mainManager.atoms().attach(make_emitter(EmitterType::Color, translate(EmitterType::Color)));
+	m_mainManager.atoms().attach(make_emitter(EmitterType::Off, translate(EmitterType::Off)));
 
 	m_mainManager.setRegisterDeviceCallback([this](IReceiver *receiver, const QString &serialNumber) -> bool {
 		return registerDevice(receiver, serialNumber);
@@ -100,19 +100,9 @@ void SessionManager::createCorrectorGroup(IReceiver *receiver) {
 
 	const auto id = receiver->id();
 
-	const auto list = {
-		CorrectorType::Brightness,
-		CorrectorType::RedChannel,
-		CorrectorType::GreenChannel,
-		CorrectorType::BlueChannel,
-		CorrectorType::FlickrEffect,
-		CorrectorType::ColorEnhancer,
-		CorrectorType::Backlight,
-	};
-
 	m_settings.beginGroup(QString::fromStdString(receiver->name()));
-	for (const auto &type : list) {
-		auto corrector = CorrectorFactory::create(type, id);
+	for (const auto &type : getCorrectorTypes()) {
+		auto corrector = make_corrector(type, id);
 		m_settings.beginGroup(value(corrector->type()).c_str());
 		corrector->setFactor(m_settings.value("factor", corrector->factor().value()).toUInt());
 		corrector->setEnabled(m_settings.value("enabled", corrector->isEnabled()).toBool());

@@ -74,7 +74,7 @@ TEST(ColorCorrectors, AllCorrectorsAllRange) {
 	constexpr auto types = getCorrectorTypes();
 
 	for (const auto type : types) {
-		auto corrector = Factory::CorrectorFactory::create(type, 0);
+		auto corrector = Factory::make_corrector(type, 0);
 
 		EXPECT_TRUE(corrector != nullptr);
 

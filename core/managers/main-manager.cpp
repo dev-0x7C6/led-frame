@@ -5,14 +5,13 @@
 #include <core/correctors/factories/corrector-factory.h>
 #include <core/devices/device-port.h>
 #include <core/functionals/debug-notification.h>
-#include <core/functionals/debug-notification.h>
 #include <core/networking/udp-broadcast-service.h>
 #include <core/receivers/concretes/uart-receiver.h>
 
 #include <QSettings>
 
-using namespace Corrector::Factory;
 using namespace Enum;
+using namespace Factory;
 using namespace Functional;
 using namespace Manager;
 using namespace Network;
@@ -20,10 +19,10 @@ using namespace Receiver::Concrete;
 
 MainManager::MainManager(QSettings &settings)
 		: m_settings(settings)
-		, m_globalBrightnessCorrection(CorrectorFactory::create(CorrectorType::Brightness, -1))
-		, m_globalRedCorrection(CorrectorFactory::create(CorrectorType::RedChannel, -1))
-		, m_globalGreenCorrection(CorrectorFactory::create(CorrectorType::GreenChannel, -1))
-		, m_globalBlueCorrection(CorrectorFactory::create(CorrectorType::BlueChannel, -1)) {
+		, m_globalBrightnessCorrection(make_corrector(CorrectorType::Brightness, -1))
+		, m_globalRedCorrection(make_corrector(CorrectorType::RedChannel, -1))
+		, m_globalGreenCorrection(make_corrector(CorrectorType::GreenChannel, -1))
+		, m_globalBlueCorrection(make_corrector(CorrectorType::BlueChannel, -1)) {
 	m_atoms.attach(m_globalBrightnessCorrection);
 	m_atoms.attach(m_globalRedCorrection);
 	m_atoms.attach(m_globalGreenCorrection);

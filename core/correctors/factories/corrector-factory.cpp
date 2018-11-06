@@ -6,10 +6,9 @@
 #include <core/correctors/factories/corrector-factory.h>
 
 using namespace Corrector::Concrete;
-using namespace Corrector::Factory;
 using namespace Enum;
 
-std::shared_ptr<ICorrector> CorrectorFactory::create(const CorrectorType &type, int owner) {
+std::shared_ptr<ICorrector> Factory::make_corrector(CorrectorType type, int owner) noexcept {
 	static int id = 0;
 
 	switch (type) {

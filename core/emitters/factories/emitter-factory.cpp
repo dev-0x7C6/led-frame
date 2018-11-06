@@ -7,10 +7,10 @@
 #include <core/emitters/factories/emitter-factory.h>
 
 using namespace Emitter::Concrete;
-using namespace Emitter::Factory;
 using namespace Enum;
+using namespace Factory;
 
-std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type) {
+std::shared_ptr<IEmitter> Factory::make_emitter(EmitterType type) noexcept {
 	static auto id = 0;
 
 	switch (type) {
@@ -25,8 +25,8 @@ std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type) {
 	return nullptr;
 }
 
-std::shared_ptr<IEmitter> EmitterFactory::create(const EmitterType &type, const std::string &name) {
-	auto emitter = create(type);
+std::shared_ptr<IEmitter> Factory::make_emitter(EmitterType type, std::string &&name) noexcept {
+	auto emitter = make_emitter(type);
 
 	if (emitter)
 		emitter->setName(name);

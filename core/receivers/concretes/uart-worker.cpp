@@ -6,10 +6,10 @@
 #include <core/functionals/loop-sync.h>
 #include <core/interfaces/icorrector.h>
 
-using namespace Enum;
 using namespace Container;
+using namespace Enum;
+using namespace Factory;
 using namespace Receiver::Concrete;
-using namespace Corrector::Factory;
 
 UartWorker::UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbon,
 	AtomAggregator &correctors,
@@ -23,7 +23,7 @@ UartWorker::UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbo
 
 void UartWorker::fade(std::function<Scanline()> getFrame, const bool in) {
 	Functional::LoopSync loopSync;
-	auto fadeCorrector = CorrectorFactory::create(CorrectorType::Brightness, -2);
+	auto fadeCorrector = make_corrector(CorrectorType::Brightness, -2);
 	fadeCorrector->setFactor(0);
 	m_correctors.attach(fadeCorrector);
 

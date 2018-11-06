@@ -15,7 +15,7 @@ using namespace Factory;
 using namespace Functional::Capture;
 using namespace Interface;
 
-std::unique_ptr<IScreenCapture> ScreenCaptureFactory::create(const ScreenCaptureType &type) {
+std::unique_ptr<IScreenCapture> Factory::make_capture(ScreenCaptureType type) noexcept {
 	switch (type) {
 		case ScreenCaptureType::QtScreenCapture: return std::make_unique<QtScreenCapture>();
 #ifdef X11

@@ -49,15 +49,15 @@ void ScreenEmitter::run() {
 	Functional::LoopSync loop;
 	ImageBlockProcessor<ColorAveragingBuffer, 16, 32> processor;
 #ifdef X11
-	auto screen = ScreenCaptureFactory::create(ScreenCaptureType::X11ShmScreenCapture);
+	auto screen = make_capture(ScreenCaptureType::X11ShmScreenCapture);
 #endif
 #ifdef RPI
-	auto screen = ScreenCaptureFactory::create(ScreenCaptureType::DispmanxScreenCapture);
+	auto screen = make_capture(ScreenCaptureType::DispmanxScreenCapture);
 #endif
 
 #ifndef X11
 #ifndef RPI
-	auto screen = ScreenCaptureFactory::create(ScreenCaptureType::QtScreenCapture);
+	auto screen = make_capture(ScreenCaptureType::QtScreenCapture);
 #endif
 #endif
 

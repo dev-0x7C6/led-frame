@@ -1,17 +1,13 @@
 #pragma once
 
-#include <core/interfaces/iemitter.h>
+#include <memory>
 
-namespace Emitter {
+class IEmitter;
+enum class EmitterType;
+
 namespace Factory {
 
-class EmitterFactory final {
-public:
-	explicit EmitterFactory() = delete;
-	virtual ~EmitterFactory() = delete;
+std::shared_ptr<IEmitter> make_emitter(EmitterType type) noexcept;
+std::shared_ptr<IEmitter> make_emitter(EmitterType type, std::string &&name) noexcept;
 
-	static std::shared_ptr<IEmitter> create(const EmitterType &type);
-	static std::shared_ptr<IEmitter> create(const EmitterType &type, const std::string &name);
-};
-}
-}
+} // namespace Factory

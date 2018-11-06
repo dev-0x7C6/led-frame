@@ -77,17 +77,17 @@ static_assert(sizeof(RibbonBitField) == 4);
 class RibbonConfiguration final {
 public:
 	constexpr explicit RibbonConfiguration() noexcept;
-	constexpr explicit RibbonConfiguration(const RibbonBitField field) noexcept;
+	constexpr explicit RibbonConfiguration(RibbonBitField field) noexcept;
 
 	constexpr auto colorFormat() const noexcept -> Enum::ColorFormat;
 	constexpr auto count() const noexcept -> u8;
 	constexpr auto direction() const noexcept -> Enum::Direction;
 	constexpr auto position() const noexcept -> Enum::Position;
 
-	void setColorFormat(const Enum::ColorFormat format) noexcept;
+	void setColorFormat(Enum::ColorFormat format) noexcept;
 	void setCount(cu8 count) noexcept;
-	void setDirection(const Enum::Direction direction) noexcept;
-	void setPosition(const Enum::Position position) noexcept;
+	void setDirection(Enum::Direction direction) noexcept;
+	void setPosition(Enum::Position position) noexcept;
 
 	constexpr auto rawData() const noexcept { return m_data; }
 

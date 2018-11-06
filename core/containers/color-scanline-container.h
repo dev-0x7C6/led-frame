@@ -16,12 +16,12 @@ public:
 	static_assert(linesize % 4 == 0);
 
 	explicit ScanlineContainer() noexcept;
-	explicit ScanlineContainer(const color fillColor) noexcept;
+	explicit ScanlineContainer(color fillColor) noexcept;
 
 	constexpr static auto size() noexcept;
 	constexpr static auto line() noexcept;
 
-	auto at(const std::size_t index) const noexcept;
+	auto at(std::size_t index) const noexcept;
 	auto data() noexcept;
 	auto constData() const noexcept;
 
@@ -29,20 +29,20 @@ public:
 	auto constData(const Enum::Position &position) const noexcept;
 
 	void clear() noexcept;
-	void fill(const color value) noexcept;
-	void fill(const Enum::Position position, const color value) noexcept;
+	void fill(color value) noexcept;
+	void fill(Enum::Position position, color value) noexcept;
 
-	ScanlineContainer &operator=(const color value) noexcept;
+	ScanlineContainer &operator=(color value) noexcept;
 	bool operator==(const ScanlineContainer &other) const noexcept;
 	bool operator!=(const ScanlineContainer &other) const noexcept;
-	void operator<<(const color value) noexcept;
-	void operator>>(const color value) noexcept;
+	void operator<<(color value) noexcept;
+	void operator>>(color value) noexcept;
 	color &operator[](u32 index) noexcept;
 
 	auto &array() noexcept { return m_data; }
 
 public:
-	constexpr static auto fromIndexToPosition(const std::size_t index) noexcept;
+	constexpr static auto fromIndexToPosition(std::size_t index) noexcept;
 
 	static color interpolation(color start, color end, factor_t p);
 	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, cfactor progress, ScanlineContainer &out) noexcept;
