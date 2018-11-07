@@ -8,10 +8,10 @@ using namespace Functional;
 
 BacklightCorrector::BacklightCorrector(ci32 id, int owner)
 		: ICorrector(id, owner, Priority::Lowest) {
-	m_factor = {1, 16, 0};
+	m_factor = FactorModifier(1, 16, 0);
 	m_enabled = false;
 }
-CorrectorType BacklightCorrector::type() const { return CorrectorType::Backlight; }
+
 void BacklightCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == 0)
 		return;

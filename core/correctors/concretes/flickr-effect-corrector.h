@@ -7,15 +7,14 @@ namespace Concrete {
 
 class FlickrEffectCorrector final : public ICorrector {
 public:
-	explicit FlickrEffectCorrector(ci32 id, int owner);
-	virtual ~FlickrEffectCorrector() = default;
+	explicit FlickrEffectCorrector(i32 id, int owner);
 
-	virtual CorrectorType type() const override;
-	virtual void correct(Container::Scanline &scanline) const noexcept override;
+	CorrectorType type() const noexcept final { return CorrectorType::FlickrEffect; }
+	void correct(Container::Scanline &scanline) const noexcept final;
 
 private:
 	mutable u32 m_duration = 0;
 	mutable u32 m_lastFactor = 0xffffffffu;
 };
-}
-}
+} // namespace Concrete
+} // namespace Corrector

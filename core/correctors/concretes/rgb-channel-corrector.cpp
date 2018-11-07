@@ -7,7 +7,6 @@ using namespace Functional;
 
 RedChannelCorrector::RedChannelCorrector(ci32 id, int owner)
 		: ICorrector(id, owner) {}
-CorrectorType RedChannelCorrector::type() const { return CorrectorType::RedChannel; }
 
 void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == factor().max())
@@ -28,7 +27,7 @@ void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept 
 
 GreenChannelCorrector::GreenChannelCorrector(ci32 id, int owner)
 		: ICorrector(id, owner) {}
-CorrectorType GreenChannelCorrector::type() const { return CorrectorType::GreenChannel; }
+
 void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == factor().max())
 		return;
@@ -48,7 +47,7 @@ void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcep
 
 BlueChannelCorrector::BlueChannelCorrector(ci32 id, int owner)
 		: ICorrector(id, owner) {}
-CorrectorType BlueChannelCorrector::type() const { return CorrectorType::BlueChannel; }
+
 void BlueChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == factor().max())
 		return;

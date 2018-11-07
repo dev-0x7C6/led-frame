@@ -8,10 +8,9 @@ namespace Concrete {
 class BrightnessCorrector final : public ICorrector {
 public:
 	explicit BrightnessCorrector(ci32 id, int owner);
-	virtual ~BrightnessCorrector() = default;
 
-	virtual CorrectorType type() const override;
-	virtual void correct(Container::Scanline &scanline) const noexcept override;
+	CorrectorType type() const noexcept final;
+	void correct(Container::Scanline &scanline) const noexcept final;
 };
-}
-}
+} // namespace Concrete
+} // namespace Corrector

@@ -13,8 +13,6 @@ ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
 	m_enabled = false;
 }
 
-CorrectorType ColorEnhancerCorrector::type() const { return CorrectorType::ColorEnhancer; }
-
 void ColorEnhancerCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == factor().min())
 		return;

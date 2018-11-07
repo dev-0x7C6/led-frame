@@ -11,11 +11,10 @@
 
 class ICorrector : public IAtom {
 public:
-	inline explicit ICorrector(ci32 id, int owner, const Enum::Priority priority = Enum::Priority::Average);
-	virtual ~ICorrector() override = default;
+	inline explicit ICorrector(ci32 id, int owner, Enum::Priority priority = Enum::Priority::Average);
 
-	virtual auto category() const noexcept -> Category final { return Category::Corrector; }
-	virtual Properties properties() const noexcept final {
+	auto category() const noexcept -> Category final { return Category::Corrector; }
+	auto properties() const noexcept -> Properties final {
 		return {
 			{"id", id()},
 			{"type", value(type())},
@@ -26,7 +25,7 @@ public:
 		};
 	}
 
-	virtual CorrectorType type() const = 0;
+	virtual CorrectorType type() const noexcept = 0;
 	virtual void correct(Container::Scanline &scanline) const noexcept = 0;
 
 	auto owner() const noexcept { return m_owner; }

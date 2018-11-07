@@ -7,29 +7,26 @@ namespace Concrete {
 
 class RedChannelCorrector final : public ICorrector {
 public:
-	explicit RedChannelCorrector(ci32 id, int owner);
-	virtual ~RedChannelCorrector() = default;
+	explicit RedChannelCorrector(i32 id, int owner);
 
-	virtual CorrectorType type() const override;
-	virtual void correct(Container::Scanline &scanline) const noexcept override;
+	CorrectorType type() const noexcept final { return CorrectorType::RedChannel; }
+	void correct(Container::Scanline &scanline) const noexcept final;
 };
 
 class GreenChannelCorrector final : public ICorrector {
 public:
-	explicit GreenChannelCorrector(ci32 id, int owner);
-	virtual ~GreenChannelCorrector() = default;
+	explicit GreenChannelCorrector(i32 id, int owner);
 
-	virtual CorrectorType type() const override;
-	virtual void correct(Container::Scanline &scanline) const noexcept override;
+	CorrectorType type() const noexcept final { return CorrectorType::GreenChannel; }
+	void correct(Container::Scanline &scanline) const noexcept final;
 };
 
 class BlueChannelCorrector final : public ICorrector {
 public:
-	explicit BlueChannelCorrector(ci32 id, int owner);
-	virtual ~BlueChannelCorrector() = default;
+	explicit BlueChannelCorrector(i32 id, int owner);
 
-	virtual CorrectorType type() const override;
-	virtual void correct(Container::Scanline &scanline) const noexcept override;
+	CorrectorType type() const noexcept final { return CorrectorType::BlueChannel; }
+	void correct(Container::Scanline &scanline) const noexcept final;
 };
-}
-}
+} // namespace Concrete
+} // namespace Corrector

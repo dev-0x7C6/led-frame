@@ -8,10 +8,9 @@ namespace Concrete {
 class BacklightCorrector final : public ICorrector {
 public:
 	explicit BacklightCorrector(ci32 id, int owner);
-	virtual ~BacklightCorrector() = default;
 
-	virtual CorrectorType type() const override;
-	virtual void correct(Container::Scanline &scanline) const noexcept override;
+	CorrectorType type() const noexcept final { return CorrectorType::Backlight; }
+	void correct(Container::Scanline &scanline) const noexcept final;
 };
 }
 }

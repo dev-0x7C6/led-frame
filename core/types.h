@@ -2,23 +2,23 @@
 
 #include <atomic>
 #include <cstdint>
-#include <type_traits>
 #include <limits>
+#include <type_traits>
 
 template <typename type>
-inline constexpr auto is_class_efficient_func() noexcept {
-	return std::is_copy_assignable<type>::value &&
-		std::is_copy_constructible<type>::value &&
-		std::is_move_assignable<type>::value &&
-		std::is_move_constructible<type>::value;
+constexpr auto is_class_efficient_func() noexcept {
+	return std::is_copy_assignable_v<type> &&
+		std::is_copy_constructible_v<type> &&
+		std::is_move_assignable_v<type> &&
+		std::is_move_constructible_v<type>;
 }
 
 template <typename type>
-inline constexpr auto is_class_efficient_nothrow_func() noexcept {
-	return std::is_nothrow_copy_assignable<type>::value &&
-		std::is_nothrow_copy_constructible<type>::value &&
-		std::is_nothrow_move_assignable<type>::value &&
-		std::is_nothrow_move_constructible<type>::value;
+constexpr auto is_class_efficient_nothrow_func() noexcept {
+	return std::is_nothrow_copy_assignable_v<type> &&
+		std::is_nothrow_copy_constructible_v<type> &&
+		std::is_nothrow_move_assignable_v<type> &&
+		std::is_nothrow_move_constructible_v<type>;
 }
 
 template <typename type>
@@ -36,14 +36,14 @@ using u32 = uint32_t;
 using u64 = uint64_t;
 using u8 = uint8_t;
 
-static_assert(std::is_same<i16, int16_t>::value);
-static_assert(std::is_same<i32, int32_t>::value);
-static_assert(std::is_same<i64, int64_t>::value);
-static_assert(std::is_same<i8, int8_t>::value);
-static_assert(std::is_same<u16, uint16_t>::value);
-static_assert(std::is_same<u32, uint32_t>::value);
-static_assert(std::is_same<u64, uint64_t>::value);
-static_assert(std::is_same<u8, uint8_t>::value);
+static_assert(std::is_same_v<i16, int16_t>);
+static_assert(std::is_same_v<i32, int32_t>);
+static_assert(std::is_same_v<i64, int64_t>);
+static_assert(std::is_same_v<i8, int8_t>);
+static_assert(std::is_same_v<u16, uint16_t>);
+static_assert(std::is_same_v<u32, uint32_t>);
+static_assert(std::is_same_v<u64, uint64_t>);
+static_assert(std::is_same_v<u8, uint8_t>);
 
 static_assert(sizeof(i16) == 2);
 static_assert(sizeof(i32) == 4);
@@ -54,14 +54,14 @@ static_assert(sizeof(u32) == 4);
 static_assert(sizeof(u64) == 8);
 static_assert(sizeof(u8) == 1);
 
-static_assert(std::is_signed<i16>::value);
-static_assert(std::is_signed<i32>::value);
-static_assert(std::is_signed<i64>::value);
-static_assert(std::is_signed<i8>::value);
-static_assert(std::is_unsigned<u16>::value);
-static_assert(std::is_unsigned<u32>::value);
-static_assert(std::is_unsigned<u64>::value);
-static_assert(std::is_unsigned<u8>::value);
+static_assert(std::is_signed_v<i16>);
+static_assert(std::is_signed_v<i32>);
+static_assert(std::is_signed_v<i64>);
+static_assert(std::is_signed_v<i8>);
+static_assert(std::is_unsigned_v<u16>);
+static_assert(std::is_unsigned_v<u32>);
+static_assert(std::is_unsigned_v<u64>);
+static_assert(std::is_unsigned_v<u8>);
 
 using ci16 = const int16_t;
 using ci32 = const int32_t;
@@ -72,14 +72,14 @@ using cu32 = const uint32_t;
 using cu64 = const uint64_t;
 using cu8 = const uint8_t;
 
-static_assert(std::is_same<cu16, const uint16_t>::value);
-static_assert(std::is_same<cu32, const uint32_t>::value);
-static_assert(std::is_same<cu64, const uint64_t>::value);
-static_assert(std::is_same<cu8, const uint8_t>::value);
-static_assert(std::is_same<ci16, const int16_t>::value);
-static_assert(std::is_same<ci32, const int32_t>::value);
-static_assert(std::is_same<ci64, const int64_t>::value);
-static_assert(std::is_same<ci8, const int8_t>::value);
+static_assert(std::is_same_v<cu16, const uint16_t>);
+static_assert(std::is_same_v<cu32, const uint32_t>);
+static_assert(std::is_same_v<cu64, const uint64_t>);
+static_assert(std::is_same_v<cu8, const uint8_t>);
+static_assert(std::is_same_v<ci16, const int16_t>);
+static_assert(std::is_same_v<ci32, const int32_t>);
+static_assert(std::is_same_v<ci64, const int64_t>);
+static_assert(std::is_same_v<ci8, const int8_t>);
 
 static_assert(sizeof(cu16) == 2);
 static_assert(sizeof(cu32) == 4);
@@ -90,14 +90,14 @@ static_assert(sizeof(ci32) == 4);
 static_assert(sizeof(ci64) == 8);
 static_assert(sizeof(ci8) == 1);
 
-static_assert(std::is_signed<ci16>::value);
-static_assert(std::is_signed<ci32>::value);
-static_assert(std::is_signed<ci64>::value);
-static_assert(std::is_signed<ci8>::value);
-static_assert(std::is_unsigned<cu16>::value);
-static_assert(std::is_unsigned<cu32>::value);
-static_assert(std::is_unsigned<cu64>::value);
-static_assert(std::is_unsigned<cu8>::value);
+static_assert(std::is_signed_v<ci16>);
+static_assert(std::is_signed_v<ci32>);
+static_assert(std::is_signed_v<ci64>);
+static_assert(std::is_signed_v<ci8>);
+static_assert(std::is_unsigned_v<cu16>);
+static_assert(std::is_unsigned_v<cu32>);
+static_assert(std::is_unsigned_v<cu64>);
+static_assert(std::is_unsigned_v<cu8>);
 
 using factor_t = float;
 using cfactor = const factor_t;
@@ -117,21 +117,22 @@ public:
 			, m_min(min) {}
 
 	constexpr FactorModifierTempate(const FactorModifierTempate &rhs) = default;
+	constexpr FactorModifierTempate &operator=(const FactorModifierTempate &rhs) = default;
 
-	FactorModifierTempate(FactorModifierTempate &&rhs) noexcept {
+	FactorModifierTempate &operator=(FactorModifierTempate &&rhs) noexcept {
 		m_max = std::move(rhs.m_max);
 		m_min = std::move(rhs.m_min);
-		m_value = std::move(rhs.m_value);
-	}
-
-	~FactorModifierTempate() noexcept = default;
-
-	constexpr FactorModifierTempate &operator=(const FactorModifierTempate &rhs) noexcept {
-		m_value = rhs.value();
-		m_max = rhs.m_max;
-		m_min = rhs.m_min;
+		m_value = value();
 		return *this;
 	}
+
+	FactorModifierTempate(FactorModifierTempate &&rhs) noexcept
+			: m_value(rhs.value())
+			, m_max(std::move(rhs.m_max))
+			, m_min(std::move(rhs.m_min)) {
+	}
+
+	~FactorModifierTempate() = default;
 
 	auto value() const noexcept -> type { return m_value; }
 	auto max() const noexcept { return m_max; }

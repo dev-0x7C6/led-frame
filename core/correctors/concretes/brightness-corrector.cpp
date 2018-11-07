@@ -9,7 +9,7 @@ BrightnessCorrector::BrightnessCorrector(ci32 id, int owner)
 		: ICorrector(id, owner) {
 }
 
-CorrectorType BrightnessCorrector::type() const { return CorrectorType::Brightness; }
+CorrectorType BrightnessCorrector::type() const noexcept { return CorrectorType::Brightness; }
 
 void BrightnessCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == factor().max())

@@ -92,11 +92,10 @@ public:
 	constexpr auto rawData() const noexcept { return m_data; }
 
 private:
-	RibbonBitField m_data;
+	RibbonBitField m_data{};
 };
 
-constexpr RibbonConfiguration::RibbonConfiguration() noexcept
-		: m_data() {}
+constexpr RibbonConfiguration::RibbonConfiguration() noexcept = default;
 constexpr RibbonConfiguration::RibbonConfiguration(const RibbonBitField field) noexcept
 		: m_data(field) {}
 constexpr auto RibbonConfiguration::colorFormat() const noexcept -> Enum::ColorFormat { return static_cast<Enum::ColorFormat>(m_data.format()); }

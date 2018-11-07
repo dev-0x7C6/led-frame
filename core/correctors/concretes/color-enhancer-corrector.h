@@ -8,10 +8,9 @@ namespace Concrete {
 class ColorEnhancerCorrector final : public ICorrector {
 public:
 	explicit ColorEnhancerCorrector(ci32 id, int owner);
-	virtual ~ColorEnhancerCorrector() = default;
 
-	virtual CorrectorType type() const override;
-	virtual void correct(Container::Scanline &scanline) const noexcept override;
+	CorrectorType type() const noexcept final { return CorrectorType::ColorEnhancer; }
+	void correct(Container::Scanline &scanline) const noexcept final;
 };
-}
-}
+} // namespace Concrete
+} // namespace Corrector
