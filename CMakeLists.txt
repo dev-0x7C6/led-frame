@@ -1,5 +1,5 @@
 project(led-frame)
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.9.4)
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -7,14 +7,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wold-style-cast")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-variadic-macros -Wno-old-style-cast")
+cmake_policy(SET CMP0069 NEW)
+include(CheckIPOSupported)
+check_ipo_supported()
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -Wold-style-cast -pedantic")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wno-variadic-macros -Wno-old-style-cast")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fverbose-asm")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror")
 
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
@@ -243,6 +242,9 @@ set(sources_bench
 )
 
 add_executable(led-frame ${sources} ${sources_app} ${rpi-sources} ${x11-sources})
+target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
+target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
+set_target_properties(led-frame PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 if (UNIX AND SUPPORT_X11)
 	target_compile_definitions(led-frame PRIVATE X11)
@@ -252,9 +254,6 @@ if (UNIX AND SUPPORT_RPI)
 	target_compile_definitions(led-frame PRIVATE RPI)
 endif()
 
-target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
-target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
-
 target_link_libraries(led-frame
 	Qt5::Core
 	Qt5::SerialPort
@@ -262,11 +261,12 @@ target_link_libraries(led-frame
 	Qt5::WebSockets
 	${rpi-libs}
 	${x11-libs}
-	"-lpthread"
+	-lpthread
 )
 
 if (TESTS AND GTEST_FOUND)
 	add_executable(led-frame-ut ${sources_ut})
+	set_target_properties(led-frame-ut PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 	target_link_libraries(led-frame-ut
 		Qt5::Core
@@ -278,6 +278,8 @@ endif()
 
 if (BENCHMARKS)
 	add_executable(led-frame-benchmark ${sources_bench})
+	set_target_properties(led-frame-benchmark PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+
 	target_link_libraries(led-frame-benchmark
 		Qt5::Core
 		-lbenchmark
