@@ -5,6 +5,8 @@
 #include <limits>
 #include <type_traits>
 
+#include <externals/common/types.hpp>
+
 template <typename type>
 constexpr auto is_class_efficient_func() noexcept {
 	return std::is_copy_assignable_v<type> &&
@@ -26,15 +28,6 @@ class is_class_cxx14_efficient : public std::integral_constant<bool, is_class_ef
 
 template <typename type>
 class is_class_cxx14_efficient_nothrow : public std::integral_constant<bool, is_class_efficient_nothrow_func<type>()> {};
-
-using i16 = int16_t;
-using i32 = int32_t;
-using i64 = int64_t;
-using i8 = int8_t;
-using u16 = uint16_t;
-using u32 = uint32_t;
-using u64 = uint64_t;
-using u8 = uint8_t;
 
 static_assert(std::is_same_v<i16, int16_t>);
 static_assert(std::is_same_v<i32, int32_t>);
