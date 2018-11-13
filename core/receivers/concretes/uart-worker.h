@@ -30,5 +30,5 @@ private:
 
 	Functional::ColorStream<270> m_stream;
 };
-}
-}
+} // namespace Concrete
+} // namespace Receiver

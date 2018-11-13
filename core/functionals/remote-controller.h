@@ -17,4 +17,4 @@ public:
 private:
 	Manager::MainManager &m_mainManager;
 };
-}
+} // namespace Functional

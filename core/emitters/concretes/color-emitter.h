@@ -22,5 +22,5 @@ private:
 	Container::Scanline m_scanline;
 	QColor m_color;
 };
-}
-}
+} // namespace Concrete
+} // namespace Emitter

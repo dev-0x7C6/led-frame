@@ -14,4 +14,4 @@ public:
 	virtual bool changeEmitterData(int emitterId, const std::string &data) = 0;
 	virtual bool changeEmitter(int receiverId, int emitterId) = 0;
 };
-}
+} // namespace Interface

@@ -16,7 +16,7 @@
 namespace Functional {
 class DevicePort;
 class LoopSync;
-}
+} // namespace Functional
 
 namespace Receiver {
 namespace Concrete {
@@ -46,5 +46,5 @@ private:
 signals:
 	void finished();
 };
-}
-}
+} // namespace Concrete
+} // namespace Receiver

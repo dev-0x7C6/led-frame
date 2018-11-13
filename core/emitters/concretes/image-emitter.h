@@ -24,5 +24,5 @@ private:
 	QImage m_image;
 	QString m_filePath;
 };
-}
-}
+} // namespace Concrete
+} // namespace Emitter

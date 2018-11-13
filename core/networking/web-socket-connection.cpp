@@ -47,22 +47,20 @@ overloaded(Ts...)->overloaded<Ts...>;
 QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
 	QJsonObject result;
 
-	for (const auto & [ key, value ] : atom->properties()) {
+	for (const auto &[key, value] : atom->properties()) {
 		std::visit(overloaded{
 					   [&result, key = key](auto arg) {
-						   if constexpr (std::is_same_v<decltype (arg), std::string>) {
+						   if constexpr (std::is_same_v<decltype(arg), std::string>) {
 							   result.insert(key.c_str(), arg.c_str());
-	}
-	else {
-		result.insert(QString::fromStdString(key), arg);
-	};
-}
-,
-},
+						   } else {
+							   result.insert(QString::fromStdString(key), arg);
+						   };
+					   },
+				   },
 			value);
-}
+	}
 
-return result;
+	return result;
 }
 
 // documentation/protocol/notification.md

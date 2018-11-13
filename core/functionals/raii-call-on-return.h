@@ -14,4 +14,4 @@ public:
 private:
 	std::function<void()> m_destroy;
 };
-}
+} // namespace Functional

@@ -10,4 +10,4 @@ public:
 
 	static DebugNotification &instance();
 };
-}
+} // namespace Functional

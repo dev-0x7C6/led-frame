@@ -20,4 +20,4 @@ public:
 	virtual auto height() const noexcept -> u32 = 0;
 	virtual auto bytesPerPixel() const noexcept -> u32 = 0;
 };
-}
+} // namespace Interface

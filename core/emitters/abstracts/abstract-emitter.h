@@ -18,5 +18,5 @@ public:
 private:
 	std::string m_name;
 };
-}
-}
+} // namespace Abstract
+} // namespace Emitter

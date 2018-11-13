@@ -29,5 +29,5 @@ private:
 	u32 m_w = 0;
 	u32 m_h = 0;
 };
-}
-}
+} // namespace Capture
+} // namespace Functional

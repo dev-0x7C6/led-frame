@@ -23,5 +23,5 @@ private:
 	std::atomic<bool> m_interrupted;
 	ci32 m_screenId;
 };
-}
-}
+} // namespace Concrete
+} // namespace Emitter

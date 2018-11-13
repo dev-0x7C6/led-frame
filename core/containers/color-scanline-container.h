@@ -187,4 +187,4 @@ inline static std::array<color, newsize> createInterpolatedColorArray(const std:
 
 	return result;
 }
-}
+} // namespace Container

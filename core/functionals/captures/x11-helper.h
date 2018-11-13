@@ -23,5 +23,5 @@ private:
 	Window m_window;
 	XImage *m_frame;
 };
-}
-}
+} // namespace Helper
+} // namespace Functional

@@ -36,5 +36,5 @@ private:
 	std::atomic<int> m_w{0};
 	std::atomic<int> m_h{0};
 };
-}
-}
+} // namespace Helper
+} // namespace Functional

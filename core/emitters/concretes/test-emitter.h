@@ -21,5 +21,5 @@ private:
 	std::unique_ptr<QTimer> m_timer;
 	u8 m_currentStep = 0;
 };
-}
-}
+} // namespace Concrete
+} // namespace Emitter

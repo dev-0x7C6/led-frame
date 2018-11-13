@@ -22,4 +22,4 @@ private:
 	std::string_view m_manufacturer = nullptr;
 	cu64 m_baudrate = 500000;
 };
-}
+} // namespace Container

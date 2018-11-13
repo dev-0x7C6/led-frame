@@ -64,5 +64,5 @@ public:
 	static QString notification(const ProtocolEvent event, const IEmitter *emitter);
 	static QString notification(const ProtocolEvent event, const IReceiver *receiver);
 };
-}
-}
+} // namespace Protocol
+} // namespace Network

@@ -15,4 +15,4 @@ public:
 private:
 	ReferenceCounter &m_counter;
 };
-}
+} // namespace Functional

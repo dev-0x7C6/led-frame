@@ -11,5 +11,5 @@ public:
 
 	virtual EmitterType type() const override;
 };
-}
-}
+} // namespace Concrete
+} // namespace Emitter

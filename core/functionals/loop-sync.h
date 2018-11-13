@@ -20,4 +20,4 @@ private:
 	u32 m_alltime;
 	u32 m_loop;
 };
-}
+} // namespace Functional

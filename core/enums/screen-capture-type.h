@@ -12,4 +12,4 @@ enum class ScreenCaptureType {
 	DispmanxScreenCapture,
 #endif
 };
-}
+} // namespace Enum

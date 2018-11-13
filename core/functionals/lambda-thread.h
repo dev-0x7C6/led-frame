@@ -16,4 +16,4 @@ protected:
 private:
 	std::function<void()> m_lambda;
 };
-}
+} // namespace Functional

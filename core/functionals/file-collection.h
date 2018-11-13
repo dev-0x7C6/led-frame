@@ -37,4 +37,4 @@ public:
 private:
 	collection_t m_collection;
 };
-}
+} // namespace Functional

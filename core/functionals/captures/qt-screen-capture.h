@@ -23,5 +23,5 @@ public:
 private:
 	QImage m_frame;
 };
-}
-}
+} // namespace Capture
+} // namespace Functional

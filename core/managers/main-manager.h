@@ -55,4 +55,4 @@ private:
 	std::list<std::unique_ptr<Network::UdpBroadcastService>> m_broadcasts;
 	QTimer m_deviceScan;
 };
-}
+} // namespace Manager

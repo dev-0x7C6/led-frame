@@ -28,4 +28,4 @@ private:
 	const std::string m_deviceName;
 	const u16 m_servicePort;
 };
-}
+} // namespace Network

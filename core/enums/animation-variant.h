@@ -18,4 +18,4 @@ constexpr type getAnimationVariantTypes() {
 		AnimationVariant::Candle,
 	}};
 }
-}
+} // namespace Enum

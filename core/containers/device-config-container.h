@@ -27,4 +27,4 @@ private:
 	u32 m_version = 0;
 	std::array<RibbonBitField, RibbonCount> m_ribbon;
 };
-}
+} // namespace Container

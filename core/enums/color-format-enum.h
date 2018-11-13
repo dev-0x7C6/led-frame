@@ -32,4 +32,4 @@ inline auto name(const ColorFormat &format) {
 
 	return "";
 }
-}
+} // namespace Enum

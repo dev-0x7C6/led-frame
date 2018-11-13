@@ -25,4 +25,4 @@ inline auto name(const Position &position) {
 
 	return "";
 }
-}
+} // namespace Enum

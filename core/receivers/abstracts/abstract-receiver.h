@@ -31,5 +31,5 @@ private:
 	std::string m_name;
 	std::unique_ptr<Functional::RaiiReferenceCounter> m_acquiredEmitter = nullptr;
 };
-}
-}
+} // namespace Abstract
+} // namespace Receiver

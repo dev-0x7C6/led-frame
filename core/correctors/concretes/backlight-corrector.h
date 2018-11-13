@@ -12,5 +12,5 @@ public:
 	CorrectorType type() const noexcept final { return CorrectorType::Backlight; }
 	void correct(Container::Scanline &scanline) const noexcept final;
 };
-}
-}
+} // namespace Concrete
+} // namespace Corrector

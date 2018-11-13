@@ -7,7 +7,7 @@ namespace Functional {
 namespace Helper {
 class X11Helper;
 }
-}
+} // namespace Functional
 
 namespace Functional {
 namespace Capture {
@@ -31,5 +31,5 @@ private:
 	u32 m_h = 0;
 	u32 m_bpp = 4;
 };
-}
-}
+} // namespace Capture
+} // namespace Functional

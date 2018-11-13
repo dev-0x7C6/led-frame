@@ -91,7 +91,7 @@ void MainManager::rescan() {
 		device->setStopBits(QSerialPort::OneStop);
 		auto thread = std::make_unique<UartReceiver>(id++, std::move(device));
 		auto interface = thread.get();
-		connect(interface, &UartReceiver::finished, this, [ this, id = interface->id() ]() {
+		connect(interface, &UartReceiver::finished, this, [this, id = interface->id()]() {
 			m_broadcasts.remove_if([id](const auto &match) {
 				return id == match->id();
 			});

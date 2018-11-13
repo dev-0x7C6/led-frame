@@ -25,4 +25,4 @@ private:
 	QSettings &m_settings;
 	MainManager &m_mainManager;
 };
-}
+} // namespace Manager

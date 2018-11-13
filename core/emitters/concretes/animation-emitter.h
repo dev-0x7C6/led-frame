@@ -22,5 +22,5 @@ private:
 	Container::Scanline m_colors;
 	QVariantAnimation m_animation;
 };
-}
-}
+} // namespace Concrete
+} // namespace Emitter

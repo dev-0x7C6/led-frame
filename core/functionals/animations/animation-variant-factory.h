@@ -14,5 +14,5 @@ public:
 
 	static void setup(QVariantAnimation &animation, const Enum::AnimationVariant &type) noexcept;
 };
-}
-}
+} // namespace Animation
+} // namespace Functional

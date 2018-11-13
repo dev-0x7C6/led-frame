@@ -20,15 +20,15 @@ overloaded(Ts...)->overloaded<Ts...>;
 void DebugNotification::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
 	std::cout << "debug: " << toString(type) << ", " << toString(atom->category()) << std::endl;
 
-	for (const auto & [ key, value ] : atom->properties()) {
+	for (const auto &[key, value] : atom->properties()) {
 		std::visit(overloaded{
-					   [key = key](auto arg) { std::cout << "  key: " << key << " [" << arg << "]" << std::endl;
-	}
-	,
-},
+					   [key = key](auto arg) {
+						   std::cout << "  key: " << key << " [" << arg << "]" << std::endl;
+					   },
+				   },
 			value);
-}
-std::cout << std::endl;
+	}
+	std::cout << std::endl;
 }
 
 DebugNotification &DebugNotification::instance() {

@@ -31,5 +31,5 @@ private:
 	int m_w;
 	int m_h;
 };
-}
-}
+} // namespace Helper
+} // namespace Functional

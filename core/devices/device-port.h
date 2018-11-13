@@ -16,4 +16,4 @@ public:
 private:
 	Container::DeviceConfigContainer m_config;
 };
-}
+} // namespace Functional
