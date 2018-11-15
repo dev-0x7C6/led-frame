@@ -5,8 +5,6 @@
 IEmitter::IEmitter(ci32 id)
 		: IAtom(id) {}
 
-IEmitter::~IEmitter() = default;
-
 void IEmitter::commit(const Container::Scanline &scanline) noexcept {
 	std::lock_guard _(m_mutex);
 	m_data = scanline;
@@ -24,7 +22,7 @@ auto IEmitter::acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCo
 
 auto IEmitter::usages() const noexcept -> int { return m_counter; }
 
-void IEmitter::interpret(std::experimental::any data) noexcept {
+void IEmitter::interpret(std::any data) noexcept {
 	std::cout << "default implementation: " << data.type().name() << std::endl;
 }
 bool IEmitter::isFirstFrameReady() const noexcept { return m_firstFrameReady == 1; }

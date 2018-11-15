@@ -15,4 +15,3 @@ OffEmitter::OffEmitter(ci32 id)
 	commit(scanline);
 }
 
-EmitterType OffEmitter::type() const { return EmitterType::Off; }

@@ -19,10 +19,6 @@ TestEmitter::TestEmitter(ci32 id)
 
 TestEmitter::~TestEmitter() = default;
 
-EmitterType TestEmitter::type() const {
-	return EmitterType::Test;
-}
-
 void TestEmitter::process() {
 	Container::Scanline scanline;
 	scanline.clear();

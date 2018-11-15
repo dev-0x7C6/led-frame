@@ -10,9 +10,9 @@ namespace Concrete {
 class TestEmitter final : public Abstract::AbstractEmitter {
 public:
 	explicit TestEmitter(ci32 id);
-	virtual ~TestEmitter();
+	~TestEmitter() final;
 
-	virtual EmitterType type() const override;
+	EmitterType type() const final { return EmitterType::Test; };
 
 protected:
 	void process();

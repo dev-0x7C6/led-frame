@@ -21,15 +21,11 @@ AnimationEmitter::~AnimationEmitter() {
 	if (m_animation.state() == QAbstractAnimation::Running)
 		m_animation.stop();
 
-	QObject::disconnect(&m_animation, 0, 0, 0);
+	QObject::disconnect(&m_animation, nullptr, nullptr, nullptr);
 }
 
-EmitterType AnimationEmitter::type() const {
-	return EmitterType::Animation;
-}
-
-void AnimationEmitter::interpret(std::experimental::any data) noexcept {
-	AnimationVariantFactory::setup(m_animation, std::experimental::any_cast<Enum::AnimationVariant>(data));
+void AnimationEmitter::interpret(std::any data) noexcept {
+	AnimationVariantFactory::setup(m_animation, std::any_cast<Enum::AnimationVariant>(data));
 }
 
 void AnimationEmitter::process(const QVariant &value) {

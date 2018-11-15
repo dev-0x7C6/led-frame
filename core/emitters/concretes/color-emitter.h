@@ -10,10 +10,9 @@ namespace Concrete {
 class ColorEmitter final : public Abstract::AbstractEmitter {
 public:
 	explicit ColorEmitter(ci32 id);
-	virtual ~ColorEmitter() = default;
 
-	virtual EmitterType type() const override;
-	virtual u32 framerate() const override { return 1; }
+	EmitterType type() const final { return EmitterType::Color; };
+	u32 framerate() const final { return 1; }
 
 	QColor color() const;
 	void setColor(const QColor &color);

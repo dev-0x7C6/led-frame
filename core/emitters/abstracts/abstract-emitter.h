@@ -8,9 +8,8 @@ namespace Abstract {
 class AbstractEmitter : public IEmitter {
 public:
 	explicit AbstractEmitter(ci32 id);
-	virtual ~AbstractEmitter() override = default;
 
-	virtual Category category() const noexcept final { return Category::Emitter; }
+	Category category() const noexcept final { return Category::Emitter; }
 
 	std::string name() const override;
 	void setName(const std::string &name) override;

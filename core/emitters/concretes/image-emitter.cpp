@@ -19,10 +19,6 @@ ImageEmitter::ImageEmitter(ci32 id, const QString &filePath)
 	loadFromFile(filePath);
 }
 
-EmitterType ImageEmitter::type() const {
-	return EmitterType::Image;
-}
-
 QRect ImageEmitter::fragment(int w, int h, cu32 index) {
 	auto l = static_cast<int>(Scanline::line());
 	auto i = static_cast<int>(index) % l;

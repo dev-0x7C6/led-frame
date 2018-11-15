@@ -7,10 +7,6 @@ ColorEmitter::ColorEmitter(ci32 id)
 	setColor(Qt::darkGreen);
 }
 
-EmitterType ColorEmitter::type() const {
-	return EmitterType::Color;
-}
-
 QColor ColorEmitter::color() const {
 	return m_color;
 }

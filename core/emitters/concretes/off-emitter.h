@@ -9,7 +9,7 @@ class OffEmitter final : public Abstract::AbstractEmitter {
 public:
 	explicit OffEmitter(ci32 id);
 
-	virtual EmitterType type() const override;
+	EmitterType type() const final { return EmitterType::Off; }
 };
 } // namespace Concrete
 } // namespace Emitter

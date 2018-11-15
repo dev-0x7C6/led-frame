@@ -10,10 +10,10 @@ namespace Concrete {
 class AnimationEmitter final : public Abstract::AbstractEmitter {
 public:
 	explicit AnimationEmitter(ci32 id);
-	virtual ~AnimationEmitter();
+	~AnimationEmitter() final;
 
-	virtual EmitterType type() const override;
-	virtual void interpret(std::experimental::any data) noexcept override;
+	EmitterType type() const final { return EmitterType::Animation; }
+	void interpret(std::any data) noexcept final;
 
 protected:
 	void process(const QVariant &value);

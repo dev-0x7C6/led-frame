@@ -5,8 +5,8 @@
 #include <core/functionals/raii-reference-counter.h>
 #include <core/generic/iatom.h>
 
+#include <any>
 #include <atomic>
-#include <experimental/any>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -14,7 +14,6 @@
 class IEmitter : public IAtom {
 public:
 	explicit IEmitter(ci32 id);
-	virtual ~IEmitter();
 
 	virtual std::string name() const = 0;
 	virtual EmitterType type() const = 0;
@@ -29,7 +28,7 @@ public:
 	auto acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter>;
 	auto usages() const noexcept -> int;
 
-	virtual void interpret(std::experimental::any data) noexcept;
+	virtual void interpret(std::any data) noexcept;
 
 	bool isFirstFrameReady() const noexcept;
 
