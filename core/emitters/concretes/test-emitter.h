@@ -12,7 +12,7 @@ public:
 	explicit TestEmitter(ci32 id);
 	~TestEmitter() final;
 
-	EmitterType type() const final { return EmitterType::Test; };
+	EmitterType type() const final { return EmitterType::Test; }
 
 protected:
 	void process();

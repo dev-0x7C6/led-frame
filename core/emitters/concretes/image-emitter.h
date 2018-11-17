@@ -12,7 +12,7 @@ public:
 	explicit ImageEmitter(ci32 id);
 	explicit ImageEmitter(ci32 id, const QString &filePath);
 
-	EmitterType type() const final { return EmitterType::Image; };
+	EmitterType type() const final { return EmitterType::Image; }
 	u32 framerate() const final { return 1; }
 
 	QRect fragment(int w, int h, cu32 index);
