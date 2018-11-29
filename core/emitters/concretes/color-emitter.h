@@ -11,7 +11,7 @@ class ColorEmitter final : public Abstract::AbstractEmitter {
 public:
 	explicit ColorEmitter(ci32 id);
 
-	EmitterType type() const final { return EmitterType::Color; };
+	EmitterType type() const final { return EmitterType::Color; }
 	u32 framerate() const final { return 1; }
 
 	QColor color() const;

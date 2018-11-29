@@ -11,7 +11,7 @@ namespace Concrete {
 class ScreenEmitter final : public QThread, public Abstract::AbstractEmitter {
 public:
 	explicit ScreenEmitter(ci32 id, ci32 screenId = 0);
-	virtual ~ScreenEmitter();
+	~ScreenEmitter() final;
 
 	virtual EmitterType type() const override;
 
