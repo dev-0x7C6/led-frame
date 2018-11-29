@@ -18,13 +18,13 @@ bool X11ShmHelper::capture(ci32 x, ci32 y, ci32 w, ci32 h) {
 	if (!(m_x == x && m_y == y && m_w == w && m_h == h)) {
 		cleanup();
 
-		m_frame = XShmCreateImage(m_display, 0, DisplayPlanes(m_display, 0), ZPixmap, 0, &m_shminfo, w, h);
+		m_frame = XShmCreateImage(m_display, nullptr, DisplayPlanes(m_display, 0), ZPixmap, nullptr, &m_shminfo, w, h);
 		const auto size = m_frame->bytes_per_line * m_frame->height;
 		m_shminfo.shmid = shmget(IPC_PRIVATE, size, IPC_CREAT | 0777);
-		m_shminfo.shmaddr = m_frame->data = reinterpret_cast<char *>(shmat(m_shminfo.shmid, 0, 0));
+		m_shminfo.shmaddr = m_frame->data = reinterpret_cast<char *>(shmat(m_shminfo.shmid, nullptr, 0));
 		m_shminfo.readOnly = false;
 		XShmAttach(m_display, &m_shminfo);
-		shmctl(m_shminfo.shmid, IPC_RMID, 0);
+		shmctl(m_shminfo.shmid, IPC_RMID, nullptr);
 
 		m_x = x;
 		m_y = y;

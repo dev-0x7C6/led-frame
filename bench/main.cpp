@@ -90,7 +90,7 @@ static void color_interpolation(benchmark::State &state) {
 	factor_t value = 0;
 
 	while (state.KeepRunning()) {
-		value += 0.01;
+		value += 0.01f;
 
 		if (value >= static_cast<factor_t>(1.0))
 			value = 0;

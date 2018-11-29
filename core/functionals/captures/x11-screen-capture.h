@@ -15,15 +15,19 @@ namespace Capture {
 class X11ScreenCapture final : public Interface::IScreenCapture {
 public:
 	explicit X11ScreenCapture();
-	virtual ~X11ScreenCapture();
+	X11ScreenCapture(const X11ScreenCapture &) = delete;
+	X11ScreenCapture(X11ScreenCapture &&) noexcept = delete;
+	X11ScreenCapture &operator=(const X11ScreenCapture &) = delete;
+	X11ScreenCapture &operator=(X11ScreenCapture &&) noexcept = delete;
+	~X11ScreenCapture() final;
 
-	virtual Enum::ScreenCaptureType type() const override;
-	virtual bool capture(ci32 id) override;
+	Enum::ScreenCaptureType type() const final;
+	bool capture(ci32 id) final;
 
-	virtual auto data() const noexcept -> ccolor * override;
-	virtual auto width() const noexcept -> u32 override { return m_w; }
-	virtual auto height() const noexcept -> u32 override { return m_h; }
-	virtual auto bytesPerPixel() const noexcept -> u32 override { return m_bpp; }
+	auto data() const noexcept -> ccolor * final;
+	auto width() const noexcept -> u32 final { return m_w; }
+	auto height() const noexcept -> u32 final { return m_h; }
+	auto bytesPerPixel() const noexcept -> u32 final { return m_bpp; }
 
 private:
 	std::unique_ptr<Functional::Helper::X11Helper> m_helper;

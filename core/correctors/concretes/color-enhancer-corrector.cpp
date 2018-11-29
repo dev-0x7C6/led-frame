@@ -17,7 +17,7 @@ void ColorEnhancerCorrector::correct(Container::Scanline &scanline) const noexce
 	if (factor().value() == factor().min())
 		return;
 
-	const auto f = m_factor.factor() + 1.0;
+	const auto f = m_factor.factor() + 1.0f;
 
 	for (auto &value : scanline.array()) {
 		std::array<color, 3> colors{{

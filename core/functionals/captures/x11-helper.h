@@ -9,11 +9,11 @@ namespace Helper {
 
 class X11Helper {
 public:
-	explicit X11Helper();
-	virtual ~X11Helper();
+	explicit X11Helper() noexcept;
+	~X11Helper();
 
-	bool capture(ci32 x, ci32 y, ci32 w, ci32 h);
-	ccolor *data();
+	bool capture(i32 x, i32 y, i32 w, i32 h);
+	ccolor *data() noexcept;
 
 private:
 	void destroyFrame();

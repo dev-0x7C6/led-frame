@@ -12,17 +12,21 @@ class X11ShmHelper;
 namespace Functional {
 namespace Capture {
 
-class X11ShmScreenCapture : public Interface::IScreenCapture {
+class X11ShmScreenCapture final : public Interface::IScreenCapture {
 public:
 	explicit X11ShmScreenCapture();
-	virtual ~X11ShmScreenCapture();
+	X11ShmScreenCapture(const X11ShmScreenCapture &) = delete;
+	X11ShmScreenCapture(X11ShmScreenCapture &&) noexcept = delete;
+	X11ShmScreenCapture &operator=(const X11ShmScreenCapture &) = delete;
+	X11ShmScreenCapture &operator=(X11ShmScreenCapture &&) noexcept = delete;
+	~X11ShmScreenCapture() final;
 
-	virtual Enum::ScreenCaptureType type() const override;
-	virtual bool capture(ci32 id) override;
-	virtual auto data() const noexcept -> ccolor * override;
-	virtual auto width() const noexcept -> u32 override { return m_w; }
-	virtual auto height() const noexcept -> u32 override { return m_h; }
-	virtual auto bytesPerPixel() const noexcept -> u32 override { return m_bpp; }
+	Enum::ScreenCaptureType type() const final;
+	bool capture(ci32 id) final;
+	auto data() const noexcept -> ccolor * final;
+	auto width() const noexcept -> u32 final { return m_w; }
+	auto height() const noexcept -> u32 final { return m_h; }
+	auto bytesPerPixel() const noexcept -> u32 final { return m_bpp; }
 
 private:
 	std::unique_ptr<Functional::Helper::X11ShmHelper> m_helper;
