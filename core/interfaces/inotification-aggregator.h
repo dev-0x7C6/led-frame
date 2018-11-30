@@ -4,7 +4,6 @@ class INotification;
 
 class INotificationAggregator {
 public:
-	explicit INotificationAggregator() = default;
 	virtual ~INotificationAggregator() = default;
 
 	virtual void attach(INotification &object) noexcept = 0;

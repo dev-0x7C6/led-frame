@@ -54,5 +54,5 @@ private:
 
 static_assert(is_class_cxx14_efficient_nothrow<ColorAveragingBuffer>::value);
 static_assert(alignof(ColorAveragingBuffer));
-static_assert(sizeof(ColorAveragingBuffer) == 16);
+static_assert(sizeof(ColorAveragingBuffer) == sizeof(i32) * 4);
 } // namespace Functional

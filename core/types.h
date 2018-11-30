@@ -127,13 +127,13 @@ public:
 
 	~FactorModifierTempate() = default;
 
-	auto value() const noexcept -> type { return m_value; }
-	auto max() const noexcept { return m_max; }
-	auto min() const noexcept { return m_min; }
+	constexpr auto value() const noexcept -> type { return m_value; }
+	constexpr auto max() const noexcept { return m_max; }
+	constexpr auto min() const noexcept { return m_min; }
 
-	auto setValue(const type value) { m_value = value; }
+	constexpr auto setValue(const type value) { m_value = value; }
 
-	auto factor() const noexcept {
+	constexpr auto factor() const noexcept {
 		const auto value = static_cast<factor_t>(m_value - m_min);
 		const auto max = static_cast<factor_t>(m_max - m_min);
 		return value / max;
