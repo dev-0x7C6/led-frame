@@ -49,7 +49,7 @@ private:
 	i32 m_r{0};
 	i32 m_g{0};
 	i32 m_b{0};
-	i32 m_c{1};
+	i32 m_c{0};
 };
 
 static_assert(is_class_cxx14_efficient_nothrow<ColorAveragingBuffer>::value);
