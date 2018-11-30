@@ -8,8 +8,8 @@
 using namespace Corrector::Concrete;
 using namespace Enum;
 
-std::shared_ptr<ICorrector> Factory::make_corrector(CorrectorType type, int owner) noexcept {
-	static int id = 0;
+std::shared_ptr<ICorrector> Factory::make_corrector(CorrectorType type, i32 owner) noexcept {
+	static i32 id = 0;
 
 	switch (type) {
 		case CorrectorType::Brightness: return std::make_shared<BrightnessCorrector>(id++, owner);
