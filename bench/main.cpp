@@ -12,6 +12,8 @@ using namespace Container;
 using namespace Enum;
 using namespace Functional;
 
+namespace Bench {
+
 class ColorScene {
 public:
 	explicit ColorScene(cu32 w, cu32 h)
@@ -101,17 +103,20 @@ static void color_interpolation(benchmark::State &state) {
 	}
 }
 
-static void image_block_processor_process_480p_auto(benchmark::State &state) { image_processor_process<640, 480>(state); }
-static void image_block_processor_process_720p_auto(benchmark::State &state) { image_processor_process<1280, 720>(state); }
-static void image_block_processor_process_1080p_auto(benchmark::State &state) { image_processor_process<1920, 1080>(state); }
-static void image_block_processor_process_4K_auto(benchmark::State &state) { image_processor_process<3840, 2160>(state); }
-static void image_block_processor_process_8K_auto(benchmark::State &state) { image_processor_process<7680, 4320>(state); }
+void image_block_processor_process_480p_auto(benchmark::State &state) { image_processor_process<640, 480>(state); }
+void image_block_processor_process_720p_auto(benchmark::State &state) { image_processor_process<1280, 720>(state); }
+void image_block_processor_process_1080p_auto(benchmark::State &state) { image_processor_process<1920, 1080>(state); }
+void image_block_processor_process_4K_auto(benchmark::State &state) { image_processor_process<3840, 2160>(state); }
+void image_block_processor_process_8K_auto(benchmark::State &state) { image_processor_process<7680, 4320>(state); }
 
-static void image_block_processor_process_480p_fixed(benchmark::State &state) { image_processor_process<640, 480, 1>(state); }
-static void image_block_processor_process_720p_fixed(benchmark::State &state) { image_processor_process<1280, 720, 1>(state); }
-static void image_block_processor_process_1080p_fixed(benchmark::State &state) { image_processor_process<1920, 1080, 1>(state); }
-static void image_block_processor_process_4K_fixed(benchmark::State &state) { image_processor_process<3840, 2160, 1>(state); }
-static void image_block_processor_process_8K_fixed(benchmark::State &state) { image_processor_process<7680, 4320, 1>(state); }
+void image_block_processor_process_480p_fixed(benchmark::State &state) { image_processor_process<640, 480, 1>(state); }
+void image_block_processor_process_720p_fixed(benchmark::State &state) { image_processor_process<1280, 720, 1>(state); }
+void image_block_processor_process_1080p_fixed(benchmark::State &state) { image_processor_process<1920, 1080, 1>(state); }
+void image_block_processor_process_4K_fixed(benchmark::State &state) { image_processor_process<3840, 2160, 1>(state); }
+void image_block_processor_process_8K_fixed(benchmark::State &state) { image_processor_process<7680, 4320, 1>(state); }
+} // namespace Bench
+
+using namespace Bench;
 
 BENCHMARK(color_interpolation);
 BENCHMARK(color_correction);
