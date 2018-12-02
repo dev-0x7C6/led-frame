@@ -14,53 +14,36 @@ using namespace Functional;
 
 namespace Bench {
 
-class ColorScene {
+class Frame {
 public:
-	explicit ColorScene(cu32 w, cu32 h)
-			: m_w(w)
-			, m_h(h) {
-		m_size = m_w * m_h * m_bpp;
-		m_data = reinterpret_cast<color *>(std::malloc(m_size));
+	explicit Frame(i32 w, i32 h, i32 bpp)
+			: m_bpp(bpp)
+			, m_data(w * h * bpp) {
 	}
 
-	~ColorScene() {
-		if (m_data != nullptr)
-			std::free(reinterpret_cast<void *>(m_data));
-	}
+	const color *data() const noexcept { return m_data.data(); }
+	auto size() const noexcept { return m_data.size(); }
+	auto lenght() const noexcept { return size() / m_bpp; }
 
-	ccolor *data() const noexcept { return m_data; }
-	u32 size() const noexcept { return m_size; }
-	u32 lenght() const noexcept { return m_size / m_bpp; }
-
-	void fill(color value) noexcept {
-		for (u32 i = 0u; i < lenght(); ++i)
-			m_data[i] = value;
+	void fill(const color value) noexcept {
+		std::fill(m_data.begin(), m_data.end(), value);
 	}
 
 private:
-	cu32 m_w = 0;
-	cu32 m_h = 0;
-	cu32 m_bpp = 4;
-	color *m_data = nullptr;
-	u32 m_size = 0;
+	const i32 m_bpp{4};
+	std::vector<color> m_data;
 };
-
-#include <iostream>
 
 template <cu32 w, cu32 h, cu32 step = 0>
 inline static void image_processor_process(benchmark::State &state) {
 	constexpr auto matchColor = 0xffffffffu;
 
-	ColorScene scene(w, h);
+	Frame scene(w, h, 4);
 	scene.fill(matchColor);
 
 	ImageBlockProcessor<ColorAveragingBuffer, 16, 24> processor;
 	while (state.KeepRunning()) {
 		processor.process(scene.data(), w, h, step);
-	}
-
-	if (processor.output().at(0) == 0) {
-		std::cout << std::endl;
 	}
 }
 
