@@ -12,6 +12,33 @@ using namespace Container;
 using namespace Enum;
 using namespace Functional;
 
+/* Best run on: x86_64 Intel(R) Core(TM) i5-4670K CPU @ 3.40GHz (4.30GHz)
+
+2018-12-02 19:38:07
+Run on (4 X 4300 MHz CPU s)
+CPU Caches:
+  L1 Data 32K (x4)
+  L1 Instruction 32K (x4)
+  L2 Unified 256K (x4)
+  L3 Unified 6144K (x1)
+---------------------------------------------------------------------------------
+Benchmark                                          Time           CPU Iterations
+---------------------------------------------------------------------------------
+color_interpolation                              407 ns        407 ns    1719033
+color_correction                                  10 ns         10 ns   71524940
+image_block_processor_process_480p_auto         4534 ns       4531 ns     154550
+image_block_processor_process_720p_auto         6452 ns       6446 ns     108601
+image_block_processor_process_1080p_auto        8810 ns       8800 ns      79501
+image_block_processor_process_4K_auto          17964 ns      17943 ns      39041
+image_block_processor_process_8K_auto          40865 ns      40802 ns      17222
+image_block_processor_process_480p_fixed        9333 ns       9324 ns      75076
+image_block_processor_process_720p_fixed       22053 ns      22028 ns      31773
+image_block_processor_process_1080p_fixed      47948 ns      47865 ns      14623
+image_block_processor_process_4K_fixed        355167 ns     353468 ns       2010
+image_block_processor_process_8K_fixed       1387108 ns    1379685 ns        508
+
+*/
+
 namespace Bench {
 
 class Frame {
