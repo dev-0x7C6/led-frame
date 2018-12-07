@@ -7,12 +7,7 @@ class QVariantAnimation;
 namespace Functional {
 namespace Animation {
 
-class AnimationVariantFactory {
-public:
-	explicit AnimationVariantFactory() = delete;
-	virtual ~AnimationVariantFactory() = delete;
+void make_animation(QVariantAnimation &animation, Enum::AnimationVariant type) noexcept;
 
-	static void setup(QVariantAnimation &animation, const Enum::AnimationVariant &type) noexcept;
-};
 } // namespace Animation
 } // namespace Functional

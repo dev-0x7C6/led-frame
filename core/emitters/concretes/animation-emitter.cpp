@@ -12,7 +12,7 @@ AnimationEmitter::AnimationEmitter(ci32 id)
 
 {
 	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, [this](const auto &value) { process(value); });
-	AnimationVariantFactory::setup(m_animation, Enum::AnimationVariant::Candle);
+	make_animation(m_animation, Enum::AnimationVariant::Candle);
 	m_colors.fill(m_animation.keyValueAt(0).value<QColor>().rgba());
 	commit(m_colors);
 }
@@ -25,7 +25,7 @@ AnimationEmitter::~AnimationEmitter() {
 }
 
 void AnimationEmitter::interpret(std::any data) noexcept {
-	AnimationVariantFactory::setup(m_animation, std::any_cast<Enum::AnimationVariant>(data));
+	make_animation(m_animation, std::any_cast<Enum::AnimationVariant>(data));
 }
 
 void AnimationEmitter::process(const QVariant &value) {

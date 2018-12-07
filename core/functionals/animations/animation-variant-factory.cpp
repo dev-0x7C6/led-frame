@@ -6,7 +6,7 @@
 using namespace Enum;
 using namespace Functional::Animation;
 
-void AnimationVariantFactory::setup(QVariantAnimation &animation, const AnimationVariant &type) noexcept {
+void Functional::Animation::make_animation(QVariantAnimation &animation, const AnimationVariant type) noexcept {
 	animation.setKeyValues({});
 
 	switch (type) {
