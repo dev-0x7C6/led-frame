@@ -20,7 +20,7 @@ using namespace Enum;
 using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
 
-UartReceiver::UartReceiver(ci32 id, std::unique_ptr<DevicePort> &&device)
+UartReceiver::UartReceiver(const i32 id, std::unique_ptr<DevicePort> &&device)
 		: AbstractReceiver(id)
 		, m_device(std::move(device))
 		, m_interrupt(false)

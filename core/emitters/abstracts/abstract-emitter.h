@@ -7,7 +7,7 @@ namespace Abstract {
 
 class AbstractEmitter : public IEmitter {
 public:
-	explicit AbstractEmitter(ci32 id);
+	explicit AbstractEmitter(i32 id);
 
 	Category category() const noexcept final { return Category::Emitter; }
 

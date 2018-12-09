@@ -13,7 +13,7 @@ public:
 	~X11Helper();
 
 	bool capture(i32 x, i32 y, i32 w, i32 h);
-	ccolor *data() noexcept;
+	const color *data() noexcept;
 
 private:
 	void destroyFrame();

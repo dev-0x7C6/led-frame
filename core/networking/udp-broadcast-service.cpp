@@ -10,7 +10,7 @@
 
 using namespace Network;
 
-UdpBroadcastService::UdpBroadcastService(const int deviceId, const std::string &deviceName, const cu16 port)
+UdpBroadcastService::UdpBroadcastService(const int deviceId, const std::string &deviceName, const u16 port)
 		: m_socket(std::make_unique<QUdpSocket>())
 		, m_timer(std::make_unique<QTimer>())
 		, m_deviceId(deviceId)

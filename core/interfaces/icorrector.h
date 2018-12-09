@@ -11,7 +11,7 @@
 
 class ICorrector : public IAtom {
 public:
-	inline explicit ICorrector(ci32 id, int owner, Enum::Priority priority = Enum::Priority::Average);
+	inline explicit ICorrector(i32 id, int owner, Enum::Priority priority = Enum::Priority::Average);
 
 	auto category() const noexcept -> Category final { return Category::Corrector; }
 	auto properties() const noexcept -> Properties final {
@@ -53,7 +53,7 @@ private:
 
 // impl
 
-ICorrector::ICorrector(ci32 id, int owner, const Enum::Priority priority)
+ICorrector::ICorrector(const i32 id, int owner, const Enum::Priority priority)
 		: IAtom(id)
 		, m_owner(owner)
 		, m_priority(priority)

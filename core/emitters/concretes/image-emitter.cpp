@@ -9,17 +9,17 @@ using namespace Container;
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-ImageEmitter::ImageEmitter(ci32 id)
+ImageEmitter::ImageEmitter(const i32 id)
 		: AbstractEmitter(id) {
 	loadFromFile("/home/dev/test.jpg");
 }
 
-ImageEmitter::ImageEmitter(ci32 id, const QString &filePath)
+ImageEmitter::ImageEmitter(const i32 id, const QString &filePath)
 		: AbstractEmitter(id) {
 	loadFromFile(filePath);
 }
 
-QRect ImageEmitter::fragment(int w, int h, cu32 index) {
+QRect ImageEmitter::fragment(int w, int h, const u32 index) {
 	auto l = static_cast<int>(Scanline::line());
 	auto i = static_cast<int>(index) % l;
 

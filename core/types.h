@@ -56,47 +56,10 @@ static_assert(std::is_unsigned_v<u32>);
 static_assert(std::is_unsigned_v<u64>);
 static_assert(std::is_unsigned_v<u8>);
 
-using ci16 = const int16_t;
-using ci32 = const int32_t;
-using ci64 = const int64_t;
-using ci8 = const int8_t;
-using cu16 = const uint16_t;
-using cu32 = const uint32_t;
-using cu64 = const uint64_t;
-using cu8 = const uint8_t;
-
-static_assert(std::is_same_v<cu16, const uint16_t>);
-static_assert(std::is_same_v<cu32, const uint32_t>);
-static_assert(std::is_same_v<cu64, const uint64_t>);
-static_assert(std::is_same_v<cu8, const uint8_t>);
-static_assert(std::is_same_v<ci16, const int16_t>);
-static_assert(std::is_same_v<ci32, const int32_t>);
-static_assert(std::is_same_v<ci64, const int64_t>);
-static_assert(std::is_same_v<ci8, const int8_t>);
-
-static_assert(sizeof(cu16) == 2);
-static_assert(sizeof(cu32) == 4);
-static_assert(sizeof(cu64) == 8);
-static_assert(sizeof(cu8) == 1);
-static_assert(sizeof(ci16) == 2);
-static_assert(sizeof(ci32) == 4);
-static_assert(sizeof(ci64) == 8);
-static_assert(sizeof(ci8) == 1);
-
-static_assert(std::is_signed_v<ci16>);
-static_assert(std::is_signed_v<ci32>);
-static_assert(std::is_signed_v<ci64>);
-static_assert(std::is_signed_v<ci8>);
-static_assert(std::is_unsigned_v<cu16>);
-static_assert(std::is_unsigned_v<cu32>);
-static_assert(std::is_unsigned_v<cu64>);
-static_assert(std::is_unsigned_v<cu8>);
-
 using factor_t = float;
 using cfactor = const factor_t;
 
 using color = u32;
-using ccolor = cu32;
 
 using cchar = const char;
 using correct_t = u32;

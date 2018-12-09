@@ -7,7 +7,7 @@
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-TestEmitter::TestEmitter(ci32 id)
+TestEmitter::TestEmitter(const i32 id)
 		: AbstractEmitter(id)
 		, m_timer(std::make_unique<QTimer>(nullptr))
 

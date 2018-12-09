@@ -6,7 +6,7 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional;
 
-BacklightCorrector::BacklightCorrector(ci32 id, int owner)
+BacklightCorrector::BacklightCorrector(const i32 id, int owner)
 		: ICorrector(id, owner, Priority::Lowest) {
 	m_factor = FactorModifier(1, 16, 0);
 	m_enabled = false;

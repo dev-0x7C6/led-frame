@@ -14,7 +14,7 @@ bool X11Helper::capture(const i32 x, const i32 y, const i32 w, const i32 h) {
 	return m_frame != nullptr;
 }
 
-ccolor *X11Helper::data() noexcept { return reinterpret_cast<ccolor *>(m_frame->data); }
+const color *X11Helper::data() noexcept { return reinterpret_cast<const color *>(m_frame->data); }
 
 void X11Helper::destroyFrame() {
 	if (m_frame)

@@ -12,7 +12,7 @@ using namespace Corrector::Concrete;
 using namespace Enum;
 using namespace Functional;
 
-inline void correctAndCheck(ICorrector *iface, const correct_t factor, ccolor fill, ccolor expect) {
+inline void correctAndCheck(ICorrector *iface, const correct_t factor, const color fill, const color expect) {
 	Scanline scanline;
 	scanline.fill(fill);
 	iface->setFactor(factor);

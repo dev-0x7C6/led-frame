@@ -9,7 +9,7 @@ namespace Concrete {
 
 class TestEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit TestEmitter(ci32 id);
+	explicit TestEmitter(i32 id);
 	~TestEmitter() final;
 
 	EmitterType type() const final { return EmitterType::Test; }

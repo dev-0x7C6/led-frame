@@ -17,9 +17,9 @@ public:
 
 	Enum::ScreenCaptureType type() const final;
 
-	bool capture(ci32 id) final;
+	bool capture(i32 id) final;
 
-	auto data() const noexcept -> ccolor * final;
+	auto data() const noexcept -> const color * final;
 	auto width() const noexcept -> u32 final;
 	auto height() const noexcept -> u32 final;
 	auto bytesPerPixel() const noexcept -> u32 final;

@@ -7,7 +7,7 @@
 using namespace Emitter::Concrete;
 using namespace Functional::Animation;
 
-AnimationEmitter::AnimationEmitter(ci32 id)
+AnimationEmitter::AnimationEmitter(const i32 id)
 		: AbstractEmitter(id)
 
 {

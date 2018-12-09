@@ -9,7 +9,7 @@ void RibbonConfiguration::setColorFormat(const ColorFormat format) noexcept {
 	m_data.setFormat(static_cast<u8>(format));
 }
 
-void RibbonConfiguration::setCount(cu8 count) noexcept {
+void RibbonConfiguration::setCount(const u8 count) noexcept {
 	m_data.setFormat(static_cast<u8>(count));
 }
 

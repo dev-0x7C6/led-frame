@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-IEmitter::IEmitter(ci32 id)
+IEmitter::IEmitter(const i32 id)
 		: IAtom(id) {}
 
 void IEmitter::commit(const Container::Scanline &scanline) noexcept {

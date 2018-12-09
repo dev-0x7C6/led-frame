@@ -174,7 +174,7 @@ ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
 }
 
 template <u32 oldsize, u32 newsize>
-inline static std::array<color, newsize> createInterpolatedColorArray(const std::function<color(cu32)> &getColor) {
+inline static std::array<color, newsize> createInterpolatedColorArray(const std::function<color(const u32)> &getColor) {
 	constexpr auto factor = static_cast<factor_t>(oldsize) / static_cast<factor_t>(newsize);
 	std::array<color, newsize> result;
 

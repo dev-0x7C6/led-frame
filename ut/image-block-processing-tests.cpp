@@ -9,7 +9,7 @@ using namespace Functional;
 
 class ColorScene {
 public:
-	explicit ColorScene(cu32 w, cu32 h)
+	explicit ColorScene(const u32 w, const u32 h)
 			: m_w(w)
 			, m_h(h) {
 		m_size = m_w * m_h * m_bpp;
@@ -21,7 +21,7 @@ public:
 			std::free(reinterpret_cast<void *>(m_data));
 	}
 
-	ccolor *data() const noexcept { return m_data; }
+	const color *data() const noexcept { return m_data; }
 	u32 size() const noexcept { return m_size; }
 	u32 lenght() const noexcept { return m_size / m_bpp; }
 
@@ -31,9 +31,9 @@ public:
 	}
 
 private:
-	cu32 m_w = 0;
-	cu32 m_h = 0;
-	cu32 m_bpp = 4;
+	const u32 m_w = 0;
+	const u32 m_h = 0;
+	const u32 m_bpp = 4;
 	color *m_data = nullptr;
 	u32 m_size = 0;
 };

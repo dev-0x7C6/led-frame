@@ -12,7 +12,7 @@ namespace Network {
 
 class UdpBroadcastService final {
 public:
-	explicit UdpBroadcastService(const int deviceId, const std::string &deviceName, cu16 port = 4999);
+	explicit UdpBroadcastService(int deviceId, const std::string &deviceName, u16 port = 4999);
 	virtual ~UdpBroadcastService();
 
 	int id() const { return m_deviceId; }

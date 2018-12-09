@@ -22,9 +22,9 @@ public:
 	~X11ScreenCapture() final;
 
 	Enum::ScreenCaptureType type() const final;
-	bool capture(ci32 id) final;
+	bool capture(i32 id) final;
 
-	auto data() const noexcept -> ccolor * final;
+	auto data() const noexcept -> const color * final;
 	auto width() const noexcept -> u32 final { return m_w; }
 	auto height() const noexcept -> u32 final { return m_h; }
 	auto bytesPerPixel() const noexcept -> u32 final { return m_bpp; }

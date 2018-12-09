@@ -13,9 +13,9 @@ public:
 
 	virtual Enum::ScreenCaptureType type() const = 0;
 
-	virtual bool capture(ci32 id = 0) = 0;
+	virtual bool capture(i32 id = 0) = 0;
 
-	virtual auto data() const noexcept -> ccolor * = 0;
+	virtual auto data() const noexcept -> const color * = 0;
 	virtual auto width() const noexcept -> u32 = 0;
 	virtual auto height() const noexcept -> u32 = 0;
 	virtual auto bytesPerPixel() const noexcept -> u32 = 0;

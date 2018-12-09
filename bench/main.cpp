@@ -61,7 +61,7 @@ private:
 	std::vector<color> m_data;
 };
 
-template <cu32 w, cu32 h, cu32 step = 0>
+template <u32 w, u32 h, u32 step = 0>
 inline static void image_processor_process(benchmark::State &state) {
 	constexpr auto matchColor = 0xffffffffu;
 

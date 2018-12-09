@@ -6,7 +6,7 @@
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-OffEmitter::OffEmitter(ci32 id)
+OffEmitter::OffEmitter(const i32 id)
 		: AbstractEmitter(id)
 
 {
@@ -14,4 +14,3 @@ OffEmitter::OffEmitter(ci32 id)
 	scanline.clear();
 	commit(scanline);
 }
-

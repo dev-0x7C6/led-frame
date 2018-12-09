@@ -16,7 +16,7 @@ X11ShmScreenCapture::X11ShmScreenCapture()
 X11ShmScreenCapture::~X11ShmScreenCapture() = default;
 
 ScreenCaptureType X11ShmScreenCapture::type() const { return ScreenCaptureType::X11ShmScreenCapture; }
-bool X11ShmScreenCapture::capture(ci32 id) {
+bool X11ShmScreenCapture::capture(const i32 id) {
 	if (QGuiApplication::screens().count() <= id)
 		return false;
 
@@ -27,4 +27,4 @@ bool X11ShmScreenCapture::capture(ci32 id) {
 	return m_helper->capture(rect.x(), rect.y(), m_w, m_h);
 }
 
-ccolor *X11ShmScreenCapture::data() const noexcept { return m_helper->data(); }
+const color *X11ShmScreenCapture::data() const noexcept { return m_helper->data(); }

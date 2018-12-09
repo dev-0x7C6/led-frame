@@ -9,7 +9,7 @@ using namespace Functional::Capture;
 
 ScreenCaptureType QtScreenCapture::type() const { return ScreenCaptureType::QtScreenCapture; }
 
-bool QtScreenCapture::capture(ci32 id) {
+bool QtScreenCapture::capture(const i32 id) {
 	if (QGuiApplication::screens().count() <= id)
 		return false;
 
@@ -19,7 +19,7 @@ bool QtScreenCapture::capture(ci32 id) {
 	return !m_frame.isNull();
 }
 
-ccolor *QtScreenCapture::data() const noexcept { return reinterpret_cast<ccolor *>(m_frame.bits()); }
+const color *QtScreenCapture::data() const noexcept { return reinterpret_cast<const color *>(m_frame.bits()); }
 
 u32 QtScreenCapture::width() const noexcept {
 	return static_cast<u32>(m_frame.width());

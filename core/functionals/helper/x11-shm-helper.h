@@ -15,8 +15,8 @@ public:
 	explicit X11ShmHelper();
 	virtual ~X11ShmHelper();
 
-	bool capture(ci32 x, ci32 y, ci32 w, ci32 h);
-	ccolor *data();
+	bool capture(i32 x, i32 y, i32 w, i32 h);
+	const color *data();
 
 private:
 	void cleanup();

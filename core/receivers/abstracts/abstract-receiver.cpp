@@ -8,7 +8,7 @@
 
 using namespace Receiver::Abstract;
 
-AbstractReceiver::AbstractReceiver(ci32 id)
+AbstractReceiver::AbstractReceiver(const i32 id)
 		: IReceiver(id) {
 	m_data.fill(0);
 }

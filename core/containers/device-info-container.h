@@ -8,7 +8,7 @@ namespace Container {
 class DeviceInfo final {
 public:
 	constexpr explicit DeviceInfo();
-	constexpr explicit DeviceInfo(std::string_view description, std::string_view manufacturer, cu64 baudrate)
+	constexpr explicit DeviceInfo(std::string_view description, std::string_view manufacturer, u64 baudrate)
 			: m_description(description)
 			, m_manufacturer(manufacturer)
 			, m_baudrate(baudrate) {}
@@ -20,6 +20,6 @@ public:
 private:
 	std::string_view m_description = nullptr;
 	std::string_view m_manufacturer = nullptr;
-	cu64 m_baudrate = 500000;
+	const u64 m_baudrate{500000};
 };
 } // namespace Container

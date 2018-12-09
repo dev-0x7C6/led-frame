@@ -26,7 +26,7 @@ class UartWorker;
 class UartReceiver final : public QObject, public Receiver::Abstract::AbstractReceiver {
 	Q_OBJECT
 public:
-	explicit UartReceiver(ci32 id, std::unique_ptr<Functional::DevicePort> &&device);
+	explicit UartReceiver(i32 id, std::unique_ptr<Functional::DevicePort> &&device);
 	virtual ~UartReceiver();
 
 	auto type() const noexcept -> ReceiverType override final;

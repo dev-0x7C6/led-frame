@@ -5,7 +5,7 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional;
 
-RedChannelCorrector::RedChannelCorrector(ci32 id, int owner)
+RedChannelCorrector::RedChannelCorrector(const i32 id, int owner)
 		: ICorrector(id, owner) {}
 
 void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
@@ -25,7 +25,7 @@ void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept 
 	}
 }
 
-GreenChannelCorrector::GreenChannelCorrector(ci32 id, int owner)
+GreenChannelCorrector::GreenChannelCorrector(const i32 id, int owner)
 		: ICorrector(id, owner) {}
 
 void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
@@ -45,7 +45,7 @@ void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcep
 	}
 }
 
-BlueChannelCorrector::BlueChannelCorrector(ci32 id, int owner)
+BlueChannelCorrector::BlueChannelCorrector(const i32 id, int owner)
 		: ICorrector(id, owner) {}
 
 void BlueChannelCorrector::correct(Container::Scanline &scanline) const noexcept {

@@ -5,7 +5,7 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional;
 
-BrightnessCorrector::BrightnessCorrector(ci32 id, int owner)
+BrightnessCorrector::BrightnessCorrector(const i32 id, int owner)
 		: ICorrector(id, owner) {
 }
 

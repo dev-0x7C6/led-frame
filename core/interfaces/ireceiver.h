@@ -14,7 +14,7 @@ class IEmitter;
 
 class IReceiver : public IAtom {
 public:
-	explicit IReceiver(ci32 id)
+	explicit IReceiver(const i32 id)
 			: IAtom(id) {}
 	~IReceiver() override = default;
 

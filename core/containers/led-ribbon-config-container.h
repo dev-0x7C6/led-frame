@@ -12,7 +12,7 @@ class RibbonBitField {
 public:
 	constexpr explicit RibbonBitField() = default;
 
-	void fromData(cu16 data) noexcept {
+	void fromData(const u16 data) noexcept {
 		m_direction = get_direction(data);
 		m_position = get_position(data);
 		m_format = get_format(data);
@@ -39,10 +39,10 @@ public:
 	constexpr auto format() const noexcept { return m_format; }
 	constexpr auto position() const noexcept { return m_position; }
 
-	void setCount(cu8 count) noexcept { m_count = count; }
-	void setDirection(cu8 direction) noexcept { m_direction = direction; }
-	void setFormat(cu8 format) noexcept { m_format = format; }
-	void setPosition(cu8 position) noexcept { m_position = position; }
+	void setCount(const u8 count) noexcept { m_count = count; }
+	void setDirection(const u8 direction) noexcept { m_direction = direction; }
+	void setFormat(const u8 format) noexcept { m_format = format; }
+	void setPosition(const u8 position) noexcept { m_position = position; }
 
 private:
 	u8 m_count{};
@@ -61,15 +61,15 @@ private:
 	constexpr static auto format_mask = 0b00000111;
 	constexpr static auto count_mask = 0b11111111;
 
-	constexpr static u8 get_direction(cu16 value) { return (value >> direction_shift) & direction_mask; }
-	constexpr static u8 get_position(cu16 value) { return (value >> position_shift) & position_mask; }
-	constexpr static u8 get_format(cu16 value) { return (value >> format_shift) & format_mask; }
-	constexpr static u8 get_count(cu16 value) { return (value >> count_shift) & count_mask; }
+	constexpr static u8 get_direction(const u16 value) { return (value >> direction_shift) & direction_mask; }
+	constexpr static u8 get_position(const u16 value) { return (value >> position_shift) & position_mask; }
+	constexpr static u8 get_format(const u16 value) { return (value >> format_shift) & format_mask; }
+	constexpr static u8 get_count(const u16 value) { return (value >> count_shift) & count_mask; }
 
-	constexpr static u16 put_direction(cu8 value) { return static_cast<u16>(value << direction_shift); }
-	constexpr static u16 put_position(cu8 value) { return static_cast<u16>(value << position_shift); }
-	constexpr static u16 put_format(cu8 value) { return static_cast<u16>(value << format_shift); }
-	constexpr static u16 put_count(cu8 value) { return static_cast<u16>(value << count_shift); }
+	constexpr static u16 put_direction(const u8 value) { return static_cast<u16>(value << direction_shift); }
+	constexpr static u16 put_position(const u8 value) { return static_cast<u16>(value << position_shift); }
+	constexpr static u16 put_format(const u8 value) { return static_cast<u16>(value << format_shift); }
+	constexpr static u16 put_count(const u8 value) { return static_cast<u16>(value << count_shift); }
 };
 
 static_assert(sizeof(RibbonBitField) == 4);
@@ -85,7 +85,7 @@ public:
 	constexpr auto position() const noexcept -> Enum::Position;
 
 	void setColorFormat(Enum::ColorFormat format) noexcept;
-	void setCount(cu8 count) noexcept;
+	void setCount(u8 count) noexcept;
 	void setDirection(Enum::Direction direction) noexcept;
 	void setPosition(Enum::Position position) noexcept;
 

@@ -7,7 +7,7 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional;
 
-ColorEnhancerCorrector::ColorEnhancerCorrector(ci32 id, int owner)
+ColorEnhancerCorrector::ColorEnhancerCorrector(const i32 id, int owner)
 		: ICorrector(id, owner, Priority::Higher) {
 	m_factor.setValue(0);
 	m_enabled = false;

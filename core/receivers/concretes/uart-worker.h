@@ -26,7 +26,7 @@ private:
 	const std::array<Container::RibbonConfiguration, 4> m_ribbon;
 	AtomAggregator &m_correctors;
 	std::unique_ptr<Functional::DevicePort> &m_device;
-	cu32 m_uartFramerate = 90;
+	const u32 m_uartFramerate{90};
 
 	Functional::ColorStream<270> m_stream;
 };

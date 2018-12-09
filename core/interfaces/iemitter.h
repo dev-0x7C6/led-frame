@@ -13,7 +13,7 @@
 
 class IEmitter : public IAtom {
 public:
-	explicit IEmitter(ci32 id);
+	explicit IEmitter(i32 id);
 
 	virtual std::string name() const = 0;
 	virtual EmitterType type() const = 0;
