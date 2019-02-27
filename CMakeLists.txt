@@ -162,6 +162,7 @@ set(sources
 	core/interfaces/icorrector.h
 	core/interfaces/iemitter.cpp
 	core/interfaces/iemitter.h
+	core/interfaces/inotification-aggregator.cpp
 	core/interfaces/inotification-aggregator.h
 	core/interfaces/ireceiver.h
 	core/interfaces/ireceiver.cpp
