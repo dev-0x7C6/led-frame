@@ -7,10 +7,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-cmake_policy(SET CMP0069 NEW)
-include(CheckIPOSupported)
-check_ipo_supported()
-
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -Wold-style-cast -pedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wno-variadic-macros -Wno-old-style-cast")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fverbose-asm")
@@ -184,9 +180,6 @@ set(sources
 	core/receivers/concretes/uart-worker.cpp
 	core/receivers/concretes/uart-worker.h
 	core/types.h
-)
-
-set(sources_app
 	main.cpp
 )
 
@@ -240,10 +233,9 @@ set(sources_bench
 	core/generic/iatom.h
 )
 
-add_executable(led-frame ${sources} ${sources_app} ${rpi-sources} ${x11-sources})
+add_executable(led-frame ${sources} ${rpi-sources} ${x11-sources})
 target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
 target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
-set_target_properties(led-frame PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 if (UNIX AND SUPPORT_X11)
 	target_compile_definitions(led-frame PRIVATE X11)
@@ -266,7 +258,6 @@ target_link_libraries(led-frame
 
 if (TESTS AND GTEST_FOUND)
 	add_executable(led-frame-ut ${sources_ut})
-	set_target_properties(led-frame-ut PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 	target_link_libraries(led-frame-ut
 		Qt5::Core
@@ -278,7 +269,6 @@ endif()
 
 if (BENCHMARKS)
 	add_executable(led-frame-benchmark ${sources_bench})
-	set_target_properties(led-frame-benchmark PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 	target_link_libraries(led-frame-benchmark
 		Qt5::Core
