@@ -8,7 +8,7 @@ IEmitter::IEmitter(const i32 id)
 void IEmitter::commit(const Container::Scanline &scanline) noexcept {
 	std::lock_guard _(m_mutex);
 	m_data = scanline;
-	m_firstFrameReady = 0;
+	m_firstFrameReady = 1;
 }
 
 auto IEmitter::data() const noexcept -> Container::Scanline {

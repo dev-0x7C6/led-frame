@@ -4,6 +4,8 @@
 
 #include <QImage>
 
+class QCamera;
+
 namespace Emitter {
 namespace Concrete {
 
@@ -15,13 +17,23 @@ public:
 	EmitterType type() const final { return EmitterType::Image; }
 	u32 framerate() const final { return 1; }
 
-	QRect fragment(int w, int h, u32 index);
-
 	bool loadFromFile(const QString &filePath);
 
 private:
 	QImage m_image;
 	QString m_filePath;
 };
+
+class CameraEmitter final : public Abstract::AbstractEmitter {
+public:
+	explicit CameraEmitter(i32 id);
+	~CameraEmitter();
+
+	EmitterType type() const final { return EmitterType::Camera; };
+
+private:
+	std::unique_ptr<QCamera> m_captureHandle;
+};
+
 } // namespace Concrete
 } // namespace Emitter

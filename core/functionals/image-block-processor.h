@@ -98,7 +98,7 @@ public:
 
 		const auto t = scan_all<type, columns>(data, block);
 
-		for (u32 i = 0; i < rows - 2; ++i)
+		for (u32 i = 0; i < pairs.size(); ++i)
 			pairs[i] = scan_edge<type, columns>(data + ((i + 1) * block.scanline * block.height) + block.hdiff / 2 * block.scanline, block);
 
 		const auto b = scan_all<type, columns>(data + ((rows - 1) * block.scanline * block.height) + block.hdiff * block.scanline, block);

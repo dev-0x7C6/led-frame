@@ -23,23 +23,19 @@ using namespace Receiver::Concrete;
 UartReceiver::UartReceiver(const i32 id, std::unique_ptr<DevicePort> &&device)
 		: AbstractReceiver(id)
 		, m_device(std::move(device))
-		, m_interrupt(false)
-		, m_thread([this]() { run(); }, this) {
-	m_device->moveToThread(&m_thread);
-	m_thread.start();
-	connect(&m_thread, &QThread::finished, this, &UartReceiver::finished);
+		, m_thread([this](const auto &interrupted) {
+			run(interrupted);
+			emit finished();
+		}) {
 }
 
-UartReceiver::~UartReceiver() {
-	interrupt();
-	m_thread.wait();
-}
+UartReceiver::~UartReceiver() = default;
 
 auto UartReceiver::type() const noexcept -> ReceiverType {
 	return ReceiverType::Uart;
 }
 
-void UartReceiver::run() {
+void UartReceiver::run(const std::atomic_bool &interrupted) {
 	const std::array<RibbonConfiguration, 4> ribbon{{
 		m_device->config().ribbon(0),
 		m_device->config().ribbon(1),
@@ -58,7 +54,7 @@ void UartReceiver::run() {
 	u32 frameCounter = 0;
 	int lastEmitterId = -1;
 
-	while (!m_interrupt && m_device->error() == 0 && m_device->isDataTerminalReady()) {
+	while (!interrupted && m_device->error() == 0 && m_device->isDataTerminalReady()) {
 		if (!isEmitterConnected() || !connectedEmitter()->isFirstFrameReady()) {
 			loopSync.wait(10);
 			continue;
@@ -124,7 +120,5 @@ void UartReceiver::run() {
 		m_device->close();
 	}
 }
-
-void UartReceiver::interrupt() { m_interrupt = true; }
 
 Container::DeviceConfigContainer UartReceiver::config() { return m_device->config(); }

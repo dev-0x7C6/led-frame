@@ -13,7 +13,7 @@ public:
 	explicit ScreenEmitter(i32 id, i32 screenId = 0);
 	~ScreenEmitter() final;
 
-	virtual EmitterType type() const override;
+	EmitterType type() const final;
 
 protected:
 	void interrupt();

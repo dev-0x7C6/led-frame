@@ -8,11 +8,14 @@
 #include <core/functionals/loop-sync.h>
 
 #include <chrono>
+#include <thread>
 
 #include <QColor>
 #include <QGuiApplication>
 #include <QRect>
 #include <QScreen>
+
+using namespace std::chrono_literals;
 
 using namespace Enum;
 using namespace Emitter::Concrete;
@@ -66,7 +69,7 @@ void ScreenEmitter::run() {
 			if (m_interrupted)
 				return;
 
-			msleep(10);
+			std::this_thread::sleep_for(10ms);
 		}
 
 		if (!screen->capture(m_screenId))

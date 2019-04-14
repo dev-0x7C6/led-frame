@@ -1,17 +1,26 @@
 #include <core/emitters/concretes/image-emitter.h>
 #include <core/enums/position-enum.h>
+#include <core/functionals/color-averaging-buffer.h>
+#include <core/functionals/image-block-processor.h>
 
 #include <algorithm>
 
 #include <QFile>
+#include <QDir>
+
+#include <QCamera>
+#include <QCameraInfo>
+#include <QAbstractVideoSurface>
 
 using namespace Container;
 using namespace Emitter::Concrete;
 using namespace Enum;
+using namespace Container;
+using namespace Functional;
 
 ImageEmitter::ImageEmitter(const i32 id)
 		: AbstractEmitter(id) {
-	loadFromFile("/home/dev/test.jpg");
+	loadFromFile(QDir::homePath() + QDir::separator() + "test.jpg");
 }
 
 ImageEmitter::ImageEmitter(const i32 id, const QString &filePath)
@@ -19,67 +28,37 @@ ImageEmitter::ImageEmitter(const i32 id, const QString &filePath)
 	loadFromFile(filePath);
 }
 
-QRect ImageEmitter::fragment(int w, int h, const u32 index) {
-	auto l = static_cast<int>(Scanline::line());
-	auto i = static_cast<int>(index) % l;
-
-	switch (Scanline::fromIndexToPosition(index)) {
-		case Position::Left:
-			return QRect(0, (h / l) * (l - i - 1), 200, (h / l));
-
-		case Position::Top:
-			return QRect((w / l) * i, 0, (w / l), 200);
-
-		case Position::Right:
-			return QRect(w - 200, (h / l) * i, 200, (h / l));
-
-		case Position::Bottom:
-			return QRect((w / l) * (l - i - 1), h - 200, (w / l), 200);
-
-		case Position::Last:
-			return {};
-	}
-
-	return {};
-}
-
 bool ImageEmitter::loadFromFile(const QString &filePath) {
 	if (!QFile::exists(filePath))
 		return false;
 
 	m_filePath = filePath;
-	m_image = QImage(filePath);
-	Container::Scanline scanline;
-	color *colors = scanline.data();
+	auto image = QImage(filePath).convertToFormat(QImage::Format_ARGB32);
 
-	for (auto i = 0u; i < Scanline::size(); ++i) {
-		QRect area = fragment(m_image.width(), m_image.height(), i);
-		int c = area.width() * area.height();
-		u32 r = 0;
-		u32 g = 0;
-		u32 b = 0;
-		color rgb = 0;
+	ImageBlockProcessor<ColorAveragingBuffer, 9, 16> processor;
 
-		for (int j = 0; j < c; ++j) {
-			QPoint point(area.x() + (j % area.width()), area.y() + (j / area.width()));
-			rgb = static_cast<color>(m_image.pixel(point));
-			r += static_cast<u8>(rgb >> 0x10);
-			g += static_cast<u8>(rgb >> 0x08);
-			b += static_cast<u8>(rgb >> 0x00);
-		}
+	processor.process(reinterpret_cast<const color *>(image.constBits()), image.width(), image.height());
+	commit(processor.output());
+	return true;
+}
 
-		if (c > 0) {
-			r /= static_cast<u32>(c);
-			g /= static_cast<u32>(c);
-			b /= static_cast<u32>(c);
-		}
-
-		r = std::min(static_cast<u32>(255), r);
-		g = std::min(static_cast<u32>(255), g);
-		b = std::min(static_cast<u32>(255), b);
-		colors[i] = qRgb(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
+class CaptureRGB32 : public QAbstractVideoSurface {
+	QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType) const final {
+		return {QVideoFrame::Format_RGB32};
 	}
 
-	commit(scanline);
-	return false;
+	bool present(const QVideoFrame &) final {
+		return true;
+	}
+};
+
+CameraEmitter::CameraEmitter(i32 id)
+		: Abstract::AbstractEmitter(id) {
+
+	auto list = QCameraInfo::availableCameras();
+
+	m_captureHandle = std::make_unique<QCamera>(list.first());
+	m_captureHandle->start();
 }
+
+CameraEmitter::~CameraEmitter() = default;

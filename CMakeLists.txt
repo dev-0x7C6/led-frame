@@ -32,6 +32,7 @@ find_package(Qt5Network)
 find_package(Qt5SerialPort)
 find_package(Qt5WebSockets)
 find_package(Qt5Widgets)
+find_package(Qt5Multimedia)
 find_package(GTest)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
@@ -146,8 +147,6 @@ set(sources
 	core/functionals/file-collection.cpp
 	core/functionals/file-collection.h
 	core/functionals/image-block-processor.h
-	core/functionals/lambda-thread.cpp
-	core/functionals/lambda-thread.h
 	core/functionals/loop-sync.cpp
 	core/functionals/loop-sync.h
 	core/functionals/raii-call-on-return.cpp
@@ -259,6 +258,7 @@ target_link_libraries(led-frame
 	Qt5::SerialPort
 	Qt5::Widgets
 	Qt5::WebSockets
+	Qt5::Multimedia
 	${rpi-libs}
 	${x11-libs}
 	-lpthread
