@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include <core/functionals/loop-sync.h>
+#include <core/functionals/frame-pace-sync.h>
 #include <core/interfaces/icorrector.h>
 
 using namespace Container;
@@ -27,22 +27,22 @@ UartWorker::UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbo
 	}
 }
 
-double animation_speed(Functional::FramePaceSync &pace) {
-	return pace.timing() * 3;
+factor_t animation_speed(Functional::FramePaceSync &pace) {
+	return pace.timing() * static_cast<factor_t>(3.0);
 }
 
 void UartWorker::fadeIn(const std::function<Scanline()> &frame, Functional::FramePaceSync &pace) {
-	for (double i = 0.0; i < 1.0; i += animation_speed(pace))
+	for (auto i = static_cast<factor_t>(0.0); i < static_cast<factor_t>(1.0); i += animation_speed(pace))
 		write(interpolate(Scanline(0), frame(), i), pace);
 }
 
 void UartWorker::fadeOut(const std::function<Scanline()> &frame, Functional::FramePaceSync &pace) {
-	for (double i = 0.0; i < 1.0; i += animation_speed(pace))
+	for (auto i = static_cast<factor_t>(0.0); i < static_cast<factor_t>(1.0); i += animation_speed(pace))
 		write(interpolate(frame(), Scanline(0), i), pace);
 }
 
 void UartWorker::change(const Scanline &from, const std::function<Scanline()> &frame, Functional::FramePaceSync &pace) {
-	for (double i = 0.0; i < 1.0; i += animation_speed(pace))
+	for (auto i = static_cast<factor_t>(0.0); i < static_cast<factor_t>(1.0); i += animation_speed(pace))
 		write(interpolate<Scanline::size()>(from, frame(), i), pace);
 }
 
@@ -69,7 +69,7 @@ void UartWorker::write(Scanline scanline, Functional::FramePaceSync &pace) {
 	if (m_port.bytesToWrite())
 		m_port.waitForBytesWritten(-1);
 
-	pace.wait();
+	pace.synchronize();
 }
 
 bool UartWorker::isValid() {

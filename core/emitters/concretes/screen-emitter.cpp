@@ -5,7 +5,7 @@
 #include <core/functionals/color-averaging-buffer.h>
 #include <core/functionals/color-functions.h>
 #include <core/functionals/image-block-processor.h>
-#include <core/functionals/loop-sync.h>
+#include <core/functionals/frame-pace-sync.h>
 
 #include <chrono>
 #include <thread>
@@ -77,6 +77,6 @@ void ScreenEmitter::run() {
 
 		processor.process(screen->data(), screen->width(), screen->height());
 		commit(processor.output());
-		framePaceing.wait();
+		framePaceing.synchronize();
 	};
 }

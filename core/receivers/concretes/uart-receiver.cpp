@@ -3,7 +3,7 @@
 #include <core/devices/device-port.h>
 #include <core/enums/position-enum.h>
 #include <core/functionals/color-stream.h>
-#include <core/functionals/loop-sync.h>
+#include <core/functionals/frame-pace-sync.h>
 #include <core/receivers/concretes/uart-receiver.h>
 #include <core/interfaces/iemitter.h>
 #include <core/receivers/concretes/uart-worker.h>
@@ -51,7 +51,7 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 
 	while (!interrupted && worker.isValid()) {
 		if (!isEmitterConnected() || !connectedEmitter()->isFirstFrameReady()) {
-			framePaceing.wait();
+			framePaceing.synchronize();
 			continue;
 		}
 
