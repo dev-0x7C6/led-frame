@@ -107,9 +107,8 @@ static void color_interpolation(benchmark::State &state) {
 		if (value >= static_cast<factor_t>(1.0))
 			value = 0;
 
-		Scanline result;
-		Scanline::interpolate(Scanline(0x00), Scanline(0xFF), value, result);
-		benchmark::DoNotOptimize(result);
+		auto ret = interpolate(Scanline(0x00), Scanline(0xFF), value);
+		benchmark::DoNotOptimize(ret);
 	}
 }
 

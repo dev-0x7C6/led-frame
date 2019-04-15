@@ -20,12 +20,12 @@ using namespace Enum;
 using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
 
-UartReceiver::UartReceiver(const i32 id, std::unique_ptr<DevicePort> &&device)
+UartReceiver::UartReceiver(const i32 id, std::unique_ptr<DevicePort> &&device, unregister_callback &&callback)
 		: AbstractReceiver(id)
 		, m_device(std::move(device))
-		, m_thread([this](const auto &interrupted) {
+		, m_thread([this, unregister_callback{std::move(callback)}](const auto &interrupted) {
 			run(interrupted);
-			emit finished();
+			unregister_callback();
 		}) {
 }
 
@@ -44,81 +44,40 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 	}};
 
 	UartWorker worker(ribbon, correctors(), m_device);
-	Functional::LoopSync loopSync;
+	Functional::FramePaceSync framePaceing(100);
+	std::optional<int> lastEmitterId;
 
-	Container::Scanline prev(0u);
-	Container::Scanline diff(0u);
-	Container::Scanline next(0u);
-	Container::Scanline output(0u);
-	const auto uartFramerate = framerate();
-	u32 frameCounter = 0;
-	int lastEmitterId = -1;
+	Scanline frame;
 
-	while (!interrupted && m_device->error() == 0 && m_device->isDataTerminalReady()) {
+	while (!interrupted && worker.isValid()) {
 		if (!isEmitterConnected() || !connectedEmitter()->isFirstFrameReady()) {
-			loopSync.wait(10);
+			framePaceing.wait();
 			continue;
 		}
 
 		const auto emitter = connectedEmitter();
 		const auto emitterId = emitter->id();
-		const auto emitterFramerate = emitter->framerate();
-		const auto emitterGetFrame = [&emitter] { return emitter->data(); };
+		auto emitterGetFrame = [&emitter] { return emitter->data(); };
 
-		const auto resetFrame = [&emitterGetFrame, &output, &prev, &diff, &next] {
-			output = emitterGetFrame();
-			prev = output;
-			diff = output;
-			next = output;
-		};
-
-		if (lastEmitterId == -1) {
+		if (!lastEmitterId.has_value()) {
 			lastEmitterId = emitterId;
-			worker.fade(emitterGetFrame);
-			resetFrame();
+			worker.fadeIn(emitterGetFrame, framePaceing);
+			frame = emitterGetFrame();
 			continue;
 		}
 
 		if (lastEmitterId != emitterId) {
 			lastEmitterId = emitterId;
-			worker.change(output, emitterGetFrame);
-			resetFrame();
+			worker.change(frame, emitterGetFrame, framePaceing);
+			frame = emitterGetFrame();
 			continue;
 		}
 
-		if (emitterFramerate != 0) {
-			next = emitterGetFrame();
-			frameCounter++;
-
-			if (next != diff) {
-				prev = diff;
-				diff = next;
-				frameCounter = 0;
-			}
-
-			auto factor = std::min(static_cast<factor_t>(1.0), static_cast<factor_t>(frameCounter) / (static_cast<factor_t>(uartFramerate) / static_cast<factor_t>(emitterFramerate)));
-
-			if (factor < 1.0f) {
-				output = emitterGetFrame();
-			} else {
-				Container::Scanline::interpolate(prev, next, factor, output);
-			}
-		} else {
-			output = emitterGetFrame();
-		}
-
-		worker.write(output);
-		loopSync.wait(uartFramerate);
+		frame = emitterGetFrame();
+		worker.write(frame, framePaceing);
 	};
 
-	if (m_device->isOpen() && m_device->isWritable()) {
-		const auto emitter = connectedEmitter();
-
-		if (emitter)
-			worker.fade([&emitter]() { return emitter->data(); }, false);
-
-		m_device->close();
-	}
+	worker.fadeOut([&frame]() { return frame; }, framePaceing);
 }
 
 Container::DeviceConfigContainer UartReceiver::config() { return m_device->config(); }

@@ -15,9 +15,11 @@
 
 #include <externals/common/std/raii/raii-thread.hpp>
 
+using unregister_callback = std::function<void()>;
+
 namespace Functional {
 class DevicePort;
-class LoopSync;
+class FramePaceSync;
 } // namespace Functional
 
 namespace Receiver {
@@ -25,10 +27,11 @@ namespace Concrete {
 
 class UartWorker;
 
-class UartReceiver final : public QObject, public Receiver::Abstract::AbstractReceiver {
-	Q_OBJECT
+class UartReceiver final : public Receiver::Abstract::AbstractReceiver {
 public:
-	explicit UartReceiver(i32, std::unique_ptr<Functional::DevicePort> &&);
+	explicit UartReceiver(i32, std::unique_ptr<Functional::DevicePort> &&, unregister_callback &&unregister);
+	UartReceiver(const UartReceiver &) = delete;
+	UartReceiver(UartReceiver &&) = delete;
 	~UartReceiver() final;
 
 	auto type() const noexcept -> ReceiverType final;
@@ -43,9 +46,7 @@ private:
 	QSerialPortInfo m_details;
 
 	raii_thread m_thread;
-
-signals:
-	void finished();
+	std::function<void()> m_unregister;
 };
 } // namespace Concrete
 } // namespace Receiver

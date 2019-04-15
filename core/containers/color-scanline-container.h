@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <array>
 #include <functional>
+#include <mutex>
 
 namespace Container {
 
@@ -17,6 +18,11 @@ public:
 
 	explicit ScanlineContainer() noexcept;
 	explicit ScanlineContainer(color fillColor) noexcept;
+
+	ScanlineContainer(ScanlineContainer &&) noexcept = default;
+	ScanlineContainer(const ScanlineContainer &) noexcept = default;
+	ScanlineContainer &operator=(ScanlineContainer &&) noexcept = default;
+	ScanlineContainer &operator=(const ScanlineContainer &) noexcept = default;
 
 	constexpr static auto size() noexcept;
 	constexpr static auto line() noexcept;
@@ -41,11 +47,11 @@ public:
 
 	auto &array() noexcept { return m_data; }
 
+	decltype(auto) begin() { return m_data.begin(); }
+	decltype(auto) end() { return m_data.end(); }
+
 public:
 	constexpr static auto fromIndexToPosition(std::size_t index) noexcept;
-
-	static color interpolation(color start, color end, factor_t p);
-	static void interpolate(const ScanlineContainer &start, const ScanlineContainer &end, cfactor progress, ScanlineContainer &out) noexcept;
 
 	template <u32 newsize>
 	inline ScanlineContainer<newsize> resize();
@@ -54,7 +60,31 @@ private:
 	std::array<color, linesize> m_data;
 };
 
+template <u32 linesize>
+class SharedScanlinePlaceholderTemplate {
+public:
+	void set(const ScanlineContainer<linesize> &container) noexcept {
+		std::lock_guard _(m_mutex);
+		m_scanline = container;
+	}
+
+	void set(ScanlineContainer<linesize> &&container) noexcept {
+		std::lock_guard _(m_mutex);
+		m_scanline = std::move(container);
+	}
+
+	ScanlineContainer<linesize> get() const noexcept {
+		std::lock_guard _(m_mutex);
+		return m_scanline;
+	}
+
+private:
+	ScanlineContainer<linesize> m_scanline{0};
+	mutable std::mutex m_mutex;
+};
+
 using Scanline = ScanlineContainer<128u>;
+using SharedScanlinePlaceholder = SharedScanlinePlaceholderTemplate<128u>;
 static_assert(is_class_cxx14_efficient_nothrow<Scanline>::value);
 
 template <u32 linesize>
@@ -136,13 +166,11 @@ color &ScanlineContainer<linesize>::operator[](u32 index) noexcept {
 
 static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color));
 
-template <typename input_type, typename factor_type>
-constexpr auto linear_interpolation(input_type &&start, input_type &&end, factor_type &&factor) noexcept -> std::decay_t<factor_type> {
+constexpr auto linear_interpolation(factor_t start, factor_t end, factor_t factor) noexcept {
 	return start + factor * (end - start);
 }
 
-template <u32 linesize>
-color ScanlineContainer<linesize>::interpolation(color start, color end, factor_t p) {
+constexpr color rgb_linear_interpolation(color start, color end, factor_t p) noexcept {
 	using namespace Functional;
 	const auto r = static_cast<color>(linear_interpolation(get_r24(start), get_r24(end), p));
 	const auto g = static_cast<color>(linear_interpolation(get_g24(start), get_g24(end), p));
@@ -151,11 +179,14 @@ color ScanlineContainer<linesize>::interpolation(color start, color end, factor_
 }
 
 template <u32 linesize>
-void ScanlineContainer<linesize>::interpolate(const ScanlineContainer &start, const ScanlineContainer &end, cfactor p, ScanlineContainer &out) noexcept {
+ScanlineContainer<linesize> interpolate(const ScanlineContainer<linesize> &start, const ScanlineContainer<linesize> &end, cfactor p) noexcept {
 	using namespace Functional;
+	ScanlineContainer<linesize> ret;
 
 	for (auto i = 0u; i < linesize; ++i)
-		out.data()[i] = interpolation(start.constData()[i], end.constData()[i], p);
+		ret.data()[i] = rgb_linear_interpolation(start.constData()[i], end.constData()[i], p);
+
+	return ret;
 }
 
 template <u32 linesize>
@@ -182,7 +213,7 @@ inline static std::array<color, newsize> createInterpolatedColorArray(const std:
 		const auto curr_idx = std::min(oldsize - 1, static_cast<u32>(i * factor));
 		const auto next_idx = std::min(oldsize - 1, curr_idx + 1);
 		const auto ret = factor * i - static_cast<int>(i * factor);
-		result[i] = Scanline::interpolation(getColor(curr_idx), getColor(next_idx), ret);
+		result[i] = rgb_linear_interpolation(getColor(curr_idx), getColor(next_idx), ret);
 	}
 
 	return result;

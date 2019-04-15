@@ -90,10 +90,60 @@ TEST(ColorCorrectors, AllCorrectorsAllRange) {
 	}
 }
 
-TEST(Scanline, Test) {
-	Scanline result;
-	Scanline::interpolate(Scanline(0x00), Scanline(0xFF), 0.5, result);
+TEST(rgbTests, rgbInterpolation) {
+	EXPECT_EQ(rgb_linear_interpolation(0xffffff, 0xffffff, 1.0), 0xffffff);
+	EXPECT_EQ(rgb_linear_interpolation(0xffffff, 0xffaaff, 1.0), 0xffaaff);
+	EXPECT_EQ(rgb_linear_interpolation(0xffffff, 0xffffaa, 1.0), 0xffffaa);
+	EXPECT_EQ(rgb_linear_interpolation(0xffffff, 0xffffff, 0.0), 0xffffff);
+	EXPECT_EQ(rgb_linear_interpolation(0xffffff, 0xffaaff, 0.0), 0xffffff);
+	EXPECT_EQ(rgb_linear_interpolation(0xffffff, 0xffffaa, 0.0), 0xffffff);
 
-	for (auto atom : result.array())
+	for (double i = 0.0; i < 1.0; i += 0.01) {
+		EXPECT_EQ(rgb_linear_interpolation(0x000000, 0xffffff, i), static_cast<color>((0xff * i)) << 16 | static_cast<color>((0xff * i)) << 8 | static_cast<color>((0xff * i)));
+	}
+}
+
+TEST(Scanline, interpolateMidPoint) {
+	for (auto &&atom : interpolate(Scanline(0x00), Scanline(0xFF), 0.5))
 		EXPECT_EQ(atom, 0x7F);
+}
+
+TEST(Scanline, interpolateBeginPoint) {
+	for (auto atom : interpolate(Scanline(0x00), Scanline(0xFF), 0.0))
+		EXPECT_EQ(atom, 0x00);
+
+	for (auto atom : interpolate(Scanline(0x3F), Scanline(0xFF), 0.0))
+		EXPECT_EQ(atom, 0x3F);
+}
+
+TEST(Scanline, interpolateBeginPointReverse) {
+	for (auto atom : interpolate(Scanline(0xFF), Scanline(0x00), 0.0))
+		EXPECT_EQ(atom, 0xFF);
+
+	for (auto atom : interpolate(Scanline(0x3F), Scanline(0x00), 0.0))
+		EXPECT_EQ(atom, 0x3F);
+}
+
+TEST(Scanline, interpolateEndPoint) {
+	for (auto atom : interpolate(Scanline(0x00), Scanline(0xFF), 1.0))
+		EXPECT_EQ(atom, 0xFF);
+
+	for (auto atom : interpolate(Scanline(0x00), Scanline(0x3F), 1.0))
+		EXPECT_EQ(atom, 0x3F);
+}
+
+TEST(Scanline, interpolateEndPointReverse) {
+	for (auto atom : interpolate(Scanline(0xFF), Scanline(0x00), 1.0))
+		EXPECT_EQ(atom, 0x00);
+
+	for (auto atom : interpolate(Scanline(0x3F), Scanline(0x00), 1.0))
+		EXPECT_EQ(atom, 0x00);
+}
+
+TEST(Scanline, interpolateEndPointRevers2e) {
+	for (auto atom : interpolate(Scanline(0xFF), Scanline(0x00), 1.0))
+		EXPECT_EQ(atom, 0x00);
+
+	for (auto atom : interpolate(Scanline(0x3F), Scanline(0x00), 1.0))
+		EXPECT_EQ(atom, 0x00);
 }

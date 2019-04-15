@@ -19,7 +19,6 @@ protected:
 	void process(const QVariant &value);
 
 private:
-	Container::Scanline m_colors;
 	QVariantAnimation m_animation;
 };
 } // namespace Concrete

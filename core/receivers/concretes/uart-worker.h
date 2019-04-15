@@ -9,26 +9,36 @@
 
 #include <core/generic/atom-aggregator.h>
 
+#include <QSerialPort>
+
+namespace Functional {
+class FramePaceSync;
+}
+
 namespace Receiver {
 namespace Concrete {
 
 class UartWorker {
 public:
-	explicit UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbon,
+	explicit UartWorker(std::array<Container::RibbonConfiguration, 4> ribbon,
 		AtomAggregator &correctors,
 		std::unique_ptr<Functional::DevicePort> &device);
 
-	void fade(std::function<Container::Scanline()> getFrame, const bool in = true);
-	void change(const Container::Scanline &from, std::function<Container::Scanline()> getFrame);
-	void write(Container::Scanline scanline);
+	void fadeIn(const std::function<Container::Scanline()> &, Functional::FramePaceSync &);
+	void fadeOut(const std::function<Container::Scanline()> &, Functional::FramePaceSync &);
+
+	void change(const Container::Scanline &from, const std::function<Container::Scanline()> &, Functional::FramePaceSync &);
+	void write(Container::Scanline, Functional::FramePaceSync &);
+
+	bool isValid();
 
 private:
 	const std::array<Container::RibbonConfiguration, 4> m_ribbon;
 	AtomAggregator &m_correctors;
 	std::unique_ptr<Functional::DevicePort> &m_device;
-	const u32 m_uartFramerate{90};
 
 	Functional::ColorStream<270> m_stream;
+	QSerialPort m_port;
 };
 } // namespace Concrete
 } // namespace Receiver

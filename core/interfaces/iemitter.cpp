@@ -6,14 +6,17 @@ IEmitter::IEmitter(const i32 id)
 		: IAtom(id) {}
 
 void IEmitter::commit(const Container::Scanline &scanline) noexcept {
-	std::lock_guard _(m_mutex);
-	m_data = scanline;
+	m_scanline.set(scanline);
+	m_firstFrameReady = 1;
+}
+
+void IEmitter::commit(Container::Scanline &&scanline) noexcept {
+	m_scanline.set(scanline);
 	m_firstFrameReady = 1;
 }
 
 auto IEmitter::data() const noexcept -> Container::Scanline {
-	std::lock_guard _(m_mutex);
-	return m_data;
+	return m_scanline.get();
 }
 
 auto IEmitter::acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter> {

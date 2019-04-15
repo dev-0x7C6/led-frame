@@ -8,7 +8,6 @@
 #include <any>
 #include <atomic>
 #include <memory>
-#include <mutex>
 #include <string>
 
 class IEmitter : public IAtom {
@@ -23,6 +22,8 @@ public:
 	virtual void setName(const std::string &name) = 0;
 
 	void commit(const Container::Scanline &scanline) noexcept;
+	void commit(Container::Scanline &&scanline) noexcept;
+
 	auto data() const noexcept -> Container::Scanline;
 
 	auto acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter>;
@@ -40,8 +41,7 @@ public:
 	}
 
 protected:
-	mutable std::mutex m_mutex;
-	Container::Scanline m_data{0u};
+	Container::SharedScanlinePlaceholder m_scanline;
 	std::atomic<int> m_firstFrameReady{0};
 	Functional::ReferenceCounter m_counter{0};
 };

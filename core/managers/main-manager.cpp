@@ -10,6 +10,8 @@
 
 #include <QSettings>
 
+#include <mutex>
+
 using namespace Enum;
 using namespace Factory;
 using namespace Functional;
@@ -76,28 +78,33 @@ void MainManager::rescan() {
 
 	static auto id = 0;
 
+	std::mutex registration_mutex;
+
 	for (const auto &port : ports) {
 		if ((port.manufacturer().toStdString() != deviceInfo.manufacturer())) continue;
 
-		auto device = std::make_unique<DevicePort>(port);
-
-		if (!device->open(QIODevice::ReadWrite))
+		if (m_lockedDevices.count(port.portName().toStdString()))
 			continue;
 
-		device->setBaudRate(deviceInfo.baudrate());
-		device->setFlowControl(QSerialPort::NoFlowControl);
-		device->setParity(QSerialPort::NoParity);
-		device->setDataBits(QSerialPort::Data8);
-		device->setStopBits(QSerialPort::OneStop);
-		auto thread = std::make_unique<UartReceiver>(id++, std::move(device));
-		auto interface = thread.get();
-		connect(interface, &UartReceiver::finished, this, [this, id = interface->id()]() {
-			m_broadcasts.remove_if([id](const auto &match) {
-				return id == match->id();
-			});
-			m_atoms.detach(m_atoms.find(id, receiver_type{}));
-		},
-			Qt::QueuedConnection);
+		std::lock_guard locker(registration_mutex);
+		id++;
+
+		while (!m_unregisterQueue.empty()) {
+			const auto &remember_id = m_unregisterQueue.front();
+			m_broadcasts.remove_if([remember_id](const auto &match) { return remember_id == match->id(); });
+			m_atoms.detach(m_atoms.find(remember_id, receiver_type{}));
+			m_unregisterQueue.pop();
+		}
+
+		auto unregister = [this, remember_id{id}, &registration_mutex]() {
+			std::lock_guard locker(registration_mutex);
+			m_unregisterQueue.emplace(remember_id);
+		};
+
+		m_lockedDevices.emplace(port.portName().toStdString());
+
+		auto device = std::make_unique<DevicePort>(port);
+		auto thread = std::make_unique<UartReceiver>(id, std::move(device), std::move(unregister));
 
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), port.serialNumber()))
 			continue;

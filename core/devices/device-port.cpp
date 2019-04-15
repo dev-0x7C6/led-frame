@@ -1,12 +1,11 @@
 #include <core/devices/device-port.h>
 
-#include <QSerialPortInfo>
 #include <QRegExp>
 
 using namespace Functional;
 
 DevicePort::DevicePort(const QSerialPortInfo &info)
-		: QSerialPort(info)
+		: m_info(info)
 
 {
 	auto config = info.description().remove(QRegExp("[ ]"));
@@ -16,4 +15,8 @@ DevicePort::DevicePort(const QSerialPortInfo &info)
 
 const Container::DeviceConfigContainer &DevicePort::config() const {
 	return m_config;
+}
+
+const QSerialPortInfo &DevicePort::info() const {
+	return m_info;
 }

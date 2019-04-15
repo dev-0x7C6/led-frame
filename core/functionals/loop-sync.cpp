@@ -3,18 +3,19 @@
 
 using namespace Functional;
 
-LoopSync::LoopSync()
-		: m_runtime(0)
+FramePaceSync::FramePaceSync(const u32 hz)
+		: m_hz(hz)
+		, m_runtime(0)
 		, m_alltime(0)
 		, m_loop(0) {
 	m_elapsed.start();
 }
 
-u32 LoopSync::wait(u32 hz) {
+u32 FramePaceSync::wait() {
 	m_runtime = m_elapsed.elapsed();
 	m_alltime += m_runtime;
 	m_elapsed.restart();
-	double delay = (1000000 / double(hz)) - m_runtime;
+	double delay = (1000000 / static_cast<double>(m_hz)) - m_runtime;
 
 	if (delay < 0)
 		delay = 0.0;
@@ -31,6 +32,6 @@ u32 LoopSync::wait(u32 hz) {
 	return m_loop;
 }
 
-u32 LoopSync::loopCount() {
+u32 FramePaceSync::loopCount() {
 	return m_loop;
 }

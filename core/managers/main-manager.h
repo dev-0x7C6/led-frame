@@ -5,8 +5,10 @@
 
 #include <core/interfaces/inotification-aggregator.h>
 
-#include <memory>
 #include <list>
+#include <memory>
+#include <set>
+#include <queue>
 
 #include <QTimer>
 
@@ -54,5 +56,7 @@ private:
 	std::function<bool(IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
 	std::list<std::unique_ptr<Network::UdpBroadcastService>> m_broadcasts;
 	QTimer m_deviceScan;
+	std::queue<int> m_unregisterQueue;
+	std::set<std::string> m_lockedDevices;
 };
 } // namespace Manager
