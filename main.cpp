@@ -7,7 +7,7 @@
 #include <core/managers/session-manager.h>
 #include <core/networking/web-socket-server.h>
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QSettings>
 #include <memory>
 
@@ -52,9 +52,9 @@ int main(int argc, char *argv[]) {
 	auto applicationName = QString(ApplicationInfo::name());
 	auto applicationVersion = QString::fromStdString(ApplicationInfo::versionToString());
 
-	QCoreApplication application(argc, argv);
-	QCoreApplication::setApplicationName(applicationName);
-	QCoreApplication::setApplicationVersion(applicationVersion);
+	QApplication application(argc, argv);
+	QApplication::setApplicationName(applicationName);
+	QApplication::setApplicationVersion(applicationVersion);
 #ifdef __unix__
 	catchUnixSignals({SIGQUIT, SIGINT, SIGTERM, SIGHUP});
 #endif
@@ -67,5 +67,5 @@ int main(int argc, char *argv[]) {
 	WebSocketServer webSocketServer(manager, controller);
 
 	manager.run();
-	return QCoreApplication::exec();
+	return QApplication::exec();
 }

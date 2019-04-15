@@ -12,9 +12,32 @@ using namespace Container;
 using namespace Enum;
 using namespace Functional;
 
-/* Best run on: x86_64 Intel(R) Core(TM) i5-4670K CPU @ 3.40GHz (4.30GHz)
+/*
+============================================================= 2019-04-15 02:27:36
+Run on (4 X 4300 MHz CPU s)
+CPU Caches:
+  L1 Data 32K (x4)
+  L1 Instruction 32K (x4)
+  L2 Unified 256K (x4)
+  L3 Unified 6144K (x1)
+---------------------------------------------------------------------------------
+Benchmark                                          Time           CPU Iterations
+---------------------------------------------------------------------------------
+color_interpolation                              264 ns        263 ns    2657952
+color_correction                                  10 ns         10 ns   70387041
+image_block_processor_process_480p_auto         3797 ns       3794 ns     184506
+image_block_processor_process_720p_auto         5751 ns       5746 ns     121820
+image_block_processor_process_1080p_auto        7985 ns       7978 ns      87710
+image_block_processor_process_4K_auto          17184 ns      17168 ns      40704
+image_block_processor_process_8K_auto          39934 ns      39892 ns      17514
+image_block_processor_process_480p_fixed        9096 ns       9086 ns      77028
+image_block_processor_process_720p_fixed       21862 ns      21820 ns      32052
+image_block_processor_process_1080p_fixed      48248 ns      48186 ns      14521
+image_block_processor_process_4K_fixed        306008 ns     304576 ns       2298
+image_block_processor_process_8K_fixed       1408527 ns    1401088 ns        500
 
-2018-12-02 19:38:07
+
+============================================================= 2018-12-02 19:38:07
 Run on (4 X 4300 MHz CPU s)
 CPU Caches:
   L1 Data 32K (x4)
