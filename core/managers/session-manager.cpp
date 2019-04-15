@@ -49,6 +49,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Color, translate(EmitterType::Color)));
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Off, translate(EmitterType::Off)));
+	m_mainManager.atoms().attach(make_emitter(EmitterType::Camera, translate(EmitterType::Camera)));
 
 	m_mainManager.setRegisterDeviceCallback([this](IReceiver *receiver, const QString &serialNumber) -> bool {
 		return registerDevice(receiver, serialNumber);
