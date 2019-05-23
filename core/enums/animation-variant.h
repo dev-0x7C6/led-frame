@@ -11,11 +11,9 @@ enum class AnimationVariant {
 	Unused,
 };
 
-inline constexpr std::initializer_list<AnimationVariant> getAnimationVariantTypes() {
-	return {
-		AnimationVariant::Rainbow,
-		AnimationVariant::Candle,
-	};
-}
+constexpr static auto animationVariantTypes = std::initializer_list<AnimationVariant>{
+	AnimationVariant::Rainbow,
+	AnimationVariant::Candle,
+};
 
 } // namespace Enum

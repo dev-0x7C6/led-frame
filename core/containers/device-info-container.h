@@ -18,8 +18,8 @@ public:
 	constexpr auto baudrate() const noexcept { return m_baudrate; }
 
 private:
-	std::string_view m_description = nullptr;
-	std::string_view m_manufacturer = nullptr;
+	std::string_view m_description;
+	std::string_view m_manufacturer;
 	const u64 m_baudrate{500000};
 };
 } // namespace Container

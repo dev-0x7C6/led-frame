@@ -41,7 +41,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Image, translate(EmitterType::Image)));
 
-	for (auto &&type : getAnimationVariantTypes()) {
+	for (auto &&type : animationVariantTypes) {
 		auto animation = make_emitter(EmitterType::Animation, translate(EmitterType::Animation));
 		animation->interpret(type);
 		m_mainManager.atoms().attach(std::move(animation));
