@@ -1,13 +1,11 @@
 #pragma once
 
-#include <array>
-#include <cmath>
 #include <core/types.h>
-#include <thread>
-
 #include <core/containers/color-scanline-container.h>
 
-#include <iostream>
+#include <array>
+#include <cmath>
+#include <thread>
 
 namespace Functional {
 
@@ -23,28 +21,24 @@ struct Block {
 } // namespace
 
 template <typename type, u32 size>
-constexpr decltype(auto) scan_extract(const color *data, const u32 range) noexcept {
-	u32 r = 0;
-	u32 g = 0;
-	u32 b = 0;
-
-	constexpr auto jmp_cacheline = 64 / sizeof(std::remove_pointer<std::decay<decltype(data)>::type>::type);
+constexpr auto scan_extract(const color *data, const u32 range) noexcept {
+	constexpr auto jmp_cacheline = 64 / sizeof(std::remove_pointer_t<std::remove_cvref<decltype(data)>::type>);
 	static_assert(jmp_cacheline == 16, "explicit check");
 
-	const u32 loop_count = range / jmp_cacheline;
+	type buff;
 
-	for (auto i = 0u; i < loop_count; ++i) {
-		r += get_r24(data[0]);
-		g += get_g24(data[0]);
-		b += get_b24(data[0]);
+	auto count = (range / jmp_cacheline);
+
+	while (count--) {
+		buff += data[0];
 		data += jmp_cacheline;
 	}
 
-	return type(r, g, b, loop_count);
+	return buff;
 }
 
 template <typename type, u32 size>
-constexpr decltype(auto) scan_all(const color *data, const Block &block) noexcept {
+constexpr auto scan_all(const color *data, const Block block) noexcept {
 	std::array<type, size> result;
 
 	const auto shift = block.scanline * (block.step - 1) + block.wdiff;
@@ -64,7 +58,7 @@ constexpr decltype(auto) scan_all(const color *data, const Block &block) noexcep
 }
 
 template <typename type, u32 size>
-constexpr decltype(auto) scan_edge(const color *data, const Block &block) noexcept {
+constexpr auto scan_edge(const color *data, const Block &block) noexcept {
 	const auto step = block.step;
 	const auto w = block.width;
 	const auto h = block.height;
