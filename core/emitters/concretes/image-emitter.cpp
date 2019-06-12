@@ -18,13 +18,11 @@ using namespace Enum;
 using namespace Container;
 using namespace Functional;
 
-ImageEmitter::ImageEmitter(const i32 id)
-		: AbstractEmitter(id) {
+ImageEmitter::ImageEmitter() {
 	loadFromFile(QDir::homePath() + QDir::separator() + "test.jpg");
 }
 
-ImageEmitter::ImageEmitter(const i32 id, const QString &filePath)
-		: AbstractEmitter(id) {
+ImageEmitter::ImageEmitter(const QString &filePath) {
 	loadFromFile(filePath);
 }
 
@@ -64,10 +62,12 @@ private:
 	std::function<void(const Scanline &)> m_update;
 };
 
-CameraEmitter::CameraEmitter(i32 id)
-		: Abstract::AbstractEmitter(id) {
+CameraEmitter::CameraEmitter() {
 
 	auto list = QCameraInfo::availableCameras();
+
+	if (list.isEmpty())
+		return;
 
 	m_captureHandle = std::make_unique<QCamera>(list.first());
 	m_captureVideo = std::make_unique<CaptureRGB32>([this](auto &&scanline) { commit(scanline); });

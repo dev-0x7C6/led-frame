@@ -7,7 +7,7 @@ namespace Concrete {
 
 class RedChannelCorrector final : public ICorrector {
 public:
-	explicit RedChannelCorrector(i32 id, int owner);
+	explicit RedChannelCorrector(int owner);
 
 	CorrectorType type() const noexcept final { return CorrectorType::RedChannel; }
 	void correct(Container::Scanline &scanline) const noexcept final;
@@ -15,7 +15,7 @@ public:
 
 class GreenChannelCorrector final : public ICorrector {
 public:
-	explicit GreenChannelCorrector(i32 id, int owner);
+	explicit GreenChannelCorrector(int owner);
 
 	CorrectorType type() const noexcept final { return CorrectorType::GreenChannel; }
 	void correct(Container::Scanline &scanline) const noexcept final;
@@ -23,7 +23,7 @@ public:
 
 class BlueChannelCorrector final : public ICorrector {
 public:
-	explicit BlueChannelCorrector(i32 id, int owner);
+	explicit BlueChannelCorrector(int owner);
 
 	CorrectorType type() const noexcept final { return CorrectorType::BlueChannel; }
 	void correct(Container::Scanline &scanline) const noexcept final;

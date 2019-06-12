@@ -9,7 +9,7 @@ namespace Concrete {
 
 class AnimationEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit AnimationEmitter(i32 id);
+	explicit AnimationEmitter();
 	~AnimationEmitter() final;
 
 	EmitterType type() const final { return EmitterType::Animation; }

@@ -8,7 +8,7 @@ namespace Abstract {
 
 class AbstractReceiver : public IReceiver {
 public:
-	explicit AbstractReceiver(const i32 id);
+	explicit AbstractReceiver();
 	~AbstractReceiver() override;
 
 	void connectEmitter(const std::shared_ptr<IEmitter> &emitter) override;

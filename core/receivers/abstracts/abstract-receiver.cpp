@@ -8,8 +8,7 @@
 
 using namespace Receiver::Abstract;
 
-AbstractReceiver::AbstractReceiver(const i32 id)
-		: IReceiver(id) {
+AbstractReceiver::AbstractReceiver() {
 	m_data.fill(0);
 }
 

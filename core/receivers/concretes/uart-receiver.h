@@ -15,7 +15,7 @@
 
 #include <externals/common/std/raii/raii-thread.hpp>
 
-using unregister_callback = std::function<void()>;
+using unregister_callback = std::function<void(const IRepresentable &)>;
 
 namespace Functional {
 class DevicePort;
@@ -29,7 +29,7 @@ class UartWorker;
 
 class UartReceiver final : public Receiver::Abstract::AbstractReceiver {
 public:
-	explicit UartReceiver(i32, std::unique_ptr<Functional::DevicePort> &&, unregister_callback &&unregister);
+	explicit UartReceiver(std::unique_ptr<Functional::DevicePort> &&, unregister_callback &&unregister);
 	UartReceiver(const UartReceiver &) = delete;
 	UartReceiver(UartReceiver &&) = delete;
 	~UartReceiver() final;

@@ -7,8 +7,6 @@ namespace Abstract {
 
 class AbstractEmitter : public IEmitter {
 public:
-	explicit AbstractEmitter(i32 id);
-
 	Category category() const noexcept final { return Category::Emitter; }
 
 	std::string name() const override;

@@ -5,8 +5,8 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional;
 
-BrightnessCorrector::BrightnessCorrector(const i32 id, int owner)
-		: ICorrector(id, owner) {
+BrightnessCorrector::BrightnessCorrector(int owner)
+		: ICorrector(owner) {
 }
 
 CorrectorType BrightnessCorrector::type() const noexcept { return CorrectorType::Brightness; }

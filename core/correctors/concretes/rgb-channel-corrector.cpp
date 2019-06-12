@@ -5,8 +5,8 @@ using namespace Enum;
 using namespace Corrector::Concrete;
 using namespace Functional;
 
-RedChannelCorrector::RedChannelCorrector(const i32 id, int owner)
-		: ICorrector(id, owner) {}
+RedChannelCorrector::RedChannelCorrector(int owner)
+		: ICorrector(owner) {}
 
 void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == factor().max())
@@ -25,8 +25,8 @@ void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept 
 	}
 }
 
-GreenChannelCorrector::GreenChannelCorrector(const i32 id, int owner)
-		: ICorrector(id, owner) {}
+GreenChannelCorrector::GreenChannelCorrector(int owner)
+		: ICorrector(owner) {}
 
 void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == factor().max())
@@ -45,8 +45,8 @@ void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcep
 	}
 }
 
-BlueChannelCorrector::BlueChannelCorrector(const i32 id, int owner)
-		: ICorrector(id, owner) {}
+BlueChannelCorrector::BlueChannelCorrector(int owner)
+		: ICorrector(owner) {}
 
 void BlueChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == factor().max())

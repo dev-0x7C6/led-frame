@@ -20,12 +20,11 @@ using namespace Enum;
 using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
 
-UartReceiver::UartReceiver(const i32 id, std::unique_ptr<DevicePort> &&device, unregister_callback &&callback)
-		: AbstractReceiver(id)
-		, m_device(std::move(device))
+UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, unregister_callback &&callback)
+		: m_device(std::move(device))
 		, m_thread([this, unregister_callback{std::move(callback)}](const auto &interrupted) {
 			run(interrupted);
-			unregister_callback();
+			unregister_callback(*this);
 		}) {
 }
 
@@ -44,7 +43,7 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 	}};
 
 	UartWorker worker(ribbon, correctors(), m_device);
-	Functional::FramePaceSync framePaceing(100);
+	Functional::FramePaceSync framePaceing(90);
 	std::optional<int> lastEmitterId;
 
 	Scanline frame;

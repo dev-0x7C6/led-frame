@@ -7,15 +7,14 @@
 #include <QString>
 
 #include <memory>
-#include <core/generic/iatom.h>
+#include <core/generic/irepresentable.h>
 #include <core/generic/atom-aggregator.h>
 
 class IEmitter;
 
-class IReceiver : public IAtom {
+class IReceiver : public IRepresentable {
 public:
-	explicit IReceiver(const i32 id)
-			: IAtom(id) {}
+	explicit IReceiver() = default;
 	~IReceiver() override = default;
 
 	auto category() const noexcept -> Category final;

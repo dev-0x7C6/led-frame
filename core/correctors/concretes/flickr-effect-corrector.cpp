@@ -2,8 +2,8 @@
 
 using namespace Corrector::Concrete;
 
-FlickrEffectCorrector::FlickrEffectCorrector(const i32 id, int owner)
-		: ICorrector(id, owner, Enum::Priority::Highest) {
+FlickrEffectCorrector::FlickrEffectCorrector(int owner)
+		: ICorrector(owner, Enum::Priority::Highest) {
 	m_factor.setValue(0);
 	m_enabled = false;
 }

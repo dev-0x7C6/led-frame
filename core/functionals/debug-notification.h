@@ -6,7 +6,7 @@ namespace Functional {
 
 class DebugNotification final : public INotification {
 public:
-	void action(NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept final;
+	void action(NotifyAction type, const std::shared_ptr<IRepresentable> &atom) noexcept final;
 
 	static DebugNotification &instance();
 };

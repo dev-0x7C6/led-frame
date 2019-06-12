@@ -7,7 +7,7 @@ namespace Concrete {
 
 class BrightnessCorrector final : public ICorrector {
 public:
-	explicit BrightnessCorrector(i32 id, int owner);
+	explicit BrightnessCorrector(int owner);
 
 	CorrectorType type() const noexcept final;
 	void correct(Container::Scanline &scanline) const noexcept final;

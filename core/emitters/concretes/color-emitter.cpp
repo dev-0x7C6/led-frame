@@ -2,8 +2,7 @@
 
 using namespace Emitter::Concrete;
 
-ColorEmitter::ColorEmitter(const i32 id)
-		: AbstractEmitter(id) {
+ColorEmitter::ColorEmitter() {
 	setColor(Qt::darkGreen);
 }
 
@@ -16,6 +15,5 @@ void ColorEmitter::setColor(const QColor &color) {
 		return;
 
 	m_color = color;
-	m_scanline.fill(color.rgb());
-	commit(m_scanline);
+	commit(Container::Scanline(color.rgb()));
 }

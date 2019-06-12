@@ -7,11 +7,11 @@
 
 #include <atomic>
 
-#include <core/generic/iatom.h>
+#include <core/generic/irepresentable.h>
 
-class ICorrector : public IAtom {
+class ICorrector : public IRepresentable {
 public:
-	inline explicit ICorrector(i32 id, int owner, Enum::Priority priority = Enum::Priority::Average);
+	inline explicit ICorrector(int owner, Enum::Priority priority = Enum::Priority::Average);
 
 	auto category() const noexcept -> Category final { return Category::Corrector; }
 	auto properties() const noexcept -> Properties final {
@@ -53,9 +53,8 @@ private:
 
 // impl
 
-ICorrector::ICorrector(const i32 id, int owner, const Enum::Priority priority)
-		: IAtom(id)
-		, m_owner(owner)
+ICorrector::ICorrector(int owner, const Enum::Priority priority)
+		: m_owner(owner)
 		, m_priority(priority)
 
 {}

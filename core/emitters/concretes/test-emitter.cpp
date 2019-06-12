@@ -7,9 +7,8 @@
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-TestEmitter::TestEmitter(const i32 id)
-		: AbstractEmitter(id)
-		, m_timer(std::make_unique<QTimer>(nullptr))
+TestEmitter::TestEmitter()
+		: m_timer(std::make_unique<QTimer>(nullptr))
 
 {
 	QObject::connect(m_timer.get(), &QTimer::timeout, [this] { process(); });

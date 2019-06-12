@@ -6,11 +6,6 @@
 using namespace Emitter::Concrete;
 using namespace Enum;
 
-OffEmitter::OffEmitter(const i32 id)
-		: AbstractEmitter(id)
-
-{
-	Container::Scanline scanline;
-	scanline.clear();
-	commit(scanline);
+OffEmitter::OffEmitter() {
+	commit(Container::Scanline(0));
 }

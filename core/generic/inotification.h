@@ -2,7 +2,7 @@
 
 #include <memory>
 
-class IAtom;
+class IRepresentable;
 
 enum class NotifyAction {
 	Attached,
@@ -26,5 +26,5 @@ constexpr auto toString(const NotifyAction &action) noexcept {
 class INotification {
 public:
 	virtual ~INotification() = default;
-	virtual void action(NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept = 0;
+	virtual void action(NotifyAction type, const std::shared_ptr<IRepresentable> &atom) noexcept = 0;
 };

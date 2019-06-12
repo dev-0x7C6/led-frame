@@ -76,8 +76,6 @@ void MainManager::rescan() {
 	Container::DeviceInfo deviceInfo("LedFrame", "LedFrame", 500000);
 	const auto ports = QSerialPortInfo::availablePorts();
 
-	static auto id = 0;
-
 	std::mutex registration_mutex;
 
 	for (const auto &port : ports) {
@@ -87,7 +85,6 @@ void MainManager::rescan() {
 			continue;
 
 		std::lock_guard locker(registration_mutex);
-		id++;
 
 		while (!m_unregisterQueue.empty()) {
 			const auto &remember_id = m_unregisterQueue.front();
@@ -96,15 +93,15 @@ void MainManager::rescan() {
 			m_unregisterQueue.pop();
 		}
 
-		auto unregister = [this, remember_id{id}, &registration_mutex]() {
-			std::lock_guard locker(registration_mutex);
-			m_unregisterQueue.emplace(remember_id);
-		};
-
 		m_lockedDevices.emplace(port.portName().toStdString());
 
+		auto unregister = [this, &registration_mutex](const IRepresentable &value) {
+			std::lock_guard locker(registration_mutex);
+			m_unregisterQueue.emplace(value.id());
+		};
+
 		auto device = std::make_unique<DevicePort>(port);
-		auto thread = std::make_unique<UartReceiver>(id, std::move(device), std::move(unregister));
+		auto thread = std::make_unique<UartReceiver>(std::move(device), std::move(unregister));
 
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), port.serialNumber()))
 			continue;

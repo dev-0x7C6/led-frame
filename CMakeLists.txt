@@ -154,8 +154,8 @@ set(sources
     core/functionals/remote-controller.h
     core/generic/atom-aggregator.cpp
     core/generic/atom-aggregator.h
-    core/generic/iatom.cpp
-    core/generic/iatom.h
+    core/generic/irepresentable.cpp
+    core/generic/irepresentable.h
     core/interfaces/icorrector.h
     core/interfaces/iemitter.cpp
     core/interfaces/iemitter.h
@@ -204,8 +204,8 @@ set(sources_ut
     core/functionals/image-block-processor.h
     core/generic/atom-aggregator.cpp
     core/generic/atom-aggregator.h
-    core/generic/iatom.cpp
-    core/generic/iatom.h
+    core/generic/irepresentable.cpp
+    core/generic/irepresentable.h
     core/interfaces/icorrector.h
     ut/corrector-tests.cpp
     ut/image-block-processing-tests.cpp
@@ -230,8 +230,8 @@ set(sources_bench
     core/correctors/factories/corrector-factory.h
     core/generic/atom-aggregator.cpp
     core/generic/atom-aggregator.h
-    core/generic/iatom.cpp
-    core/generic/iatom.h
+    core/generic/irepresentable.cpp
+    core/generic/irepresentable.h
     core/interfaces/icorrector.h
 )
 

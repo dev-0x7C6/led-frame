@@ -1,6 +1,6 @@
 #include "debug-notification.h"
 
-#include <core/generic/iatom.h>
+#include <core/generic/irepresentable.h>
 #include <core/generic/inotification.h>
 
 #include <core/types.h>
@@ -17,7 +17,7 @@ struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts>
 overloaded(Ts...)->overloaded<Ts...>;
 
-void DebugNotification::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
+void DebugNotification::action(const NotifyAction type, const std::shared_ptr<IRepresentable> &atom) noexcept {
 	std::cout << "debug: " << toString(type) << ", " << toString(atom->category()) << std::endl;
 
 	for (const auto &[key, value] : atom->properties()) {

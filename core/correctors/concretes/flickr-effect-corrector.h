@@ -7,7 +7,7 @@ namespace Concrete {
 
 class FlickrEffectCorrector final : public ICorrector {
 public:
-	explicit FlickrEffectCorrector(i32 id, int owner);
+	explicit FlickrEffectCorrector(int owner);
 
 	CorrectorType type() const noexcept final { return CorrectorType::FlickrEffect; }
 	void correct(Container::Scanline &scanline) const noexcept final;

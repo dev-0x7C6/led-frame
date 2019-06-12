@@ -12,8 +12,8 @@ namespace Concrete {
 
 class ImageEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit ImageEmitter(i32 id);
-	explicit ImageEmitter(i32 id, const QString &filePath);
+	explicit ImageEmitter();
+	explicit ImageEmitter(const QString &filePath);
 
 	EmitterType type() const final { return EmitterType::Image; }
 	u32 framerate() const final { return 1; }
@@ -27,7 +27,7 @@ private:
 
 class CameraEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit CameraEmitter(i32 id);
+	explicit CameraEmitter();
 	~CameraEmitter();
 
 	EmitterType type() const final { return EmitterType::Camera; }

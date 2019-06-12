@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-IEmitter::IEmitter(const i32 id)
-		: IAtom(id) {}
-
 void IEmitter::commit(const Container::Scanline &scanline) noexcept {
 	m_scanline.set(scanline);
 	m_firstFrameReady = 1;

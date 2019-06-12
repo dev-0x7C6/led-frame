@@ -25,9 +25,8 @@ using namespace Functional;
 
 using namespace std::literals;
 
-ScreenEmitter::ScreenEmitter(const i32 id, const i32 screenId)
+ScreenEmitter::ScreenEmitter(const i32 screenId)
 		: QThread(nullptr)
-		, AbstractEmitter(id)
 		, m_interrupted(false)
 		, m_screenId(screenId)
 

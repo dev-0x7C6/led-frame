@@ -23,7 +23,7 @@ inline void correctAndCheck(ICorrector *iface, const correct_t factor, const col
 }
 
 TEST(ColorCorrectors, BrightnessCorrector) {
-	BrightnessCorrector corrector(0, 0);
+	BrightnessCorrector corrector(0);
 	EXPECT_EQ(corrector.factor().max(), 255);
 	EXPECT_EQ(corrector.factor().min(), 0);
 	correctAndCheck(&corrector, 255, 0x00ffffffu, 0x00ffffffu);
@@ -35,7 +35,7 @@ TEST(ColorCorrectors, BrightnessCorrector) {
 }
 
 TEST(ColorCorrectors, RedCorrector) {
-	RedChannelCorrector corrector(0, 0);
+	RedChannelCorrector corrector(0);
 	EXPECT_EQ(corrector.factor().max(), 255);
 	EXPECT_EQ(corrector.factor().min(), 0);
 	correctAndCheck(&corrector, 255, 0x00ffffffu, 0x00ffffffu);
@@ -47,7 +47,7 @@ TEST(ColorCorrectors, RedCorrector) {
 }
 
 TEST(ColorCorrectors, GreenCorrector) {
-	GreenChannelCorrector corrector(0, 0);
+	GreenChannelCorrector corrector(0);
 	EXPECT_EQ(corrector.factor().max(), 255);
 	EXPECT_EQ(corrector.factor().min(), 0);
 	correctAndCheck(&corrector, 255, 0x00ffffffu, 0x00ffffffu);
@@ -59,7 +59,7 @@ TEST(ColorCorrectors, GreenCorrector) {
 }
 
 TEST(ColorCorrectors, BlueCorrector) {
-	BlueChannelCorrector corrector(0, 0);
+	BlueChannelCorrector corrector(0);
 	EXPECT_EQ(corrector.factor().max(), 255);
 	EXPECT_EQ(corrector.factor().min(), 0);
 	correctAndCheck(&corrector, 255, 0x00ffffffu, 0x00ffffffu);

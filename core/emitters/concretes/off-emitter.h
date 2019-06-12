@@ -7,7 +7,7 @@ namespace Concrete {
 
 class OffEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit OffEmitter(i32 id);
+	explicit OffEmitter();
 
 	EmitterType type() const final { return EmitterType::Off; }
 };

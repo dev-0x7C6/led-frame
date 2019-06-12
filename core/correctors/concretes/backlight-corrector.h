@@ -7,7 +7,7 @@ namespace Concrete {
 
 class BacklightCorrector final : public ICorrector {
 public:
-	explicit BacklightCorrector(i32 id, int owner);
+	explicit BacklightCorrector(int owner);
 
 	CorrectorType type() const noexcept final { return CorrectorType::Backlight; }
 	void correct(Container::Scanline &scanline) const noexcept final;

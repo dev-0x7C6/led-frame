@@ -22,7 +22,7 @@ public:
 	WebSocketConnection &operator=(WebSocketConnection &&) noexcept = delete;
 	~WebSocketConnection() final;
 
-	void action(NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept final;
+	void action(NotifyAction type, const std::shared_ptr<IRepresentable> &atom) noexcept final;
 
 private:
 	void recv(const QString &message);

@@ -9,7 +9,7 @@ namespace Concrete {
 
 class ColorEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit ColorEmitter(i32 id);
+	explicit ColorEmitter();
 
 	EmitterType type() const final { return EmitterType::Color; }
 	u32 framerate() const final { return 1; }
@@ -18,8 +18,7 @@ public:
 	void setColor(const QColor &color);
 
 private:
-	Container::Scanline m_scanline;
-	QColor m_color;
+	QColor m_color{};
 };
 } // namespace Concrete
 } // namespace Emitter

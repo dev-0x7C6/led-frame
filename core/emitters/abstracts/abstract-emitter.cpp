@@ -6,10 +6,6 @@
 
 using namespace Emitter::Abstract;
 
-AbstractEmitter::AbstractEmitter(const i32 id)
-		: IEmitter(id) {
-}
-
 std::string AbstractEmitter::name() const {
 	return m_name;
 }

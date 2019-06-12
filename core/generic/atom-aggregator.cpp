@@ -18,7 +18,7 @@ void AtomAggregator::detach(INotification *notificator) noexcept {
 		m_notifications.end());
 }
 
-void AtomAggregator::attach(const std::shared_ptr<IAtom> &object) noexcept {
+void AtomAggregator::attach(const std::shared_ptr<IRepresentable> &object) noexcept {
 	std::lock_guard _(m_mutex);
 	m_objects.emplace_back(object);
 
@@ -26,13 +26,13 @@ void AtomAggregator::attach(const std::shared_ptr<IAtom> &object) noexcept {
 		notification->action(NotifyAction::Attached, object);
 
 	object->attach([this, object = object]() {
-		std::lock_guard locker(m_mutex);
+		std::lock_guard _(m_mutex);
 		for (auto notification : m_notifications)
 			notification->action(NotifyAction::Modified, object);
 	});
 }
 
-void AtomAggregator::detach(const std::shared_ptr<IAtom> &object) noexcept {
+void AtomAggregator::detach(const std::shared_ptr<IRepresentable> &object) noexcept {
 	std::lock_guard _(m_mutex);
 
 	for (auto notification : m_notifications)
@@ -44,13 +44,13 @@ void AtomAggregator::detach(const std::shared_ptr<IAtom> &object) noexcept {
 		m_objects.end());
 }
 
-void AtomAggregator::enumerate(const std::function<void(const std::shared_ptr<IAtom> &)> &callback) const noexcept {
+void AtomAggregator::enumerate(const std::function<void(const std::shared_ptr<IRepresentable> &)> &callback) const noexcept {
 	std::lock_guard _(m_mutex);
 	for (const auto &object : m_objects)
 		callback(object);
 }
 
-auto AtomAggregator::find(const Category category, const int id) noexcept -> std::shared_ptr<IAtom> {
+auto AtomAggregator::find(const Category category, const int id) noexcept -> std::shared_ptr<IRepresentable> {
 	std::lock_guard _(m_mutex);
 	for (const auto &object : m_objects)
 		if (id == object->id() && category == object->category())

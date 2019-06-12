@@ -7,10 +7,7 @@
 using namespace Emitter::Concrete;
 using namespace Functional::Animation;
 
-AnimationEmitter::AnimationEmitter(const i32 id)
-		: AbstractEmitter(id)
-
-{
+AnimationEmitter::AnimationEmitter() {
 	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, [this](const auto &value) { process(value); });
 	make_animation(m_animation, Enum::AnimationVariant::Candle);
 }

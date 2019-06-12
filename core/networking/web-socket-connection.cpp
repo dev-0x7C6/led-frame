@@ -44,7 +44,7 @@ struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts>
 overloaded(Ts...)->overloaded<Ts...>;
 
-QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
+QJsonObject toJson(const std::shared_ptr<IRepresentable> &atom) {
 	QJsonObject result;
 
 	for (const auto &[key, value] : atom->properties()) {
@@ -65,7 +65,7 @@ QJsonObject toJson(const std::shared_ptr<IAtom> &atom) {
 
 // documentation/protocol/notification.md
 
-void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<IAtom> &atom) noexcept {
+void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<IRepresentable> &atom) noexcept {
 	std::lock_guard _(m_mutex);
 	QJsonObject notification{
 		{"message", "notification"},

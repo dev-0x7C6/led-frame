@@ -3,16 +3,16 @@
 #include <core/containers/color-scanline-container.h>
 #include <core/enums/emitter-type-enum.h>
 #include <core/functionals/raii-reference-counter.h>
-#include <core/generic/iatom.h>
+#include <core/generic/irepresentable.h>
 
 #include <any>
 #include <atomic>
 #include <memory>
 #include <string>
 
-class IEmitter : public IAtom {
+class IEmitter : public IRepresentable {
 public:
-	explicit IEmitter(i32 id);
+	explicit IEmitter() = default;
 
 	virtual std::string name() const = 0;
 	virtual EmitterType type() const = 0;

@@ -9,16 +9,14 @@ using namespace Corrector::Concrete;
 using namespace Enum;
 
 std::shared_ptr<ICorrector> Factory::make_corrector(CorrectorType type, i32 owner) noexcept {
-	static i32 id = 0;
-
 	switch (type) {
-		case CorrectorType::Brightness: return std::make_shared<BrightnessCorrector>(id++, owner);
-		case CorrectorType::ColorEnhancer: return std::make_shared<ColorEnhancerCorrector>(id++, owner);
-		case CorrectorType::FlickrEffect: return std::make_shared<FlickrEffectCorrector>(id++, owner);
-		case CorrectorType::RedChannel: return std::make_shared<RedChannelCorrector>(id++, owner);
-		case CorrectorType::GreenChannel: return std::make_shared<GreenChannelCorrector>(id++, owner);
-		case CorrectorType::BlueChannel: return std::make_shared<BlueChannelCorrector>(id++, owner);
-		case CorrectorType::Backlight: return std::make_shared<BacklightCorrector>(id++, owner);
+		case CorrectorType::Brightness: return std::make_shared<BrightnessCorrector>(owner);
+		case CorrectorType::ColorEnhancer: return std::make_shared<ColorEnhancerCorrector>(owner);
+		case CorrectorType::FlickrEffect: return std::make_shared<FlickrEffectCorrector>(owner);
+		case CorrectorType::RedChannel: return std::make_shared<RedChannelCorrector>(owner);
+		case CorrectorType::GreenChannel: return std::make_shared<GreenChannelCorrector>(owner);
+		case CorrectorType::BlueChannel: return std::make_shared<BlueChannelCorrector>(owner);
+		case CorrectorType::Backlight: return std::make_shared<BacklightCorrector>(owner);
 		case CorrectorType::Unused: return nullptr;
 	}
 
