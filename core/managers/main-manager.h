@@ -5,10 +5,12 @@
 
 #include <core/interfaces/inotification-aggregator.h>
 
+#include <core/functionals/safe_queue.h>
+#include <core/functionals/safe_set.h>
+#include <core/functionals/safe_device_locker.h>
+
 #include <list>
 #include <memory>
-#include <set>
-#include <queue>
 
 #include <QTimer>
 
@@ -56,7 +58,8 @@ private:
 	std::function<bool(IReceiver *, const QString &serialNumber)> m_registerDeviceCallback;
 	std::list<std::unique_ptr<Network::UdpBroadcastService>> m_broadcasts;
 	QTimer m_deviceScan;
-	std::queue<int> m_unregisterQueue;
-	std::set<std::string> m_lockedDevices;
+
+	safe::device_locker m_deviceLocker;
+	safe::queue<i32> m_unregisterQueue;
 };
 } // namespace Manager

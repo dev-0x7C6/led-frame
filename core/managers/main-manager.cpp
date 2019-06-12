@@ -74,34 +74,23 @@ void MainManager::detach(INotification &notifier) noexcept {
 
 void MainManager::rescan() {
 	Container::DeviceInfo deviceInfo("LedFrame", "LedFrame", 500000);
-	const auto ports = QSerialPortInfo::availablePorts();
 
-	std::mutex registration_mutex;
+	m_unregisterQueue.dequeue_all([this](auto &&id_to_unregister) {
+		m_broadcasts.remove_if([id_to_unregister](auto &&match) { return id_to_unregister == match->id(); });
+		m_atoms.detach(m_atoms.find(id_to_unregister, receiver_type{}));
+	});
 
-	for (const auto &port : ports) {
+	for (auto &&port : QSerialPortInfo::availablePorts()) {
 		if ((port.manufacturer().toStdString() != deviceInfo.manufacturer())) continue;
 
-		if (m_lockedDevices.count(port.portName().toStdString()))
+		if (!m_deviceLocker.lock(port.portName().toStdString()))
 			continue;
 
-		std::lock_guard locker(registration_mutex);
-
-		while (!m_unregisterQueue.empty()) {
-			const auto &remember_id = m_unregisterQueue.front();
-			m_broadcasts.remove_if([remember_id](const auto &match) { return remember_id == match->id(); });
-			m_atoms.detach(m_atoms.find(remember_id, receiver_type{}));
-			m_unregisterQueue.pop();
-		}
-
-		m_lockedDevices.emplace(port.portName().toStdString());
-
-		auto unregister = [this, &registration_mutex](const IRepresentable &value) {
-			std::lock_guard locker(registration_mutex);
-			m_unregisterQueue.emplace(value.id());
-		};
-
-		auto device = std::make_unique<DevicePort>(port);
-		auto thread = std::make_unique<UartReceiver>(std::move(device), std::move(unregister));
+		auto thread = std::make_unique<UartReceiver>(std::make_unique<DevicePort>(port),
+			[this, port{port.portName().toStdString()}](const IRepresentable &value) {
+				m_unregisterQueue.emplace(value.id());
+				m_deviceLocker.unlock(port);
+			});
 
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), port.serialNumber()))
 			continue;
