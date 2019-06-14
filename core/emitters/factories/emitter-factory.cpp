@@ -1,4 +1,5 @@
 #include <core/emitters/concretes/animation-emitter.h>
+#include <core/emitters/concretes/camera-emitter.h>
 #include <core/emitters/concretes/color-emitter.h>
 #include <core/emitters/concretes/image-emitter.h>
 #include <core/emitters/concretes/off-emitter.h>

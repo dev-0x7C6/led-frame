@@ -113,6 +113,8 @@ set(sources
     core/emitters/concretes/color-emitter.h
     core/emitters/concretes/image-emitter.cpp
     core/emitters/concretes/image-emitter.h
+    core/emitters/concretes/camera-emitter.cpp
+    core/emitters/concretes/camera-emitter.h
     core/emitters/concretes/off-emitter.cpp
     core/emitters/concretes/off-emitter.h
     core/emitters/concretes/screen-emitter.cpp

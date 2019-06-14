@@ -77,5 +77,5 @@ void ScreenEmitter::run() {
 		processor.process(screen->data(), screen->width(), screen->height());
 		commit(processor.output());
 		framePaceing.synchronize();
-	};
+	}
 }
