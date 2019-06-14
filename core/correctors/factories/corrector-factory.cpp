@@ -8,15 +8,15 @@
 using namespace Corrector::Concrete;
 using namespace Enum;
 
-std::shared_ptr<ICorrector> Factory::make_corrector(CorrectorType type, i32 owner) noexcept {
+std::unique_ptr<ICorrector> Factory::make_corrector(CorrectorType type, i32 owner) noexcept {
 	switch (type) {
-		case CorrectorType::Brightness: return std::make_shared<BrightnessCorrector>(owner);
-		case CorrectorType::ColorEnhancer: return std::make_shared<ColorEnhancerCorrector>(owner);
-		case CorrectorType::FlickrEffect: return std::make_shared<FlickrEffectCorrector>(owner);
-		case CorrectorType::RedChannel: return std::make_shared<RedChannelCorrector>(owner);
-		case CorrectorType::GreenChannel: return std::make_shared<GreenChannelCorrector>(owner);
-		case CorrectorType::BlueChannel: return std::make_shared<BlueChannelCorrector>(owner);
-		case CorrectorType::Backlight: return std::make_shared<BacklightCorrector>(owner);
+		case CorrectorType::Brightness: return std::make_unique<BrightnessCorrector>(owner);
+		case CorrectorType::ColorEnhancer: return std::make_unique<ColorEnhancerCorrector>(owner);
+		case CorrectorType::FlickrEffect: return std::make_unique<FlickrEffectCorrector>(owner);
+		case CorrectorType::RedChannel: return std::make_unique<RedChannelCorrector>(owner);
+		case CorrectorType::GreenChannel: return std::make_unique<GreenChannelCorrector>(owner);
+		case CorrectorType::BlueChannel: return std::make_unique<BlueChannelCorrector>(owner);
+		case CorrectorType::Backlight: return std::make_unique<BacklightCorrector>(owner);
 		case CorrectorType::Unused: return nullptr;
 	}
 

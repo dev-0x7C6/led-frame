@@ -7,6 +7,7 @@
 #include <core/receivers/concretes/uart-receiver.h>
 #include <core/interfaces/iemitter.h>
 #include <core/receivers/concretes/uart-worker.h>
+#include <externals/common/logger/logger.hpp>
 
 #include <QElapsedTimer>
 
@@ -19,6 +20,10 @@ using namespace Functional;
 using namespace Enum;
 using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
+
+namespace {
+constexpr auto filter = error_class::debug;
+}
 
 UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, unregister_callback &&callback)
 		: m_device(std::move(device))
@@ -74,9 +79,11 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 
 		frame = emitterGetFrame();
 		worker.write(frame, framePaceing);
-	};
+	}
 
+	logger<filter>::hint("receiver fadeout");
 	worker.fadeOut([&frame]() { return frame; }, framePaceing);
+	logger<filter>::debug("quiting thread");
 }
 
 Container::DeviceConfigContainer UartReceiver::config() { return m_device->config(); }

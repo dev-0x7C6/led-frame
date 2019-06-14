@@ -25,10 +25,13 @@ void AtomAggregator::attach(const std::shared_ptr<IRepresentable> &object) noexc
 	for (auto notification : m_notifications)
 		notification->action(NotifyAction::Attached, object);
 
-	object->attach([this, object = object]() {
+	object->attach([this, weak = std::weak_ptr(object)]() {
 		std::lock_guard _(m_mutex);
-		for (auto notification : m_notifications)
-			notification->action(NotifyAction::Modified, object);
+		auto shared = weak.lock();
+
+		if (shared)
+			for (auto notification : m_notifications)
+				notification->action(NotifyAction::Modified, shared);
 	});
 }
 

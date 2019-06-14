@@ -6,6 +6,7 @@
 #include <core/managers/main-manager.h>
 #include <core/managers/session-manager.h>
 #include <core/networking/web-socket-server.h>
+#include <externals/common/logger/logger.hpp>
 
 #include <QApplication>
 #include <QSettings>
@@ -33,7 +34,9 @@ using namespace std::chrono_literals;
 void catchUnixSignals(const std::vector<int> &quitSignals,
 	const std::vector<int> &ignoreSignals = std::vector<int>()) {
 
-	auto handler = [](int) -> void { QCoreApplication::quit(); };
+	auto handler = [](int) -> void {
+		logger<>::error("quiting application...");
+		QCoreApplication::quit(); };
 
 	for (int sig : ignoreSignals)
 		signal(sig, SIG_IGN);

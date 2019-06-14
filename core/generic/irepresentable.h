@@ -24,16 +24,13 @@ private:
 
 class IRepresentable : public std::enable_shared_from_this<IRepresentable>, public CallbackStorage {
 public:
-	IRepresentable()
-			: m_id(get_unique_i32()) {
-	}
+	IRepresentable();
+	virtual ~IRepresentable();
 
 	IRepresentable(const IRepresentable &) = delete;
 	IRepresentable(IRepresentable &&) = delete;
 	IRepresentable &operator=(const IRepresentable &) = delete;
 	IRepresentable &operator=(IRepresentable &&) = delete;
-
-	virtual ~IRepresentable() = default;
 
 	auto id() const noexcept { return m_id; }
 	virtual auto category() const noexcept -> Category { return Category::Undefined; }

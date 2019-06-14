@@ -5,5 +5,5 @@
 
 namespace Factory {
 
-std::shared_ptr<ICorrector> make_corrector(CorrectorType type, i32 owner) noexcept;
+std::unique_ptr<ICorrector> make_corrector(CorrectorType type, i32 owner) noexcept;
 }

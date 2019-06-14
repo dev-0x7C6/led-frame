@@ -103,7 +103,7 @@ void SessionManager::createCorrectorGroup(IReceiver *receiver) {
 
 	m_settings.beginGroup(QString::fromStdString(receiver->name()));
 	for (const auto &type : getCorrectorTypes()) {
-		auto corrector = make_corrector(type, id);
+		std::shared_ptr corrector = make_corrector(type, id);
 		m_settings.beginGroup(value(corrector->type()).c_str());
 		corrector->setFactor(m_settings.value("factor", corrector->factor().value()).toUInt());
 		corrector->setEnabled(m_settings.value("enabled", corrector->isEnabled()).toBool());

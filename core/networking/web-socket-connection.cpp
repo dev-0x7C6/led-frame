@@ -3,6 +3,7 @@
 #include <core/networking/protocols/json-protocol.h>
 #include <core/networking/web-socket-connection.h>
 #include <core/interfaces/ireceiver.h>
+#include <externals/common/logger/logger.hpp>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -10,9 +11,13 @@
 #include <QWebSocket>
 #include <QTimer>
 
+namespace {
 #ifdef QT_DEBUG
-#include <iostream>
+constexpr auto filter = error_class::debug;
+#else
+constexpr auto filter = error_class::information;
 #endif
+} // namespace
 
 #include <chrono>
 #include <typeindex>
@@ -49,12 +54,12 @@ QJsonObject toJson(const std::shared_ptr<IRepresentable> &atom) {
 
 	for (const auto &[key, value] : atom->properties()) {
 		std::visit(overloaded{
-					   [&result, key = key](auto arg) {
+					   [&](auto arg) {
 						   if constexpr (std::is_same_v<decltype(arg), std::string>) {
 							   result.insert(key.c_str(), arg.c_str());
 						   } else {
 							   result.insert(QString::fromStdString(key), arg);
-						   };
+						   }
 					   },
 				   },
 			value);
@@ -78,10 +83,7 @@ void WebSocketConnection::action(const NotifyAction type, const std::shared_ptr<
 }
 
 void WebSocketConnection::send(const QString &message) {
-#ifdef QT_DEBUG
-	std::cout << "send:\n";
-	std::cout << "\t" << message.toStdString() << "\n\n";
-#endif
+	logger<filter>::debug("send:\n\t", message.toStdString(), "\n\n");
 	m_socket->sendTextMessage(message);
 	m_socket->flush();
 }
@@ -90,10 +92,7 @@ void WebSocketConnection::recv(const QString &in) {
 	auto json = QJsonDocument::fromJson(in.toUtf8());
 	auto obj = json.object();
 
-#ifdef QT_DEBUG
-	std::cout << "recv:\n";
-	std::cout << "\t" << in.toStdString() << "\n\n";
-#endif
+	logger<filter>::debug("recv:\n\t", in.toStdString(), "\n\n");
 
 	const auto message = obj.value("message").toString();
 	const auto event = obj.value("event");

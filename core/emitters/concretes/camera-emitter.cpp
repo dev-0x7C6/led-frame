@@ -13,6 +13,7 @@ using namespace Emitter::Concrete;
 using namespace Enum;
 using namespace Container;
 using namespace Functional;
+
 class CaptureRGB32 : public QAbstractVideoSurface {
 public:
 	CaptureRGB32(std::function<void(const Scanline &)> &&update)
@@ -42,7 +43,7 @@ CameraEmitter::CameraEmitter() {
 		return;
 
 	m_captureHandle = std::make_unique<QCamera>(list.first());
-	m_captureVideo = std::make_unique<CaptureRGB32>([this](auto &&scanline) { commit(scanline); });
+	m_captureVideo = std::make_unique<CaptureRGB32>([this](auto &&scanline) { commit(std::forward<decltype(scanline)>(scanline)); });
 	m_captureHandle->setViewfinder(m_captureVideo.get());
 	m_captureHandle->start();
 }
