@@ -49,7 +49,6 @@ private:
 	std::shared_ptr<ICorrector> m_globalRedCorrection;
 	std::shared_ptr<ICorrector> m_globalGreenCorrection;
 	std::shared_ptr<ICorrector> m_globalBlueCorrection;
-	AtomAggregator m_atoms;
 
 protected:
 	void rescan();
@@ -61,5 +60,6 @@ private:
 
 	safe::device_locker m_deviceLocker;
 	safe::queue<i32> m_unregisterQueue;
+	AtomAggregator m_atoms;
 };
 } // namespace Manager

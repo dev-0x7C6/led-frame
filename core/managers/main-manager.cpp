@@ -77,7 +77,7 @@ void MainManager::rescan() {
 
 	m_unregisterQueue.dequeue_all([this](auto &&id_to_unregister) {
 		m_broadcasts.remove_if([id_to_unregister](auto &&match) { return id_to_unregister == match->id(); });
-		m_atoms.detach(m_atoms.find(id_to_unregister, receiver_type{}));
+		m_atoms.detach(id_to_unregister);
 	});
 
 	for (auto &&port : QSerialPortInfo::availablePorts()) {

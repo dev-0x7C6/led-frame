@@ -4,6 +4,7 @@
 #include <core/generic/inotification.h>
 
 #include <mutex>
+#include <list>
 
 struct corrector_type {};
 struct emitter_type {};
@@ -16,6 +17,7 @@ public:
 
 	void attach(const std::shared_ptr<IRepresentable> &object) noexcept;
 	void detach(const std::shared_ptr<IRepresentable> &object) noexcept;
+	void detach(i32 id) noexcept;
 
 	void enumerate(const std::function<void(const std::shared_ptr<IRepresentable> &)> &callback) const noexcept;
 
@@ -25,7 +27,10 @@ public:
 	auto find(const int id, receiver_type) noexcept -> std::shared_ptr<IRepresentable> { return find(Category::Receiver, id); }
 
 private:
-	std::vector<std::shared_ptr<IRepresentable>> m_objects;
-	std::vector<INotification *> m_notifications;
+	void notifyAll(NotifyAction, const std::shared_ptr<IRepresentable> &);
+
+private:
+	std::list<std::shared_ptr<IRepresentable>> m_objects;
+	std::list<INotification *> m_notifications;
 	mutable std::recursive_mutex m_mutex;
 };

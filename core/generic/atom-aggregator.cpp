@@ -2,6 +2,12 @@
 
 #include <algorithm>
 
+void AtomAggregator::notifyAll(NotifyAction action, const std::shared_ptr<IRepresentable> &object) {
+	std::lock_guard _(m_mutex);
+	for (auto &&notification : m_notifications)
+		notification->action(action, object);
+}
+
 void AtomAggregator::attach(INotification *notificator) noexcept {
 	std::lock_guard _(m_mutex);
 	m_notifications.emplace_back(notificator);
@@ -12,39 +18,37 @@ void AtomAggregator::attach(INotification *notificator) noexcept {
 
 void AtomAggregator::detach(INotification *notificator) noexcept {
 	std::lock_guard _(m_mutex);
-	m_notifications.erase(std::remove_if(m_notifications.begin(),
-							  m_notifications.end(),
-							  [notificator](const auto &value) { return value == notificator; }),
-		m_notifications.end());
+	m_notifications.remove_if([notificator](auto &&element) { return element == notificator; });
 }
 
 void AtomAggregator::attach(const std::shared_ptr<IRepresentable> &object) noexcept {
 	std::lock_guard _(m_mutex);
 	m_objects.emplace_back(object);
-
-	for (auto notification : m_notifications)
-		notification->action(NotifyAction::Attached, object);
+	notifyAll(NotifyAction::Attached, object);
 
 	object->attach([this, weak = std::weak_ptr(object)]() {
 		std::lock_guard _(m_mutex);
 		auto shared = weak.lock();
 
 		if (shared)
-			for (auto notification : m_notifications)
-				notification->action(NotifyAction::Modified, shared);
+			notifyAll(NotifyAction::Modified, shared);
 	});
 }
 
 void AtomAggregator::detach(const std::shared_ptr<IRepresentable> &object) noexcept {
 	std::lock_guard _(m_mutex);
+	notifyAll(NotifyAction::Detached, object);
 
-	for (auto notification : m_notifications)
-		notification->action(NotifyAction::Detached, object);
+	m_objects.remove_if([ptr = object.get()](auto &&element) {
+		return element.get() == ptr;
+	});
+}
 
-	m_objects.erase(std::remove_if(m_objects.begin(),
-						m_objects.end(),
-						[ptr = object.get()](const auto &value) { return ptr == value.get(); }),
-		m_objects.end());
+void AtomAggregator::detach(i32 id) noexcept {
+	std::lock_guard _(m_mutex);
+	m_objects.remove_if([id](auto &&element) {
+		return element->id() == id;
+	});
 }
 
 void AtomAggregator::enumerate(const std::function<void(const std::shared_ptr<IRepresentable> &)> &callback) const noexcept {
