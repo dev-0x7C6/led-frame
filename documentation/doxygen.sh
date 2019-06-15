@@ -1,3 +1,4 @@
 #!/bin/bash 
-doxygen project.doxy
-xdg-open doxygen/html/index.html
+cd `git rev-parse --show-toplevel`
+doxygen documentation/project.doxy
+xdg-open documentation/doxygen/html/index.html
