@@ -5,9 +5,9 @@
 
 #include <core/interfaces/inotification-aggregator.h>
 
-#include <core/functionals/safe_queue.h>
-#include <core/functionals/safe_set.h>
-#include <core/functionals/safe_device_locker.h>
+#include <core/functionals/safe-queue.h>
+#include <core/functionals/safe-set.h>
+#include <core/functionals/safe-device-locker.h>
 
 #include <list>
 #include <memory>

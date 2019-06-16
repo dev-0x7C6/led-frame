@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/functionals/safe_set.h>
+#include <core/functionals/safe-set.h>
 
 namespace safe {
 
