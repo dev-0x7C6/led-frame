@@ -91,9 +91,9 @@ inline static void image_processor_process(benchmark::State &state) {
 	Frame scene(w, h, 4);
 	scene.fill(matchColor);
 
-	ImageBlockProcessor<ColorAveragingBuffer, 16, 24> processor;
 	while (state.KeepRunning()) {
-		processor.process(scene.data(), w, h, step);
+		auto ret = ImageBlockProcessor<ColorAveragingBuffer, 16, 24>::process(scene.data(), w, h, step);
+		benchmark::DoNotOptimize(ret);
 	}
 }
 

@@ -79,7 +79,7 @@ constexpr auto scan_edge(const color *data, const Block &block) noexcept {
 template <class type, u32 rows, u32 columns>
 class ImageBlockProcessor final {
 public:
-	void process(const color *data, u32 width, u32 height, u32 step = 0) {
+	constexpr static auto process(const color *data, u32 width, u32 height, u32 step = 0) noexcept {
 		Block block;
 		block.scanline = width;
 		block.width = width / columns;
@@ -97,6 +97,13 @@ public:
 
 		const auto b = scan_all<type, columns>(data + ((rows - 1) * block.scanline * block.height) + block.hdiff * block.scanline, block);
 
+		Container::Scanline output;
+
+		std::array<type, columns> m_t;
+		std::array<type, columns> m_b;
+		std::array<type, rows - 2> m_l;
+		std::array<type, rows - 2> m_r;
+
 #ifdef RPI
 		const auto tc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return t.at(index).bgr(); });
 		const auto bc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return b.at(index).bgr(); });
@@ -109,24 +116,17 @@ public:
 		const auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&](const u32 index) { return pairs.at(index).second(); });
 #endif
 		for (std::size_t i = 0u; i < 32u; ++i) {
-			m_output[i] = lc.at(31 - i);
-			m_output[i + 32] = tc.at(i);
-			m_output[i + 64] = rc.at(i);
-			m_output[i + 96] = bc.at(31 - i);
+			output[i] = lc.at(31 - i);
+			output[i + 32] = tc.at(i);
+			output[i + 64] = rc.at(i);
+			output[i + 96] = bc.at(31 - i);
 		}
+
+		return output;
 	}
 
-	auto columnCount() const noexcept { return columns; }
-	auto rowCount() const noexcept { return rows; }
-
-	const auto &output() const noexcept { return m_output; }
-
-private:
-	Container::Scanline m_output;
-
-	std::array<type, columns> m_t;
-	std::array<type, columns> m_b;
-	std::array<type, rows - 2> m_l;
-	std::array<type, rows - 2> m_r;
+	constexpr static auto columnCount() noexcept { return columns; }
+	constexpr static auto rowCount() noexcept { return rows; }
 };
+
 } // namespace Functional

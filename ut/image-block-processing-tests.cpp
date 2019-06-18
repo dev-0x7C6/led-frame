@@ -46,10 +46,9 @@ TEST(ImageBlockProcessor, checkingEmptySpace) {
 	ColorScene scene(w, h);
 	scene.fill(matchColor);
 
-	ImageBlockProcessor<ColorAveragingBuffer, 32, 32> processor;
-	processor.process(scene.data(), w, h, 4);
+	const auto output = ImageBlockProcessor<ColorAveragingBuffer, 32, 32>::process(scene.data(), w, h, 4);
 
-	for (u32 i = 0u; i < processor.output().size(); ++i) {
-		EXPECT_EQ(processor.output().at(i), 0xff0000u);
+	for (u32 i = 0u; i < output.size(); ++i) {
+		EXPECT_EQ(output.at(i), 0xff0000u);
 	}
 }

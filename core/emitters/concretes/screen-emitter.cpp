@@ -49,7 +49,6 @@ void ScreenEmitter::interrupt() {
 
 void ScreenEmitter::run() {
 	Functional::FramePaceSync framePaceing(framerate());
-	ImageBlockProcessor<ColorAveragingBuffer, 16, 32> processor;
 #ifdef X11
 	auto screen = make_capture(ScreenCaptureType::X11ShmScreenCapture);
 #endif
@@ -74,8 +73,7 @@ void ScreenEmitter::run() {
 		if (!screen->capture(m_screenId))
 			continue;
 
-		processor.process(screen->data(), screen->width(), screen->height());
-		commit(processor.output());
+		commit(ImageBlockProcessor<ColorAveragingBuffer, 16, 32>::process(screen->data(), screen->width(), screen->height()));
 		framePaceing.synchronize();
 	}
 }
