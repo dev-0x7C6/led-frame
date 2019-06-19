@@ -44,8 +44,16 @@ void AtomAggregator::detach(const std::shared_ptr<IRepresentable> &object) noexc
 	});
 }
 
-void AtomAggregator::detach(i32 id) noexcept {
+void AtomAggregator::detach(const i32 id) noexcept {
 	std::lock_guard _(m_mutex);
+	std::shared_ptr<IRepresentable> object;
+	for (auto &&obj : m_objects) {
+		if (obj->id() == id)
+			object = obj;
+	}
+
+	notifyAll(NotifyAction::Detached, object);
+
 	m_objects.remove_if([id](auto &&element) {
 		return element->id() == id;
 	});
