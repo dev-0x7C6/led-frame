@@ -11,6 +11,7 @@
 
 #include <QElapsedTimer>
 #include <QEventLoop>
+#include <QThread>
 
 #include <algorithm>
 #include <iostream>
@@ -23,7 +24,7 @@ using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
 
 namespace {
-constexpr auto filter = error_class::debug;
+constexpr auto filter = error_class::information;
 }
 
 UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, unregister_callback &&callback)
@@ -42,6 +43,7 @@ auto UartReceiver::type() const noexcept -> ReceiverType {
 
 void UartReceiver::run(const std::atomic_bool &interrupted) {
 	QEventLoop loop;
+	loop.thread()->setPriority(QThread::Priority::HighestPriority);
 
 	const std::array<RibbonConfiguration, 4> ribbon{{
 		m_device->config().ribbon(0),

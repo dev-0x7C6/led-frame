@@ -4,7 +4,7 @@
 #include <externals/common/logger/logger.hpp>
 
 namespace {
-constexpr auto filter = error_class::debug;
+constexpr auto filter = error_class::information;
 }
 
 void CallbackStorage::attach(std::function<void()> &&callback) {
