@@ -29,7 +29,6 @@ ScreenEmitter::ScreenEmitter(const i32 screenId)
 		: QThread(nullptr)
 		, m_interrupted(false)
 		, m_screenId(screenId)
-
 {
 	start();
 }
@@ -76,4 +75,6 @@ void ScreenEmitter::run() {
 		commit(ImageBlockProcessor<ColorAveragingBuffer, 16, 32>::process(screen->data(), screen->width(), screen->height()));
 		framePaceing.synchronize();
 	}
+
+	invalidate();
 }

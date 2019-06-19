@@ -8,7 +8,12 @@ using namespace Emitter::Concrete;
 using namespace Functional::Animation;
 
 AnimationEmitter::AnimationEmitter() {
-	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, [this](const auto &value) { process(value); });
+	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, [this, firstFrame{true}](const auto &value) mutable {
+		if (usages() || firstFrame)
+			process(value);
+
+		firstFrame = false;
+	});
 	make_animation(m_animation, Enum::AnimationVariant::Candle);
 }
 

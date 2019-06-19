@@ -22,7 +22,7 @@ struct Block {
 
 template <typename type, u32 size>
 constexpr auto scan_extract(const color *data, const u32 range) noexcept {
-	constexpr auto jmp_cacheline = 64 / sizeof(std::remove_pointer_t<std::remove_cvref<decltype(data)>::type>);
+	constexpr auto jmp_cacheline = 64 / sizeof(color);
 	static_assert(jmp_cacheline == 16, "explicit check");
 
 	type buff;

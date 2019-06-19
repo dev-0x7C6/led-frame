@@ -11,21 +11,21 @@ using namespace Emitter::Concrete;
 using namespace Enum;
 using namespace Factory;
 
-std::shared_ptr<IEmitter> Factory::make_emitter(EmitterType type) noexcept {
+std::unique_ptr<IEmitter> Factory::make_emitter(EmitterType type) noexcept {
 	switch (type) {
-		case EmitterType::Color: return std::make_shared<ColorEmitter>();
-		case EmitterType::Animation: return std::make_shared<AnimationEmitter>();
-		case EmitterType::Image: return std::make_shared<ImageEmitter>();
-		case EmitterType::Screen: return std::make_shared<ScreenEmitter>();
-		case EmitterType::Test: return std::make_shared<TestEmitter>();
-		case EmitterType::Camera: return std::make_shared<CameraEmitter>();
-		case EmitterType::Off: return std::make_shared<OffEmitter>();
+		case EmitterType::Color: return std::make_unique<ColorEmitter>();
+		case EmitterType::Animation: return std::make_unique<AnimationEmitter>();
+		case EmitterType::Image: return std::make_unique<ImageEmitter>();
+		case EmitterType::Screen: return std::make_unique<ScreenEmitter>();
+		case EmitterType::Test: return std::make_unique<TestEmitter>();
+		case EmitterType::Camera: return std::make_unique<CameraEmitter>();
+		case EmitterType::Off: return std::make_unique<OffEmitter>();
 	}
 
 	return nullptr;
 }
 
-std::shared_ptr<IEmitter> Factory::make_emitter(EmitterType type, std::string &&name) noexcept {
+std::unique_ptr<IEmitter> Factory::make_emitter(EmitterType type, std::string &&name) noexcept {
 	auto emitter = make_emitter(type);
 
 	if (emitter)

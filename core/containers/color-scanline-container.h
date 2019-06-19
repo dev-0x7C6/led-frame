@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <array>
 #include <functional>
-#include <mutex>
+#include <memory>
 #include <cmath>
 
 namespace Container {
@@ -21,9 +21,9 @@ public:
 	constexpr explicit ScanlineContainer(color fillColor) noexcept;
 
 	constexpr ScanlineContainer(ScanlineContainer &&) noexcept = default;
-	constexpr ScanlineContainer(const ScanlineContainer &) noexcept = default;
+	constexpr ScanlineContainer(const ScanlineContainer &);
 	constexpr ScanlineContainer &operator=(ScanlineContainer &&) noexcept = default;
-	constexpr ScanlineContainer &operator=(const ScanlineContainer &) noexcept = default;
+	constexpr ScanlineContainer &operator=(const ScanlineContainer &) = delete;
 
 	constexpr static auto size() noexcept;
 	constexpr static auto line() noexcept;
@@ -46,10 +46,10 @@ public:
 	constexpr void operator>>(color value) noexcept;
 	constexpr color &operator[](u32 index) noexcept;
 
-	constexpr auto &array() noexcept { return m_data; }
+	constexpr auto &array() noexcept { return container(); }
 
-	constexpr decltype(auto) begin() { return m_data.begin(); }
-	constexpr decltype(auto) end() { return m_data.end(); }
+	constexpr decltype(auto) begin() { return container().begin(); }
+	constexpr decltype(auto) end() { return container().end(); }
 
 public:
 	constexpr static auto fromIndexToPosition(std::size_t index) noexcept;
@@ -58,43 +58,28 @@ public:
 	constexpr ScanlineContainer<newsize> resize();
 
 private:
-	std::array<color, linesize> m_data;
-};
-
-template <u32 linesize>
-class SharedScanlinePlaceholderTemplate {
-public:
-	void set(const ScanlineContainer<linesize> &container) noexcept {
-		std::lock_guard _(m_mutex);
-		m_scanline = container;
-	}
-
-	void set(ScanlineContainer<linesize> &&container) noexcept {
-		std::lock_guard _(m_mutex);
-		m_scanline = std::move(container);
-	}
-
-	ScanlineContainer<linesize> get() const noexcept {
-		std::lock_guard _(m_mutex);
-		return m_scanline;
-	}
+	const auto &container() const noexcept { return *m_data; }
+	auto &container() noexcept { return *m_data; }
 
 private:
-	ScanlineContainer<linesize> m_scanline{0};
-	mutable std::mutex m_mutex;
+	std::unique_ptr<std::array<color, linesize>> m_data; //make on heap to faster move
 };
 
 using Scanline = ScanlineContainer<128u>;
-using SharedScanlinePlaceholder = SharedScanlinePlaceholderTemplate<128u>;
-static_assert(is_class_cxx14_efficient_nothrow<Scanline>::value);
 
 template <u32 linesize>
 constexpr ScanlineContainer<linesize>::ScanlineContainer() noexcept
-		: m_data() {}
+		: m_data(std::make_unique<std::array<color, linesize>>()) {}
 
 template <u32 linesize>
 constexpr ScanlineContainer<linesize>::ScanlineContainer(const color fillColor) noexcept
-		: m_data() { m_data.fill(fillColor); }
+		: m_data(std::make_unique<std::array<color, linesize>>()) { container().fill(fillColor); }
+
+template <u32 linesize>
+constexpr ScanlineContainer<linesize>::ScanlineContainer(const ScanlineContainer &rhs)
+		: m_data(std::make_unique<std::array<color, linesize>>()) {
+	container() = rhs.container();
+}
 
 template <u32 linesize>
 constexpr auto ScanlineContainer<linesize>::size() noexcept { return linesize; }
@@ -104,26 +89,26 @@ constexpr auto ScanlineContainer<linesize>::line() noexcept { return linesize / 
 
 template <u32 linesize>
 constexpr auto ScanlineContainer<linesize>::at(const std::size_t index) const noexcept {
-	return m_data.at(index);
+	return container().at(index);
 }
 
 template <u32 linesize>
-constexpr auto ScanlineContainer<linesize>::data() noexcept { return m_data.data(); }
+constexpr auto ScanlineContainer<linesize>::data() noexcept { return container().data(); }
 
 template <u32 linesize>
-constexpr auto ScanlineContainer<linesize>::constData() const noexcept { return m_data.data(); }
+constexpr auto ScanlineContainer<linesize>::constData() const noexcept { return container().data(); }
 
 template <u32 linesize>
-constexpr auto ScanlineContainer<linesize>::data(const Enum::Position &position) noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
+constexpr auto ScanlineContainer<linesize>::data(const Enum::Position &position) noexcept { return container().data() + (static_cast<color>(position) * line()); }
 
 template <u32 linesize>
-constexpr auto ScanlineContainer<linesize>::constData(const Enum::Position &position) const noexcept { return m_data.data() + (static_cast<color>(position) * line()); }
+constexpr auto ScanlineContainer<linesize>::constData(const Enum::Position &position) const noexcept { return container().data() + (static_cast<color>(position) * line()); }
 
 template <u32 linesize>
 constexpr void ScanlineContainer<linesize>::clear() noexcept { fill(0u); }
 
 template <u32 linesize>
-constexpr void ScanlineContainer<linesize>::fill(const color value) noexcept { m_data.fill(value); }
+constexpr void ScanlineContainer<linesize>::fill(const color value) noexcept { container().fill(value); }
 
 template <u32 linesize>
 constexpr void ScanlineContainer<linesize>::fill(const Enum::Position position, const color value) noexcept {
@@ -143,29 +128,29 @@ constexpr ScanlineContainer<linesize> &ScanlineContainer<linesize>::operator=(co
 }
 
 template <u32 linesize>
-constexpr bool ScanlineContainer<linesize>::operator==(const ScanlineContainer &other) const noexcept { return m_data == other.m_data; }
+constexpr bool ScanlineContainer<linesize>::operator==(const ScanlineContainer &other) const noexcept { return container() == other.container(); }
 
 template <u32 linesize>
 constexpr bool ScanlineContainer<linesize>::operator!=(const ScanlineContainer &other) const noexcept { return !operator==(other); }
 
 template <u32 linesize>
 constexpr void ScanlineContainer<linesize>::operator<<(const color value) noexcept {
-	std::rotate(m_data.begin(), m_data.begin() + 1, m_data.end());
-	m_data[linesize - 1] = value;
+	std::rotate(container().begin(), container().begin() + 1, container().end());
+	container()[linesize - 1] = value;
 }
 
 template <u32 linesize>
 constexpr void ScanlineContainer<linesize>::operator>>(const color value) noexcept {
-	std::rotate(m_data.rbegin(), m_data.rbegin() + 1, m_data.rend());
-	m_data[0] = value;
+	std::rotate(container().rbegin(), container().rbegin() + 1, container().rend());
+	container()[0] = value;
 }
 
 template <u32 linesize>
 constexpr color &ScanlineContainer<linesize>::operator[](u32 index) noexcept {
-	return m_data[index];
+	return container()[index];
 }
 
-static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color));
+//static_assert(sizeof(Scanline) == Scanline::size() * sizeof(color));
 
 template <typename type>
 constexpr auto linear_interpolation(type start, type end, type factor) noexcept {
@@ -200,7 +185,7 @@ constexpr ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
 	for (int i = 0; i < newsize; ++i) {
 		const auto idx = factor * i;
 		const auto ret = idx - static_cast<int>(idx);
-		result[i] = interpolation(m_data[static_cast<int>(idx)], m_data[static_cast<int>(idx + 1)], ret);
+		result[i] = interpolation(container()[static_cast<int>(idx)], container()[static_cast<int>(idx + 1)], ret);
 	}
 
 	return result;

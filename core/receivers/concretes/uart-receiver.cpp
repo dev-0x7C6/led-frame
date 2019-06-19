@@ -10,6 +10,7 @@
 #include <externals/common/logger/logger.hpp>
 
 #include <QElapsedTimer>
+#include <QEventLoop>
 
 #include <algorithm>
 #include <iostream>
@@ -40,6 +41,8 @@ auto UartReceiver::type() const noexcept -> ReceiverType {
 }
 
 void UartReceiver::run(const std::atomic_bool &interrupted) {
+	QEventLoop loop;
+
 	const std::array<RibbonConfiguration, 4> ribbon{{
 		m_device->config().ribbon(0),
 		m_device->config().ribbon(1),
@@ -48,18 +51,25 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 	}};
 
 	UartWorker worker(ribbon, correctors(), m_device);
-	Functional::FramePaceSync framePaceing(90);
+	Functional::FramePaceSync framePaceing(80);
 	std::optional<int> lastEmitterId;
 
 	Scanline frame;
 
 	while (!interrupted && worker.isValid()) {
-		if (!isEmitterConnected() || !connectedEmitter()->isFirstFrameReady()) {
+		const auto emitter = connectedEmitter();
+
+		if (!isEmitterConnected() || !emitter->isFirstFrameReady()) {
 			framePaceing.synchronize();
 			continue;
 		}
 
-		const auto emitter = connectedEmitter();
+		if (!emitter->isValid()) {
+			logger<filter>::notice("receiver ", name(), ": connected emitter ", emitter->name(), " no longer valid, disconnecting from receiver");
+			connectEmitter(nullptr);
+			continue;
+		}
+
 		const auto emitterId = emitter->id();
 		auto emitterGetFrame = [&emitter] { return emitter->data(); };
 
@@ -72,13 +82,15 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 
 		if (lastEmitterId != emitterId) {
 			lastEmitterId = emitterId;
-			worker.change(frame, emitterGetFrame, framePaceing);
+			worker.change(
+				frame, [&emitter] { return emitter->data(); }, framePaceing);
 			frame = emitterGetFrame();
 			continue;
 		}
 
 		frame = emitterGetFrame();
 		worker.write(frame, framePaceing);
+		loop.processEvents(QEventLoop::AllEvents, 1);
 	}
 
 	logger<filter>::hint("receiver fadeout");

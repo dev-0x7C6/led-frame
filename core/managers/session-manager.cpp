@@ -27,7 +27,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 	auto screens = QGuiApplication::screens();
 
 	for (auto screen : screens) {
-		auto emitter = make_emitter(EmitterType::Screen);
+		std::shared_ptr emitter = make_emitter(EmitterType::Screen);
 		emitter->setName((QObject::tr("Display: ") + screen->name()).toStdString());
 		m_mainManager.atoms().attach(emitter);
 	}
@@ -109,7 +109,7 @@ void SessionManager::createCorrectorGroup(IReceiver *receiver) {
 		corrector->setEnabled(m_settings.value("enabled", corrector->isEnabled()).toBool());
 		receiver->correctors().attach(corrector);
 		m_settings.endGroup();
-	};
+	}
 
 	m_settings.endGroup();
 }

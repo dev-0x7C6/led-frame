@@ -31,19 +31,19 @@ factor_t animation_speed(Functional::FramePaceSync &pace) {
 	return pace.timing() * static_cast<factor_t>(3.0);
 }
 
-void UartWorker::fadeIn(const std::function<Scanline()> &frame, Functional::FramePaceSync &pace) {
+void UartWorker::fadeIn(const FrameCaptureFunctor &frame, Functional::FramePaceSync &pace) {
 	for (auto i = static_cast<factor_t>(0.0); i < static_cast<factor_t>(1.0); i += animation_speed(pace))
 		write(interpolate(Scanline(0), frame(), i), pace);
 }
 
-void UartWorker::fadeOut(const std::function<Scanline()> &frame, Functional::FramePaceSync &pace) {
+void UartWorker::fadeOut(const FrameCaptureFunctor &frame, Functional::FramePaceSync &pace) {
 	for (auto i = static_cast<factor_t>(0.0); i < static_cast<factor_t>(1.0); i += animation_speed(pace))
 		write(interpolate(frame(), Scanline(0), i), pace);
 }
 
-void UartWorker::change(const Scanline &from, const std::function<Scanline()> &frame, Functional::FramePaceSync &pace) {
+void UartWorker::change(const Scanline &from, FrameCaptureFunctor &&to, Functional::FramePaceSync &pace) {
 	for (auto i = static_cast<factor_t>(0.0); i < static_cast<factor_t>(1.0); i += animation_speed(pace))
-		write(interpolate<Scanline::size()>(from, frame(), i), pace);
+		write(interpolate<Scanline::size()>(from, to(), i), pace);
 }
 
 void UartWorker::write(Scanline scanline, Functional::FramePaceSync &pace) {

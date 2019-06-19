@@ -18,16 +18,18 @@ class FramePaceSync;
 namespace Receiver {
 namespace Concrete {
 
+using FrameCaptureFunctor = std::function<Container::Scanline()>;
+
 class UartWorker {
 public:
 	explicit UartWorker(std::array<Container::RibbonConfiguration, 4> ribbon,
 		AtomAggregator &correctors,
 		std::unique_ptr<Functional::DevicePort> &device);
 
-	void fadeIn(const std::function<Container::Scanline()> &, Functional::FramePaceSync &);
-	void fadeOut(const std::function<Container::Scanline()> &, Functional::FramePaceSync &);
+	void fadeIn(const FrameCaptureFunctor &, Functional::FramePaceSync &);
+	void fadeOut(const FrameCaptureFunctor &, Functional::FramePaceSync &);
 
-	void change(const Container::Scanline &from, const std::function<Container::Scanline()> &, Functional::FramePaceSync &);
+	void change(const Container::Scanline &from, FrameCaptureFunctor &&, Functional::FramePaceSync &);
 	void write(Container::Scanline, Functional::FramePaceSync &);
 
 	bool isValid();

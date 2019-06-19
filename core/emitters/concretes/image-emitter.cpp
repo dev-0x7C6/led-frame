@@ -23,8 +23,10 @@ ImageEmitter::ImageEmitter(const QString &filePath) {
 }
 
 bool ImageEmitter::loadFromFile(const QString &filePath) {
-	if (!QFile::exists(filePath))
+	if (!QFile::exists(filePath)) {
+		commit(Scanline(0));
 		return false;
+	}
 
 	m_filePath = filePath;
 	auto image = QImage(filePath).convertToFormat(QImage::Format_ARGB32);

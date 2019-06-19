@@ -90,11 +90,13 @@ TEST(ColorCorrectors, AllCorrectorsAllRange) {
 	}
 }
 
+/* when C++20 will be common
 TEST(fast_interpolation, tests) {
 	for (double i = 0.0; i < 1.0; i += 0.01) {
 		EXPECT_EQ(static_cast<int>(std::lerp(20.0, 40.0, i) * 100), static_cast<int>(linear_interpolation(20.0, 40.0, i) * 100));
 	}
 }
+*/
 
 TEST(rgbTests, rgbInterpolation) {
 	EXPECT_EQ(rgb_linear_interpolation(0xffffff, 0xffffff, 1.0), 0xffffff);

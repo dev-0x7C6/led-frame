@@ -8,11 +8,35 @@
 #include <any>
 #include <atomic>
 #include <memory>
+#include <mutex>
 #include <string>
+
+namespace safe {
+
+template <typename type>
+class placeholder {
+public:
+	template <typename... args>
+	void set(args &&... values) noexcept {
+		std::lock_guard _(m_mutex);
+		m_placeholder = type(std::forward<args>(values)...);
+	}
+
+	type get() const noexcept {
+		std::lock_guard _(m_mutex);
+		return m_placeholder;
+	}
+
+private:
+	type m_placeholder;
+	mutable std::mutex m_mutex;
+};
+} // namespace safe
 
 class IEmitter : public IRepresentable {
 public:
 	explicit IEmitter() = default;
+	~IEmitter() override;
 
 	virtual std::string name() const = 0;
 	virtual EmitterType type() const = 0;
@@ -21,8 +45,10 @@ public:
 
 	virtual void setName(const std::string &name) = 0;
 
-	void commit(const Container::Scanline &scanline) noexcept;
-	void commit(Container::Scanline &&scanline) noexcept;
+	template <typename... args>
+	void commit(args &&... values) noexcept {
+		m_scanline.set(std::forward<args>(values)...);
+	}
 
 	auto data() const noexcept -> Container::Scanline;
 
@@ -40,8 +66,17 @@ public:
 			{"name", name()}};
 	}
 
+	bool isValid() { return m_valid; }
+
 protected:
-	Container::SharedScanlinePlaceholder m_scanline;
-	std::atomic<int> m_firstFrameReady{0};
+	void invalidate() {
+		m_valid = false;
+	}
+
+protected:
+	safe::placeholder<std::optional<Container::Scanline>> m_scanline;
 	Functional::ReferenceCounter m_counter{0};
+
+private:
+	std::atomic_bool m_valid{true};
 };

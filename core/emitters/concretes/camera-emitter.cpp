@@ -99,4 +99,5 @@ void CameraEmitter::run() {
 
 	handle.reset(nullptr);
 	process();
+	invalidate();
 }

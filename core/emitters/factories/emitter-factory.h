@@ -7,7 +7,7 @@ enum class EmitterType;
 
 namespace Factory {
 
-std::shared_ptr<IEmitter> make_emitter(EmitterType type) noexcept;
-std::shared_ptr<IEmitter> make_emitter(EmitterType type, std::string &&name) noexcept;
+std::unique_ptr<IEmitter> make_emitter(EmitterType type) noexcept;
+std::unique_ptr<IEmitter> make_emitter(EmitterType type, std::string &&name) noexcept;
 
 } // namespace Factory
