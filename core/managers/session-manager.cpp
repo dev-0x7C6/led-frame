@@ -14,6 +14,9 @@
 #include <QScreen>
 #include <QSettings>
 
+#include <chrono>
+
+using namespace std::chrono_literals;
 using namespace Enum;
 using namespace Factory;
 using namespace Manager;
@@ -23,6 +26,24 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 		, m_mainManager(mainManager)
 
 {
+	QObject::connect(&m_invalidateTimer, &QTimer::timeout, &m_invalidateTimer, [this]() {
+		std::queue<i32> queue;
+
+		m_mainManager.atoms().enumerate([this, &queue](const std::shared_ptr<IRepresentable> &value) {
+			if (Category::Emitter == value->category()) {
+				auto emitter = std::static_pointer_cast<IEmitter>(value);
+				if (!emitter->isValid())
+					queue.emplace(emitter->id());
+			}
+		});
+
+		while (!queue.empty()) {
+			m_mainManager.atoms().detach(queue.front());
+			queue.pop();
+		}
+	});
+	m_invalidateTimer.start(100ms);
+
 #ifndef RPI
 	auto screens = QGuiApplication::screens();
 

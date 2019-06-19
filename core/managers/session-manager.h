@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QTimer>
+
 class IReceiver;
 class QSettings;
 class QString;
@@ -22,6 +24,7 @@ protected:
 	void save();
 
 private:
+	QTimer m_invalidateTimer;
 	QSettings &m_settings;
 	MainManager &m_mainManager;
 };
