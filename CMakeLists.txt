@@ -14,6 +14,7 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 COMPONENTS Core Network SerialPort WebSockets Widgets Multimedia REQUIRED)
 find_package(GTest)
+find_package(Threads)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -Wold-style-cast -pedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wno-variadic-macros -Wno-old-style-cast")
@@ -201,7 +202,6 @@ set(sources_ut
 )
 
 set(sources_bench
-    bench/main.cpp
     core/containers/color-scanline-container.cpp
     core/containers/color-scanline-container.h
     core/generic/atom-aggregator.cpp
@@ -209,6 +209,7 @@ set(sources_bench
     core/generic/irepresentable.cpp
     core/generic/irepresentable.h
     core/interfaces/icorrector.h
+    bench/main.cpp
 )
 
 add_executable(led-frame ${sources} ${rpi-sources} ${x11-sources})
@@ -230,7 +231,7 @@ target_link_libraries(led-frame
 	Qt5::WebSockets
 	${rpi-libs}
 	${x11-libs}
-	-lpthread
+        Threads::Threads
 )
 
 if (TESTS AND GTEST_FOUND)
@@ -238,10 +239,7 @@ if (TESTS AND GTEST_FOUND)
 
 	target_link_libraries(led-frame-ut
                 led-frame-correctors
-		Qt5::Core
-		${GTEST_LIBRARIES}
-		-lgmock
-		-lpthread
+                GTest::GTest
 	)
 endif()
 
@@ -250,9 +248,8 @@ if (BENCHMARKS)
 
 	target_link_libraries(led-frame-benchmark
                 led-frame-correctors
-		Qt5::Core
 		-lbenchmark
-		-lpthread
+                Threads::Threads
 	)
 endif()
 
