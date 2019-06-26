@@ -1,5 +1,10 @@
 project(led-frame)
 cmake_minimum_required(VERSION 3.9.4)
+
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 8)
+set(VERSION_PATCH 11)
+
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -7,31 +12,14 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+find_package(Qt5 COMPONENTS Core Network SerialPort WebSockets Widgets Multimedia REQUIRED)
+find_package(GTest)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -Wold-style-cast -pedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wno-variadic-macros -Wno-old-style-cast")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fverbose-asm")
 
-#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
-#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
-#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
-
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 8)
-set(VERSION_PATCH 10)
-set(PROJECT_NAME LedFrame)
-set(PROJECT_CODENAME "")
-
 configure_file(config.h.in config.h)
-
-find_package(Qt5Core)
-find_package(Qt5Network)
-find_package(Qt5SerialPort)
-find_package(Qt5WebSockets)
-find_package(Qt5Widgets)
-find_package(Qt5Multimedia)
-find_package(GTest)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
@@ -39,11 +27,6 @@ option(SUPPORT_RPI3 "Some extensions for Raspberry Pi 3" OFF)
 option(TESTS "Build unit tests" ON)
 option(BENCHMARKS "Build benchmarks" ON)
 
-include_directories(
-	${CMAKE_CURRENT_BINARY_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_SOURCE_DIR}
-)
 
 if (UNIX AND SUPPORT_RPI)
 	if (SUPPORT_RPI3)
@@ -81,30 +64,9 @@ if (UNIX AND SUPPORT_X11)
 	)
 endif()
 
-set(sources
-    core/containers/application-info-container.h
-    core/containers/color-scanline-container.cpp
-    core/containers/color-scanline-container.h
-    core/containers/device-config-container.cpp
-    core/containers/device-config-container.h
-    core/containers/device-info-container.h
-    core/containers/led-ribbon-config-container.cpp
-    core/containers/led-ribbon-config-container.h
-    core/correctors/concretes/backlight-corrector.cpp
-    core/correctors/concretes/backlight-corrector.h
-    core/correctors/concretes/brightness-corrector.cpp
-    core/correctors/concretes/brightness-corrector.h
-    core/correctors/concretes/color-enhancer-corrector.cpp
-    core/correctors/concretes/color-enhancer-corrector.h
-    core/correctors/concretes/flickr-effect-corrector.cpp
-    core/correctors/concretes/flickr-effect-corrector.h
-    core/correctors/concretes/rgb-channel-corrector.cpp
-    core/correctors/concretes/rgb-channel-corrector.h
-    core/correctors/factories/corrector-factory.cpp
-    core/correctors/factories/corrector-factory.h
-    core/debug.h
-    core/devices/device-port.cpp
-    core/devices/device-port.h
+# Emitters
+
+add_library(led-frame-emitters STATIC
     core/emitters/abstracts/abstract-emitter.cpp
     core/emitters/abstracts/abstract-emitter.h
     core/emitters/concretes/animation-emitter.cpp
@@ -123,6 +85,42 @@ set(sources
     core/emitters/concretes/test-emitter.h
     core/emitters/factories/emitter-factory.cpp
     core/emitters/factories/emitter-factory.h
+)
+
+target_link_libraries(led-frame-emitters Qt5::Core Qt5::Widgets Qt5::Multimedia)
+
+# Correctors
+
+add_library(led-frame-correctors STATIC
+    core/correctors/concretes/backlight-corrector.cpp
+    core/correctors/concretes/backlight-corrector.h
+    core/correctors/concretes/brightness-corrector.cpp
+    core/correctors/concretes/brightness-corrector.h
+    core/correctors/concretes/color-enhancer-corrector.cpp
+    core/correctors/concretes/color-enhancer-corrector.h
+    core/correctors/concretes/flickr-effect-corrector.cpp
+    core/correctors/concretes/flickr-effect-corrector.h
+    core/correctors/concretes/rgb-channel-corrector.cpp
+    core/correctors/concretes/rgb-channel-corrector.h
+    core/correctors/factories/corrector-factory.cpp
+    core/correctors/factories/corrector-factory.h
+)
+
+target_link_libraries(led-frame-correctors Qt5::Core)
+
+
+set(sources
+    core/containers/application-info-container.h
+    core/containers/color-scanline-container.cpp
+    core/containers/color-scanline-container.h
+    core/containers/device-config-container.cpp
+    core/containers/device-config-container.h
+    core/containers/device-info-container.h
+    core/containers/led-ribbon-config-container.cpp
+    core/containers/led-ribbon-config-container.h
+    core/debug.h
+    core/devices/device-port.cpp
+    core/devices/device-port.h
     core/enums/animation-variant.h
     core/enums/color-format-enum.h
     core/enums/color-type-enum.h
@@ -190,18 +188,6 @@ set(sources
 set(sources_ut
     core/containers/color-scanline-container.cpp
     core/containers/color-scanline-container.h
-    core/correctors/concretes/backlight-corrector.cpp
-    core/correctors/concretes/backlight-corrector.h
-    core/correctors/concretes/brightness-corrector.cpp
-    core/correctors/concretes/brightness-corrector.h
-    core/correctors/concretes/color-enhancer-corrector.cpp
-    core/correctors/concretes/color-enhancer-corrector.h
-    core/correctors/concretes/flickr-effect-corrector.cpp
-    core/correctors/concretes/flickr-effect-corrector.h
-    core/correctors/concretes/rgb-channel-corrector.cpp
-    core/correctors/concretes/rgb-channel-corrector.h
-    core/correctors/factories/corrector-factory.cpp
-    core/correctors/factories/corrector-factory.h
     core/functionals/color-averaging-buffer.h
     core/functionals/image-block-processor.h
     core/generic/atom-aggregator.cpp
@@ -218,18 +204,6 @@ set(sources_bench
     bench/main.cpp
     core/containers/color-scanline-container.cpp
     core/containers/color-scanline-container.h
-    core/correctors/concretes/backlight-corrector.cpp
-    core/correctors/concretes/backlight-corrector.h
-    core/correctors/concretes/brightness-corrector.cpp
-    core/correctors/concretes/brightness-corrector.h
-    core/correctors/concretes/color-enhancer-corrector.cpp
-    core/correctors/concretes/color-enhancer-corrector.h
-    core/correctors/concretes/flickr-effect-corrector.cpp
-    core/correctors/concretes/flickr-effect-corrector.h
-    core/correctors/concretes/rgb-channel-corrector.cpp
-    core/correctors/concretes/rgb-channel-corrector.h
-    core/correctors/factories/corrector-factory.cpp
-    core/correctors/factories/corrector-factory.h
     core/generic/atom-aggregator.cpp
     core/generic/atom-aggregator.h
     core/generic/irepresentable.cpp
@@ -250,11 +224,10 @@ if (UNIX AND SUPPORT_RPI)
 endif()
 
 target_link_libraries(led-frame
-	Qt5::Core
+        led-frame-correctors
+        led-frame-emitters
 	Qt5::SerialPort
-	Qt5::Widgets
 	Qt5::WebSockets
-	Qt5::Multimedia
 	${rpi-libs}
 	${x11-libs}
 	-lpthread
@@ -264,6 +237,7 @@ if (TESTS AND GTEST_FOUND)
 	add_executable(led-frame-ut ${sources_ut})
 
 	target_link_libraries(led-frame-ut
+                led-frame-correctors
 		Qt5::Core
 		${GTEST_LIBRARIES}
 		-lgmock
@@ -275,6 +249,7 @@ if (BENCHMARKS)
 	add_executable(led-frame-benchmark ${sources_bench})
 
 	target_link_libraries(led-frame-benchmark
+                led-frame-correctors
 		Qt5::Core
 		-lbenchmark
 		-lpthread

@@ -13,7 +13,6 @@ public:
 	constexpr static auto versionMinor() noexcept { return VERSION_MINOR; }
 	constexpr static auto versionPatch() noexcept { return VERSION_PATCH; }
 
-	constexpr static auto codename() noexcept { return PROJECT_CODENAME; }
 	constexpr static auto name() noexcept { return PROJECT_NAME; }
 
 	static std::string versionToString() noexcept {
