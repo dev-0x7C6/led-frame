@@ -15,19 +15,17 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt5 COMPONENTS Core Network SerialPort WebSockets Widgets Multimedia REQUIRED)
 find_package(GTest)
 find_package(Threads)
+find_package(X11)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -Wold-style-cast -pedantic")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wno-variadic-macros -Wno-old-style-cast")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fverbose-asm")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -pedantic -Wno-variadic-macros -Wno-old-style-cast -fverbose-asm")
 
 configure_file(config.h.in config.h)
 
-option(SUPPORT_X11 "Support for X11 screen capture" ON)
+option(SUPPORT_X11 "Support for X11 screen capture" OFF)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
 option(SUPPORT_RPI3 "Some extensions for Raspberry Pi 3" OFF)
 option(TESTS "Build unit tests" ON)
 option(BENCHMARKS "Build benchmarks" ON)
-
 
 if (UNIX AND SUPPORT_RPI)
 	if (SUPPORT_RPI3)
@@ -44,25 +42,6 @@ if (UNIX AND SUPPORT_RPI)
 	)
 	set(rpi-libs -lbcm_host -lvcos -lvcsm -lvchostif)
 	link_directories("/opt/vc/lib")
-endif()
-
-
-if (UNIX AND SUPPORT_X11)
-	set(x11-sources
-		core/functionals/captures/x11-helper.cpp
-		core/functionals/captures/x11-helper.h
-		core/functionals/captures/x11-screen-capture.cpp
-		core/functionals/captures/x11-screen-capture.h
-		core/functionals/captures/x11-shm-screen-capture.cpp
-		core/functionals/captures/x11-shm-screen-capture.h
-		core/functionals/helper/x11-shm-helper.cpp
-		core/functionals/helper/x11-shm-helper.h
-	)
-
-	set(x11-libs
-		-lX11
-		-lXext
-	)
 endif()
 
 # Emitters
@@ -108,6 +87,34 @@ add_library(led-frame-correctors STATIC
 )
 
 target_link_libraries(led-frame-correctors Qt5::Core)
+
+# Receivers
+
+add_library(led-frame-receivers STATIC
+    core/receivers/abstracts/abstract-receiver.cpp
+    core/receivers/abstracts/abstract-receiver.h
+    core/receivers/concretes/uart-receiver.cpp
+    core/receivers/concretes/uart-receiver.h
+    core/receivers/concretes/uart-worker.cpp
+    core/receivers/concretes/uart-worker.h
+)
+
+target_link_libraries(led-frame-receivers Qt5::Core Qt5::Widgets Qt5::SerialPort)
+
+# Networking
+
+add_library(led-frame-networking STATIC
+    core/networking/protocols/json-protocol.cpp
+    core/networking/protocols/json-protocol.h
+    core/networking/udp-broadcast-service.cpp
+    core/networking/udp-broadcast-service.h
+    core/networking/web-socket-connection.cpp
+    core/networking/web-socket-connection.h
+    core/networking/web-socket-server.cpp
+    core/networking/web-socket-server.h
+)
+
+target_link_libraries(led-frame-networking Qt5::Core Qt5::Network Qt5::Widgets Qt5::WebSockets)
 
 
 set(sources
@@ -168,74 +175,60 @@ set(sources
     core/managers/main-manager.h
     core/managers/session-manager.cpp
     core/managers/session-manager.h
-    core/networking/protocols/json-protocol.cpp
-    core/networking/protocols/json-protocol.h
-    core/networking/udp-broadcast-service.cpp
-    core/networking/udp-broadcast-service.h
-    core/networking/web-socket-connection.cpp
-    core/networking/web-socket-connection.h
-    core/networking/web-socket-server.cpp
-    core/networking/web-socket-server.h
-    core/receivers/abstracts/abstract-receiver.cpp
-    core/receivers/abstracts/abstract-receiver.h
-    core/receivers/concretes/uart-receiver.cpp
-    core/receivers/concretes/uart-receiver.h
-    core/receivers/concretes/uart-worker.cpp
-    core/receivers/concretes/uart-worker.h
     core/types.h
     main.cpp
 )
 
-set(sources_ut
-    core/containers/color-scanline-container.cpp
-    core/containers/color-scanline-container.h
-    core/functionals/color-averaging-buffer.h
-    core/functionals/image-block-processor.h
-    core/generic/atom-aggregator.cpp
-    core/generic/atom-aggregator.h
-    core/generic/irepresentable.cpp
-    core/generic/irepresentable.h
-    core/interfaces/icorrector.h
-    ut/corrector-tests.cpp
-    ut/image-block-processing-tests.cpp
-    ut/main.cpp
-)
-
-set(sources_bench
-    core/containers/color-scanline-container.cpp
-    core/containers/color-scanline-container.h
-    core/generic/atom-aggregator.cpp
-    core/generic/atom-aggregator.h
-    core/generic/irepresentable.cpp
-    core/generic/irepresentable.h
-    core/interfaces/icorrector.h
-    bench/main.cpp
-)
-
-add_executable(led-frame ${sources} ${rpi-sources} ${x11-sources})
+add_executable(led-frame ${sources} ${rpi-sources})
+install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
 target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
 target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
-
-if (UNIX AND SUPPORT_X11)
-	target_compile_definitions(led-frame PRIVATE X11)
-endif()
 
 if (UNIX AND SUPPORT_RPI)
 	target_compile_definitions(led-frame PRIVATE RPI)
 endif()
 
 target_link_libraries(led-frame
-        led-frame-correctors
         led-frame-emitters
-	Qt5::SerialPort
-	Qt5::WebSockets
+        led-frame-correctors
+        led-frame-receivers
+        led-frame-networking
 	${rpi-libs}
-	${x11-libs}
         Threads::Threads
 )
 
+if (SUPPORT_X11 AND X11_FOUND)
+    add_library(led-frame-x11-support STATIC
+        core/functionals/captures/x11-helper.cpp
+        core/functionals/captures/x11-helper.h
+        core/functionals/captures/x11-screen-capture.cpp
+        core/functionals/captures/x11-screen-capture.h
+        core/functionals/captures/x11-shm-screen-capture.cpp
+        core/functionals/captures/x11-shm-screen-capture.h
+        core/functionals/helper/x11-shm-helper.cpp
+        core/functionals/helper/x11-shm-helper.h
+    )
+
+    target_compile_definitions(led-frame-x11-support PUBLIC X11)
+    target_link_libraries(led-frame-x11-support Qt5::Core Qt5::Widgets X11::X11 X11::Xext)
+    target_link_libraries(led-frame led-frame-x11-support)
+endif()
+
 if (TESTS AND GTEST_FOUND)
-	add_executable(led-frame-ut ${sources_ut})
+        add_executable(led-frame-ut
+            core/containers/color-scanline-container.cpp
+            core/containers/color-scanline-container.h
+            core/functionals/color-averaging-buffer.h
+            core/functionals/image-block-processor.h
+            core/generic/atom-aggregator.cpp
+            core/generic/atom-aggregator.h
+            core/generic/irepresentable.cpp
+            core/generic/irepresentable.h
+            core/interfaces/icorrector.h
+            ut/corrector-tests.cpp
+            ut/image-block-processing-tests.cpp
+            ut/main.cpp
+        )
 
 	target_link_libraries(led-frame-ut
                 led-frame-correctors
@@ -244,7 +237,16 @@ if (TESTS AND GTEST_FOUND)
 endif()
 
 if (BENCHMARKS)
-	add_executable(led-frame-benchmark ${sources_bench})
+        add_executable(led-frame-benchmark
+            core/containers/color-scanline-container.cpp
+            core/containers/color-scanline-container.h
+            core/generic/atom-aggregator.cpp
+            core/generic/atom-aggregator.h
+            core/generic/irepresentable.cpp
+            core/generic/irepresentable.h
+            core/interfaces/icorrector.h
+            bench/main.cpp
+        )
 
 	target_link_libraries(led-frame-benchmark
                 led-frame-correctors
@@ -252,5 +254,3 @@ if (BENCHMARKS)
                 Threads::Threads
 	)
 endif()
-
-install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
