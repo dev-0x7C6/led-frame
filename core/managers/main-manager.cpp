@@ -73,7 +73,7 @@ void MainManager::detach(INotification &notifier) noexcept {
 }
 
 void MainManager::rescan() {
-	Container::DeviceInfo deviceInfo("LedFrame", "LedFrame", 500000);
+	Container::DeviceInfo deviceInfo("LedFrame", "LedFrame", 460800);
 
 	m_unregisterQueue.dequeue_all([this](auto &&id_to_unregister) {
 		m_broadcasts.remove_if([id_to_unregister](auto &&match) { return id_to_unregister == match->id(); });
@@ -81,7 +81,7 @@ void MainManager::rescan() {
 	});
 
 	for (auto &&port : QSerialPortInfo::availablePorts()) {
-		if ((port.manufacturer().toStdString() != deviceInfo.manufacturer())) continue;
+		//if ((port.manufacturer().toStdString() != deviceInfo.manufacturer())) continue;
 
 		if (!m_deviceLocker.lock(port.portName().toStdString()))
 			continue;

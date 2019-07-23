@@ -17,11 +17,11 @@ find_package(GTest)
 find_package(Threads)
 find_package(X11)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -pedantic -Wno-variadic-macros -Wno-old-style-cast -fverbose-asm")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Werror -pedantic -Wno-variadic-macros -Wno-old-style-cast -fverbose-asm")
 
 configure_file(config.h.in config.h)
 
-option(SUPPORT_X11 "Support for X11 screen capture" OFF)
+option(SUPPORT_X11 "Support for X11 screen capture" ON)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
 option(SUPPORT_RPI3 "Some extensions for Raspberry Pi 3" OFF)
 option(TESTS "Build unit tests" ON)
@@ -193,7 +193,7 @@ target_link_libraries(led-frame
         led-frame-correctors
         led-frame-receivers
         led-frame-networking
-	${rpi-libs}
+        ${rpi-libs}
         Threads::Threads
 )
 
@@ -210,6 +210,7 @@ if (SUPPORT_X11 AND X11_FOUND)
     )
 
     target_compile_definitions(led-frame-x11-support PUBLIC X11)
+    target_compile_definitions(led-frame-emitters PUBLIC X11)
     target_link_libraries(led-frame-x11-support Qt5::Core Qt5::Widgets X11::X11 X11::Xext)
     target_link_libraries(led-frame led-frame-x11-support)
 endif()

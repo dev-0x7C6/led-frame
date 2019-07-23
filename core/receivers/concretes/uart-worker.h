@@ -3,13 +3,15 @@
 #include <core/containers/color-scanline-container.h>
 #include <core/containers/led-ribbon-config-container.h>
 #include <core/functionals/color-stream.h>
+#include <core/generic/atom-aggregator.h>
 #include <core/devices/device-port.h>
+#include <externals/protocol/protocol.hpp>
+
 #include <memory>
 #include <array>
 
-#include <core/generic/atom-aggregator.h>
-
 #include <QSerialPort>
+#include <QElapsedTimer>
 
 namespace Functional {
 class FramePaceSync;
@@ -39,8 +41,12 @@ private:
 	AtomAggregator &m_correctors;
 	std::unique_ptr<Functional::DevicePort> &m_device;
 
-	Functional::ColorStream<270> m_stream;
+	Functional::ColorStream<1024> m_stream;
 	QSerialPort m_port;
+	QElapsedTimer m_elapsed;
+	bool m_evenFrame{true};
+
+	std::optional<ledframe::proto::command_info_params> m_info;
 };
 } // namespace Concrete
 } // namespace Receiver

@@ -47,6 +47,7 @@ private:
 
 	raii_thread m_thread;
 	std::function<void()> m_unregister;
+	bool m_evenFrame{true};
 };
 } // namespace Concrete
 } // namespace Receiver

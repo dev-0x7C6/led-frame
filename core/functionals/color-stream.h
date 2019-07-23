@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <core/enums/color-format-enum.h>
 #include <core/enums/color-type-enum.h>
 #include <core/types.h>
@@ -67,8 +68,19 @@ public:
 		m_buffer[m_seek++] = static_cast<color_type>(get_r24(value));
 	}
 
+	constexpr static auto size() noexcept {
+		return buffer_size;
+	}
+
+	auto filled() const noexcept { return m_seek; }
+
+	const auto &buffer() const noexcept {
+		m_seek = 0;
+		return m_buffer;
+	}
+
 private:
 	std::array<color_type, buffer_size> m_buffer;
-	size_t m_seek = 0;
+	mutable size_t m_seek{};
 };
 } // namespace Functional

@@ -53,7 +53,7 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 	}};
 
 	UartWorker worker(ribbon, correctors(), m_device);
-	Functional::FramePaceSync framePaceing(80);
+	Functional::FramePaceSync framePaceing(1000);
 	std::optional<int> lastEmitterId;
 
 	Scanline frame;
