@@ -17,20 +17,17 @@ void ColorEnhancerCorrector::correct(Container::Scanline &scanline) const noexce
 	if (factor().value() == factor().min())
 		return;
 
-	const auto f = m_factor.factor() + 1.0f;
-
 	for (auto &value : scanline.array()) {
-		std::array<color, 3> colors{{
-			static_cast<color>(get_r24(value)),
-			static_cast<color>(get_g24(value)),
-			static_cast<color>(get_b24(value)),
-		}};
+		const auto r = static_cast<int>(get_r24(value));
+		const auto g = static_cast<int>(get_g24(value));
+		const auto b = static_cast<int>(get_b24(value));
 
-		auto pair = std::minmax_element(colors.cbegin(), colors.cend());
+		auto sum = r + g + b;
 
-		colors[pair.first - colors.cbegin()] /= f;
-		colors[pair.second - colors.cbegin()] *= f;
+		if (sum >= 256) {
+			auto m = static_cast<double>(sum) / 256.0;
 
-		value = rgb(colors.at(0), colors.at(1), colors.at(2));
+			value = rgb(static_cast<int>(r / m), static_cast<int>(g / m), static_cast<int>(b / m));
+		}
 	}
 }
