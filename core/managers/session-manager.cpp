@@ -57,7 +57,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 #ifdef RPI
 	auto emitter = make_emitter(EmitterType::Screen);
 	emitter->setName("RPI Output");
-	m_mainManager.emitters().attach(emitter);
+	m_mainManager.atoms().attach(std::move(emitter));
 #endif
 
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Image, translate(EmitterType::Image)));

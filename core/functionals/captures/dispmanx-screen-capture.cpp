@@ -22,7 +22,7 @@ Enum::ScreenCaptureType DispmanxScreenCapture::type() const {
 	return Enum::ScreenCaptureType::DispmanxScreenCapture;
 }
 
-bool DispmanxScreenCapture::capture(ci32 id) {
+bool DispmanxScreenCapture::capture(const i32 id) {
 	static_cast<void>(id);
 	return m_helper->capture();
 }
@@ -31,6 +31,6 @@ auto DispmanxScreenCapture::width() const noexcept -> u32 { return m_helper->wid
 
 auto DispmanxScreenCapture::height() const noexcept -> u32 { return m_helper->height(); }
 
-auto DispmanxScreenCapture::data() const noexcept -> ccolor * {
+auto DispmanxScreenCapture::data() const noexcept -> const color * {
 	return reinterpret_cast<color *>(m_helper->data());
 }

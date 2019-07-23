@@ -17,7 +17,7 @@ public:
 
 	virtual Enum::ScreenCaptureType type() const override;
 	virtual bool capture(const i32 id) override;
-	virtual auto data() const noexcept -> ccolor * override;
+	virtual auto data() const noexcept -> const color * override;
 	virtual auto width() const noexcept -> u32;
 	virtual auto height() const noexcept -> u32;
 	virtual auto bytesPerPixel() const noexcept -> u32 override { return 4; }
