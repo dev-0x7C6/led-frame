@@ -1,6 +1,5 @@
 #include <core/containers/application-info-container.h>
 #include <core/functionals/debug-notification.h>
-#include <core/functionals/file-collection.h>
 #include <core/functionals/raii-call-on-return.h>
 #include <core/functionals/remote-controller.h>
 #include <core/managers/main-manager.h>
@@ -65,7 +64,6 @@ int main(int argc, char *argv[]) {
 	QSettings settings(applicationName, applicationName);
 	MainManager manager(settings);
 	SessionManager session(settings, manager);
-	FileCollection imageCollection;
 	RemoteController controller(manager);
 	WebSocketServer webSocketServer(manager, controller);
 

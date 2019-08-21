@@ -146,8 +146,6 @@ set(sources
     core/functionals/color-stream.h
     core/functionals/debug-notification.cpp
     core/functionals/debug-notification.h
-    core/functionals/file-collection.cpp
-    core/functionals/file-collection.h
     core/functionals/frame-pace-sync.cpp
     core/functionals/frame-pace-sync.h
     core/functionals/image-block-processor.h
