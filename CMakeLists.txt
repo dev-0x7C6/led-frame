@@ -149,8 +149,6 @@ set(sources
     core/functionals/frame-pace-sync.cpp
     core/functionals/frame-pace-sync.h
     core/functionals/image-block-processor.h
-    core/functionals/raii-call-on-return.cpp
-    core/functionals/raii-call-on-return.h
     core/functionals/raii-reference-counter.h
     core/functionals/remote-controller.cpp
     core/functionals/remote-controller.h

@@ -8,7 +8,6 @@ namespace Functional {
 class FramePaceSync {
 public:
 	explicit FramePaceSync(u64 hz);
-	virtual ~FramePaceSync() = default;
 
 	auto hz() const noexcept { return m_hz; }
 	factor_t timing() const noexcept { return (static_cast<factor_t>(1.0) / m_hz); }
