@@ -1,7 +1,6 @@
 #pragma once
 
 #include <core/containers/color-scanline-container.h>
-#include <core/containers/device-config-container.h>
 #include <core/enums/ereceiver-type.h>
 
 #include <QString>
@@ -30,7 +29,6 @@ public:
 
 	virtual std::shared_ptr<IEmitter> connectedEmitter() const = 0;
 
-	virtual Container::DeviceConfigContainer config() = 0;
 	virtual void setName(const std::string &name) = 0;
 
 	virtual auto correctors() noexcept -> AtomAggregator & = 0;

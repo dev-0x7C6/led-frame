@@ -1,4 +1,3 @@
-#include <core/containers/device-config-container.h>
 #include <core/correctors/concretes/color-enhancer-corrector.h>
 #include <core/devices/device-port.h>
 #include <core/enums/position-enum.h>
@@ -45,14 +44,7 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 	QEventLoop loop;
 	loop.thread()->setPriority(QThread::Priority::HighestPriority);
 
-	const std::array<RibbonConfiguration, 4> ribbon{{
-		m_device->config().ribbon(0),
-		m_device->config().ribbon(1),
-		m_device->config().ribbon(2),
-		m_device->config().ribbon(3),
-	}};
-
-	UartWorker worker(ribbon, correctors(), m_device);
+	UartWorker worker(correctors(), m_device);
 	Functional::FramePaceSync framePaceing(1000);
 	std::optional<int> lastEmitterId;
 
@@ -99,5 +91,3 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 	worker.fadeOut([&frame]() { return frame; }, framePaceing);
 	logger<filter>::debug("quiting thread");
 }
-
-Container::DeviceConfigContainer UartReceiver::config() { return m_device->config(); }

@@ -42,7 +42,7 @@ public:
 
 		for (auto i = 0; i < 300; ++i) {
 			if (m_device.readLine() == "RDY")
-				return std::nullopt;
+				return info;
 
 			m_device.waitForReadyRead(1);
 		}
@@ -107,25 +107,24 @@ private:
 	QSerialPort &m_device;
 };
 
-UartWorker::UartWorker(const std::array<Container::RibbonConfiguration, 4> ribbon,
-	AtomAggregator &correctors,
+UartWorker::UartWorker(AtomAggregator &correctors,
 	std::unique_ptr<Functional::DevicePort> &device)
-		: m_ribbon(ribbon)
-		, m_correctors(correctors)
+		: m_correctors(correctors)
 		, m_device(device)
 
 {
 	m_port.setPort(device->info());
-	if (m_port.open(QIODevice::ReadWrite)) {
-		m_port.setBaudRate(460800);
-		m_port.setFlowControl(QSerialPort::NoFlowControl);
-		m_port.setParity(QSerialPort::NoParity);
-		m_port.setDataBits(QSerialPort::Data8);
-		m_port.setStopBits(QSerialPort::OneStop);
-	}
+	m_port.setBaudRate(1382400);
+	//m_port.setBaudRate(460800);
+	m_port.setFlowControl(QSerialPort::NoFlowControl);
+	m_port.setParity(QSerialPort::NoParity);
+	m_port.setDataBits(QSerialPort::Data8);
+	m_port.setStopBits(QSerialPort::OneStop);
+	m_port.setReadBufferSize(4096);
+	m_port.open(QIODevice::ReadWrite);
 
 	m_port.clear();
-	std::this_thread::sleep_for(2s);
+	std::this_thread::sleep_for(100ms);
 	m_port.clear();
 
 	LedFrameProtocol protocol(m_port);
@@ -160,6 +159,13 @@ void UartWorker::write(Scanline scanline, Functional::FramePaceSync &pace) {
 			static_cast<ICorrector *>(source.get())->correct(scanline);
 	});
 
+	LedFrameProtocol protocol(m_port);
+
+	if (!m_info) {
+		m_info = protocol.info();
+		return;
+	}
+
 	for (auto i = 0; i < m_info->sequences; ++i) {
 		const auto &cfg = m_info->directions[i];
 		const auto factor = static_cast<factor_t>(Scanline::line()) / static_cast<factor_t>(cfg.count - 1);
@@ -175,22 +181,6 @@ void UartWorker::write(Scanline scanline, Functional::FramePaceSync &pace) {
 		}
 	}
 
-	/*
-	for (const auto &config : m_ribbon) {
-		const auto factor = static_cast<factor_t>(Scanline::line()) / static_cast<factor_t>(config.count() - 1);
-
-		for (int i = 0; i < config.count(); ++i) {
-			const auto idx1 = std::min(static_cast<int>(Scanline::line() - 1), static_cast<int>(i * factor));
-			const auto idx2 = std::min(static_cast<int>(Scanline::line() - 1), idx1 + 1);
-			const auto rest = (i * factor) - idx1;
-			auto color = rgb_linear_interpolation(scanline.constData(config.position())[idx1],
-				scanline.constData(config.position())[idx2], rest);
-			m_stream.insert(config.colorFormat(), color);
-		}
-	}
-	*/
-
-	LedFrameProtocol protocol(m_port);
 	protocol.push(m_stream, m_evenFrame);
 	m_evenFrame = !m_evenFrame;
 

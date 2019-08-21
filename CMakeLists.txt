@@ -121,11 +121,7 @@ set(sources
     core/containers/application-info-container.h
     core/containers/color-scanline-container.cpp
     core/containers/color-scanline-container.h
-    core/containers/device-config-container.cpp
-    core/containers/device-config-container.h
     core/containers/device-info-container.h
-    core/containers/led-ribbon-config-container.cpp
-    core/containers/led-ribbon-config-container.h
     core/debug.h
     core/devices/device-port.cpp
     core/devices/device-port.h

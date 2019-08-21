@@ -1,9 +1,7 @@
 #pragma once
 
-#include <core/containers/device-config-container.h>
 #include <core/enums/color-format-enum.h>
 #include <core/receivers/abstracts/abstract-receiver.h>
-#include <core/containers/led-ribbon-config-container.h>
 
 #include <QObject>
 #include <QSerialPort>
@@ -35,8 +33,6 @@ public:
 	~UartReceiver() final;
 
 	auto type() const noexcept -> ReceiverType final;
-
-	Container::DeviceConfigContainer config() final;
 
 protected:
 	void run(const std::atomic_bool &interrupted);
