@@ -39,11 +39,9 @@ void catchUnixSignals(std::initializer_list<int> &&catch_those) {
 #endif
 
 int main(int argc, char *argv[]) {
-
 #ifdef RPI
 	bcm_host_init();
 #endif
-
 	auto applicationName = QString(ApplicationInfo::name());
 	auto applicationVersion = QString::fromStdString(ApplicationInfo::versionToString());
 

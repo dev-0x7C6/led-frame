@@ -13,10 +13,11 @@ namespace Concrete {
 
 class CameraEmitter final : public Abstract::AbstractEmitter, private QThread {
 public:
-	explicit CameraEmitter();
+	explicit CameraEmitter(std::any &&argument);
 	~CameraEmitter();
 
 	EmitterType type() const final { return EmitterType::Camera; }
+	QCameraInfo info() const noexcept { return m_info; }
 
 protected:
 	void run() final;

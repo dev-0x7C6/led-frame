@@ -3,6 +3,7 @@
 #include <core/emitters/concretes/camera-emitter.h>
 #include <core/functionals/color-averaging-buffer.h>
 #include <core/functionals/image-block-processor.h>
+#include <externals/common/logger/logger.hpp>
 
 #include <QAbstractVideoSurface>
 #include <QCamera>
@@ -11,6 +12,11 @@
 
 #include <thread>
 #include <chrono>
+
+namespace {
+constexpr auto module = "[camera_capture]: ";
+constexpr auto filter = error_class::debug;
+} // namespace
 
 using namespace std::chrono_literals;
 
@@ -45,13 +51,8 @@ private:
 	std::function<void(const Scanline &)> m_update;
 };
 
-CameraEmitter::CameraEmitter() {
-	auto list = QCameraInfo::availableCameras();
-
-	if (list.isEmpty())
-		return;
-
-	m_info = list.first();
+CameraEmitter::CameraEmitter(std::any &&argument)
+		: m_info(std::any_cast<QCameraInfo>(argument)) {
 	start();
 }
 
@@ -60,8 +61,6 @@ CameraEmitter::~CameraEmitter() {
 	wait();
 }
 
-#include <QDebug>
-
 void CameraEmitter::run() {
 	QEventLoop loop;
 	std::unique_ptr<QCamera> handle;
@@ -69,7 +68,7 @@ void CameraEmitter::run() {
 
 	const auto process = [&loop]() noexcept {
 		loop.processEvents(QEventLoop::AllEvents, 10);
-		std::this_thread::sleep_for(10ms); // avoid busy loop
+		std::this_thread::sleep_for(1ms); // avoid busy loop
 	};
 
 	while (!m_interrupted) {
@@ -90,12 +89,22 @@ void CameraEmitter::run() {
 					m_interrupted = true;
 				}
 			});
+
+			QCameraViewfinderSettings settings;
+			settings.setResolution(1280, 720);
+			settings.setMinimumFrameRate(30.0);
+			settings.setMaximumFrameRate(60.0);
+			settings.setPixelFormat(QVideoFrame::PixelFormat::Format_ARGB32);
+
+			handle->setViewfinderSettings(settings);
 			handle->setViewfinder(&capture);
 			handle->start();
 		}
 
 		process();
 	}
+
+	logger<filter>::debug(module, "quiting");
 
 	handle.reset(nullptr);
 	process();

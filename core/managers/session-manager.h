@@ -1,10 +1,12 @@
 #pragma once
 
 #include <QTimer>
+#include <memory>
 
 class IReceiver;
 class QSettings;
 class QString;
+class MultiCameraController;
 
 namespace Manager {
 
@@ -27,5 +29,6 @@ private:
 	QTimer m_invalidateTimer;
 	QSettings &m_settings;
 	MainManager &m_mainManager;
+	std::unique_ptr<MultiCameraController> m_cameraManager;
 };
 } // namespace Manager
