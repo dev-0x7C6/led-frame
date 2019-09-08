@@ -81,7 +81,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 
 		m_mainManager.atoms().enumerate([&queue, &queue_info](const std::shared_ptr<IRepresentable> &value) {
 			if (Category::Emitter == value->category()) {
-				auto emitter = std::static_pointer_cast<IEmitter>(value);
+				auto emitter = std::dynamic_pointer_cast<IEmitter>(value);
 				if (emitter->isValid())
 					return;
 
