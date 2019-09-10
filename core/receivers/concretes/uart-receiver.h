@@ -32,7 +32,7 @@ public:
 	UartReceiver(UartReceiver &&) = delete;
 	~UartReceiver() final;
 
-	auto type() const noexcept -> ReceiverType final;
+	auto type() const noexcept -> receiver_type final;
 
 protected:
 	void run(const std::atomic_bool &interrupted);

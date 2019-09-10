@@ -97,6 +97,11 @@ add_library(led-frame-receivers STATIC
     core/receivers/concretes/uart-receiver.h
     core/receivers/concretes/uart-worker.cpp
     core/receivers/concretes/uart-worker.h
+    core/receivers/stub-receiver.h
+    core/receivers/stub-receiver.cpp
+    core/receivers/factories/receiver-factory.cpp
+    core/receivers/factories/receiver-factory.h
+    core/receivers/receiver-type.hpp
 )
 
 target_link_libraries(led-frame-receivers Qt5::Core Qt5::Widgets Qt5::SerialPort)
@@ -132,7 +137,6 @@ set(sources
     core/enums/corrector-type.h
     core/enums/direction.h
     core/enums/emitter-type-enum.h
-    core/enums/ereceiver-type.h
     core/enums/position-enum.h
     core/enums/screen-capture-type.h
     core/factories/screen-capture-factory.cpp

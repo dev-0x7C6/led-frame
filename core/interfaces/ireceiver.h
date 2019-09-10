@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/containers/color-scanline-container.h>
-#include <core/enums/ereceiver-type.h>
+#include <core/receivers/receiver-type.hpp>
 
 #include <QString>
 
@@ -20,7 +20,7 @@ public:
 	auto properties() const noexcept -> Properties final;
 
 	virtual auto name() const noexcept -> std::string = 0;
-	virtual auto type() const noexcept -> ReceiverType = 0;
+	virtual auto type() const noexcept -> receiver_type = 0;
 	virtual auto framerate() const noexcept -> u32;
 
 	virtual void connectEmitter(const std::shared_ptr<IEmitter> &emitter) = 0;

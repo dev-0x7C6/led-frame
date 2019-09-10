@@ -36,8 +36,8 @@ UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, unregister_call
 
 UartReceiver::~UartReceiver() = default;
 
-auto UartReceiver::type() const noexcept -> ReceiverType {
-	return ReceiverType::Uart;
+auto UartReceiver::type() const noexcept -> receiver_type {
+	return receiver_type::uart;
 }
 
 void UartReceiver::run(const std::atomic_bool &interrupted) {

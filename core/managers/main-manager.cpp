@@ -7,6 +7,7 @@
 #include <core/functionals/debug-notification.h>
 #include <core/networking/udp-broadcast-service.h>
 #include <core/receivers/concretes/uart-receiver.h>
+#include <core/receivers/factories/receiver-factory.h>
 
 #include <QSettings>
 
@@ -39,6 +40,9 @@ MainManager::MainManager(QSettings &settings)
 
 #ifdef QT_DEBUG
 	attach(Functional::DebugNotification::instance());
+	auto receiver = factory::make_receiver(receiver_type::stub, [](auto &&) {});
+	m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(receiver->id(), "stub", 4999));
+	m_atoms.attach(std::move(receiver));
 #endif
 	connect(&m_deviceScan, &QTimer::timeout, this, &MainManager::rescan);
 }
@@ -86,17 +90,16 @@ void MainManager::rescan() {
 		if (!m_deviceLocker.lock(port.portName().toStdString()))
 			continue;
 
-		auto thread = std::make_unique<UartReceiver>(std::make_unique<DevicePort>(port),
-			[this, port{port.portName().toStdString()}](const IRepresentable &value) {
-				m_unregisterQueue.emplace(value.id());
-				m_deviceLocker.unlock(port);
-			});
+		auto receiver = factory::make_receiver(receiver_type::uart, [this, port{port.portName().toStdString()}](const IRepresentable &value) {
+			m_unregisterQueue.emplace(value.id());
+			m_deviceLocker.unlock(port);
+		});
 
-		if (m_registerDeviceCallback && !m_registerDeviceCallback(thread.get(), port.serialNumber()))
+		if (m_registerDeviceCallback && !m_registerDeviceCallback(receiver.get(), port.serialNumber()))
 			continue;
 
-		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(thread->id(), thread->name(), 4999));
-		m_atoms.attach(std::move(thread));
+		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(receiver->id(), receiver->name(), 4999));
+		m_atoms.attach(std::move(receiver));
 	}
 }
 

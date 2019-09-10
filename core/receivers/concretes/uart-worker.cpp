@@ -114,8 +114,7 @@ UartWorker::UartWorker(AtomAggregator &correctors,
 
 {
 	m_port.setPort(device->info());
-	m_port.setBaudRate(1382400);
-	//m_port.setBaudRate(460800);
+	m_port.setBaudRate(460800);
 	m_port.setFlowControl(QSerialPort::NoFlowControl);
 	m_port.setParity(QSerialPort::NoParity);
 	m_port.setDataBits(QSerialPort::Data8);

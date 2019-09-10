@@ -6,10 +6,6 @@
 #include <mutex>
 #include <list>
 
-struct corrector_type {};
-struct emitter_type {};
-struct receiver_type {};
-
 class AtomAggregator {
 public:
 	void attach(INotification *notificator) noexcept;
@@ -22,9 +18,9 @@ public:
 	void enumerate(const std::function<void(const std::shared_ptr<IRepresentable> &)> &callback) const noexcept;
 
 	auto find(Category category, int id) noexcept -> std::shared_ptr<IRepresentable>;
-	auto find(const int id, corrector_type) noexcept -> std::shared_ptr<IRepresentable> { return find(Category::Corrector, id); }
-	auto find(const int id, emitter_type) noexcept -> std::shared_ptr<IRepresentable> { return find(Category::Emitter, id); }
-	auto find(const int id, receiver_type) noexcept -> std::shared_ptr<IRepresentable> { return find(Category::Receiver, id); }
+	auto find_corrector(const int id) noexcept -> std::shared_ptr<IRepresentable> { return find(Category::Corrector, id); }
+	auto find_emitter(const int id) noexcept -> std::shared_ptr<IRepresentable> { return find(Category::Emitter, id); }
+	auto find_receiver(const int id) noexcept -> std::shared_ptr<IRepresentable> { return find(Category::Receiver, id); }
 
 private:
 	void notifyAll(NotifyAction, const std::shared_ptr<IRepresentable> &);

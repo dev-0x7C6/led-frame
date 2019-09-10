@@ -41,7 +41,7 @@ bool RemoteController::changeCorrector(int receiverId, int correctorId, correct_
 
 	if (receiver) {
 		if (receiverId == -1) {
-			auto corrector = std::static_pointer_cast<ICorrector>(m_mainManager.atoms().find(correctorId, corrector_type{}));
+			auto corrector = std::static_pointer_cast<ICorrector>(m_mainManager.atoms().find_corrector(correctorId));
 
 			if (!corrector) return false;
 
@@ -50,7 +50,7 @@ bool RemoteController::changeCorrector(int receiverId, int correctorId, correct_
 			return true;
 		}
 
-		auto corrector = std::static_pointer_cast<ICorrector>(receiver->correctors().find(correctorId, corrector_type{}));
+		auto corrector = std::static_pointer_cast<ICorrector>(receiver->correctors().find_corrector(correctorId));
 
 		if (!corrector) return false;
 
