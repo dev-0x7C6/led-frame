@@ -23,7 +23,8 @@ using namespace Receiver::Abstract;
 using namespace Receiver::Concrete;
 
 namespace {
-constexpr auto filter = error_class::information;
+constexpr auto filter = error_class::debug;
+constexpr auto module = "[uart receiver]: ";
 }
 
 UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, unregister_callback &&callback)
@@ -41,6 +42,7 @@ auto UartReceiver::type() const noexcept -> receiver_type {
 }
 
 void UartReceiver::run(const std::atomic_bool &interrupted) {
+	logger<filter>::debug(module, "thread started");
 	QEventLoop loop;
 	loop.thread()->setPriority(QThread::Priority::HighestPriority);
 
@@ -50,7 +52,9 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 
 	Scanline frame;
 
-	while (!interrupted && worker.isValid()) {
+	logger<filter>::information(module, "running on: ", m_device->info().portName().toStdString());
+
+	while (!interrupted || worker.isValid()) {
 		const auto emitter = connectedEmitter();
 
 		if (!isEmitterConnected() || !emitter->isFirstFrameReady()) {
@@ -59,7 +63,7 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 		}
 
 		if (!emitter->isValid()) {
-			logger<filter>::notice("receiver ", name(), ": connected emitter ", emitter->name(), " no longer valid, disconnecting from receiver");
+			logger<filter>::notice(module, "receiver ", name(), ": connected emitter ", emitter->name(), " no longer valid, disconnecting from receiver");
 			connectEmitter(nullptr);
 			continue;
 		}
@@ -87,7 +91,7 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 		loop.processEvents(QEventLoop::AllEvents, 1);
 	}
 
-	logger<filter>::hint("receiver fadeout");
+	logger<filter>::hint(module, "receiver fadeout");
 	worker.fadeOut([&frame]() { return frame; }, framePaceing);
-	logger<filter>::debug("quiting thread");
+	logger<filter>::debug(module, "thread finished");
 }

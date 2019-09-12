@@ -189,7 +189,7 @@ void UartWorker::write(Scanline scanline, Functional::FramePaceSync &pace) {
 
 	if (m_elapsed.hasExpired(1000)) {
 		m_elapsed.restart();
-		qDebug() << fps;
+		//qDebug() << fps;
 		fps = 0;
 	}
 

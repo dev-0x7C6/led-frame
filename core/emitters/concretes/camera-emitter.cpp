@@ -214,6 +214,8 @@ void CameraEmitter::run() {
 				logger<filter>::debug("  ", fps, " fps");
 			}
 
+			logger<filter>::information(module, "selected resolution: ", prefered_resolution.width(), "x", prefered_resolution.height(), "@", available_framerates.back(), "fps");
+
 			QCameraViewfinderSettings settings;
 			settings.setResolution(prefered_resolution.width(), prefered_resolution.height());
 			settings.setMinimumFrameRate(available_framerates.front());
