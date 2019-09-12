@@ -96,7 +96,7 @@ void MainManager::rescan() {
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(receiver.get(), port.serialNumber()))
 			continue;
 
-		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(receiver->id(), receiver->name(), 4999));
+		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(receiver->id(), port.portName().toStdString(), 4999));
 		m_atoms.attach(std::move(receiver));
 	}
 }
