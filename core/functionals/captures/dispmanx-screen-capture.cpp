@@ -2,7 +2,6 @@
 
 #include "core/enums/screen-capture-type.h"
 #include "core/functionals/helper/dispmanx-helper.h"
-#include "core/functionals/raii-call-on-return.h"
 
 #include <iostream>
 #include <functional>

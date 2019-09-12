@@ -77,23 +77,21 @@ void MainManager::detach(INotification &notifier) noexcept {
 }
 
 void MainManager::rescan() {
-	Container::DeviceInfo deviceInfo("LedFrame", "LedFrame", 460800);
-
 	m_unregisterQueue.dequeue_all([this](auto &&id_to_unregister) {
 		m_broadcasts.remove_if([id_to_unregister](auto &&match) { return id_to_unregister == match->id(); });
 		m_atoms.detach(id_to_unregister);
 	});
 
 	for (auto &&port : QSerialPortInfo::availablePorts()) {
-		//if ((port.manufacturer().toStdString() != deviceInfo.manufacturer())) continue;
-
 		if (!m_deviceLocker.lock(port.portName().toStdString()))
 			continue;
 
-		auto receiver = factory::make_receiver(receiver_type::uart, [this, port{port.portName().toStdString()}](const IRepresentable &value) {
-			m_unregisterQueue.emplace(value.id());
-			m_deviceLocker.unlock(port);
-		});
+		auto receiver = factory::make_receiver(
+			receiver_type::uart, [this, port{port.portName().toStdString()}](const IRepresentable &value) {
+				m_unregisterQueue.emplace(value.id());
+				m_deviceLocker.unlock(port);
+			},
+			port);
 
 		if (m_registerDeviceCallback && !m_registerDeviceCallback(receiver.get(), port.serialNumber()))
 			continue;
