@@ -12,17 +12,9 @@ void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept 
 	if (factor().value() == factor().max())
 		return;
 
-	const auto f = factor().factor();
-
-	for (auto &value : scanline.array()) {
-		if (value == 0)
-			continue;
-
-		const auto r = static_cast<color>(get_r24(value) * f);
-		const auto g = get_g24(value);
-		const auto b = get_b24(value);
-		value = rgb(r, g, b);
-	}
+	scanline.modify([f{factor().factor()}](auto &&r, auto &&, auto &&) {
+		r = static_cast<color>(r * f);
+	});
 }
 
 GreenChannelCorrector::GreenChannelCorrector(int owner)
@@ -32,17 +24,9 @@ void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcep
 	if (factor().value() == factor().max())
 		return;
 
-	const auto f = factor().factor();
-
-	for (auto &value : scanline.array()) {
-		if (value == 0)
-			continue;
-
-		const auto r = get_r24(value);
-		const auto g = static_cast<color>(get_g24(value) * f);
-		const auto b = get_b24(value);
-		value = rgb(r, g, b);
-	}
+	scanline.modify([f{factor().factor()}](auto &&, auto &&g, auto &&) {
+		g = static_cast<color>(g * f);
+	});
 }
 
 BlueChannelCorrector::BlueChannelCorrector(int owner)
@@ -52,15 +36,7 @@ void BlueChannelCorrector::correct(Container::Scanline &scanline) const noexcept
 	if (factor().value() == factor().max())
 		return;
 
-	const auto f = factor().factor();
-
-	for (auto &value : scanline.array()) {
-		if (value == 0)
-			continue;
-
-		const auto r = get_r24(value);
-		const auto g = get_g24(value);
-		const auto b = static_cast<color>(get_b24(value) * f);
-		value = rgb(r, g, b);
-	}
+	scanline.modify([f{factor().factor()}](auto &&, auto &&, auto &&b) {
+		b = static_cast<color>(b * f);
+	});
 }

@@ -17,17 +17,14 @@ void ColorEnhancerCorrector::correct(Container::Scanline &scanline) const noexce
 	if (factor().value() == factor().min())
 		return;
 
-	for (auto &value : scanline.array()) {
-		const auto r = static_cast<int>(get_r24(value));
-		const auto g = static_cast<int>(get_g24(value));
-		const auto b = static_cast<int>(get_b24(value));
-
-		auto sum = r + g + b;
+	scanline.modify([](auto &&r, auto &&g, auto &&b) {
+		const auto sum = r + g + b;
 
 		if (sum >= 256) {
-			auto m = static_cast<double>(sum) / 256.0;
-
-			value = rgb(static_cast<int>(r / m), static_cast<int>(g / m), static_cast<int>(b / m));
+			const auto factor = static_cast<double>(sum) / 256.0;
+			r = static_cast<u32>(r / factor);
+			g = static_cast<u32>(g / factor);
+			b = static_cast<u32>(b / factor);
 		}
-	}
+	});
 }

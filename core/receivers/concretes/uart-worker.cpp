@@ -180,7 +180,6 @@ void UartWorker::write(Scanline scanline, Functional::FramePaceSync &pace) {
 		}
 	}
 
-	m_stream.apply_ws2812_gamma_correction();
 	protocol.push(m_stream, m_evenFrame);
 	m_evenFrame = !m_evenFrame;
 

@@ -18,7 +18,7 @@ inline void correctAndCheck(ICorrector *iface, const correct_t factor, const col
 	iface->setFactor(factor);
 	iface->correct(scanline);
 
-	for (const auto &value : scanline.array())
+	for (const auto &value : scanline)
 		EXPECT_EQ(value, expect);
 }
 

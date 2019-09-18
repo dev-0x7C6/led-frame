@@ -15,14 +15,9 @@ void BrightnessCorrector::correct(Container::Scanline &scanline) const noexcept 
 	if (factor().value() == factor().max())
 		return;
 
-	const auto f = factor().factor();
-	for (auto &value : scanline.array()) {
-		if (value == 0)
-			continue;
-
-		const auto r = static_cast<color>(get_r24(value) * f);
-		const auto g = static_cast<color>(get_g24(value) * f);
-		const auto b = static_cast<color>(get_b24(value) * f);
-		value = rgb(r, g, b);
-	}
+	scanline.modify([factor{factor().factor()}](auto &&r, auto &&g, auto &&b) {
+		r = static_cast<u32>(r * factor);
+		g = static_cast<u32>(g * factor);
+		b = static_cast<u32>(b * factor);
+	});
 }

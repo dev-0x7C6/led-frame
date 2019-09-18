@@ -46,7 +46,15 @@ public:
 	constexpr void operator>>(color value) noexcept;
 	constexpr color &operator[](u32 index) noexcept;
 
-	constexpr auto &array() noexcept { return container(); }
+	constexpr void modify(std::function<void(color &r, color &g, color &b)> &&callable) {
+		for (auto &v : container()) {
+			auto r = Functional::get_r24(v);
+			auto g = Functional::get_g24(v);
+			auto b = Functional::get_b24(v);
+			callable(r, g, b);
+			v = Functional::rgb(r, g, b);
+		}
+	}
 
 	constexpr decltype(auto) begin() { return container().begin(); }
 	constexpr decltype(auto) end() { return container().end(); }

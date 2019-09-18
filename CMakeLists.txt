@@ -82,6 +82,8 @@ add_library(led-frame-correctors STATIC
     core/correctors/concretes/flickr-effect-corrector.h
     core/correctors/concretes/rgb-channel-corrector.cpp
     core/correctors/concretes/rgb-channel-corrector.h
+    core/correctors/concretes/gamma-corrector.cpp
+    core/correctors/concretes/gamma-corrector.h
     core/correctors/factories/corrector-factory.cpp
     core/correctors/factories/corrector-factory.h
 )

@@ -12,6 +12,7 @@ enum class CorrectorType {
 	BlueChannel,
 	FlickrEffect,
 	Backlight,
+	Gamma,
 	Unused,
 };
 
@@ -24,11 +25,13 @@ constexpr std::array<CorrectorType, static_cast<u32>(CorrectorType::Unused)> get
 		CorrectorType::BlueChannel,
 		CorrectorType::FlickrEffect,
 		CorrectorType::Backlight,
+		CorrectorType::Gamma,
 	}};
 }
 
 inline QString name(CorrectorType type) {
 	switch (type) {
+		case CorrectorType::Gamma: return "Gamma";
 		case CorrectorType::ColorEnhancer: return "Color enhancer";
 		case CorrectorType::Brightness: return "Brightness";
 		case CorrectorType::RedChannel: return "Red";
@@ -44,6 +47,7 @@ inline QString name(CorrectorType type) {
 
 inline std::string value(CorrectorType type) {
 	switch (type) {
+		case CorrectorType::Gamma: return "gamma";
 		case CorrectorType::ColorEnhancer: return "color_enhancer";
 		case CorrectorType::Brightness: return "brightness";
 		case CorrectorType::RedChannel: return "red_channel";

@@ -80,21 +80,6 @@ public:
 		return m_buffer;
 	}
 
-	constexpr static auto generate_gamma_table(double gamma = 2.5) {
-		std::array<uint8_t, 256> ret;
-		for (auto i = 0u; i < ret.size(); ++i)
-			ret[i] = static_cast<uint8_t>(std::pow(static_cast<double>(i) / 255.0, gamma) * 255.0);
-		return ret;
-	}
-
-	void apply_ws2812_gamma_correction() {
-		const auto table = generate_gamma_table();
-
-		for (auto &color : m_buffer) {
-			color = table[color];
-		}
-	}
-
 private:
 	std::array<color_type, buffer_size> m_buffer;
 	mutable size_t m_seek{};

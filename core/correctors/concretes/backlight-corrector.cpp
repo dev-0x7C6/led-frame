@@ -16,13 +16,9 @@ void BacklightCorrector::correct(Container::Scanline &scanline) const noexcept {
 	if (factor().value() == 0)
 		return;
 
-	const auto backlight = factor().value();
-
-	for (auto &value : scanline.array()) {
-		const auto r = std::max(backlight, get_r24(value));
-		const auto g = std::max(backlight, get_g24(value));
-		const auto b = std::max(backlight, get_b24(value));
-
-		value = rgb(r, g, b);
-	}
+	scanline.modify([backlight{static_cast<u32>(factor().value())}](u32 & r, u32 & g, u32 & b) noexcept {
+		r = std::max(backlight, r);
+		g = std::max(backlight, g);
+		b = std::max(backlight, b);
+	});
 }

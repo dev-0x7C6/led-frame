@@ -21,8 +21,11 @@ void FlickrEffectCorrector::correct(Container::Scanline &scanline) const noexcep
 
 	auto skip = ((m_duration % f) + 1) > (f / 2);
 
-	for (auto &value : scanline.array())
-		value = (skip) ? 0 : value;
+	scanline.modify([skip](auto &&r, auto &&g, auto &&b) {
+		r = (skip) ? 0 : r;
+		g = (skip) ? 0 : g;
+		b = (skip) ? 0 : b;
+	});
 
 	m_duration++;
 }
