@@ -68,7 +68,6 @@ public:
 
 	bool isValid() { return m_valid; }
 
-protected:
 	void invalidate() {
 		m_valid = false;
 	}

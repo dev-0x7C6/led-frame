@@ -72,36 +72,36 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 
 {
 	m_cameraManager = std::make_unique<MultiCameraController>([this](const QCameraInfo &info) {
-		m_mainManager.atoms().attach(make_emitter(EmitterType::Camera, info.description().toStdString(), info));
+		auto emitter = make_emitter(EmitterType::Camera, info.description().toStdString(), info);
+
+		m_unregisterCallable[emitter->id()] = [this, info]() {
+			m_cameraManager->unmark(info);
+		};
+
+		m_mainManager.atoms().attach(std::move(emitter));
 	});
 
 	QObject::connect(&m_invalidateTimer, &QTimer::timeout, &m_invalidateTimer, [this]() {
 		std::queue<i32> queue;
-		std::queue<QCameraInfo> queue_info;
 
-		m_mainManager.atoms().enumerate([&queue, &queue_info](const std::shared_ptr<IRepresentable> &value) {
+		m_mainManager.atoms().enumerate([&queue](const std::shared_ptr<IRepresentable> &value) {
 			if (Category::Emitter == value->category()) {
 				auto emitter = std::dynamic_pointer_cast<IEmitter>(value);
 				if (emitter->isValid())
 					return;
 
 				queue.emplace(emitter->id());
-
-				//TODO: better way to unregister camera
-				auto camera = std::dynamic_pointer_cast<Emitter::Concrete::CameraEmitter>(value);
-				if (camera)
-					queue_info.emplace(camera->info());
 			}
 		});
 
 		while (!queue.empty()) {
-			m_mainManager.atoms().detach(queue.front());
+			auto &&emitter = queue.front();
+			if (m_unregisterCallable.count(emitter)) {
+				m_unregisterCallable[emitter]();
+				m_unregisterCallable.erase(emitter);
+			}
+			m_mainManager.atoms().detach(emitter);
 			queue.pop();
-		}
-
-		while (!queue_info.empty()) {
-			m_cameraManager->unmark(queue_info.front());
-			queue_info.pop();
 		}
 	});
 	m_invalidateTimer.start(100ms);

@@ -67,7 +67,7 @@ add_library(led-frame-emitters STATIC
     core/emitters/factories/emitter-factory.h
 )
 
-target_link_libraries(led-frame-emitters Qt5::Core Qt5::Widgets Qt5::Multimedia)
+target_link_libraries(led-frame-emitters PUBLIC Qt5::Core Qt5::Widgets Qt5::Multimedia)
 
 # Correctors
 
@@ -88,7 +88,7 @@ add_library(led-frame-correctors STATIC
     core/correctors/factories/corrector-factory.h
 )
 
-target_link_libraries(led-frame-correctors Qt5::Core)
+target_link_libraries(led-frame-correctors PRIVATE Qt5::Core)
 
 # Receivers
 
@@ -106,7 +106,7 @@ add_library(led-frame-receivers STATIC
     core/receivers/receiver-type.hpp
 )
 
-target_link_libraries(led-frame-receivers Qt5::Core Qt5::Widgets Qt5::SerialPort)
+target_link_libraries(led-frame-receivers PRIVATE Qt5::Core Qt5::Widgets Qt5::SerialPort)
 
 # Networking
 
@@ -186,12 +186,14 @@ if (UNIX AND SUPPORT_RPI)
 	target_compile_definitions(led-frame PRIVATE RPI)
 endif()
 
-target_link_libraries(led-frame
+target_link_libraries(led-frame PRIVATE
         led-frame-emitters
         led-frame-correctors
         led-frame-receivers
         led-frame-networking
         ${rpi-libs}
+        Qt5::Core
+        Qt5::SerialPort
         Threads::Threads
 )
 
@@ -210,7 +212,7 @@ if (SUPPORT_X11 AND X11_FOUND)
     target_compile_definitions(led-frame-x11-support PUBLIC X11)
     target_compile_definitions(led-frame-emitters PUBLIC X11)
     target_link_libraries(led-frame-x11-support Qt5::Core Qt5::Widgets X11::X11 X11::Xext)
-    target_link_libraries(led-frame led-frame-x11-support)
+    target_link_libraries(led-frame PRIVATE led-frame-x11-support)
 endif()
 
 if (TESTS AND GTEST_FOUND)
@@ -231,6 +233,7 @@ if (TESTS AND GTEST_FOUND)
 
 	target_link_libraries(led-frame-ut
                 led-frame-correctors
+                Qt5::Core
                 GTest::GTest
 	)
 endif()
@@ -250,6 +253,7 @@ if (BENCHMARKS)
 	target_link_libraries(led-frame-benchmark
                 led-frame-correctors
 		-lbenchmark
+                Qt5::Core
                 Threads::Threads
 	)
 endif()

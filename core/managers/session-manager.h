@@ -2,6 +2,10 @@
 
 #include <QTimer>
 #include <memory>
+#include <unordered_map>
+#include <functional>
+
+#include <externals/common/types.hpp>
 
 class IReceiver;
 class QSettings;
@@ -26,6 +30,7 @@ protected:
 	void save();
 
 private:
+	std::unordered_map<i32, std::function<void()>> m_unregisterCallable;
 	QTimer m_invalidateTimer;
 	QSettings &m_settings;
 	MainManager &m_mainManager;

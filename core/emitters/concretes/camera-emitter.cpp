@@ -10,6 +10,7 @@
 #include <QCameraInfo>
 #include <QEventLoop>
 #include <QMediaRecorder>
+#include <QThread>
 
 #include <thread>
 #include <chrono>
@@ -26,6 +27,8 @@ using namespace Emitter::Concrete;
 using namespace Enum;
 using namespace Container;
 using namespace Functional;
+
+namespace {
 
 class resolution {
 public:
@@ -113,126 +116,154 @@ private:
 	std::function<void(const Scanline &)> m_update;
 };
 
-CameraEmitter::CameraEmitter(std::any &&argument)
-		: m_info(std::any_cast<QCameraInfo>(argument)) {
-	start();
+template <typename Iterator>
+auto prepare_prefered_resolutions(Iterator begin, Iterator end) noexcept {
+	std::vector<resolution> resolutions_16_9;
+	std::vector<resolution> resolutions_16_10;
+	std::vector<resolution> resolutions_4_3;
+	std::vector<resolution> resolutions_other;
+	std::vector<resolution> resolutions;
+
+	for (; begin != end; ++begin) {
+		const auto mode = *begin;
+		resolution res(mode.width(), mode.height());
+		switch (res.aspect()) {
+			case resolution::aspect_ratio::_16_9:
+				resolutions_16_9.emplace_back(std::move(res));
+				break;
+			case resolution::aspect_ratio::_16_10:
+				resolutions_16_10.emplace_back(std::move(res));
+				break;
+			case resolution::aspect_ratio::_4_3:
+				resolutions_4_3.emplace_back(std::move(res));
+				break;
+			case resolution::aspect_ratio::other:
+				resolutions_other.emplace_back(std::move(res));
+				break;
+		}
+	}
+
+	std::sort(resolutions_16_9.begin(), resolutions_16_9.end());
+	std::sort(resolutions_16_10.begin(), resolutions_16_10.end());
+	std::sort(resolutions_4_3.begin(), resolutions_4_3.end());
+	std::sort(resolutions_other.begin(), resolutions_other.end());
+	resolutions.reserve(resolutions_16_9.size() + resolutions_16_10.size() + resolutions_4_3.size() + resolutions_other.size());
+
+	std::move(resolutions_16_9.begin(), resolutions_16_9.end(), std::back_inserter(resolutions));
+	std::move(resolutions_16_10.begin(), resolutions_16_10.end(), std::back_inserter(resolutions));
+	std::move(resolutions_4_3.begin(), resolutions_4_3.end(), std::back_inserter(resolutions));
+	std::move(resolutions_other.begin(), resolutions_other.end(), std::back_inserter(resolutions));
+
+	return resolutions;
 }
+} // namespace
 
-CameraEmitter::~CameraEmitter() {
-	m_interrupted = true;
-	wait();
-}
+class CameraWorker : public QThread {
+public:
+	CameraWorker(IEmitter &emitter, std::any &&args, std::atomic<bool> &interrupted)
+			: m_emitter(emitter)
+			, m_args(std::move(args))
+			, m_interrupted(interrupted) {
+		start();
+	}
 
-void CameraEmitter::run() {
-	QEventLoop loop;
-	std::unique_ptr<QCamera> handle;
-	Capture<QVideoFrame::Format_ARGB32> capture([this](auto &&scanline) { commit(std::forward<decltype(scanline)>(scanline)); });
+	~CameraWorker() {
+		m_interrupted = true;
+		wait();
+	}
 
-	const auto process = [&loop]() noexcept {
-		loop.processEvents(QEventLoop::AllEvents, 10);
-		std::this_thread::sleep_for(1ms); // avoid busy loop
-	};
+protected:
+	void run() final {
+		QEventLoop loop;
+		std::unique_ptr<QCamera> handle;
+		const auto info = std::any_cast<QCameraInfo>(m_args);
 
-	while (!m_interrupted) {
-		while (usages() == 0) {
-			if (m_interrupted)
-				return;
+		Capture<QVideoFrame::Format_ARGB32> capture([this](auto &&scanline) { m_emitter.commit(std::forward<decltype(scanline)>(scanline)); });
 
-			if (handle)
-				handle.reset(nullptr);
+		const auto process = [&loop]() noexcept {
+			loop.processEvents(QEventLoop::AllEvents, 10);
+			std::this_thread::sleep_for(1ms); // avoid busy loop
+		};
+
+		while (!m_interrupted) {
+			while (m_emitter.usages() == 0) {
+				if (m_interrupted)
+					return;
+
+				if (handle)
+					handle.reset(nullptr);
+
+				process();
+			}
+
+			if (!handle) {
+				auto [available_resolutions, available_framerates] = [&info]() {
+					QCamera camera(info);
+					camera.load();
+					QMediaRecorder rec(&camera);
+					return std::make_pair(rec.supportedResolutions(), rec.supportedFrameRates());
+				}();
+
+				if (available_resolutions.empty()) {
+					logger<filter>::error(module, "no available resolutions");
+					std::this_thread::sleep_for(1s);
+					continue;
+				}
+
+				if (available_framerates.empty()) {
+					logger<filter>::error(module, "no available framerates");
+					std::this_thread::sleep_for(1s);
+					continue;
+				}
+
+				handle = std::make_unique<QCamera>(info);
+
+				std::sort(available_framerates.begin(), available_framerates.end());
+				const auto prefered_resolutions = prepare_prefered_resolutions(available_resolutions.begin(), available_resolutions.end());
+				const auto prefered_resolution = prefered_resolutions.front();
+
+				logger<filter>::debug(module, "available resolutions:");
+				for (auto &&res : prefered_resolutions) {
+					logger<filter>::debug("  ", res.width(), "x", res.height());
+				}
+
+				logger<filter>::debug(module, "available framerats:");
+				for (auto &&fps : available_framerates) {
+					logger<filter>::debug("  ", fps, " fps");
+				}
+
+				logger<filter>::information(module, "selected resolution: ", prefered_resolution.width(), "x", prefered_resolution.height(), "@", available_framerates.back(), "fps");
+
+				QCameraViewfinderSettings settings;
+				settings.setResolution(prefered_resolution.width(), prefered_resolution.height());
+				settings.setMinimumFrameRate(available_framerates.front());
+				settings.setMaximumFrameRate(available_framerates.back());
+
+				handle->setViewfinderSettings(settings);
+				handle->setViewfinder(&capture);
+				handle->start();
+			}
 
 			process();
 		}
 
-		if (!handle) {
-			auto [available_resolutions, available_framerates] = [this]() {
-				QCamera camera(m_info);
-				camera.load();
-				QMediaRecorder rec(&camera);
-				return std::make_pair(rec.supportedResolutions(), rec.supportedFrameRates());
-			}();
+		logger<filter>::debug(module, "quiting");
 
-			if (available_resolutions.empty()) {
-				logger<filter>::error(module, "no available resolutions");
-				std::this_thread::sleep_for(1s);
-				continue;
-			}
-
-			if (available_framerates.empty()) {
-				logger<filter>::error(module, "no available framerates");
-				std::this_thread::sleep_for(1s);
-				continue;
-			}
-
-			handle = std::make_unique<QCamera>(m_info);
-
-			std::vector<resolution> resolutions_16_9;
-			std::vector<resolution> resolutions_16_10;
-			std::vector<resolution> resolutions_4_3;
-			std::vector<resolution> resolutions_other;
-			std::vector<resolution> resolutions;
-
-			for (auto &&mode : available_resolutions) {
-				resolution res(mode.width(), mode.height());
-				switch (res.aspect()) {
-					case resolution::aspect_ratio::_16_9:
-						resolutions_16_9.emplace_back(std::move(res));
-						break;
-					case resolution::aspect_ratio::_16_10:
-						resolutions_16_10.emplace_back(std::move(res));
-						break;
-					case resolution::aspect_ratio::_4_3:
-						resolutions_4_3.emplace_back(std::move(res));
-						break;
-					case resolution::aspect_ratio::other:
-						resolutions_other.emplace_back(std::move(res));
-						break;
-				}
-			}
-
-			std::sort(resolutions_16_9.begin(), resolutions_16_9.end());
-			std::sort(resolutions_16_10.begin(), resolutions_16_10.end());
-			std::sort(resolutions_4_3.begin(), resolutions_4_3.end());
-			std::sort(resolutions_other.begin(), resolutions_other.end());
-			resolutions.reserve(resolutions_16_9.size() + resolutions_16_10.size() + resolutions_4_3.size() + resolutions_other.size());
-
-			std::move(resolutions_16_9.begin(), resolutions_16_9.end(), std::back_inserter(resolutions));
-			std::move(resolutions_16_10.begin(), resolutions_16_10.end(), std::back_inserter(resolutions));
-			std::move(resolutions_4_3.begin(), resolutions_4_3.end(), std::back_inserter(resolutions));
-			std::move(resolutions_other.begin(), resolutions_other.end(), std::back_inserter(resolutions));
-
-			const auto prefered_resolution = resolutions.front();
-			std::sort(available_framerates.begin(), available_framerates.end());
-
-			logger<filter>::debug(module, "available resolutions:");
-			for (auto &&res : resolutions) {
-				logger<filter>::debug("  ", res.width(), "x", res.height());
-			}
-
-			logger<filter>::debug(module, "available framerats:");
-			for (auto &&fps : available_framerates) {
-				logger<filter>::debug("  ", fps, " fps");
-			}
-
-			logger<filter>::information(module, "selected resolution: ", prefered_resolution.width(), "x", prefered_resolution.height(), "@", available_framerates.back(), "fps");
-
-			QCameraViewfinderSettings settings;
-			settings.setResolution(prefered_resolution.width(), prefered_resolution.height());
-			settings.setMinimumFrameRate(available_framerates.front());
-			settings.setMaximumFrameRate(available_framerates.back());
-			//settings.setPixelFormat(QVideoFrame::PixelFormat::Format_UYVY);
-
-			handle->setViewfinderSettings(settings);
-			handle->setViewfinder(&capture);
-			handle->start();
-		}
-
+		handle.reset(nullptr);
 		process();
+		m_emitter.invalidate();
 	}
 
-	logger<filter>::debug(module, "quiting");
+private:
+	IEmitter &m_emitter;
+	std::any m_args;
+	std::atomic<bool> &m_interrupted;
+};
 
-	handle.reset(nullptr);
-	process();
-	invalidate();
+CameraEmitter::CameraEmitter(std::any &&argument)
+		: m_worker(std::make_unique<CameraWorker>(*this, std::move(argument), m_interrupted)) {
+}
+
+CameraEmitter::~CameraEmitter() {
+	m_interrupted = true;
 }
