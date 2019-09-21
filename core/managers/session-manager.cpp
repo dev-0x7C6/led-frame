@@ -124,11 +124,8 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Image, translate(EmitterType::Image)));
 
-	for (auto &&type : animationVariantTypes) {
-		auto animation = make_emitter(EmitterType::Animation, translate(EmitterType::Animation));
-		animation->interpret(type);
-		m_mainManager.atoms().attach(std::move(animation));
-	}
+	for (auto &&type : animationVariantTypes)
+		m_mainManager.atoms().attach(make_emitter(EmitterType::Animation, translate(EmitterType::Animation), type));
 
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Color, translate(EmitterType::Color)));
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Off, translate(EmitterType::Off)));
@@ -161,7 +158,6 @@ bool SessionManager::registerDevice(IReceiver *receiver, const QString &serialNu
 	const auto defaultEmitter = m_settings.value("emitter").toString().toStdString();
 
 	if (!defaultEmitter.empty()) {
-
 		m_mainManager.atoms().enumerate([receiver, defaultEmitter](const auto &atom) {
 			if (Category::Emitter != atom->category())
 				return;

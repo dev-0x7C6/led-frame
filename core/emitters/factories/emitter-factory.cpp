@@ -14,7 +14,7 @@ using namespace Factory;
 std::unique_ptr<IEmitter> Factory::make_emitter(EmitterType type, std::any &&argument) noexcept {
 	switch (type) {
 		case EmitterType::Color: return std::make_unique<ColorEmitter>();
-		case EmitterType::Animation: return std::make_unique<AnimationEmitter>();
+		case EmitterType::Animation: return std::make_unique<AnimationEmitter>(std::move(argument));
 		case EmitterType::Image: return std::make_unique<ImageEmitter>();
 		case EmitterType::Screen: return std::make_unique<ScreenEmitter>();
 		case EmitterType::Test: return std::make_unique<TestEmitter>();

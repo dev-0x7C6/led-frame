@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/emitters/abstracts/abstract-emitter.h>
+#include <any>
 
 class QCamera;
 class CameraWorker;

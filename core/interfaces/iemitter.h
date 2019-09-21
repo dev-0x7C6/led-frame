@@ -5,7 +5,6 @@
 #include <core/functionals/raii-reference-counter.h>
 #include <core/generic/irepresentable.h>
 
-#include <any>
 #include <atomic>
 #include <memory>
 #include <mutex>
@@ -54,8 +53,6 @@ public:
 
 	auto acquire() noexcept -> std::unique_ptr<Functional::RaiiReferenceCounter>;
 	auto usages() const noexcept -> int;
-
-	virtual void interpret(std::any data) noexcept;
 
 	bool isFirstFrameReady() const noexcept;
 

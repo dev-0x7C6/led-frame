@@ -7,14 +7,14 @@
 using namespace Emitter::Concrete;
 using namespace Functional::Animation;
 
-AnimationEmitter::AnimationEmitter() {
+AnimationEmitter::AnimationEmitter(std::any &&args) {
 	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, [this, firstFrame{true}](const auto &value) mutable {
 		if (usages() || firstFrame)
 			process(value);
 
 		firstFrame = false;
 	});
-	make_animation(m_animation, Enum::AnimationVariant::Candle);
+	make_animation(m_animation, std::any_cast<Enum::AnimationVariant>(args));
 }
 
 AnimationEmitter::~AnimationEmitter() {
@@ -24,10 +24,12 @@ AnimationEmitter::~AnimationEmitter() {
 	QObject::disconnect(&m_animation, nullptr, nullptr, nullptr);
 }
 
-void AnimationEmitter::interpret(std::any data) noexcept {
-	make_animation(m_animation, std::any_cast<Enum::AnimationVariant>(data));
-}
-
 void AnimationEmitter::process(const QVariant &value) {
-	commit(Container::Scanline(qvariant_cast<QColor>(value).rgb()));
+	if (!value.isValid())
+		return;
+
+	const auto color = qvariant_cast<QColor>(value);
+
+	if (color.isValid())
+		commit(Container::Scanline(color.rgb()));
 }
