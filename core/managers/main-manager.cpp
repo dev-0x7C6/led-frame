@@ -25,6 +25,21 @@ constexpr auto module = "[settings]: ";
 constexpr auto serial_port_config_file = "/etc/led-frame/serial.conf";
 } // namespace
 
+class settings_group_raii {
+public:
+	settings_group_raii(QSettings &settings, const QString &key)
+			: m_settings(settings) {
+		m_settings.beginGroup(key);
+	}
+
+	~settings_group_raii() {
+		m_settings.endGroup();
+	}
+
+private:
+	QSettings &m_settings;
+};
+
 class SystemSerialPortConfiguration {
 public:
 	SystemSerialPortConfiguration() {
@@ -35,17 +50,16 @@ public:
 			return;
 		}
 
-		if (settings.allKeys().isEmpty()) {
+		if (settings.childGroups().isEmpty()) {
 			logger<filter>::warning(module, "no serial port configured: ", serial_port_config_file);
 		}
 
-		for (auto &&key : settings.allKeys()) {
-			settings.beginGroup(key);
+		for (auto &&key : settings.childGroups()) {
+			settings_group_raii(settings, key);
 			auto port = settings.value("port").toString().toStdString();
 			logger<filter>::debug(module, "section: ", key.toStdString());
 			logger<filter>::debug(module, "port_name: ", port);
 			m_ports.emplace_back(std::move(port));
-			settings.endGroup();
 		}
 	}
 
@@ -69,12 +83,13 @@ MainManager::MainManager(QSettings &settings)
 	m_atoms.attach(m_globalGreenCorrection);
 	m_atoms.attach(m_globalBlueCorrection);
 
-	m_settings.beginGroup("GlobalCorrectors");
-	m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", m_globalBrightnessCorrection->factor().value()).toUInt());
-	m_globalRedCorrection->setFactor(m_settings.value("red", m_globalRedCorrection->factor().value()).toUInt());
-	m_globalGreenCorrection->setFactor(m_settings.value("green", m_globalGreenCorrection->factor().value()).toUInt());
-	m_globalBlueCorrection->setFactor(m_settings.value("blue", m_globalBlueCorrection->factor().value()).toUInt());
-	m_settings.endGroup();
+	{
+		settings_group_raii(m_settings, "GlobalCorrectors");
+		m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", m_globalBrightnessCorrection->factor().value()).toUInt());
+		m_globalRedCorrection->setFactor(m_settings.value("red", m_globalRedCorrection->factor().value()).toUInt());
+		m_globalGreenCorrection->setFactor(m_settings.value("green", m_globalGreenCorrection->factor().value()).toUInt());
+		m_globalBlueCorrection->setFactor(m_settings.value("blue", m_globalBlueCorrection->factor().value()).toUInt());
+	}
 
 #ifdef QT_DEBUG
 	attach(Functional::DebugNotification::instance());
@@ -86,12 +101,11 @@ MainManager::MainManager(QSettings &settings)
 }
 
 MainManager::~MainManager() {
-	m_settings.beginGroup("GlobalCorrectors");
+	settings_group_raii(m_settings, "GlobalCorrectors");
 	m_settings.setValue("brightness", m_globalBrightnessCorrection->factor().value());
 	m_settings.setValue("red", m_globalRedCorrection->factor().value());
 	m_settings.setValue("green", m_globalGreenCorrection->factor().value());
 	m_settings.setValue("blue", m_globalBlueCorrection->factor().value());
-	m_settings.endGroup();
 }
 
 void MainManager::attach(INotification &notifier) noexcept {
