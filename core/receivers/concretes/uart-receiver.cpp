@@ -54,7 +54,7 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 
 	logger<filter>::information(module, "running on: ", m_device->info().portName().toStdString());
 
-	while (!interrupted || worker.isValid()) {
+	while (!interrupted && worker.isValid()) {
 		const auto emitter = connectedEmitter();
 
 		if (!isEmitterConnected() || !emitter->isFirstFrameReady()) {
