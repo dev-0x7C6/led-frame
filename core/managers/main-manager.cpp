@@ -55,7 +55,7 @@ public:
 		}
 
 		for (auto &&key : settings.childGroups()) {
-			settings_group_raii(settings, key);
+			settings_group_raii raii(settings, key);
 			auto port = settings.value("port").toString().toStdString();
 			logger<filter>::debug(module, "section: ", key.toStdString());
 			logger<filter>::debug(module, "port_name: ", port);
@@ -84,7 +84,7 @@ MainManager::MainManager(QSettings &settings)
 	m_atoms.attach(m_globalBlueCorrection);
 
 	{
-		settings_group_raii(m_settings, "GlobalCorrectors");
+		settings_group_raii raii(m_settings, "GlobalCorrectors");
 		m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", m_globalBrightnessCorrection->factor().value()).toUInt());
 		m_globalRedCorrection->setFactor(m_settings.value("red", m_globalRedCorrection->factor().value()).toUInt());
 		m_globalGreenCorrection->setFactor(m_settings.value("green", m_globalGreenCorrection->factor().value()).toUInt());
@@ -101,7 +101,7 @@ MainManager::MainManager(QSettings &settings)
 }
 
 MainManager::~MainManager() {
-	settings_group_raii(m_settings, "GlobalCorrectors");
+	settings_group_raii raii(m_settings, "GlobalCorrectors");
 	m_settings.setValue("brightness", m_globalBrightnessCorrection->factor().value());
 	m_settings.setValue("red", m_globalRedCorrection->factor().value());
 	m_settings.setValue("green", m_globalGreenCorrection->factor().value());
