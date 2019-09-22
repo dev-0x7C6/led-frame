@@ -143,7 +143,10 @@ UartWorker::UartWorker(AtomAggregator &correctors,
 	port->clear();
 
 	m_proto = std::make_unique<ProtocolController>(std::move(port));
-	m_proto->synchronize();
+	for (int i = 0; i < 10; ++i) {
+		m_proto->synchronize();
+		std::this_thread::sleep_for(1ms);
+	}
 	m_info = m_proto->info();
 }
 
