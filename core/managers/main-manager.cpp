@@ -46,12 +46,14 @@ public:
 		QSettings settings(serial_port_config_file, QSettings::Format::IniFormat);
 		if (QSettings::Status::NoError != settings.status()) {
 			logger<filter>::warning(module, "unable to find or access serial port configuration file ", serial_port_config_file);
-			logger<filter>::warning(module, "no serial port support");
+			logger<filter>::warning(module, "all ports allowed");
 			return;
 		}
 
 		if (settings.childGroups().isEmpty()) {
 			logger<filter>::warning(module, "no serial port configured: ", serial_port_config_file);
+			logger<filter>::warning(module, "all ports allowed");
+			return;
 		}
 
 		for (auto &&key : settings.childGroups()) {
@@ -64,6 +66,9 @@ public:
 	}
 
 	bool isRegistred(const std::string &device) {
+		if (m_ports.empty())
+			return true;
+
 		return std::find(m_ports.begin(), m_ports.end(), device) != m_ports.end();
 	}
 
