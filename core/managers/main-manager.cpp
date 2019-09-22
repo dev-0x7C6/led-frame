@@ -20,7 +20,7 @@ using namespace Network;
 using namespace Receiver::Concrete;
 
 namespace {
-constexpr auto filter = error_class::information;
+constexpr auto filter = error_class::debug;
 constexpr auto module = "[settings]: ";
 constexpr auto serial_port_config_file = "/etc/led-frame/serial.conf";
 } // namespace
@@ -39,8 +39,14 @@ public:
 			logger<filter>::warning(module, "no serial port configured: ", serial_port_config_file);
 		}
 
-		for (auto &&key : settings.allKeys())
-			m_ports.emplace_back(settings.value(key + "/port", QString{}).toString().toStdString());
+		for (auto &&key : settings.allKeys()) {
+			settings.beginGroup(key);
+			auto port = settings.value("port").toString().toStdString();
+			logger<filter>::debug(module, "section: ", key.toStdString());
+			logger<filter>::debug(module, "port_name: ", port);
+			m_ports.emplace_back(std::move(port));
+			settings.endGroup();
+		}
 	}
 
 	bool isRegistred(const std::string &device) {
