@@ -17,7 +17,7 @@ using namespace Enum;
 using namespace Receiver::Concrete;
 
 namespace {
-constexpr auto filter = error_class::debug;
+constexpr auto filter = error_class::information;
 constexpr auto module = "[procotol]: ";
 } // namespace
 
@@ -76,7 +76,7 @@ public:
 	}
 
 	bool isValid() {
-		return m_port->isOpen() && m_port->error() == QSerialPort::NoError;
+		return m_port->isOpen() && (m_port->error() == QSerialPort::NoError || m_port->error() == QSerialPort::TimeoutError);
 	}
 
 private:
