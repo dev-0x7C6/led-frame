@@ -38,6 +38,8 @@ void catchUnixSignals(std::initializer_list<int> &&catch_those) {
 
 #endif
 
+#include <externals/common/logger/logger.hpp>
+
 int main(int argc, char *argv[]) {
 #ifdef RPI
 	bcm_host_init();

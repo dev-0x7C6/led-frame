@@ -8,10 +8,9 @@
 #include <core/networking/udp-broadcast-service.h>
 #include <core/receivers/concretes/uart-receiver.h>
 #include <core/receivers/factories/receiver-factory.h>
+#include <externals/common/logger/logger.hpp>
 
 #include <QSettings>
-
-#include <mutex>
 
 using namespace Enum;
 using namespace Factory;
@@ -20,8 +19,41 @@ using namespace Manager;
 using namespace Network;
 using namespace Receiver::Concrete;
 
+namespace {
+constexpr auto filter = error_class::information;
+constexpr auto module = "[settings]: ";
+constexpr auto serial_port_config_file = "/etc/led-frame/serial.conf";
+} // namespace
+
+class SystemSerialPortConfiguration {
+public:
+	SystemSerialPortConfiguration() {
+		QSettings settings(serial_port_config_file, QSettings::Format::IniFormat);
+		if (QSettings::Status::NoError != settings.status()) {
+			logger<filter>::warning(module, "unable to find or access serial port configuration file ", serial_port_config_file);
+			logger<filter>::warning(module, "no serial port support");
+			return;
+		}
+
+		if (settings.allKeys().isEmpty()) {
+			logger<filter>::warning(module, "no serial port configured: ", serial_port_config_file);
+		}
+
+		for (auto &&key : settings.allKeys())
+			m_ports.emplace_back(settings.value(key + "/port", QString{}).toString().toStdString());
+	}
+
+	bool isRegistred(const std::string &device) {
+		return std::find(m_ports.begin(), m_ports.end(), device) != m_ports.end();
+	}
+
+private:
+	std::vector<std::string> m_ports;
+};
+
 MainManager::MainManager(QSettings &settings)
 		: m_settings(settings)
+		, m_serialConfig(std::make_unique<SystemSerialPortConfiguration>())
 		, m_globalBrightnessCorrection(make_corrector(CorrectorType::Brightness, -1))
 		, m_globalRedCorrection(make_corrector(CorrectorType::RedChannel, -1))
 		, m_globalGreenCorrection(make_corrector(CorrectorType::GreenChannel, -1))
@@ -83,7 +115,12 @@ void MainManager::rescan() {
 	});
 
 	for (auto &&port : QSerialPortInfo::availablePorts()) {
-		if (!m_deviceLocker.lock(port.portName().toStdString()))
+		const auto portName = port.portName().toStdString();
+
+		if (!m_serialConfig->isRegistred(portName))
+			continue;
+
+		if (!m_deviceLocker.lock(portName))
 			continue;
 
 		auto receiver = factory::make_receiver(

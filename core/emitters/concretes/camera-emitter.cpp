@@ -118,6 +118,8 @@ private:
 
 template <typename Iterator>
 auto prepare_prefered_resolutions(Iterator begin, Iterator end) noexcept {
+	std::unordered_map<i32, std::vector<resolution>> table;
+
 	std::vector<resolution> resolutions_16_9;
 	std::vector<resolution> resolutions_16_10;
 	std::vector<resolution> resolutions_4_3;
@@ -127,6 +129,8 @@ auto prepare_prefered_resolutions(Iterator begin, Iterator end) noexcept {
 	for (; begin != end; ++begin) {
 		const auto mode = *begin;
 		resolution res(mode.width(), mode.height());
+		table[static_cast<i32>(res.aspect())].emplace_back(std::move(res));
+
 		switch (res.aspect()) {
 			case resolution::aspect_ratio::_16_9:
 				resolutions_16_9.emplace_back(std::move(res));
@@ -160,9 +164,9 @@ auto prepare_prefered_resolutions(Iterator begin, Iterator end) noexcept {
 
 class CameraWorker : public QThread {
 public:
-	CameraWorker(IEmitter &emitter, std::any &&args, std::atomic<bool> &interrupted)
+	CameraWorker(IEmitter &emitter, QCameraInfo &&info, std::atomic<bool> &interrupted)
 			: m_emitter(emitter)
-			, m_args(std::move(args))
+			, m_info(std::move(info))
 			, m_interrupted(interrupted) {
 		start();
 	}
@@ -176,7 +180,6 @@ protected:
 	void run() final {
 		QEventLoop loop;
 		std::unique_ptr<QCamera> handle;
-		const auto info = std::any_cast<QCameraInfo>(m_args);
 
 		Capture<QVideoFrame::Format_ARGB32> capture([this](auto &&scanline) { m_emitter.commit(std::forward<decltype(scanline)>(scanline)); });
 
@@ -197,8 +200,8 @@ protected:
 			}
 
 			if (!handle) {
-				auto [available_resolutions, available_framerates] = [&info]() {
-					QCamera camera(info);
+				auto [available_resolutions, available_framerates] = [this]() {
+					QCamera camera(m_info);
 					camera.load();
 					QMediaRecorder rec(&camera);
 					return std::make_pair(rec.supportedResolutions(), rec.supportedFrameRates());
@@ -216,7 +219,7 @@ protected:
 					continue;
 				}
 
-				handle = std::make_unique<QCamera>(info);
+				handle = std::make_unique<QCamera>(m_info);
 
 				std::sort(available_framerates.begin(), available_framerates.end());
 				const auto prefered_resolutions = prepare_prefered_resolutions(available_resolutions.begin(), available_resolutions.end());
@@ -256,12 +259,12 @@ protected:
 
 private:
 	IEmitter &m_emitter;
-	std::any m_args;
+	QCameraInfo m_info;
 	std::atomic<bool> &m_interrupted;
 };
 
-CameraEmitter::CameraEmitter(std::any &&argument)
-		: m_worker(std::make_unique<CameraWorker>(*this, std::move(argument), m_interrupted)) {
+CameraEmitter::CameraEmitter(QCameraInfo &&info)
+		: m_worker(std::make_unique<CameraWorker>(*this, std::move(info), m_interrupted)) {
 }
 
 CameraEmitter::~CameraEmitter() {

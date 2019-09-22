@@ -1,16 +1,16 @@
 #pragma once
 
 #include <core/emitters/abstracts/abstract-emitter.h>
+#include <core/enums/animation-variant.h>
 
 #include <QVariantAnimation>
-#include <any>
 
 namespace Emitter {
 namespace Concrete {
 
 class AnimationEmitter final : public Abstract::AbstractEmitter {
 public:
-	explicit AnimationEmitter(std::any &&args);
+	explicit AnimationEmitter(Enum::AnimationVariant);
 	~AnimationEmitter() final;
 
 	EmitterType type() const final { return EmitterType::Animation; }

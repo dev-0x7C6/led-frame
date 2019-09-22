@@ -7,14 +7,14 @@
 using namespace Emitter::Concrete;
 using namespace Functional::Animation;
 
-AnimationEmitter::AnimationEmitter(std::any &&args) {
+AnimationEmitter::AnimationEmitter(const Enum::AnimationVariant variant) {
 	QObject::connect(&m_animation, &QVariantAnimation::valueChanged, [this, firstFrame{true}](const auto &value) mutable {
 		if (usages() || firstFrame)
 			process(value);
 
 		firstFrame = false;
 	});
-	make_animation(m_animation, std::any_cast<Enum::AnimationVariant>(args));
+	make_animation(m_animation, variant);
 }
 
 AnimationEmitter::~AnimationEmitter() {

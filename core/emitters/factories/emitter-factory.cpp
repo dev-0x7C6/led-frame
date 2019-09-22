@@ -7,6 +7,8 @@
 #include <core/emitters/concretes/test-emitter.h>
 #include <core/emitters/factories/emitter-factory.h>
 
+#include <QCameraInfo>
+
 using namespace Emitter::Concrete;
 using namespace Enum;
 using namespace Factory;
@@ -14,11 +16,11 @@ using namespace Factory;
 std::unique_ptr<IEmitter> Factory::make_emitter(EmitterType type, std::any &&argument) noexcept {
 	switch (type) {
 		case EmitterType::Color: return std::make_unique<ColorEmitter>();
-		case EmitterType::Animation: return std::make_unique<AnimationEmitter>(std::move(argument));
+		case EmitterType::Animation: return std::make_unique<AnimationEmitter>(std::any_cast<Enum::AnimationVariant>(argument));
 		case EmitterType::Image: return std::make_unique<ImageEmitter>();
 		case EmitterType::Screen: return std::make_unique<ScreenEmitter>();
 		case EmitterType::Test: return std::make_unique<TestEmitter>();
-		case EmitterType::Camera: return std::make_unique<CameraEmitter>(std::move(argument));
+		case EmitterType::Camera: return std::make_unique<CameraEmitter>(std::any_cast<QCameraInfo>(argument));
 		case EmitterType::Off: return std::make_unique<OffEmitter>();
 	}
 

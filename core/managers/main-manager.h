@@ -24,6 +24,7 @@ class UdpBroadcastService;
 
 class IReceiver;
 class QSettings;
+class SystemSerialPortConfiguration;
 
 namespace Manager {
 
@@ -45,6 +46,7 @@ private:
 	QSettings &m_settings;
 
 private:
+	std::unique_ptr<SystemSerialPortConfiguration> m_serialConfig;
 	std::shared_ptr<ICorrector> m_globalBrightnessCorrection;
 	std::shared_ptr<ICorrector> m_globalRedCorrection;
 	std::shared_ptr<ICorrector> m_globalGreenCorrection;
