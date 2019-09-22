@@ -12,6 +12,8 @@
 #include <QSerialPort>
 #include <QElapsedTimer>
 
+class ProtocolController;
+
 namespace Functional {
 class FramePaceSync;
 }
@@ -25,6 +27,7 @@ class UartWorker {
 public:
 	explicit UartWorker(AtomAggregator &correctors,
 		std::unique_ptr<Functional::DevicePort> &device);
+	~UartWorker();
 
 	void fadeIn(const FrameCaptureFunctor &, Functional::FramePaceSync &);
 	void fadeOut(const FrameCaptureFunctor &, Functional::FramePaceSync &);
@@ -39,9 +42,9 @@ private:
 	std::unique_ptr<Functional::DevicePort> &m_device;
 
 	Functional::ColorStream<1024> m_stream;
+	std::unique_ptr<ProtocolController> m_proto;
 	QSerialPort m_port;
 	QElapsedTimer m_elapsed;
-	bool m_evenFrame{true};
 
 	std::optional<ledframe::proto::command_info_params> m_info;
 };
