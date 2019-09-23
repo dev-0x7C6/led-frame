@@ -1,4 +1,5 @@
 #include <core/emitters/concretes/image-emitter.h>
+
 #include <core/enums/position-enum.h>
 #include <core/functionals/color-averaging-buffer.h>
 #include <core/functionals/image-block-processor.h>

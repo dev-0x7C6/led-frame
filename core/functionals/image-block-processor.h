@@ -9,16 +9,14 @@
 
 namespace Functional {
 
-namespace {
 struct Block {
-	u32 scanline;
-	u32 width;
-	u32 height;
-	u32 step;
-	u32 wdiff;
-	u32 hdiff;
+	u32 scanline{};
+	u32 width{};
+	u32 height{};
+	u32 step{};
+	u32 wdiff{};
+	u32 hdiff{};
 };
-} // namespace
 
 template <typename type, u32 size>
 constexpr auto scan_extract(const color *data, const u32 range) noexcept {

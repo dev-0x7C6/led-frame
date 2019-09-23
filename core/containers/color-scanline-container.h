@@ -66,26 +66,23 @@ public:
 	constexpr ScanlineContainer<newsize> resize();
 
 private:
-	const auto &container() const noexcept { return *m_data; }
-	auto &container() noexcept { return *m_data; }
+	const auto &container() const noexcept { return m_data; }
+	auto &container() noexcept { return m_data; }
 
 private:
-	std::unique_ptr<std::array<color, linesize>> m_data; //make on heap to faster move
+	std::array<color, linesize> m_data;
 };
 
 using Scanline = ScanlineContainer<128u>;
 
 template <u32 linesize>
-constexpr ScanlineContainer<linesize>::ScanlineContainer() noexcept
-		: m_data(std::make_unique<std::array<color, linesize>>()) {}
+constexpr ScanlineContainer<linesize>::ScanlineContainer() noexcept {}
 
 template <u32 linesize>
-constexpr ScanlineContainer<linesize>::ScanlineContainer(const color fillColor) noexcept
-		: m_data(std::make_unique<std::array<color, linesize>>()) { container().fill(fillColor); }
+constexpr ScanlineContainer<linesize>::ScanlineContainer(const color fillColor) noexcept { container().fill(fillColor); }
 
 template <u32 linesize>
-constexpr ScanlineContainer<linesize>::ScanlineContainer(const ScanlineContainer &rhs)
-		: m_data(std::make_unique<std::array<color, linesize>>()) {
+constexpr ScanlineContainer<linesize>::ScanlineContainer(const ScanlineContainer &rhs) {
 	container() = rhs.container();
 }
 
@@ -200,9 +197,9 @@ constexpr ScanlineContainer<newsize> ScanlineContainer<linesize>::resize() {
 }
 
 template <u32 oldsize, u32 newsize>
-inline static std::array<color, newsize> createInterpolatedColorArray(const std::function<color(const u32)> &getColor) {
+constexpr std::array<color, newsize> createInterpolatedColorArray(const std::function<color(const u32)> &getColor) {
 	constexpr auto factor = static_cast<factor_t>(oldsize) / static_cast<factor_t>(newsize);
-	std::array<color, newsize> result;
+	std::array<color, newsize> result{};
 
 	for (u32 i = 0u; i < newsize; ++i) {
 		const auto curr_idx = std::min(oldsize - 1, static_cast<u32>(i * factor));
