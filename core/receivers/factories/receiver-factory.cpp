@@ -6,19 +6,21 @@
 
 #include <core/protocols/concretes/led-frame-protocol.h>
 
+namespace {
+Protocol::Concrete::LedFrameProtocol make_porotocol(const QSerialPortInfo &info) {
+	return {info};
+}
+} // namespace
+
 std::unique_ptr<IReceiver> Factory::make_receiver(receiver_type type, std::function<void(const IRepresentable &)> &&unregister, std::any &&args) {
 	using namespace Receiver::Concrete;
 	switch (type) {
-		case receiver_type::uart: {
-			const auto info = std::any_cast<QSerialPortInfo>(args);
-
+		case receiver_type::uart:
 			try {
-				Protocol::Concrete::LedFrameProtocol protocol(info);
-				return std::make_unique<UartReceiver>(std::move(protocol), std::move(unregister));
+				return std::make_unique<UartReceiver>(make_porotocol(std::any_cast<QSerialPortInfo>(args)), std::move(unregister));
 			} catch (std::logic_error &) {
 				return nullptr;
 			}
-		}
 		case receiver_type::stub:
 			return std::make_unique<StubReceiver>();
 	}
