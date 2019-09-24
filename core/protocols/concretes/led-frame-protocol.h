@@ -13,7 +13,7 @@ namespace Protocol {
 namespace Concrete {
 
 class LedFrameProtocol {
-	static constexpr auto filter = error_class::debug;
+	static constexpr auto filter = error_class::information;
 	static constexpr auto module = "[protocol]: ";
 
 public:
@@ -29,12 +29,17 @@ public:
 			throw std::logic_error("unable to open port");
 		m_port->clear();
 
-		for (int i = 0; i < 10; ++i) {
-			if (!synchronize())
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		}
+		auto try_synchronize = [this]() noexcept {
+			for (int i = 0; i < 6; ++i) {
+				if (synchronize())
+					return true;
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
 
-		if (synchronize())
+			return false;
+		};
+
+		if (!try_synchronize())
 			throw std::logic_error("unable to synchronize with device");
 
 		m_cachedInfo = queryInfo();
