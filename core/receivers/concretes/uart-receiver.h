@@ -2,6 +2,7 @@
 
 #include <core/enums/color-format-enum.h>
 #include <core/receivers/abstracts/abstract-receiver.h>
+#include <core/protocols/concretes/led-frame-protocol.h>
 
 #include <QObject>
 #include <QSerialPort>
@@ -27,7 +28,7 @@ class UartWorker;
 
 class UartReceiver final : public Receiver::Abstract::AbstractReceiver {
 public:
-	explicit UartReceiver(std::unique_ptr<Functional::DevicePort> &&, unregister_callback &&unregister);
+	explicit UartReceiver(Protocol::Concrete::LedFrameProtocol &&protocol, unregister_callback &&unregister);
 	UartReceiver(const UartReceiver &) = delete;
 	UartReceiver(UartReceiver &&) = delete;
 	~UartReceiver() final;
@@ -38,7 +39,7 @@ protected:
 	void run(const std::atomic_bool &interrupted);
 
 private:
-	std::unique_ptr<Functional::DevicePort> m_device;
+	Protocol::Concrete::LedFrameProtocol m_protocol;
 	QSerialPortInfo m_details;
 
 	raii_thread m_thread;

@@ -12,7 +12,9 @@
 #include <QSerialPort>
 #include <QElapsedTimer>
 
-class ProtocolController;
+namespace Protocol::Concrete {
+class LedFrameProtocol;
+}
 
 namespace Functional {
 class FramePaceSync;
@@ -26,7 +28,7 @@ using FrameCaptureFunctor = std::function<Container::Scanline()>;
 class UartWorker {
 public:
 	explicit UartWorker(AtomAggregator &correctors,
-		std::unique_ptr<Functional::DevicePort> &device);
+		Protocol::Concrete::LedFrameProtocol &);
 	~UartWorker();
 
 	void fadeIn(const FrameCaptureFunctor &, Functional::FramePaceSync &);
@@ -39,14 +41,10 @@ public:
 
 private:
 	AtomAggregator &m_correctors;
-	std::unique_ptr<Functional::DevicePort> &m_device;
-
 	Functional::ColorStream<1024> m_stream;
-	std::unique_ptr<ProtocolController> m_proto;
+	Protocol::Concrete::LedFrameProtocol &m_proto;
 	QSerialPort m_port;
 	QElapsedTimer m_elapsed;
-
-	std::optional<ledframe::proto::command_info_params> m_info;
 };
 } // namespace Concrete
 } // namespace Receiver

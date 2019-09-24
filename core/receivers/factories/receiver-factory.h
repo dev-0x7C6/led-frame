@@ -9,6 +9,6 @@
 class IReceiver;
 class IRepresentable;
 
-namespace factory {
+namespace Factory {
 std::unique_ptr<IReceiver> make_receiver(receiver_type type, std::function<void(const IRepresentable &)> &&end_of_life, std::any && = {});
 }

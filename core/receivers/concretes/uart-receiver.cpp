@@ -27,12 +27,13 @@ constexpr auto filter = error_class::debug;
 constexpr auto module = "[uart receiver]: ";
 }
 
-UartReceiver::UartReceiver(std::unique_ptr<DevicePort> &&device, unregister_callback &&callback)
-		: m_device(std::move(device))
+UartReceiver::UartReceiver(Protocol::Concrete::LedFrameProtocol &&protocol, unregister_callback &&callback)
+		: m_protocol(std::move(protocol))
 		, m_thread([this, unregister_callback{std::move(callback)}](const auto &interrupted) {
 			run(interrupted);
 			unregister_callback(*this);
 		}) {
+	setName(m_protocol.info().name);
 }
 
 UartReceiver::~UartReceiver() = default;
@@ -46,13 +47,13 @@ void UartReceiver::run(const std::atomic_bool &interrupted) {
 	QEventLoop loop;
 	loop.thread()->setPriority(QThread::Priority::HighestPriority);
 
-	UartWorker worker(correctors(), m_device);
+	UartWorker worker(correctors(), m_protocol);
 	Functional::FramePaceSync framePaceing(1000);
 	std::optional<int> lastEmitterId;
 
 	Scanline frame;
 
-	logger<filter>::information(module, "running on: ", m_device->info().portName().toStdString());
+	logger<filter>::information(module, "running");
 
 	while (!interrupted && worker.isValid()) {
 		const auto emitter = connectedEmitter();

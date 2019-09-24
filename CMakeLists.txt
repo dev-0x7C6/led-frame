@@ -125,6 +125,8 @@ target_link_libraries(led-frame-networking Qt5::Core Qt5::Network Qt5::Widgets Q
 
 
 set(sources
+    core/protocols/concretes/led-frame-protocol.cpp
+    core/protocols/concretes/led-frame-protocol.h
     core/containers/application-info-container.h
     core/containers/color-scanline-container.cpp
     core/containers/color-scanline-container.h

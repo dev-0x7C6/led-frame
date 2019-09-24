@@ -98,7 +98,7 @@ MainManager::MainManager(QSettings &settings)
 
 #ifdef QT_DEBUG
 	attach(Functional::DebugNotification::instance());
-	auto receiver = factory::make_receiver(receiver_type::stub, [](auto &&) {});
+	auto receiver = Factory::make_receiver(receiver_type::stub, [](auto &&) {});
 	m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(receiver->id(), "stub", 4999));
 	m_atoms.attach(std::move(receiver));
 #endif
@@ -148,17 +148,22 @@ void MainManager::rescan() {
 		if (!m_deviceLocker.lock(portName))
 			continue;
 
-		auto receiver = factory::make_receiver(
+		auto receiver = Factory::make_receiver(
 			receiver_type::uart, [this, port{port.portName().toStdString()}](const IRepresentable &value) {
 				m_unregisterQueue.emplace(value.id());
 				m_deviceLocker.unlock(port);
 			},
 			port);
 
-		if (m_registerDeviceCallback && !m_registerDeviceCallback(receiver.get(), port.serialNumber()))
+		if (!receiver) {
+			m_deviceLocker.unlock(portName);
+			continue;
+		}
+
+		if (m_registerDeviceCallback && !m_registerDeviceCallback(receiver.get(), QString::fromStdString(receiver->name())))
 			continue;
 
-		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(receiver->id(), port.portName().toStdString(), 4999));
+		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(receiver->id(), receiver->name(), 4999));
 		m_atoms.attach(std::move(receiver));
 	}
 }
