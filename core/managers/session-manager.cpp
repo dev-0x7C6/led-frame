@@ -125,7 +125,7 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Image, translate(EmitterType::Image)));
 
 	for (auto &&type : animationVariantTypes)
-		m_mainManager.atoms().attach(make_emitter(EmitterType::Animation, translate(EmitterType::Animation), type));
+		m_mainManager.atoms().attach(make_emitter(EmitterType::Animation, translate(type), type));
 
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Color, translate(EmitterType::Color)));
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Off, translate(EmitterType::Off)));

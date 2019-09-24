@@ -4,7 +4,6 @@
 #include <core/types.h>
 
 namespace Container {
-
 class DeviceInfo final {
 public:
 	constexpr explicit DeviceInfo();
