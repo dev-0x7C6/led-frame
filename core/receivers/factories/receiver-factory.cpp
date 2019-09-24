@@ -18,8 +18,10 @@ std::unique_ptr<IReceiver> Factory::make_receiver(receiver_type type, std::funct
 		case receiver_type::uart:
 			try {
 				auto info = std::any_cast<QSerialPortInfo>(args);
-				make_porotocol(info);
-				return std::make_unique<UartReceiver>(std::move(info), std::move(unregister));
+				auto name = std::string(make_porotocol(info).info().name);
+				auto receiver = std::make_unique<UartReceiver>(std::move(info), std::move(unregister));
+				receiver->setName(name);
+				return receiver;
 			} catch (std::logic_error &) {
 				return nullptr;
 			}
