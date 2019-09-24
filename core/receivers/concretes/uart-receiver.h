@@ -28,7 +28,7 @@ class UartWorker;
 
 class UartReceiver final : public Receiver::Abstract::AbstractReceiver {
 public:
-	explicit UartReceiver(Protocol::Concrete::LedFrameProtocol &&protocol, unregister_callback &&unregister);
+	explicit UartReceiver(QSerialPortInfo &&info, unregister_callback &&unregister);
 	UartReceiver(const UartReceiver &) = delete;
 	UartReceiver(UartReceiver &&) = delete;
 	~UartReceiver() final;
@@ -36,10 +36,9 @@ public:
 	auto type() const noexcept -> receiver_type final;
 
 protected:
-	void run(const std::atomic_bool &interrupted);
+	void run(const QSerialPortInfo &info, const std::atomic_bool &interrupted);
 
 private:
-	Protocol::Concrete::LedFrameProtocol m_protocol;
 	QSerialPortInfo m_details;
 
 	raii_thread m_thread;

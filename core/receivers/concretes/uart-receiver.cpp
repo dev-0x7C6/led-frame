@@ -27,13 +27,11 @@ constexpr auto filter = error_class::debug;
 constexpr auto module = "[uart receiver]: ";
 }
 
-UartReceiver::UartReceiver(Protocol::Concrete::LedFrameProtocol &&protocol, unregister_callback &&callback)
-		: m_protocol(std::move(protocol))
-		, m_thread([this, unregister_callback{std::move(callback)}](const auto &interrupted) {
-			run(interrupted);
+UartReceiver::UartReceiver(QSerialPortInfo &&info, unregister_callback &&callback)
+		: m_thread([this, info{std::move(info)}, unregister_callback{std::move(callback)}](const auto &interrupted) {
+			run(info, interrupted);
 			unregister_callback(*this);
 		}) {
-	setName(m_protocol.info().name);
 }
 
 UartReceiver::~UartReceiver() = default;
@@ -42,12 +40,14 @@ auto UartReceiver::type() const noexcept -> receiver_type {
 	return receiver_type::uart;
 }
 
-void UartReceiver::run(const std::atomic_bool &interrupted) {
+void UartReceiver::run(const QSerialPortInfo &info, const std::atomic_bool &interrupted) {
 	logger<filter>::debug(module, "thread started");
 	QEventLoop loop;
 	loop.thread()->setPriority(QThread::Priority::HighestPriority);
 
-	UartWorker worker(correctors(), m_protocol);
+	Protocol::Concrete::LedFrameProtocol protocol(std::move(info));
+
+	UartWorker worker(correctors(), protocol);
 	Functional::FramePaceSync framePaceing(1000);
 	std::optional<int> lastEmitterId;
 

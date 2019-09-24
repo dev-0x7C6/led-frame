@@ -17,7 +17,9 @@ std::unique_ptr<IReceiver> Factory::make_receiver(receiver_type type, std::funct
 	switch (type) {
 		case receiver_type::uart:
 			try {
-				return std::make_unique<UartReceiver>(make_porotocol(std::any_cast<QSerialPortInfo>(args)), std::move(unregister));
+				auto info = std::any_cast<QSerialPortInfo>(args);
+				make_porotocol(info);
+				return std::make_unique<UartReceiver>(std::move(info), std::move(unregister));
 			} catch (std::logic_error &) {
 				return nullptr;
 			}
