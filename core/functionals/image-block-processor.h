@@ -95,13 +95,6 @@ public:
 
 		const auto b = scan_all<type, columns>(data + ((rows - 1) * block.scanline * block.height) + block.hdiff * block.scanline, block);
 
-		Container::Scanline output;
-
-		std::array<type, columns> m_t;
-		std::array<type, columns> m_b;
-		std::array<type, rows - 2> m_l;
-		std::array<type, rows - 2> m_r;
-
 #ifdef RPI
 		const auto tc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return t.at(index).bgr(); });
 		const auto bc = Container::createInterpolatedColorArray<columns, 32>([&](cu32 index) { return b.at(index).bgr(); });
@@ -113,6 +106,8 @@ public:
 		const auto lc = Container::createInterpolatedColorArray<rows - 2, 32>([&](const u32 index) { return pairs.at(index).first(); });
 		const auto rc = Container::createInterpolatedColorArray<rows - 2, 32>([&](const u32 index) { return pairs.at(index).second(); });
 #endif
+
+		Container::Scanline output;
 		for (std::size_t i = 0u; i < 32u; ++i) {
 			output[i] = lc.at(31 - i);
 			output[i + 32] = tc.at(i);
