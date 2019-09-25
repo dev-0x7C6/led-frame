@@ -164,6 +164,7 @@ void SessionManager::createCorrectorGroup(QSettings &settings, IReceiver &receiv
 
 	const auto id = receiver.id();
 
+	settings_group_raii _(settings, "correctors");
 	for (const auto &type : getCorrectorTypes()) {
 		std::shared_ptr corrector = make_corrector(type, id);
 		settings_group_raii _(settings, value(type));
@@ -184,6 +185,7 @@ SessionManager::~SessionManager() {
 		if (const auto emitter = receiver->connectedEmitter(); emitter)
 			m_settings.setValue("last_selected_emitter", QString::fromStdString(emitter->name()));
 
+		settings_group_raii __(m_settings, "correctors");
 		receiver->correctors().enumerate([this](const std::shared_ptr<IRepresentable> &v) {
 			auto &&corrector = std::static_pointer_cast<ICorrector>(v);
 			settings_group_raii _(m_settings, value(corrector->type()));
