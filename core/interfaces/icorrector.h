@@ -9,6 +9,8 @@
 
 #include <core/generic/irepresentable.h>
 
+#include <QSettings>
+
 class ICorrector : public IRepresentable {
 public:
 	inline explicit ICorrector(int owner, Enum::Priority priority = Enum::Priority::Average);
@@ -40,6 +42,18 @@ public:
 
 	inline auto setEnabled(bool value) noexcept;
 	inline auto setFactor(correct_t value) noexcept;
+
+	void save(QSettings &settings) {
+		settings.setValue("factor", m_factor.value());
+		settings.setValue("threshold", m_threshold.value());
+		settings.setValue("enabled", static_cast<int>(m_enabled));
+	}
+
+	void load(QSettings &settings) {
+		m_factor.setValue(settings.value("factor", m_factor.value()).toUInt());
+		m_threshold.setValue(settings.value("threshold", m_threshold.value()).toUInt());
+		m_enabled = settings.value("enabled", static_cast<int>(m_enabled)).toInt();
+	}
 
 protected:
 	FactorModifier m_factor{255, 255, 0};

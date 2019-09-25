@@ -9,8 +9,7 @@
 #include <core/receivers/concretes/uart-receiver.h>
 #include <core/receivers/factories/receiver-factory.h>
 #include <externals/common/logger/logger.hpp>
-
-#include <QSettings>
+#include <core/functionals/settings-group-raii.h>
 
 using namespace Enum;
 using namespace Factory;
@@ -24,21 +23,6 @@ constexpr auto filter = error_class::debug;
 constexpr auto module = "[settings]: ";
 constexpr auto serial_port_config_file = "/etc/led-frame/serial.conf";
 } // namespace
-
-class settings_group_raii {
-public:
-	settings_group_raii(QSettings &settings, const QString &key)
-			: m_settings(settings) {
-		m_settings.beginGroup(key);
-	}
-
-	~settings_group_raii() {
-		m_settings.endGroup();
-	}
-
-private:
-	QSettings &m_settings;
-};
 
 class SystemSerialPortConfiguration {
 public:
@@ -65,7 +49,7 @@ public:
 		}
 	}
 
-	bool isRegistred(const std::string &device) {
+	bool isAllowed(const std::string &device) {
 		if (m_ports.empty())
 			return true;
 
@@ -89,7 +73,7 @@ MainManager::MainManager(QSettings &settings)
 	m_atoms.attach(m_globalBlueCorrection);
 
 	{
-		settings_group_raii raii(m_settings, "GlobalCorrectors");
+		settings_group_raii raii(m_settings, "global_correctors");
 		m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", m_globalBrightnessCorrection->factor().value()).toUInt());
 		m_globalRedCorrection->setFactor(m_settings.value("red", m_globalRedCorrection->factor().value()).toUInt());
 		m_globalGreenCorrection->setFactor(m_settings.value("green", m_globalGreenCorrection->factor().value()).toUInt());
@@ -106,7 +90,7 @@ MainManager::MainManager(QSettings &settings)
 }
 
 MainManager::~MainManager() {
-	settings_group_raii raii(m_settings, "GlobalCorrectors");
+	settings_group_raii raii(m_settings, "global_correctors");
 	m_settings.setValue("brightness", m_globalBrightnessCorrection->factor().value());
 	m_settings.setValue("red", m_globalRedCorrection->factor().value());
 	m_settings.setValue("green", m_globalGreenCorrection->factor().value());
@@ -142,7 +126,7 @@ void MainManager::rescan() {
 	for (auto &&port : QSerialPortInfo::availablePorts()) {
 		const auto portName = port.portName().toStdString();
 
-		if (!m_serialConfig->isRegistred(portName))
+		if (!m_serialConfig->isAllowed(portName))
 			continue;
 
 		if (!m_deviceLocker.lock(portName))
@@ -160,7 +144,7 @@ void MainManager::rescan() {
 			continue;
 		}
 
-		if (m_registerDeviceCallback && !m_registerDeviceCallback(receiver.get(), QString::fromStdString(receiver->name())))
+		if (m_registerDeviceCallback && !m_registerDeviceCallback(*receiver))
 			continue;
 
 		m_broadcasts.emplace_back(std::make_unique<UdpBroadcastService>(receiver->id(), receiver->name(), 4999));
@@ -168,7 +152,7 @@ void MainManager::rescan() {
 	}
 }
 
-void MainManager::setRegisterDeviceCallback(const std::function<bool(IReceiver *, const QString &serialNumber)> &callback) {
+void MainManager::setRegisterDeviceCallback(const std::function<bool(IReceiver &)> &callback) {
 	m_registerDeviceCallback = callback;
 }
 

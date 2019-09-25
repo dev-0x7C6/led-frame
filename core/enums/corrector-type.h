@@ -29,7 +29,7 @@ constexpr std::array<CorrectorType, static_cast<u32>(CorrectorType::Unused)> get
 	}};
 }
 
-inline QString name(CorrectorType type) {
+inline QString name(const CorrectorType type) {
 	switch (type) {
 		case CorrectorType::Gamma: return "Gamma";
 		case CorrectorType::ColorEnhancer: return "Color enhancer";
@@ -45,7 +45,7 @@ inline QString name(CorrectorType type) {
 	return {};
 }
 
-inline std::string value(CorrectorType type) {
+inline std::string value(const CorrectorType type) {
 	switch (type) {
 		case CorrectorType::Gamma: return "gamma";
 		case CorrectorType::ColorEnhancer: return "color_enhancer";

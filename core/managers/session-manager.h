@@ -22,8 +22,8 @@ public:
 	virtual ~SessionManager();
 
 protected:
-	bool registerDevice(IReceiver *receiver, const QString &serialNumber);
-	void createCorrectorGroup(IReceiver *receiver);
+	bool registerDevice(IReceiver &receiver);
+	void createCorrectorGroup(QSettings &settings, IReceiver &receiver);
 
 protected:
 	void load();

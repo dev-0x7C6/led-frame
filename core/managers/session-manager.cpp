@@ -9,11 +9,10 @@
 #include <core/interfaces/ireceiver.h>
 #include <core/managers/main-manager.h>
 #include <core/emitters/concretes/camera-emitter.h>
+#include <core/functionals/settings-group-raii.h>
 
 #include <QApplication>
-#include <QMessageBox>
 #include <QScreen>
-#include <QSettings>
 #include <QCameraInfo>
 
 #include <chrono>
@@ -130,66 +129,47 @@ SessionManager::SessionManager(QSettings &settings, MainManager &mainManager)
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Color, translate(EmitterType::Color)));
 	m_mainManager.atoms().attach(make_emitter(EmitterType::Off, translate(EmitterType::Off)));
 
-	m_mainManager.setRegisterDeviceCallback([this](IReceiver *receiver, const QString &serialNumber) -> bool {
-		return registerDevice(receiver, serialNumber);
+	m_mainManager.setRegisterDeviceCallback([this](IReceiver &receiver) -> bool {
+		return registerDevice(receiver);
 	});
 }
 
-bool SessionManager::registerDevice(IReceiver *receiver, const QString &serialNumber) {
+bool SessionManager::registerDevice(IReceiver &receiver) {
 #ifdef QT_DEBUG
-	receiver->correctors().attach(&Functional::DebugNotification::instance());
+	receiver.correctors().attach(&Functional::DebugNotification::instance());
 #endif
-	m_settings.beginGroup("devices");
-	m_settings.beginGroup(serialNumber);
+	settings_group_raii _(m_settings, receiver.name());
+	createCorrectorGroup(m_settings, receiver);
 
-	if (m_settings.value("name", "").toString().isEmpty()) {
-		receiver->setName(serialNumber.toStdString());
-		m_settings.setValue("name", serialNumber);
-	} else
-		receiver->setName(m_settings.value("name", "").toString().toStdString());
+	const auto last_selected_emitter = m_settings.value("last_selected_emitter").toString().toStdString();
 
-	m_settings.endGroup();
-	m_settings.endGroup();
-	m_settings.sync();
-
-	createCorrectorGroup(receiver);
-
-	m_settings.beginGroup(QString::fromStdString(receiver->name()));
-	const auto defaultEmitter = m_settings.value("emitter").toString().toStdString();
-
-	if (!defaultEmitter.empty()) {
-		m_mainManager.atoms().enumerate([receiver, defaultEmitter](const auto &atom) {
+	if (!last_selected_emitter.empty()) {
+		m_mainManager.atoms().enumerate([&receiver, last_selected_emitter](const auto &atom) {
 			if (Category::Emitter != atom->category())
 				return;
 
 			auto emitter = std::static_pointer_cast<IEmitter>(atom);
-			if (emitter->name() == defaultEmitter)
-				receiver->connectEmitter(emitter);
+			if (emitter->name() == last_selected_emitter)
+				receiver.connectEmitter(emitter);
 		});
 	}
-	m_settings.endGroup();
 	return true;
 }
 
-void SessionManager::createCorrectorGroup(IReceiver *receiver) {
-	m_mainManager.atoms().enumerate([receiver](const auto &atom) {
+void SessionManager::createCorrectorGroup(QSettings &settings, IReceiver &receiver) {
+	m_mainManager.atoms().enumerate([&receiver](const auto &atom) {
 		if (Category::Corrector == atom->category())
-			receiver->correctors().attach(atom);
+			receiver.correctors().attach(atom);
 	});
 
-	const auto id = receiver->id();
+	const auto id = receiver.id();
 
-	m_settings.beginGroup(QString::fromStdString(receiver->name()));
 	for (const auto &type : getCorrectorTypes()) {
 		std::shared_ptr corrector = make_corrector(type, id);
-		m_settings.beginGroup(value(corrector->type()).c_str());
-		corrector->setFactor(m_settings.value("factor", corrector->factor().value()).toUInt());
-		corrector->setEnabled(m_settings.value("enabled", corrector->isEnabled()).toBool());
-		receiver->correctors().attach(corrector);
-		m_settings.endGroup();
+		settings_group_raii _(settings, value(type));
+		corrector->load(settings);
+		receiver.correctors().attach(corrector);
 	}
-
-	m_settings.endGroup();
 }
 
 SessionManager::~SessionManager() {
@@ -199,25 +179,15 @@ SessionManager::~SessionManager() {
 
 		auto receiver = std::static_pointer_cast<IReceiver>(atom);
 
-		m_settings.beginGroup(QString::fromStdString(receiver->name()));
+		settings_group_raii _(m_settings, receiver->name());
 
-		m_settings.setValue("emitter", "");
-		if (receiver->isEmitterConnected()) {
-			const auto name = receiver->connectedEmitter()->name();
-			m_settings.setValue("emitter", QString::fromStdString(name));
-		}
+		if (const auto emitter = receiver->connectedEmitter(); emitter)
+			m_settings.setValue("last_selected_emitter", QString::fromStdString(emitter->name()));
 
-		m_mainManager.atoms().enumerate([this](const auto &atom) {
-			if (Category::Corrector != atom->category())
-				return;
-
-			auto corrector = std::static_pointer_cast<ICorrector>(atom);
-			m_settings.beginGroup(value(corrector->type()).c_str());
-			m_settings.setValue("factor", corrector->factor().value());
-			m_settings.setValue("enabled", corrector->isEnabled());
-			m_settings.endGroup();
+		receiver->correctors().enumerate([this](const std::shared_ptr<IRepresentable> &v) {
+			auto &&corrector = std::static_pointer_cast<ICorrector>(v);
+			settings_group_raii _(m_settings, value(corrector->type()));
+			corrector->save(m_settings);
 		});
-
-		m_settings.endGroup();
 	});
 }
