@@ -62,22 +62,14 @@ private:
 
 MainManager::MainManager(QSettings &settings)
 		: m_settings(settings)
-		, m_serialConfig(std::make_unique<SystemSerialPortConfiguration>())
-		, m_globalBrightnessCorrection(make_corrector(CorrectorType::Brightness, -1))
-		, m_globalRedCorrection(make_corrector(CorrectorType::RedChannel, -1))
-		, m_globalGreenCorrection(make_corrector(CorrectorType::GreenChannel, -1))
-		, m_globalBlueCorrection(make_corrector(CorrectorType::BlueChannel, -1)) {
-	m_atoms.attach(m_globalBrightnessCorrection);
-	m_atoms.attach(m_globalRedCorrection);
-	m_atoms.attach(m_globalGreenCorrection);
-	m_atoms.attach(m_globalBlueCorrection);
-
-	{
-		settings_group_raii raii(m_settings, "global_correctors");
-		m_globalBrightnessCorrection->setFactor(m_settings.value("brightness", m_globalBrightnessCorrection->factor().value()).toUInt());
-		m_globalRedCorrection->setFactor(m_settings.value("red", m_globalRedCorrection->factor().value()).toUInt());
-		m_globalGreenCorrection->setFactor(m_settings.value("green", m_globalGreenCorrection->factor().value()).toUInt());
-		m_globalBlueCorrection->setFactor(m_settings.value("blue", m_globalBlueCorrection->factor().value()).toUInt());
+		, m_serialConfig(std::make_unique<SystemSerialPortConfiguration>()) {
+	settings_group_raii _(m_settings, "global_correctors");
+	for (auto &&type : {CorrectorType::Brightness, CorrectorType::RedChannel, CorrectorType::BlueChannel, CorrectorType::GreenChannel}) {
+		std::shared_ptr corrector = make_corrector(type, -1);
+		settings_group_raii _(m_settings, value(type));
+		corrector->load(m_settings);
+		m_global_correctors.emplace_back(corrector);
+		m_atoms.attach(corrector);
 	}
 
 #ifdef QT_DEBUG
@@ -90,11 +82,11 @@ MainManager::MainManager(QSettings &settings)
 }
 
 MainManager::~MainManager() {
-	settings_group_raii raii(m_settings, "global_correctors");
-	m_settings.setValue("brightness", m_globalBrightnessCorrection->factor().value());
-	m_settings.setValue("red", m_globalRedCorrection->factor().value());
-	m_settings.setValue("green", m_globalGreenCorrection->factor().value());
-	m_settings.setValue("blue", m_globalBlueCorrection->factor().value());
+	settings_group_raii _(m_settings, "global_correctors");
+	for (auto &&corrector : m_global_correctors) {
+		settings_group_raii _(m_settings, value(corrector->type()));
+		corrector->save(m_settings);
+	}
 }
 
 void MainManager::attach(INotification &notifier) noexcept {

@@ -8,6 +8,7 @@
 #include <core/functionals/safe-queue.h>
 #include <core/functionals/safe-set.h>
 #include <core/functionals/safe-device-locker.h>
+#include <core/containers/corrector-container.h>
 
 #include <list>
 #include <memory>
@@ -47,10 +48,7 @@ private:
 
 private:
 	std::unique_ptr<SystemSerialPortConfiguration> m_serialConfig;
-	std::shared_ptr<ICorrector> m_globalBrightnessCorrection;
-	std::shared_ptr<ICorrector> m_globalRedCorrection;
-	std::shared_ptr<ICorrector> m_globalGreenCorrection;
-	std::shared_ptr<ICorrector> m_globalBlueCorrection;
+	Container::corrector_container m_global_correctors;
 
 protected:
 	void rescan();
