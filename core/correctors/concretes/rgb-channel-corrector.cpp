@@ -9,7 +9,7 @@ RedChannelCorrector::RedChannelCorrector(int owner)
 		: ICorrector(owner) {}
 
 void RedChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
-	if (factor().value() == factor().max())
+	if (factor().isMaximum())
 		return;
 
 	scanline.modify([f{factor().factor()}](auto &&r, auto &&, auto &&) {
@@ -21,7 +21,7 @@ GreenChannelCorrector::GreenChannelCorrector(int owner)
 		: ICorrector(owner) {}
 
 void GreenChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
-	if (factor().value() == factor().max())
+	if (factor().isMaximum())
 		return;
 
 	scanline.modify([f{factor().factor()}](auto &&, auto &&g, auto &&) {
@@ -33,7 +33,7 @@ BlueChannelCorrector::BlueChannelCorrector(int owner)
 		: ICorrector(owner) {}
 
 void BlueChannelCorrector::correct(Container::Scanline &scanline) const noexcept {
-	if (factor().value() == factor().max())
+	if (factor().isMaximum())
 		return;
 
 	scanline.modify([f{factor().factor()}](auto &&, auto &&, auto &&b) {

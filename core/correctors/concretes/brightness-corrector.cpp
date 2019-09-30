@@ -12,7 +12,7 @@ BrightnessCorrector::BrightnessCorrector(int owner)
 CorrectorType BrightnessCorrector::type() const noexcept { return CorrectorType::Brightness; }
 
 void BrightnessCorrector::correct(Container::Scanline &scanline) const noexcept {
-	if (factor().value() == factor().max())
+	if (factor().isMaximum())
 		return;
 
 	scanline.modify([factor{factor().factor()}](auto &&r, auto &&g, auto &&b) {

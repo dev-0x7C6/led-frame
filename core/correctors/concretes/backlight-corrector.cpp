@@ -13,7 +13,7 @@ BacklightCorrector::BacklightCorrector(int owner)
 }
 
 void BacklightCorrector::correct(Container::Scanline &scanline) const noexcept {
-	if (factor().value() == 0)
+	if (factor().isMinimum())
 		return;
 
 	scanline.modify([backlight{static_cast<u32>(factor().value())}](u32 & r, u32 & g, u32 & b) noexcept {

@@ -9,10 +9,10 @@ FlickrEffectCorrector::FlickrEffectCorrector(int owner)
 }
 
 void FlickrEffectCorrector::correct(Container::Scanline &scanline) const noexcept {
-	const auto f = factor().value();
-
-	if (f == 0)
+	if (factor().isMinimum())
 		return;
+
+	const auto f = factor().value();
 
 	if (m_lastFactor != f) {
 		m_duration = 0;

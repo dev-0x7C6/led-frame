@@ -102,6 +102,14 @@ public:
 		return value / max;
 	}
 
+	constexpr auto isMinimum() const noexcept {
+		return m_value == m_min;
+	}
+
+	constexpr auto isMaximum() const noexcept {
+		return m_value == m_max;
+	}
+
 private:
 	std::atomic<type> m_value{std::numeric_limits<type>::max()};
 	type m_max = std::numeric_limits<type>::max();

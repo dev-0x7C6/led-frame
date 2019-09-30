@@ -24,7 +24,7 @@ GammaCorrector::GammaCorrector(int owner)
 }
 
 void GammaCorrector::correct(Container::Scanline &scanline) const noexcept {
-	if (factor().value() == factor().min())
+	if (factor().isMinimum())
 		return;
 
 	const auto table = generate_gamma_table(0.1 + static_cast<double>(factor().factor()) * 3.0);
