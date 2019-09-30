@@ -230,18 +230,34 @@ protected:
 
 				handle = std::make_unique<QCamera>(m_info);
 
+				QObject::connect(handle.get(), &QCamera::statusChanged, [](auto &&value) {
+					logger<filter>::debug(module, "qt: camera status changed: ", static_cast<int>(value));
+				});
+
+				QObject::connect(handle.get(), &QCamera::stateChanged, [](auto &&value) {
+					logger<filter>::debug(module, "qt: camera state changed: ", static_cast<int>(value));
+				});
+
+				QObject::connect(handle.get(), qOverload<QCamera::Error>(&QCamera::error), [](auto &&value) {
+					logger<filter>::debug(module, "qt: camera error id: ", static_cast<int>(value));
+				});
+
+				QObject::connect(handle.get(), &QCamera::captureModeChanged, [](auto &&value) {
+					logger<filter>::debug(module, "qt: camera capture mode changed: ", static_cast<int>(value));
+				});
+
 				std::sort(available_framerates.begin(), available_framerates.end());
 				const auto prefered_resolutions = prepare_prefered_resolutions(available_resolutions.begin(), available_resolutions.end());
 				const auto prefered_resolution = prefered_resolutions.front();
 
 				logger<filter>::debug(module, "available resolutions:");
 				for (auto &&res : prefered_resolutions) {
-					logger<filter>::debug("  ", res.width(), "x", res.height());
+					logger<filter>::debug(module, "  ", res.width(), "x", res.height());
 				}
 
 				logger<filter>::debug(module, "available framerats:");
 				for (auto &&fps : available_framerates) {
-					logger<filter>::debug("  ", fps, " fps");
+					logger<filter>::debug(module, "  ", fps, " fps");
 				}
 
 				logger<filter>::information(module, "selected resolution: ", prefered_resolution.width(), "x", prefered_resolution.height(), "@", available_framerates.back(), "fps");
@@ -254,6 +270,13 @@ protected:
 				handle->setViewfinderSettings(settings);
 				handle->setViewfinder(&capture);
 				handle->start();
+			}
+
+			if (handle && QCamera::Status::UnavailableStatus == handle->status()) {
+				logger<filter>::error(module, "camera unavailable, disconnected ?");
+				handle.reset(nullptr);
+				error_count++;
+				continue;
 			}
 
 			if (handle && QCamera::Error::NoError != handle->error()) {
