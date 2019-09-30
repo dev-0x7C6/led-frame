@@ -4,6 +4,7 @@
 #include <core/functionals/color-averaging-buffer.h>
 #include <core/functionals/image-block-processor.h>
 #include <externals/common/logger/logger.hpp>
+#include <externals/common/video/resolution.hpp>
 
 #include <QAbstractVideoSurface>
 #include <QCamera>
@@ -20,6 +21,8 @@ constexpr auto module = "[camera_capture]: ";
 constexpr auto filter = error_class::debug;
 } // namespace
 
+using framerate = int;
+
 using namespace std::chrono_literals;
 
 using namespace Container;
@@ -29,67 +32,6 @@ using namespace Container;
 using namespace Functional;
 
 namespace {
-
-class resolution {
-public:
-	enum class aspect_ratio {
-		_16_9,
-		_16_10,
-		_4_3,
-		other
-	};
-
-	constexpr resolution(int w, int h)
-			: m_w(w)
-			, m_h(h) {}
-	constexpr auto width() const noexcept { return m_w; }
-	constexpr auto height() const noexcept { return m_h; }
-
-	constexpr auto aspect() const noexcept {
-		if ((m_w * 9) / 16 == m_h)
-			return aspect_ratio::_16_9;
-
-		if ((m_w * 3) / 4 == m_h)
-			return aspect_ratio::_4_3;
-
-		if ((m_w * 10) / 16 == m_h)
-			return aspect_ratio::_16_10;
-
-		return aspect_ratio::other;
-	}
-
-	constexpr auto is_aspect_16_9() const noexcept {
-		return aspect_ratio::_16_9 == aspect();
-	}
-
-	constexpr auto is_aspect_16_10() const noexcept {
-		return aspect_ratio::_16_10 == aspect();
-	}
-
-	constexpr auto is_aspect_4_3() const noexcept {
-		return aspect_ratio::_4_3 == aspect();
-	}
-
-	constexpr auto is_valid() const noexcept {
-		return (m_w == 0) && (m_h == 0);
-	}
-
-	friend constexpr auto operator==(const resolution &lhs, const resolution &rhs) noexcept {
-		return lhs.m_w == rhs.m_w && lhs.m_h == rhs.m_h;
-	}
-
-	friend constexpr auto operator!=(const resolution &lhs, const resolution &rhs) noexcept {
-		return !operator==(lhs, rhs);
-	}
-
-	friend constexpr auto operator<(const resolution &lhs, const resolution &rhs) noexcept {
-		return (lhs.m_w * lhs.m_h) < (rhs.m_w * rhs.m_h);
-	}
-
-private:
-	int m_w{};
-	int m_h{};
-};
 
 template <QVideoFrame::PixelFormat format>
 class Capture : public QAbstractVideoSurface {
@@ -116,50 +58,39 @@ private:
 	std::function<void(const Scanline &)> m_update;
 };
 
-template <typename Iterator>
-auto prepare_prefered_resolutions(Iterator begin, Iterator end) noexcept {
-	std::unordered_map<i32, std::vector<resolution>> table;
+class ProbeCamera {
+public:
+	ProbeCamera(const QCameraInfo &info) {
+		QCamera camera(info);
+		camera.load();
+		QMediaRecorder recorder(&camera);
 
-	std::vector<resolution> resolutions_16_9;
-	std::vector<resolution> resolutions_16_10;
-	std::vector<resolution> resolutions_4_3;
-	std::vector<resolution> resolutions_other;
-	std::vector<resolution> resolutions;
+		for (auto &&size : recorder.supportedResolutions())
+			m_resolutions.emplace_back(size.width(), size.height());
 
-	for (; begin != end; ++begin) {
-		const auto mode = *begin;
-		resolution res(mode.width(), mode.height());
-		table[static_cast<i32>(res.aspect())].emplace_back(std::move(res));
+		for (auto &&rate : recorder.supportedFrameRates())
+			m_framerates.emplace_back(rate);
 
-		switch (res.aspect()) {
-			case resolution::aspect_ratio::_16_9:
-				resolutions_16_9.emplace_back(std::move(res));
-				break;
-			case resolution::aspect_ratio::_16_10:
-				resolutions_16_10.emplace_back(std::move(res));
-				break;
-			case resolution::aspect_ratio::_4_3:
-				resolutions_4_3.emplace_back(std::move(res));
-				break;
-			case resolution::aspect_ratio::other:
-				resolutions_other.emplace_back(std::move(res));
-				break;
-		}
+		std::sort(m_resolutions.begin(), m_resolutions.end(), [](const resolution &lhs, const resolution &rhs) {
+			const auto lhs_rank = static_cast<int>(lhs.aspect());
+			const auto rhs_rank = static_cast<int>(rhs.aspect());
+			return lhs_rank < rhs_rank && lhs < rhs;
+		});
+
+		std::sort(m_framerates.begin(), m_framerates.end());
 	}
 
-	std::sort(resolutions_16_9.begin(), resolutions_16_9.end());
-	std::sort(resolutions_16_10.begin(), resolutions_16_10.end());
-	std::sort(resolutions_4_3.begin(), resolutions_4_3.end());
-	std::sort(resolutions_other.begin(), resolutions_other.end());
-	resolutions.reserve(resolutions_16_9.size() + resolutions_16_10.size() + resolutions_4_3.size() + resolutions_other.size());
+	const auto &resolutions() const noexcept { return m_resolutions; }
+	const auto &framerates() const noexcept { return m_framerates; }
 
-	std::move(resolutions_16_9.begin(), resolutions_16_9.end(), std::back_inserter(resolutions));
-	std::move(resolutions_16_10.begin(), resolutions_16_10.end(), std::back_inserter(resolutions));
-	std::move(resolutions_4_3.begin(), resolutions_4_3.end(), std::back_inserter(resolutions));
-	std::move(resolutions_other.begin(), resolutions_other.end(), std::back_inserter(resolutions));
+	bool isValid() const noexcept {
+		return !m_resolutions.empty() && !m_framerates.empty();
+	}
 
-	return resolutions;
-}
+private:
+	std::vector<resolution> m_resolutions;
+	std::vector<framerate> m_framerates;
+};
 } // namespace
 
 class CameraWorker : public QThread {
@@ -207,22 +138,13 @@ protected:
 			}
 
 			if (!handle) {
-				auto [available_resolutions, available_framerates] = [this]() {
-					QCamera camera(m_info);
-					camera.load();
-					QMediaRecorder rec(&camera);
-					return std::make_pair(rec.supportedResolutions(), rec.supportedFrameRates());
-				}();
+				ProbeCamera probe(m_info);
 
-				if (available_resolutions.empty()) {
-					logger<filter>::error(module, "no available resolutions");
-					std::this_thread::sleep_for(1s);
-					error_count++;
-					continue;
-				}
+				auto &&available_resolutions = probe.resolutions();
+				auto &&available_framerates = probe.framerates();
 
-				if (available_framerates.empty()) {
-					logger<filter>::error(module, "no available framerates");
+				if (!probe.isValid()) {
+					logger<filter>::error(module, "unable to probe camera details");
 					std::this_thread::sleep_for(1s);
 					error_count++;
 					continue;
@@ -246,12 +168,10 @@ protected:
 					logger<filter>::debug(module, "qt: camera capture mode changed: ", static_cast<int>(value));
 				});
 
-				std::sort(available_framerates.begin(), available_framerates.end());
-				const auto prefered_resolutions = prepare_prefered_resolutions(available_resolutions.begin(), available_resolutions.end());
-				const auto prefered_resolution = prefered_resolutions.front();
+				const auto prefered_resolution = available_resolutions.front();
 
 				logger<filter>::debug(module, "available resolutions:");
-				for (auto &&res : prefered_resolutions) {
+				for (auto &&res : available_resolutions) {
 					logger<filter>::debug(module, "  ", res.width(), "x", res.height());
 				}
 
