@@ -33,6 +33,24 @@ using namespace Functional;
 
 namespace {
 
+class raii_video_frame_map {
+public:
+	raii_video_frame_map(QVideoFrame &frame, const QAbstractVideoBuffer::MapMode mode)
+			: m_frame(frame)
+			, m_mapped(m_frame.map(mode)) {
+		m_frame.map(mode);
+	}
+
+	~raii_video_frame_map() {
+		if (m_mapped)
+			m_frame.unmap();
+	}
+
+private:
+	QVideoFrame &m_frame;
+	bool m_mapped{false};
+};
+
 template <QVideoFrame::PixelFormat format>
 class Capture : public QAbstractVideoSurface {
 public:
@@ -50,7 +68,7 @@ private:
 		if (!buffer.isValid())
 			return false;
 
-		frame.map(QAbstractVideoBuffer::MapMode::ReadOnly);
+		raii_video_frame_map _(frame, QAbstractVideoBuffer::MapMode::ReadOnly);
 		m_update(ImageBlockProcessor<ColorAveragingBuffer, 9, 16>::process(reinterpret_cast<const color *>(frame.bits()), frame.width(), frame.height()));
 		return true;
 	}
