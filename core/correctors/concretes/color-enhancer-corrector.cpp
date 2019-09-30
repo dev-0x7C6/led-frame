@@ -14,7 +14,7 @@ ColorEnhancerCorrector::ColorEnhancerCorrector(int owner)
 }
 
 void ColorEnhancerCorrector::correct(Container::Scanline &scanline) const noexcept {
-	if (factor().isMinimum()))
+	if (factor().isMinimum())
 		return;
 
 	scanline.modify([](auto &&r, auto &&g, auto &&b) {

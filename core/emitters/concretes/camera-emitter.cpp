@@ -188,7 +188,14 @@ protected:
 			std::this_thread::sleep_for(1ms); // avoid busy loop
 		};
 
+		auto error_count{0};
+
 		while (!m_interrupted) {
+			if (error_count > 3) {
+				logger<filter>::error(module, "error count exceeded");
+				break;
+			}
+
 			while (m_emitter.usages() == 0) {
 				if (m_interrupted)
 					return;
@@ -210,12 +217,14 @@ protected:
 				if (available_resolutions.empty()) {
 					logger<filter>::error(module, "no available resolutions");
 					std::this_thread::sleep_for(1s);
+					error_count++;
 					continue;
 				}
 
 				if (available_framerates.empty()) {
 					logger<filter>::error(module, "no available framerates");
 					std::this_thread::sleep_for(1s);
+					error_count++;
 					continue;
 				}
 
@@ -245,6 +254,13 @@ protected:
 				handle->setViewfinderSettings(settings);
 				handle->setViewfinder(&capture);
 				handle->start();
+			}
+
+			if (handle && QCamera::Error::NoError != handle->error()) {
+				logger<filter>::error(module, "camera error: ", handle->errorString().toStdString());
+				handle.reset(nullptr);
+				error_count++;
+				continue;
 			}
 
 			process();
