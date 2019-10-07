@@ -25,6 +25,14 @@ using namespace Functional;
 
 using namespace std::literals;
 
+namespace {
+#ifdef RPI
+constexpr auto palette = Enum::ColorFormat::BGR;
+#else
+constexpr auto palette = Enum::ColorFormat::RGB;
+#endif
+} // namespace
+
 ScreenEmitter::ScreenEmitter(const i32 screenId)
 		: QThread(nullptr)
 		, m_interrupted(false)
@@ -72,7 +80,7 @@ void ScreenEmitter::run() {
 		if (!screen->capture(m_screenId))
 			continue;
 
-		commit(ImageBlockProcessor<ColorAveragingBuffer, 16, 32>::process(screen->data(), screen->width(), screen->height()));
+		commit(ImageBlockProcessor<ColorAveragingBuffer<palette>, 9, 16>::process(screen->data(), screen->width(), screen->height()));
 		framePaceing.synchronize();
 	}
 

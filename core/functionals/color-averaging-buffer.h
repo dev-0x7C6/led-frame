@@ -2,10 +2,11 @@
 
 #include <core/types.h>
 #include <core/functionals/color-functions.h>
+#include <core/enums/color-format-enum.h>
 
 namespace Functional {
 
-template <typename type>
+template <typename type, Enum::ColorFormat format>
 class alignas(4) ColorAveragingBufferTemplate {
 public:
 	constexpr ColorAveragingBufferTemplate() = default;
@@ -31,17 +32,20 @@ public:
 	}
 
 	constexpr type operator()() const noexcept {
+		using namespace Enum;
 		const auto avg_r = static_cast<type>(m_r / m_c);
 		const auto avg_g = static_cast<type>(m_g / m_c);
 		const auto avg_b = static_cast<type>(m_b / m_c);
-		return rgb(avg_r, avg_g, avg_b);
-	}
 
-	constexpr type bgr() const noexcept {
-		const auto avg_r = static_cast<type>(m_r / m_c);
-		const auto avg_g = static_cast<type>(m_g / m_c);
-		const auto avg_b = static_cast<type>(m_b / m_c);
-		return rgb(avg_b, avg_g, avg_r);
+		switch (format) {
+			case ColorFormat::RGB: return rgb(avg_r, avg_g, avg_b);
+			case ColorFormat::RBG: return rgb(avg_r, avg_b, avg_g);
+			case ColorFormat::GRB: return rgb(avg_g, avg_r, avg_b);
+			case ColorFormat::BRG: return rgb(avg_b, avg_r, avg_g);
+			case ColorFormat::GBR: return rgb(avg_g, avg_b, avg_r);
+			case ColorFormat::BGR: return rgb(avg_b, avg_g, avg_r);
+		}
+		return rgb(avg_r, avg_g, avg_b);
 	}
 
 	constexpr auto count() const noexcept { return m_c; }
@@ -53,9 +57,10 @@ private:
 	u32 m_c{0};
 };
 
-using ColorAveragingBuffer = ColorAveragingBufferTemplate<color>;
+template <Enum::ColorFormat format = Enum::ColorFormat::RGB>
+using ColorAveragingBuffer = ColorAveragingBufferTemplate<color, format>;
 
-static_assert(is_class_cxx14_efficient_nothrow<ColorAveragingBuffer>::value);
-static_assert(alignof(ColorAveragingBuffer));
-static_assert(sizeof(ColorAveragingBuffer) == sizeof(i32) * 4);
+static_assert(is_class_cxx14_efficient_nothrow<ColorAveragingBuffer<Enum::ColorFormat::RGB>>::value);
+static_assert(alignof(ColorAveragingBuffer<Enum::ColorFormat::RGB>));
+static_assert(sizeof(ColorAveragingBuffer<Enum::ColorFormat::RGB>) == sizeof(i32) * 4);
 } // namespace Functional

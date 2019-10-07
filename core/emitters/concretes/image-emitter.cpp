@@ -32,6 +32,6 @@ bool ImageEmitter::loadFromFile(const QString &filePath) {
 	m_filePath = filePath;
 	auto image = QImage(filePath).convertToFormat(QImage::Format_ARGB32);
 
-	commit(ImageBlockProcessor<ColorAveragingBuffer, 9, 16>::process(reinterpret_cast<const color *>(image.constBits()), image.width(), image.height()));
+	commit(ImageBlockProcessor<ColorAveragingBuffer<Enum::ColorFormat::RGB>, 9, 16>::process(reinterpret_cast<const color *>(image.constBits()), image.width(), image.height()));
 	return true;
 }

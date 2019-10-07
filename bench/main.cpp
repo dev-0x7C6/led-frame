@@ -92,7 +92,7 @@ inline static void image_processor_process(benchmark::State &state) {
 	scene.fill(matchColor);
 
 	while (state.KeepRunning()) {
-		auto ret = ImageBlockProcessor<ColorAveragingBuffer, 16, 24>::process(scene.data(), w, h, step);
+		auto ret = ImageBlockProcessor<ColorAveragingBuffer<Enum::ColorFormat::RGB>, 16, 24>::process(scene.data(), w, h, step);
 		benchmark::DoNotOptimize(ret);
 	}
 }

@@ -69,7 +69,7 @@ private:
 			return false;
 
 		raii_video_frame_map _(frame, QAbstractVideoBuffer::MapMode::ReadOnly);
-		m_update(ImageBlockProcessor<ColorAveragingBuffer, 9, 16>::process(reinterpret_cast<const color *>(frame.bits()), frame.width(), frame.height()));
+		m_update(ImageBlockProcessor<ColorAveragingBuffer<Enum::ColorFormat::RGB>, 9, 16>::process(reinterpret_cast<const color *>(frame.bits()), frame.width(), frame.height()));
 		return true;
 	}
 
