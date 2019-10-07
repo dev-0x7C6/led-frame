@@ -23,26 +23,10 @@ configure_file(config.h.in config.h)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
 option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
-option(SUPPORT_RPI3 "Some extensions for Raspberry Pi 3" OFF)
+option(OPTIMIZE_RPI3 "Optimize for Raspberry Pi 3" OFF)
+option(OPTIMIZE_RPI4 "Optimize for Raspberry Pi 4" OFF)
 option(TESTS "Build unit tests" ON)
 option(BENCHMARKS "Build benchmarks" ON)
-
-if (UNIX AND SUPPORT_RPI)
-	if (SUPPORT_RPI3)
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=armv8-a+crc -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard -ftree-vectorize -funsafe-math-optimizations") 
-	endif()
-	include_directories("/opt/vc/include")
-	include_directories("/opt/vc/include/interface/vcos/pthreads")
-	include_directories("/opt/vc/include/interface/vmcs_host/linux")
-	set(rpi-sources
-		core/functionals/captures/dispmanx-screen-capture.cpp
-		core/functionals/captures/dispmanx-screen-capture.h
-		core/functionals/helper/dispmanx-helper.cpp
-		core/functionals/helper/dispmanx-helper.h
-	)
-	set(rpi-libs -lbcm_host -lvcos -lvcsm -lvchostif)
-	link_directories("/opt/vc/lib")
-endif()
 
 # Emitters
 
@@ -68,6 +52,32 @@ add_library(led-frame-emitters STATIC
 )
 
 target_link_libraries(led-frame-emitters PUBLIC Qt5::Core Qt5::Widgets Qt5::Multimedia)
+
+# Raspberry Pi
+
+if (UNIX AND SUPPORT_RPI)
+        if (OPTIMIZE_RPI3)
+                set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=armv8-a+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard -ftree-vectorize -funsafe-math-optimizations")
+        endif()
+        if (OPTIMIZE_RPI4)
+                set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=armv8-a+crc -mtune=cortex-a72 -mfpu=neon-fp-armv8 -mfloat-abi=hard -ftree-vectorize -funsafe-math-optimizations")
+        endif()
+
+	include_directories("/opt/vc/include")
+	include_directories("/opt/vc/include/interface/vcos/pthreads")
+	include_directories("/opt/vc/include/interface/vmcs_host/linux")
+	set(rpi-sources
+		core/functionals/captures/dispmanx-screen-capture.cpp
+		core/functionals/captures/dispmanx-screen-capture.h
+		core/functionals/helper/dispmanx-helper.cpp
+		core/functionals/helper/dispmanx-helper.h
+	)
+	set(rpi-libs -lbcm_host -lvcos -lvcsm -lvchostif)
+	link_directories("/opt/vc/lib")
+
+        target_compile_definitions(led-frame-emitters PUBLIC RPI)
+endif()
+
 
 # Correctors
 
