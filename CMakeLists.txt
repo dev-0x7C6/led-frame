@@ -211,6 +211,8 @@ if (SUPPORT_X11 AND X11_FOUND)
         core/functionals/helper/x11-shm-helper.h
     )
 
+
+
     target_compile_definitions(led-frame-x11-support PUBLIC X11)
     target_compile_definitions(led-frame-emitters PUBLIC X11)
     target_link_libraries(led-frame-x11-support Qt5::Core Qt5::Widgets X11::X11 X11::Xext)
@@ -231,10 +233,12 @@ if (TESTS AND GTEST_FOUND)
             ut/corrector-tests.cpp
             ut/image-block-processing-tests.cpp
             ut/main.cpp
+            ut/x11-tests.cpp
         )
 
 	target_link_libraries(led-frame-ut
                 led-frame-correctors
+                led-frame-x11-support
                 Qt5::Core
                 GTest::GTest
 	)
