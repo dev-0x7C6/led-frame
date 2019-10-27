@@ -9,7 +9,7 @@
 #include <core/receivers/concretes/uart-receiver.h>
 #include <core/receivers/factories/receiver-factory.h>
 #include <externals/common/logger/logger.hpp>
-#include <core/functionals/settings-group-raii.h>
+#include <externals/common/qt/raii/raii-settings-group.hpp>
 
 using namespace Enum;
 using namespace Factory;
@@ -41,7 +41,7 @@ public:
 		}
 
 		for (auto &&key : settings.childGroups()) {
-			settings_group_raii raii(settings, key);
+			raii_settings_group raii(settings, key);
 			auto port = settings.value("port").toString().toStdString();
 			logger<filter>::debug(module, "section: ", key.toStdString());
 			logger<filter>::debug(module, "port_name: ", port);
@@ -63,10 +63,10 @@ private:
 MainManager::MainManager(QSettings &settings)
 		: m_settings(settings)
 		, m_serialConfig(std::make_unique<SystemSerialPortConfiguration>()) {
-	settings_group_raii _(m_settings, "global_correctors");
+	raii_settings_group _(m_settings, "global_correctors");
 	for (auto &&type : {CorrectorType::Brightness, CorrectorType::RedChannel, CorrectorType::BlueChannel, CorrectorType::GreenChannel}) {
 		std::shared_ptr corrector = make_corrector(type, -1);
-		settings_group_raii _(m_settings, value(type));
+		raii_settings_group _(m_settings, value(type));
 		corrector->load(m_settings);
 		m_global_correctors.emplace_back(corrector);
 		m_atoms.attach(corrector);
@@ -82,9 +82,9 @@ MainManager::MainManager(QSettings &settings)
 }
 
 MainManager::~MainManager() {
-	settings_group_raii _(m_settings, "global_correctors");
+	raii_settings_group _(m_settings, "global_correctors");
 	for (auto &&corrector : m_global_correctors) {
-		settings_group_raii _(m_settings, value(corrector->type()));
+		raii_settings_group _(m_settings, value(corrector->type()));
 		corrector->save(m_settings);
 	}
 }

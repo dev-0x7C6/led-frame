@@ -1,6 +1,7 @@
 #include "session-manager.h"
 
 #include <core/correctors/factories/corrector-factory.h>
+#include <core/emitters/concretes/camera-emitter.h>
 #include <core/emitters/factories/emitter-factory.h>
 #include <core/enums/animation-variant.h>
 #include <core/functionals/debug-notification.h>
@@ -8,8 +9,7 @@
 #include <core/interfaces/iemitter.h>
 #include <core/interfaces/ireceiver.h>
 #include <core/managers/main-manager.h>
-#include <core/emitters/concretes/camera-emitter.h>
-#include <core/functionals/settings-group-raii.h>
+#include <externals/common/qt/raii/raii-settings-group.hpp>
 
 #include <QApplication>
 #include <QScreen>
@@ -138,7 +138,7 @@ bool SessionManager::registerDevice(IReceiver &receiver) {
 #ifdef QT_DEBUG
 	receiver.correctors().attach(&Functional::DebugNotification::instance());
 #endif
-	settings_group_raii _(m_settings, receiver.name());
+	raii_settings_group _(m_settings, receiver.name());
 	createCorrectorGroup(m_settings, receiver);
 
 	const auto last_selected_emitter = m_settings.value("last_selected_emitter").toString().toStdString();
@@ -164,10 +164,10 @@ void SessionManager::createCorrectorGroup(QSettings &settings, IReceiver &receiv
 
 	const auto id = receiver.id();
 
-	settings_group_raii _(settings, "correctors");
+	raii_settings_group _(settings, "correctors");
 	for (const auto &type : getCorrectorTypes()) {
 		std::shared_ptr corrector = make_corrector(type, id);
-		settings_group_raii _(settings, value(type));
+		raii_settings_group _(settings, value(type));
 		corrector->load(settings);
 		receiver.correctors().attach(corrector);
 	}
@@ -180,15 +180,15 @@ SessionManager::~SessionManager() {
 
 		auto receiver = std::static_pointer_cast<IReceiver>(atom);
 
-		settings_group_raii _(m_settings, receiver->name());
+		raii_settings_group _(m_settings, receiver->name());
 
 		if (const auto emitter = receiver->connectedEmitter(); emitter)
 			m_settings.setValue("last_selected_emitter", QString::fromStdString(emitter->name()));
 
-		settings_group_raii __(m_settings, "correctors");
+		raii_settings_group __(m_settings, "correctors");
 		receiver->correctors().enumerate([this](const std::shared_ptr<IRepresentable> &v) {
 			auto &&corrector = std::static_pointer_cast<ICorrector>(v);
-			settings_group_raii _(m_settings, value(corrector->type()));
+			raii_settings_group _(m_settings, value(corrector->type()));
 			corrector->save(m_settings);
 		});
 	});
