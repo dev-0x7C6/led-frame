@@ -2,10 +2,11 @@ project(led-frame)
 cmake_minimum_required(VERSION 3.9.4)
 
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 8)
-set(VERSION_PATCH 11)
+set(VERSION_MINOR 9)
+set(VERSION_PATCH 0)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -14,7 +15,7 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 COMPONENTS Core Network SerialPort WebSockets Widgets Multimedia REQUIRED)
 find_package(GTest)
-find_package(Threads)
+find_package(Threads REQUIRED)
 find_package(X11)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Werror -pedantic -Wno-variadic-macros -Wno-old-style-cast -fverbose-asm")
@@ -22,7 +23,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Werror -p
 configure_file(config.h.in config.h)
 
 option(SUPPORT_X11 "Support for X11 screen capture" ON)
-option(SUPPORT_RPI "Support for Raspberry Pi screen capture" OFF)
+option(SUPPORT_DISPMANX "Support for VideoCore Dispmanx" OFF)
 option(OPTIMIZE_RPI3 "Optimize for Raspberry Pi 3" OFF)
 option(OPTIMIZE_RPI4 "Optimize for Raspberry Pi 4" OFF)
 option(TESTS "Build unit tests" ON)
@@ -55,7 +56,7 @@ target_link_libraries(led-frame-emitters PUBLIC Qt5::Core Qt5::Widgets Qt5::Mult
 
 # Raspberry Pi
 
-if (UNIX AND SUPPORT_RPI)
+if (UNIX AND SUPPORT_DISPMANX)
         if (OPTIMIZE_RPI3)
                 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=armv8-a+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard -ftree-vectorize -funsafe-math-optimizations")
         endif()
@@ -194,7 +195,7 @@ install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
 target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
 target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
-if (UNIX AND SUPPORT_RPI)
+if (UNIX AND SUPPORT_DISPMANX)
 	target_compile_definitions(led-frame PRIVATE RPI)
 endif()
 
