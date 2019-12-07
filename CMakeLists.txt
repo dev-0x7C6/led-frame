@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.9.4)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 9)
-set(VERSION_PATCH 0)
+set(VERSION_PATCH 1)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -191,7 +191,7 @@ set(sources
 )
 
 add_executable(led-frame ${sources} ${rpi-sources})
-install(TARGETS led-frame DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
+install(TARGETS led-frame RUNTIME DESTINATION bin)
 target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
 target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
@@ -253,6 +253,8 @@ if (TESTS AND GTEST_FOUND)
                 Qt5::Core
                 GTest::GTest
 	)
+
+        install(TARGETS led-frame-ut RUNTIME DESTINATION bin)
 endif()
 
 if (BENCHMARKS)
@@ -273,4 +275,6 @@ if (BENCHMARKS)
                 Qt5::Core
                 Threads::Threads
 	)
+
+        install(TARGETS led-frame-benchmark RUNTIME DESTINATION bin)
 endif()
