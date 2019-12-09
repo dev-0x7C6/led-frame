@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.9.4)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 9)
-set(VERSION_PATCH 1)
+set(VERSION_PATCH 2)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -28,6 +28,7 @@ option(OPTIMIZE_RPI3 "Optimize for Raspberry Pi 3" OFF)
 option(OPTIMIZE_RPI4 "Optimize for Raspberry Pi 4" OFF)
 option(TESTS "Build unit tests" ON)
 option(BENCHMARKS "Build benchmarks" ON)
+option(SYSTEMD "Install systemd service" ON)
 
 # Emitters
 
@@ -194,6 +195,11 @@ add_executable(led-frame ${sources} ${rpi-sources})
 install(TARGETS led-frame RUNTIME DESTINATION bin)
 target_compile_definitions(led-frame PRIVATE QT_DEPRECATED_WARNINGS)
 target_compile_definitions(led-frame PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x060000)
+
+if (SYSTEMD)
+    set(SYSTEMD_CONFIGURATIONS_FILES_DIR "/lib/systemd/system")
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/systemd/led-frame.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR})
+endif(SYSTEMD)
 
 if (UNIX AND SUPPORT_DISPMANX)
 	target_compile_definitions(led-frame PRIVATE RPI)

@@ -1,0 +1,8 @@
+[Unit]
+Description=A high performance linux based solution for software ambilight.
+
+[Service]
+ExecStart=/usr/bin/led-frame
+
+[Install]
+WantedBy=multi-user.target
