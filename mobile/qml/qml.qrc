@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>DeviceListPage.qml</file>
+        <file>WaitPage.qml</file>
+        <file>DeviceControlPage.qml</file>
+        <file>DeviceCorrectorPage.qml</file>
+        <file>Configuration.qml</file>
+        <file>components/DisplayIcon.qml</file>
+        <file>delegates/DeviceDelegate.qml</file>
+        <file>delegates/EmitterDelegate.qml</file>
+        <file>delegates/BaseDelegate.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>delegates/CorrectorDelegate.qml</file>
+        <file>../js/functions.js</file>
+        <file>ApplicationHeader.qml</file>
+        <file>components/PrettyLabel.qml</file>
+        <file>ApplicationDrawer.qml</file>
+        <file>ColorGrid.qml</file>
+        <file>components/labels/LargeLabel.qml</file>
+        <file>components/labels/MediumLabel.qml</file>
+        <file>components/labels/SmallLabel.qml</file>
+        <file>components/labels/AbstractLabel.qml</file>
+        <file>components/layouts/LayoutExpander.qml</file>
+        <file>delegates/custom/Description.qml</file>
+    </qresource>
+</RCC>

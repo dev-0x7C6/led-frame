@@ -1,3 +1,9 @@
 *.pro.user
 CMakeLists.txt.*
 documentation/doxygen/
+*.*~
+*.pro.user*
+*.txt.user*
+android/gradle.properties
+android/local.properties
+compile_commands.json

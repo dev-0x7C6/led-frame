@@ -1,9 +1,9 @@
 project(led-frame)
-cmake_minimum_required(VERSION 3.9.4)
+cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 9)
-set(VERSION_PATCH 2)
+set(VERSION_PATCH 3)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -29,9 +29,14 @@ option(OPTIMIZE_RPI4 "Optimize for Raspberry Pi 4" OFF)
 option(TESTS "Build unit tests" ON)
 option(BENCHMARKS "Build benchmarks" ON)
 option(SYSTEMD "Install systemd service" ON)
+option(MOBILE "Build mobile front-end" OFF)
+
+# Mobile
+if (MOBILE)
+    add_subdirectory("mobile")
+endif()
 
 # Emitters
-
 add_library(led-frame-emitters STATIC
     core/emitters/abstracts/abstract-emitter.cpp
     core/emitters/abstracts/abstract-emitter.h

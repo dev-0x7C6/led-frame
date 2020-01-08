@@ -1,0 +1,42 @@
+<RCC>
+    <qresource prefix="/">
+        <file>background/background-blured.png</file>
+        <file>background/background.png</file>
+        <file>background/background.svg</file>
+        <file>config.png</file>
+        <file>devices/usb.png</file>
+        <file>devices/usbs.png</file>
+        <file>devices/usbs.svg</file>
+        <file>emitters/animation.png</file>
+        <file>emitters/color.png</file>
+        <file>emitters/display.png</file>
+        <file>emitters/landscape.png</file>
+        <file>lcd256-without-glow.png</file>
+        <file>lcd.png</file>
+        <file>splash/splash.png</file>
+        <file>splash/splash.svg</file>
+        <file>devices/title.png</file>
+        <file>correctors/brightness.svg</file>
+        <file>correctors/color-enhancer.svg</file>
+        <file>correctors/brightness.png</file>
+        <file>correctors/color-enhancer.png</file>
+        <file>correctors/backlight.png</file>
+        <file>correctors/backlight.svg</file>
+        <file>correctors/blue.png</file>
+        <file>correctors/blue.svg</file>
+        <file>correctors/green.png</file>
+        <file>correctors/green.svg</file>
+        <file>correctors/red.png</file>
+        <file>correctors/red.svg</file>
+        <file>correctors/flickr.png</file>
+        <file>correctors/flickr.svg</file>
+        <file>devices/bar.png</file>
+        <file>splash/desktop.png</file>
+        <file>splash/desktop.svg</file>
+        <file>emitters/off.png</file>
+        <file>emitters/camera.png</file>
+        <file>emitters/camera.svg</file>
+        <file>correctors/gamma.png</file>
+        <file>correctors/gamma.svg</file>
+    </qresource>
+</RCC>
