@@ -2,7 +2,7 @@
 Description=A high performance linux based solution for software ambilight.
 
 [Service]
-ExecStart=/usr/bin/led-frame
+ExecStart=/usr/bin/led-frame -platform offscreen
 
 [Install]
 WantedBy=multi-user.target
