@@ -6,8 +6,9 @@
 #include <externals/protocol/protocol.hpp>
 #include <core/functionals/color-stream.h>
 
-#include <thread>
 #include <chrono>
+#include <optional>
+#include <thread>
 
 namespace Protocol {
 namespace Concrete {
